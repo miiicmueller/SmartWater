@@ -6,7 +6,7 @@
 int main(void) {
     WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 
-	//ceci est un test
+	//Un autre commantaire pour tester depuis CCS
 
 	return 0;
 }
