@@ -13,7 +13,6 @@ int main(void) {
     // modification 3
 
     // MOdification 4
-    // Salut simon
 
     // modification 5
 
