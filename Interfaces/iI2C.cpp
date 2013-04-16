@@ -4,7 +4,7 @@
 #include "iI2C.h"
 
 
-boolean iI2C::config(char i2cSpeed, char i2cPort)
+bool iI2C::config(char i2cSpeed, char i2cPort)
 {
 	return 0;
 }

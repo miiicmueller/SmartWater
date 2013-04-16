@@ -9,7 +9,7 @@
 class tUnitName : public tParameters
 {
 private:
-	string name;
+	std::string name;
 
 };
 #endif

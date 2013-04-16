@@ -7,7 +7,7 @@
 class tCommandesAT
 {
 public:
-	string aCommand[];
+	std::string aCommand;
 
 };
 #endif

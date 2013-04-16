@@ -9,11 +9,11 @@
 class gTerminal : public Gestionnaire
 {
 private:
-	boolean pipeOpen;
+	bool pipeOpen;
 
 
 public:
-	boolean getPipeOpen();
+	bool getPipeOpen();
 
 };
 #endif

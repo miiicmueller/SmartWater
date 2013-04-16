@@ -9,7 +9,7 @@
 class tMdPUser : public tParameters
 {
 private:
-	string mdPUser;
+	std::string mdPUser;
 
 };
 #endif

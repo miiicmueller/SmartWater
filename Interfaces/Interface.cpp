@@ -4,7 +4,7 @@
 #include "Interface.h"
 
 
-boolean Interface::write(char data)
+bool Interface::write(char data)
 {
 	return 0;
 }

@@ -4,7 +4,7 @@
 #include "gTerminal.h"
 
 
-boolean gTerminal::getPipeOpen()
+bool gTerminal::getPipeOpen()
 {
 	return 0;
 }

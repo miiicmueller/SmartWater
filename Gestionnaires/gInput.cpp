@@ -19,9 +19,9 @@ int gInput::getTempSensValue(char tempSensNb)
 	return 0;
 }
 
-string gInput::getSms(int nSms)
+std::string gInput::getSms(int nSms)
 {
-	return 0;
+	return "";
 }
 
 int gInput::getSmsNb()
@@ -29,7 +29,7 @@ int gInput::getSmsNb()
 	return 0;
 }
 
-tDate gInput::getCurrentTime()
+tDate* gInput::getCurrentTime()
 {
-	return 0;
+	return new tDate();
 }

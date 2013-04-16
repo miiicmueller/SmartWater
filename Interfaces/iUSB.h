@@ -3,20 +3,18 @@
 
 #include <string>
 #include <assert.h>
-
+#include "../Def/def.h"
 #include "Interface.h"
-#include "kStatusEnum.h"
 
-class iUSB : public Interface
-{
+class iUSB: public Interface {
 private:
-	char[MAX_BUFFERSIZE] usbSerialBuffer;
-
+	char* usbSerialBuffer;
+	static const int MAX_BUFFERSIZE = 100;
 
 public:
-	boolean getFullFrame(char FrameBuffer[][]);
+	bool getFullFrame(char* FrameBuffer);
 
-	void sendFullFrame(char FrameBuffer[][]);
+	void sendFullFrame(char* FrameBuffer);
 
 	kStatusEnum getStatus();
 

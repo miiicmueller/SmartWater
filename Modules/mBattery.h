@@ -14,7 +14,7 @@ private:
 
 public:
 	mBattery();
-	boolean CheckBattery();
+	bool CheckBattery();
 
 	int GetBatteryValue();
 

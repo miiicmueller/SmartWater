@@ -3,18 +3,15 @@
 
 #include <string>
 #include <assert.h>
-
-#include "kStatusEnum.h"
+#include <stdlib.h>
+#include "../Def/def.h"
 
 class Interface
 {
 private:
-	kStatusEnum status;
-
-
+	kStatusEnum status ;
 public:
-	boolean write(char data);
-
+	bool write(char data);
 	char read();
 
 };

@@ -9,7 +9,7 @@
 class iI2C : public Interface
 {
 public:
-	boolean config(char i2cSpeed, char i2cPort);
+	bool config(char i2cSpeed, char i2cPort);
 
 	void start();
 

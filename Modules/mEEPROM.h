@@ -13,7 +13,7 @@ private:
 
 
 public:
-	boolean write(int address, char value);
+	bool write(int address, char value);
 
 	char read(int address);
 

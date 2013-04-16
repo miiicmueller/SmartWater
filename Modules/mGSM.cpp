@@ -4,32 +4,32 @@
 #include "mGSM.h"
 
 
-string mGSM::getSMS()
+std::string mGSM::getSMS()
+{
+	return "";
+}
+
+void mGSM::sendSMS(std::string data)
+{
+}
+
+bool mGSM::activateModule()
 {
 	return 0;
 }
 
-void mGSM::sendSMS(string data)
+bool mGSM::desactivateModule()
+{
+	return false;
+}
+
+void mGSM::sendCommandAT(std::string command, std::string data)
 {
 }
 
-boolean mGSM::activateModule()
+bool mGSM::controlPassword()
 {
-	return 0;
-}
-
-boolean mGSM::desactivateModule()
-{
-	return 0;
-}
-
-void mGSM::sendCommandAT(string command[], string data)
-{
-}
-
-boolean mGSM::controlPassword()
-{
-	return 0;
+	return false;
 }
 
 void mGSM::unlockSIM()

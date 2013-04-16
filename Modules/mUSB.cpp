@@ -4,16 +4,16 @@
 #include "mUSB.h"
 
 
-boolean mUSB::getCommand(int cmd*, char values[][])
+bool mUSB::getCommand(int* cmd, char* values)
 {
-	return 0;
+	return false;
 }
 
-void mUSB::sendReply(int values[][], int valNum)
+void mUSB::sendReply(int* values, int valNum)
 {
 }
 
-boolean mUSB::isConnected()
+bool mUSB::isConnected()
 {
-	return 0;
+	return false;
 }

@@ -9,7 +9,7 @@
 class tAlarmNumber : public tParameters
 {
 private:
-	char number[];
+	char* number;
 
 };
 #endif

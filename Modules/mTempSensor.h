@@ -12,12 +12,11 @@ private:
 	char sensorAddress;
 
 public:
-	boolean isSleeping;
+	bool isSleeping;
 
 
 public:
 	int readTemp();
-
 	int sleep();
 
 };

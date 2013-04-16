@@ -5,22 +5,22 @@
 #include <assert.h>
 
 #include "Gestionnaire.h"
-#include "tDate.h"
+#include "../Tools/tDate.h"
 
 class gInput : public Gestionnaire
 {
 private:
-	int counterValues[][];
+	int counterValues;
 
 	int batteryValue;
 
-	int tempSensValues[][];
+	int tempSensValues;
 
-	string smsTab[][];
+	std::string smsTab;
 
 	int smsNb;
 
-	tDate currentTime;
+	tDate* currentTime;
 
 
 public:
@@ -30,11 +30,11 @@ public:
 
 	int getTempSensValue(char tempSensNb);
 
-	string getSms(int nSms);
+	std::string getSms(int nSms);
 
 	int getSmsNb();
 
-	tDate getCurrentTime();
+	tDate* getCurrentTime();
 
 };
 #endif

@@ -9,30 +9,30 @@
 class mGSM : public Module
 {
 private:
-	boolean isPresent;
+	bool isPresent;
 
-	boolean isUnlocked;
+	bool isUnlocked;
 
-	string SMSReceived;
+	std::string SMSReceived;
 
-	boolean isActivate;
+	bool isActivate;
 
 
 private:
-	void sendCommandAT(string command[], string data);
+	void sendCommandAT(std::string command, std::string data);
 
-	boolean controlPassword();
+	bool controlPassword();
 
 	void unlockSIM();
 
 public:
-	string getSMS();
+	std::string getSMS();
 
-	void sendSMS(string data);
+	void sendSMS(std::string data);
 
-	boolean activateModule();
+	bool activateModule();
 
-	boolean desactivateModule();
+	bool desactivateModule();
 
 };
 #endif

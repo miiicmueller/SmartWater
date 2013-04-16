@@ -4,7 +4,7 @@
 #include "mEEPROM.h"
 
 
-boolean mEEPROM::write(int address, char value)
+bool mEEPROM::write(int address, char value)
 {
 	return 0;
 }

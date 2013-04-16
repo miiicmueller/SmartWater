@@ -9,11 +9,11 @@
 class mUSB : public Module
 {
 public:
-	boolean getCommand(int cmd*, char values[][]);
+	bool getCommand(int* cmd, char* values);
 
-	void sendReply(int values[][], int valNum);
+	void sendReply(int* values, int valNum);
 
-	boolean isConnected();
+	bool isConnected();
 
 };
 #endif

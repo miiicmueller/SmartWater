@@ -9,7 +9,7 @@ mBattery::mBattery()
 {
 }
 
-boolean mBattery::CheckBattery()
+bool mBattery::CheckBattery()
 {
 	return 0;
 }
