@@ -16,7 +16,7 @@ int main(void) {
 
     // modification 5
 
-    // test de simon
+    // test de simon dzurt
 
     //salut tata
 
