@@ -3,6 +3,10 @@
 
 #include "Interface.h"
 
+//Constructeur de la classe mère
+Interface::Interface(){
+
+}
 
 bool Interface::write(char data)
 {

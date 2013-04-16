@@ -6,10 +6,26 @@
 
 #include "Interface.h"
 
-class iUART : public Interface
-{
+typedef enum {
+	k8bits, k9bits
+} UARTDataCfgEnum;
+
+typedef enum {
+	kLSBFirst, kMSBFirst
+} UARTSendModeEnum;
+
+typedef enum {
+	kUSCI_A0, kUSCI_A1
+} UARTPortEnum;
+
+
+class iUART: public Interface {
+private :
+	UARTPortEnum serialPort;
+
 public:
-	void config(int kPort);
+	iUART(UARTPortEnum aPort);
+	void config(UARTPortEnum aPort);
 
 };
 #endif

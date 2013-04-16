@@ -11,6 +11,7 @@ class Interface
 private:
 	kStatusEnum status ;
 public:
+	Interface();
 	bool write(char data);
 	char read();
 
