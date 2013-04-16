@@ -6,28 +6,6 @@
 int main(void) {
     WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 
-    // Voila une nouvelle modification
-
-    // Voila une nouvelle modification2
-    // voici michael
-
-    // modification 3
-
-    // MOdification 4
-
-    // modification 5
-
-    // test de simon dzurt
-
-    //salut tata
-    
-    //ksjngavidfqglakjfn
-
-	// Salut Cyrille
-	// Modification 6
-    // toto
-
-    //dans le prochain commit je modifie ca
 
 	return 0;
 }
