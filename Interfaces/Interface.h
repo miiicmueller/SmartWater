@@ -14,6 +14,7 @@ public:
 	Interface();
 	bool write(char data);
 	char read();
+	kStatusEnum getStatus();
 
 };
 #endif
