@@ -25,7 +25,19 @@ private:
 	bool isEnabled;
 	USCIRecBufStruct USCIRingBuffer;
 
+	//Variable global pour gérer l'affectations des
+	// interruptions
+	static iUART* UART_0;
+	static iUART* UART_1;
+
+	// Fonction d'interruption propre a chaque objet
+	void interruptHandler();
 	bool isBufferEmpty();
+
+	//Interruptions handlers
+	friend void USCI_A0(void);
+	friend void USCI_A1(void);
+
 public:
 	iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
 			UARTStopBitsEnum aStopBits, UARTPartityEnum aParity,

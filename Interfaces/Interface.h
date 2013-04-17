@@ -15,6 +15,5 @@ public:
 	bool write(char aData);
 	char read();
 	kStatusEnum getStatus();
-
 };
 #endif

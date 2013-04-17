@@ -6,7 +6,13 @@
 #include "../Def/enum_types.h"
 #include "../Def/def.h"
 
+//TODO fixer cette valeur à la bonne fréquence
 #define F_BRCLK 15000
+
+
+//Initalisation des attributs UART_x statiques
+iUART* iUART::UART_0 = NULL;
+iUART* iUART::UART_1 = NULL;
 
 iUART::iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
 		UARTStopBitsEnum aStopBits, UARTPartityEnum aParity,
@@ -21,6 +27,26 @@ iUART::iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
 	this->USCIRingBuffer.ByteCount = 0;
 	this->USCIRingBuffer.InIndex = 0;
 	this->USCIRingBuffer.OutIndex = 0;
+
+	//intialiser les adresse poiteur d'instance iUart pour les interruptions
+	switch (this->serialPort) {
+	case kUSCI_A0:
+		// On doit tester si le pointeur n'est pas utilisé
+		// par un autre objet
+		if (this->UART_0 == NULL) {
+			UART_0 = this;
+		}
+		break;
+	case kUSCI_A1:
+		// On doit tester si le pointeur n'est pas utilisé
+		// par un autre objet
+		if (this->UART_1 == NULL) {
+			UART_1 = this;
+		}
+		break;
+	default:
+		;
+	}
 
 }
 
@@ -85,7 +111,7 @@ void iUART::config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
 		//Configuration du baudrate
 		UCA0BR0 = (char) aBaudDiv;
 		UCA0BR1 = (char) (aBaudDiv >> 8);
-		//FIXME penser à ajouter le reste quand on connaîtra la fréquence CPU
+		//TODO penser à ajouter le reste quand on connaîtra la fréquence CPU
 
 		//Configuration de l'interruption à la reception
 		UCA0IE |= UCRXIE;
@@ -244,39 +270,46 @@ bool iUART::isBufferEmpty() {
 	return (this->USCIRingBuffer.ByteCount > 0);
 }
 
-//-------------- INTERRUPT HANDLER ------------
+void iUART::interruptHandler() {
+	char aReceivedChar = 0;
+	//Lecture du byte recu et ceci clear l'interruption
+	aReceivedChar = UCA0RXBUF;
+
+	// Test que le buffer ne soit pas plein
+	if (false == this->USCIRingBuffer.BufferIsFull) {
+		//Alors on écrit le byte recus dans le buffer
+		this->USCIRingBuffer.SciRecBuf[this->USCIRingBuffer.InIndex] =
+				aReceivedChar;
+
+		//On incrément l'index et le nombre de byte recus
+		this->USCIRingBuffer.InIndex++;
+
+		// Si on a atteint la dernière case on revient à 0
+		if (kSciRecBufSize <= this->USCIRingBuffer.InIndex) {
+			this->USCIRingBuffer.InIndex = 0;
+		}
+
+		this->USCIRingBuffer.ByteCount++;
+	}
+
+	//Test si on a rempli le buffer Si on a recu n char
+	if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount) {
+		this->USCIRingBuffer.BufferIsFull = true;
+	} else {
+		this->USCIRingBuffer.BufferIsFull = false;
+	}
+}
+
+//-------------- INTERRUPT HANDLER | FRIEND OF iUart ------------
 
 // USCIA0 Interrupt handler
 #pragma vector=USCI_A0_VECTOR
 __interrupt void USCI_A0(void) {
 	//Vérifiation que c'est bien un interruption en reception
-	if ((UCA0IF & GUCRXIFG) == GUCRXIFG) {
-		char aReceivedChar = 0;
-		//Lecture du byte recu et ceci clear l'interruption
-		aReceivedChar = UCA0RXBUF;
-
-		// Test que le buffer ne soit pas plein
-		if (kFalse == this->USCIRingBuffer.BufferIsFull) {
-			//Alors on écrit le byte recus dans le buffer
-			this->USCIRingBuffer.SciRecBuf[this->USCIRingBuffer.InIndex] =
-					aReceivedChar;
-
-			//On incrément l'index et le nombre de byte recus
-			this->USCIRingBuffer.InIndex++;
-
-			// Si on a atteint la dernière case on revient à 0
-			if (kSciRecBufSize <= this->USCIRingBuffer.InIndex) {
-				this->USCIRingBuffer.InIndex = 0;
-			}
-
-			this->USCIRingBuffer.ByteCount++;
-		}
-
-		//Test si on a rempli le buffer Si on a recu n char
-		if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount) {
-			this->USCIRingBuffer.BufferIsFull = kTrue;
-		} else {
-			this->USCIRingBuffer.BufferIsFull = kFalse;
+	if ((UCA0IFG & UCRXIFG)== UCRXIFG) {
+		// On teste si le pointeur iUART_0 a été  affecté
+		if (iUART::UART_0 != NULL) {
+			iUART::UART_0->interruptHandler();
 		}
 	}
 
@@ -286,33 +319,10 @@ __interrupt void USCI_A0(void) {
 #pragma vector=USCI_A1_VECTOR
 __interrupt void USCI_A1(void) {
 	//Vérifiation que c'est bien un interruption en reception
-	if ((UCA1IF & GUCRXIFG) == GUCRXIFG) {
-		char aReceivedChar = 0;
-		//Lecture du byte recu et ceci clear l'interruption
-		aReceivedChar = UCA1RXBUF;
-
-		// Test que le buffer ne soit pas plein
-		if (kFalse == this->USCIRingBuffer.BufferIsFull) {
-			//Alors on écrit le byte recus dans le buffer
-			this->USCIRingBuffer.SciRecBuf[this->USCIRingBuffer.InIndex] =
-					aReceivedChar;
-
-			//On incrément l'index et le nombre de byte recus
-			this->USCIRingBuffer.InIndex++;
-
-			// Si on a atteint la dernière case on revient à 0
-			if (kSciRecBufSize <= this->USCIRingBuffer.InIndex) {
-				this->USCIRingBuffer.InIndex = 0;
-			}
-
-			this->USCIRingBuffer.ByteCount++;
-		}
-
-		//Test si on a rempli le buffer Si on a recu n char
-		if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount) {
-			this->USCIRingBuffer.BufferIsFull = kTrue;
-		} else {
-			this->USCIRingBuffer.BufferIsFull = kFalse;
+	if ((UCA1IFG & UCRXIFG)== UCRXIFG) {
+		// On teste si le pointeur iUART_1 a été  affecté
+		if (iUART::UART_1 != NULL) {
+			iUART::UART_1->interruptHandler();
 		}
 	}
 }
