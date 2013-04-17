@@ -4,11 +4,9 @@
 
 #include "iUART.h"
 
-iUART::iUART(UARTPortEnum aPort)
-{
-	this->serialPort = aPort ;
+iUART::iUART(UARTPortEnum aPort) {
+	this->serialPort = aPort;
 }
 
-void iUART::config(int kPort)
-{
+void iUART::config(UARTPortEnum aPort) {
 }
