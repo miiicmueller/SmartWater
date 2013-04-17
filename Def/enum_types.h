@@ -1,3 +1,16 @@
+/*
+------------------------------------------------------------
+Copyright 2003-2007 Haute Ecole ARC Ingénierie,
+Switzerland. All rights reserved
+------------------------------------------------------------
+Nom du fichier :  enum_types.h
+Auteur et Date :  Mueller Michael 17.4.2013
+
+But : Type custom pour le programme
+
+------------------------------------------------------------
+*/
+
 #ifndef __TYPES_ENUM__
 #define __TYPES_ENUM__
 

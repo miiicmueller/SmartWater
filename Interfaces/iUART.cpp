@@ -1,3 +1,16 @@
+/*
+------------------------------------------------------------
+Copyright 2003-200x Haute Ecole ARC Ingénierie,
+Switzerland. All rights reserved
+------------------------------------------------------------
+Nom du fichier : iUART.cpp
+Auteur et Date : Michael Mueller
+
+Description dans le fichier iUART.h
+------------------------------------------------------------
+*/
+
+
 #include <string>
 #include <assert.h>
 #include <msp430.h>
@@ -9,11 +22,21 @@
 //TODO fixer cette valeur à la bonne fréquence
 #define F_BRCLK 15000
 
-
 //Initalisation des attributs UART_x statiques
 iUART* iUART::UART_0 = NULL;
 iUART* iUART::UART_1 = NULL;
 
+/**
+ * Constructeur principal de la classe iUart du MSP430
+ *
+ * aPort : Port de communication
+ * aSendMode : LSB ou MSB en premier
+ * aStopBits : nbr de stop bits
+ * aParity : Parité de la communication
+ * aDataCfg : format de donnée sur 8 ou 7 bits
+ * aBaudrate : vitesse de transmission
+ *
+ */
 iUART::iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
 		UARTStopBitsEnum aStopBits, UARTPartityEnum aParity,
 		UARTDataCfgEnum aDataCfg, int aBaudrate) {
@@ -50,6 +73,17 @@ iUART::iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
 
 }
 
+/**
+ * Fonction de configuration du port assigné dans le constructeur
+ * On peut tout modifier sauf le port
+ *
+ * aSendMode : LSB ou MSB en premier
+ * aStopBits : nbr de stop bits
+ * aParity : Parité de la communication
+ * aDataCfg : format de donnée sur 8 ou 7 bits
+ * aBaudrate : vitesse de transmission
+ *
+ */
 void iUART::config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
 		UARTPartityEnum aParity, UARTDataCfgEnum aDataCfg, int aBaudrate) {
 
@@ -130,12 +164,16 @@ void iUART::config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
 	}
 }
 
+/**
+ * Fonction pour lire "1" byte recus dans le buffer tourant
+ *
+ */
 char iUART::read() {
 	if (isEnabled) {
 		char aByteToRead = 0;
 
 		aByteToRead =
-				this->USCIRingBuffer.SciRecBuf[this->USCIRingBuffer.OutIndex];
+				this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.OutIndex];
 
 		// On incrémente seulement après avoir lu .
 		this->USCIRingBuffer.OutIndex++;
@@ -154,6 +192,11 @@ char iUART::read() {
 	}
 }
 
+/**
+ * Fonction pour transmettre "1" byte sur la ligne
+ * !! La méthode enable doit avoir été préalablement appelée
+ *
+ */
 bool iUART::write(char aData) {
 	//test si l'interface est activé
 	if (isEnabled) {
@@ -177,6 +220,13 @@ bool iUART::write(char aData) {
 	}
 }
 
+/**
+ * Fonction qui permet de lire 1 flag de status du port
+ * !! La méthode enable doit avoir été préalablement appelée
+ *
+ * aFlag : nom du flag à lire
+ *
+ */
 bool iUART::getStatusFlag(UARTStatusFlag aFlag) {
 	switch (this->serialPort) {
 	case kUSCI_A0:
@@ -234,6 +284,11 @@ bool iUART::getStatusFlag(UARTStatusFlag aFlag) {
 	}
 }
 
+
+/**
+ * Fonction qui permet d'activer la communcation serielle
+ *
+ */
 void iUART::enable() {
 	switch (this->serialPort) {
 
@@ -250,6 +305,10 @@ void iUART::enable() {
 	this->isEnabled = true;
 }
 
+/**
+ * Fonction qui permet desactiver la communcation serielle
+ *
+ */
 void iUART::disable() {
 	switch (this->serialPort) {
 
@@ -266,10 +325,18 @@ void iUART::disable() {
 	this->isEnabled = false;
 }
 
+/**
+ * Fonction qui permet de tester si le buffer tourant est vide
+ *
+ */
 bool iUART::isBufferEmpty() {
 	return (this->USCIRingBuffer.ByteCount > 0);
 }
 
+/**
+ * Handler d'interruption propre à chaque objets
+ *
+ */
 void iUART::interruptHandler() {
 	char aReceivedChar = 0;
 	//Lecture du byte recu et ceci clear l'interruption
@@ -278,7 +345,7 @@ void iUART::interruptHandler() {
 	// Test que le buffer ne soit pas plein
 	if (false == this->USCIRingBuffer.BufferIsFull) {
 		//Alors on écrit le byte recus dans le buffer
-		this->USCIRingBuffer.SciRecBuf[this->USCIRingBuffer.InIndex] =
+		this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
 				aReceivedChar;
 
 		//On incrément l'index et le nombre de byte recus

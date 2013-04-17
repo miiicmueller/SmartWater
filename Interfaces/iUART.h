@@ -1,3 +1,16 @@
+/*
+------------------------------------------------------------
+Copyright 2003-2007 Haute Ecole ARC Ingénierie,
+Switzerland. All rights reserved
+------------------------------------------------------------
+Nom du fichier :  iUART.h
+Auteur et Date :  Mueller Michael 17.04.2013
+
+But : Interface de communication serielle UART
+
+------------------------------------------------------------
+*/
+
 #ifndef I_U_A_R_T_H
 #define I_U_A_R_T_H
 
@@ -12,7 +25,7 @@
 
 //Structure du buffer tournant
 typedef struct {
-	char SciRecBuf[kSciRecBufSize ];
+	char UsciRecBuf[kSciRecBufSize ];
 	int InIndex;
 	int OutIndex;
 	int ByteCount;
@@ -32,7 +45,6 @@ private:
 
 	// Fonction d'interruption propre a chaque objet
 	void interruptHandler();
-	bool isBufferEmpty();
 
 	//Interruptions handlers
 	friend void USCI_A0(void);
@@ -49,6 +61,7 @@ public:
 	void disable();
 	char read();
 	bool write(char aData);
+	bool isBufferEmpty();
 
 };
 #endif
