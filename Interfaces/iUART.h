@@ -7,11 +7,25 @@
 
 #include "Interface.h"
 
+// Buffer de 200 caractères
+#define kSciRecBufSize ((unsigned char)(200))
+
+//Structure du buffer tournant
+typedef struct {
+	char SciRecBuf[kSciRecBufSize ];
+	int InIndex;
+	int OutIndex;
+	int ByteCount;
+	bool BufferIsFull;
+} USCIRecBufStruct;
+
 class iUART: public Interface {
 private:
 	UARTPortEnum serialPort;
 	bool isEnabled;
+	USCIRecBufStruct USCIRingBuffer;
 
+	bool isBufferEmpty();
 public:
 	iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
 			UARTStopBitsEnum aStopBits, UARTPartityEnum aParity,
