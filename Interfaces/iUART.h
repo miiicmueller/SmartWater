@@ -10,13 +10,19 @@
 class iUART: public Interface {
 private:
 	UARTPortEnum serialPort;
+	bool isEnabled;
 
 public:
-	iUART(UARTPortEnum aPort);
-	void config(UARTSendModeEnum aSendMode);
+	iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
+			UARTStopBitsEnum aStopBits, UARTPartityEnum aParity,
+			UARTDataCfgEnum aDataCfg, int aBaudrate);
+	void config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
+			UARTPartityEnum aParity, UARTDataCfgEnum aDataCfg, int aBaudrate);
 	bool getStatusFlag(UARTStatusFlag aStatFlag);
 	void enable();
 	void disable();
+	char read();
+	bool write(char aData);
 
 };
 #endif

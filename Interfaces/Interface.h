@@ -12,7 +12,7 @@ private:
 	kStatusEnum status ;
 public:
 	Interface();
-	bool write(char data);
+	bool write(char aData);
 	char read();
 	kStatusEnum getStatus();
 

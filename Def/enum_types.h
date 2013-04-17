@@ -2,9 +2,11 @@
 #define __TYPES_ENUM__
 
 // ------- ENUM UART ---------------
+
 typedef enum {
-	k8bits, k9bits
+	k7bits, k8bits
 } UARTDataCfgEnum;
+
 
 typedef enum {
 	k1StBits, k2StBits
