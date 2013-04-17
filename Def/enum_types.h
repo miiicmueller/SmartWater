@@ -1,9 +1,18 @@
 #ifndef __TYPES_ENUM__
 #define __TYPES_ENUM__
 
+// ------- ENUM UART ---------------
 typedef enum {
 	k8bits, k9bits
 } UARTDataCfgEnum;
+
+typedef enum {
+	k1StBits, k2StBits
+} UARTStopBitsEnum;
+
+typedef enum {
+	kNone, kOdd, kEven
+} UARTPartityEnum;
 
 typedef enum {
 	kLSBFirst, kMSBFirst
@@ -16,5 +25,7 @@ typedef enum {
 typedef enum {
 
 } UARTStatusFlag;
+
+// ----------------------------
 
 #endif

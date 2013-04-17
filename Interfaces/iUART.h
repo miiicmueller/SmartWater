@@ -13,7 +13,7 @@ private:
 
 public:
 	iUART(UARTPortEnum aPort);
-	void config();
+	void config(UARTSendModeEnum aSendMode);
 	bool getStatusFlag(UARTStatusFlag aStatFlag);
 	void enable();
 	void disable();
