@@ -1,15 +1,14 @@
 /*
-------------------------------------------------------------
-Copyright 2003-200x Haute Ecole ARC Ingénierie,
-Switzerland. All rights reserved
-------------------------------------------------------------
-Nom du fichier : iUART.cpp
-Auteur et Date : Michael Mueller
+ ------------------------------------------------------------
+ Copyright 2003-200x Haute Ecole ARC Ingénierie,
+ Switzerland. All rights reserved
+ ------------------------------------------------------------
+ Nom du fichier : iUART.cpp
+ Auteur et Date : Michael Mueller
 
-Description dans le fichier iUART.h
-------------------------------------------------------------
-*/
-
+ Description dans le fichier iUART.h
+ ------------------------------------------------------------
+ */
 
 #include <string>
 #include <assert.h>
@@ -230,60 +229,14 @@ bool iUART::write(char aData) {
 bool iUART::getStatusFlag(UARTStatusFlag aFlag) {
 	switch (this->serialPort) {
 	case kUSCI_A0:
-		//Pas besoin de break car onfait un return directement
-		switch (aFlag) {
-		case kUCBUSY:
-			return ((UCA0STAT & aFlag) == aFlag) ? true : false;
-
-		case kUCRXERR:
-			return ((UCA0STAT & aFlag) == aFlag) ? true : false;
-
-		case kUCPE:
-			return ((UCA0STAT & aFlag) == aFlag) ? true : false;
-
-		case kUCOE:
-			return ((UCA0STAT & aFlag) == aFlag) ? true : false;
-
-		case kUCFE:
-			return ((UCA0STAT & aFlag) == aFlag) ? true : false;
-
-		case kUCLISTEN:
-			return ((UCA0STAT & aFlag) == aFlag) ? true : false;
-
-		default:
-			return false;
-			;
-		}
+		return ((UCA0STAT & aFlag) == aFlag) ? true : false;
 
 	case kUSCI_A1:
-		switch (aFlag) {
-		case kUCBUSY:
-			return ((UCA1STAT & aFlag) == aFlag) ? true : false;
-
-		case kUCRXERR:
-			return ((UCA1STAT & aFlag) == aFlag) ? true : false;
-
-		case kUCPE:
-			return ((UCA1STAT & aFlag) == aFlag) ? true : false;
-
-		case kUCOE:
-			return ((UCA1STAT & aFlag) == aFlag) ? true : false;
-
-		case kUCFE:
-			return ((UCA1STAT & aFlag) == aFlag) ? true : false;
-
-		case kUCLISTEN:
-			return ((UCA1STAT & aFlag) == aFlag) ? true : false;
-
-		default:
-			return false;
-			;
-		}
+		return ((UCA1STAT & aFlag) == aFlag) ? true : false;
 	default:
 		return false;
 	}
 }
-
 
 /**
  * Fonction qui permet d'activer la communcation serielle
