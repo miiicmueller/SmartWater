@@ -62,7 +62,6 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 		else
 		{
 			// Impossible de créer l'objet voulu
-			return NULL;
 		}
 		break;
 	case kUSCI_A1:
@@ -75,7 +74,6 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 		else
 		{
 			// Impossible de créer l'objet voulu
-			return NULL;
 		}
 		break;
 	default:
