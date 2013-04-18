@@ -1,3 +1,9 @@
+//*****************************************************************************
+//Nom du fichier : Interface.h
+//Auteur et Date : SAVY Cyrille 18.04.2013
+//But : classe abstraite de la couche interface
+//*****************************************************************************
+
 #ifndef __INTERFACE__
 #define __INTERFACE__
 
@@ -6,24 +12,29 @@
 #include <stdlib.h>
 #include "../Def/def.h"
 
-#ifndef __kStatusEnum__
-#define __kStatusEnum__
-
+//états possibles pour une interface
 typedef enum {
-	kActive, kError, kSuspended, kClosed, kBusy
+	kActive, kError, kSuspended, kClosed, kBusy, kUnInitialized
 } kStatusEnum;
 
-#endif
-
 class Interface {
-private:
-	kStatusEnum status;
+public:
+	//tools
+	kStatusEnum status;	//état dans lequel se trouve l'interface
 
 public:
+	//constructeur
 	Interface();
+
+	//méthodes virtuelles pures que les classes filles devront implémenter
 	virtual bool write(char aData) = 0;
 	virtual char read() = 0;
+
+	//permet de connaître l'état de l'interface
 	kStatusEnum getStatus();
+
+	//destructeur
+	~Interface();
 };
 
 #endif
