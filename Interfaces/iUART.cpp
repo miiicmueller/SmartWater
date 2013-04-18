@@ -9,21 +9,18 @@
  Description dans le fichier iUART.h
  ------------------------------------------------------------
  */
-
-#include <string>
-#include <assert.h>
+#include <cassert>
 #include <msp430.h>
 
 #include "iUART.h"
-#include "../Def/enum_types.h"
 #include "../Def/def.h"
 
 //TODO fixer cette valeur à la bonne fréquence
 #define F_BRCLK (UInt16)15000
 
 //Initalisation des attributs UART_x statiques
-iUART* iUART::UART_0 = NULL;
-iUART* iUART::UART_1 = NULL;
+iUART* iUART::USCI_0 = NULL;
+iUART* iUART::USCI_1 = NULL;
 
 /**
  * Constructeur principal de la classe iUart du MSP430
@@ -36,9 +33,11 @@ iUART* iUART::UART_1 = NULL;
  * aBaudrate : vitesse de transmission
  *
  */
-iUART::iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
-		UARTStopBitsEnum aStopBits, UARTPartityEnum aParity,
-		UARTDataCfgEnum aDataCfg, UInt16 aBaudrate) {
+iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
+		iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
+		iUARTDataCfgEnum aDataCfg, UInt16 aBaudrate) :
+		Interface()
+{
 	//Assignation du port de communcation
 	this->serialPort = aPort;
 	//Configuration du port USCI
@@ -51,25 +50,61 @@ iUART::iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
 	this->USCIRingBuffer.OutIndex = 0;
 
 	//intialiser les adresse poiteur d'instance iUart pour les interruptions
-	switch (this->serialPort) {
+	switch (this->serialPort)
+	{
 	case kUSCI_A0:
 		// On doit tester si le pointeur n'est pas utilisé
 		// par un autre objet
-		if (this->UART_0 == NULL) {
-			UART_0 = this;
+		if (this->USCI_0 == NULL)
+		{
+			USCI_0 = this;
+		}
+		else
+		{
+			// Impossible de créer l'objet voulu
 		}
 		break;
 	case kUSCI_A1:
 		// On doit tester si le pointeur n'est pas utilisé
 		// par un autre objet
-		if (this->UART_1 == NULL) {
-			UART_1 = this;
+		if (this->USCI_1 == NULL)
+		{
+			USCI_1 = this;
+		}
+		else
+		{
+			// Impossible de créer l'objet voulu
 		}
 		break;
 	default:
 		;
 	}
 
+}
+
+/**
+ * Destructeur de la classe iUart
+ */
+iUART::~iUART()
+{
+	//Libération de la pile d'interruption
+	switch (this->serialPort)
+	{
+	case kUSCI_A0:
+		if (this->USCI_0 == this)
+		{
+			USCI_0 = NULL;
+		}
+		break;
+	case kUSCI_A1:
+		if (this->USCI_1 == this)
+		{
+			USCI_1 = NULL;
+		}
+		break;
+	default:
+		;
+	}
 }
 
 /**
@@ -83,14 +118,16 @@ iUART::iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
  * aBaudrate : vitesse de transmission
  *
  */
-void iUART::config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
-		UARTPartityEnum aParity, UARTDataCfgEnum aDataCfg, UInt16 aBaudrate) {
+void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
+		iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg, UInt16 aBaudrate)
+{
 
 	//Calcul de la division
 	UInt16 aBaudDiv = (UInt16) (F_BRCLK / aBaudrate);
 
 	//Initialisation du port USCI
-	switch (this->serialPort) {
+	switch (this->serialPort)
+	{
 
 	case kUSCI_A0:
 		//Obligation de mettre le bit UCSWRST à 1
@@ -98,21 +135,28 @@ void iUART::config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
 		UCA0CTL1 |= UCSWRST;
 
 		//Test du mode | LSB ou MSB first
-		if (kMSBFirst == aSendMode) {
+		if (kMSBFirst == aSendMode)
+		{
 			UCA0CTL0 |= UCMSB;
-		} else {
+		}
+		else
+		{
 			UCA0CTL0 &= ~UCMSB;
 		}
 
 		// Configuration des bits de stop
-		if (k1StBits == aStopBits) {
+		if (k1StBits == aStopBits)
+		{
 			UCA0CTL0 &= UCSPB;
-		} else {
+		}
+		else
+		{
 			UCA0CTL0 |= UCSPB;
 		}
 
 		//Configuration de la paritée
-		switch (aParity) {
+		switch (aParity)
+		{
 		case kNone: //Pas de paritée
 			UCA0CTL0 &= ~UCPEN;
 			break;
@@ -135,9 +179,12 @@ void iUART::config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
 		UCA0CTL0 &= ~(UCSYNC);
 
 		// Configuration de la longeur de donées à tranmettre
-		if (k7bits == aDataCfg) {
+		if (k7bits == aDataCfg)
+		{
 			UCA0CTL0 |= UC7BIT;
-		} else {
+		}
+		else
+		{
 			UCA0CTL0 &= ~UC7BIT;
 		}
 
@@ -167,8 +214,10 @@ void iUART::config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
  * Fonction pour lire "1" byte recus dans le buffer tourant
  *
  */
-char iUART::read() {
-	if (isEnabled) {
+char iUART::read()
+{
+	if (isEnabled)
+	{
 		UInt8 aByteToRead = 0;
 
 		aByteToRead =
@@ -178,7 +227,8 @@ char iUART::read() {
 		this->USCIRingBuffer.OutIndex++;
 
 		// Si on a atteint la dernière case on revient à 0
-		if (kSciRecBufSize <= this->USCIRingBuffer.OutIndex) {
+		if (kSciRecBufSize <= this->USCIRingBuffer.OutIndex)
+		{
 			this->USCIRingBuffer.OutIndex = 0;
 		}
 
@@ -186,7 +236,9 @@ char iUART::read() {
 
 		return aByteToRead;
 
-	} else {
+	}
+	else
+	{
 		return 0;
 	}
 }
@@ -196,11 +248,14 @@ char iUART::read() {
  * !! La méthode enable doit avoir été préalablement appelée
  *
  */
-bool iUART::write(char aData) {
+bool iUART::write(char aData)
+{
 	//test si l'interface est activé
-	if (isEnabled) {
+	if (isEnabled)
+	{
 		//Selection du port
-		switch (this->serialPort) {
+		switch (this->serialPort)
+		{
 
 		case kUSCI_A0: // Sur le port 0
 			UCA0TXBUF = aData;
@@ -214,7 +269,9 @@ bool iUART::write(char aData) {
 			;
 		}
 		return true;
-	} else {
+	}
+	else
+	{
 		return false;
 	}
 }
@@ -226,8 +283,10 @@ bool iUART::write(char aData) {
  * aFlag : nom du flag à lire
  *
  */
-bool iUART::getStatusFlag(UARTStatusFlag aFlag) {
-	switch (this->serialPort) {
+bool iUART::getStatusFlag(iUARTStatusFlag aFlag)
+{
+	switch (this->serialPort)
+	{
 	case kUSCI_A0:
 		return ((UCA0STAT & aFlag) == aFlag) ? true : false;
 
@@ -242,8 +301,10 @@ bool iUART::getStatusFlag(UARTStatusFlag aFlag) {
  * Fonction qui permet d'activer la communcation serielle
  *
  */
-void iUART::enable() {
-	switch (this->serialPort) {
+void iUART::enable()
+{
+	switch (this->serialPort)
+	{
 
 	case kUSCI_A0:
 		UCA0CTL1 &= ~(UCSWRST);
@@ -262,8 +323,10 @@ void iUART::enable() {
  * Fonction qui permet desactiver la communcation serielle
  *
  */
-void iUART::disable() {
-	switch (this->serialPort) {
+void iUART::disable()
+{
+	switch (this->serialPort)
+	{
 
 	case kUSCI_A0:
 		UCA0CTL1 |= UCSWRST;
@@ -282,7 +345,8 @@ void iUART::disable() {
  * Fonction qui permet de tester si le buffer tourant est vide
  *
  */
-bool iUART::isBufferEmpty() {
+bool iUART::isBufferEmpty()
+{
 	return (this->USCIRingBuffer.ByteCount > 0);
 }
 
@@ -290,13 +354,15 @@ bool iUART::isBufferEmpty() {
  * Handler d'interruption propre à chaque objets
  *
  */
-void iUART::interruptHandler() {
+void iUART::interruptHandler()
+{
 	UInt8 aReceivedChar = 0;
 	//Lecture du byte recu et ceci clear l'interruption
 	aReceivedChar = UCA0RXBUF;
 
 	// Test que le buffer ne soit pas plein
-	if (false == this->USCIRingBuffer.BufferIsFull) {
+	if (false == this->USCIRingBuffer.BufferIsFull)
+	{
 		//Alors on écrit le byte recus dans le buffer
 		this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
 				aReceivedChar;
@@ -305,7 +371,8 @@ void iUART::interruptHandler() {
 		this->USCIRingBuffer.InIndex++;
 
 		// Si on a atteint la dernière case on revient à 0
-		if (kSciRecBufSize <= this->USCIRingBuffer.InIndex) {
+		if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
+		{
 			this->USCIRingBuffer.InIndex = 0;
 		}
 
@@ -313,9 +380,12 @@ void iUART::interruptHandler() {
 	}
 
 	//Test si on a rempli le buffer Si on a recu n char
-	if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount) {
+	if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount)
+	{
 		this->USCIRingBuffer.BufferIsFull = true;
-	} else {
+	}
+	else
+	{
 		this->USCIRingBuffer.BufferIsFull = false;
 	}
 }
@@ -324,12 +394,15 @@ void iUART::interruptHandler() {
 
 // USCIA0 Interrupt handler
 #pragma vector=USCI_A0_VECTOR
-__interrupt void USCI_A0(void) {
+__interrupt void USCI_A0(void)
+{
 	//Vérifiation que c'est bien un interruption en reception
-	if ((UCA0IFG & UCRXIFG)== UCRXIFG) {
+	if ((UCA0IFG & UCRXIFG)== UCRXIFG)
+	{
 		// On teste si le pointeur iUART_0 a été  affecté
-		if (iUART::UART_0 != NULL) {
-			iUART::UART_0->interruptHandler();
+		if (iUART::USCI_0 != NULL)
+		{
+			iUART::USCI_0->interruptHandler();
 		}
 	}
 
@@ -337,12 +410,15 @@ __interrupt void USCI_A0(void) {
 
 // USCIA1 Interrupt handler
 #pragma vector=USCI_A1_VECTOR
-__interrupt void USCI_A1(void) {
+__interrupt void USCI_A1(void)
+{
 	//Vérifiation que c'est bien un interruption en reception
-	if ((UCA1IFG & UCRXIFG)== UCRXIFG) {
+	if ((UCA1IFG & UCRXIFG)== UCRXIFG)
+	{
 		// On teste si le pointeur iUART_1 a été  affecté
-		if (iUART::UART_1 != NULL) {
-			iUART::UART_1->interruptHandler();
+		if (iUART::USCI_1 != NULL)
+		{
+			iUART::USCI_1->interruptHandler();
 		}
 	}
 }

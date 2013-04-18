@@ -21,3 +21,4 @@ kStatusEnum Interface::getStatus() {
 //destructeur
 Interface::~Interface() {
 }
+

@@ -12,7 +12,6 @@
 #include <stdlib.h>
 #include "../Def/def.h"
 
-//états possibles pour une interface
 typedef enum {
 	kActive, kError, kSuspended, kClosed, kBusy, kUnInitialized
 } kStatusEnum;
