@@ -4,10 +4,12 @@
 #include "Interface.h"
 
 //Constructeur de la classe mère
-Interface::Interface() {
+Interface::Interface()
+{
 
 }
 
 kStatusEnum Interface::getStatus() {
 	return this->status;
 }
+

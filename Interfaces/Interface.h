@@ -6,6 +6,7 @@
 #include <stdlib.h>
 #include "../Def/def.h"
 
+//Sert à rien, à mon avis car la classe possède déja ce système
 #ifndef __kStatusEnum__
 #define __kStatusEnum__
 
@@ -21,6 +22,7 @@ private:
 
 public:
 	Interface();
+	virtual ~Interface();
 	virtual bool write(char aData) = 0;
 	virtual char read() = 0;
 	kStatusEnum getStatus();
