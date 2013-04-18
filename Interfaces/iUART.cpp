@@ -9,9 +9,7 @@
  Description dans le fichier iUART.h
  ------------------------------------------------------------
  */
-
-#include <string>
-#include <assert.h>
+#include <cassert>
 #include <msp430.h>
 
 #include "iUART.h"
@@ -37,7 +35,8 @@ iUART* iUART::USCI_1 = NULL;
  */
 iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 		iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
-		iUARTDataCfgEnum aDataCfg, UInt16 aBaudrate)
+		iUARTDataCfgEnum aDataCfg, UInt16 aBaudrate) :
+		Interface()
 {
 	//Assignation du port de communcation
 	this->serialPort = aPort;
@@ -60,6 +59,11 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 		{
 			USCI_0 = this;
 		}
+		else
+		{
+			// Impossible de créer l'objet voulu
+			return NULL;
+		}
 		break;
 	case kUSCI_A1:
 		// On doit tester si le pointeur n'est pas utilisé
@@ -68,11 +72,41 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 		{
 			USCI_1 = this;
 		}
+		else
+		{
+			// Impossible de créer l'objet voulu
+			return NULL;
+		}
 		break;
 	default:
 		;
 	}
 
+}
+
+/**
+ * Destructeur de la classe iUart
+ */
+iUART::~iUART()
+{
+	//Libération de la pile d'interruption
+	switch (this->serialPort)
+	{
+	case kUSCI_A0:
+		if (this->USCI_0 == this)
+		{
+			USCI_0 = NULL;
+		}
+		break;
+	case kUSCI_A1:
+		if (this->USCI_1 == this)
+		{
+			USCI_1 = NULL;
+		}
+		break;
+	default:
+		;
+	}
 }
 
 /**

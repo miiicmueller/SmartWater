@@ -91,6 +91,7 @@ public:
 	iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 			iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
 			iUARTDataCfgEnum aDataCfg, UInt16 aBaudrate);
+	~iUART();
 	void config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 			iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg,
 			UInt16 aBaudrate);

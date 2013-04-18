@@ -6,14 +6,20 @@
 #include <stdlib.h>
 #include "../Def/def.h"
 
+typedef enum
+{
+	kActive, kError, kSuspended, kClosed, kBusy
+} kStatusEnum;
+
 class Interface
 {
 private:
-	kStatusEnum status ;
+	kStatusEnum status;
 public:
 	Interface();
-	bool write(char aData);
-	char read();
-	kStatusEnum getStatus();
+	virtual ~Interface();
+	virtual bool write(char aData);
+	virtual char read();
+	virtual kStatusEnum getStatus();
 };
 #endif

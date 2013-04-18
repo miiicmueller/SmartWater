@@ -4,16 +4,7 @@
 #include "Interface.h"
 
 //Constructeur de la classe mère
-Interface::Interface(){
-
-}
-
-bool Interface::write(char data)
+Interface::Interface()
 {
-	return 0;
-}
 
-char Interface::read()
-{
-	return 0;
 }
