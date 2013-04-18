@@ -3,10 +3,6 @@
 
 #define F_CPU 24000000UL
 
-typedef enum {
-	kActive, kError, kSuspended, kClosed, kBusy
-} kStatusEnum;
-
 typedef char SInt8;
 typedef unsigned char UInt8;
 typedef int SInt16;

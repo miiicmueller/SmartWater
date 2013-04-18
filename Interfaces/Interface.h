@@ -1,19 +1,29 @@
-#ifndef INTERFACE_H
-#define INTERFACE_H
+#ifndef __INTERFACE__
+#define __INTERFACE__
 
 #include <string>
 #include <assert.h>
 #include <stdlib.h>
 #include "../Def/def.h"
 
-class Interface
-{
+#ifndef __kStatusEnum__
+#define __kStatusEnum__
+
+typedef enum {
+	kActive, kError, kSuspended, kClosed, kBusy
+} kStatusEnum;
+
+#endif
+
+class Interface {
 private:
-	kStatusEnum status ;
+	kStatusEnum status;
+
 public:
 	Interface();
-	bool write(char aData);
-	char read();
+	virtual bool write(char aData) = 0;
+	virtual char read() = 0;
 	kStatusEnum getStatus();
 };
+
 #endif
