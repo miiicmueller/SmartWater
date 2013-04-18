@@ -6,6 +6,8 @@
 
 #include "Module.h"
 
+using namespace std ;
+
 class mGSM : public Module
 {
 private:
@@ -26,7 +28,7 @@ private:
 	void unlockSIM();
 
 public:
-	std::string getSMS();
+	string getSMS();
 
 	void sendSMS(std::string data);
 
