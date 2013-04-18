@@ -19,7 +19,7 @@
 #include "../Def/def.h"
 
 //TODO fixer cette valeur à la bonne fréquence
-#define F_BRCLK 15000
+#define F_BRCLK (UInt16)15000
 
 //Initalisation des attributs UART_x statiques
 iUART* iUART::UART_0 = NULL;
@@ -38,7 +38,7 @@ iUART* iUART::UART_1 = NULL;
  */
 iUART::iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
 		UARTStopBitsEnum aStopBits, UARTPartityEnum aParity,
-		UARTDataCfgEnum aDataCfg, int aBaudrate) {
+		UARTDataCfgEnum aDataCfg, UInt16 aBaudrate) {
 	//Assignation du port de communcation
 	this->serialPort = aPort;
 	//Configuration du port USCI
@@ -84,10 +84,10 @@ iUART::iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
  *
  */
 void iUART::config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
-		UARTPartityEnum aParity, UARTDataCfgEnum aDataCfg, int aBaudrate) {
+		UARTPartityEnum aParity, UARTDataCfgEnum aDataCfg, UInt16 aBaudrate) {
 
 	//Calcul de la division
-	int aBaudDiv = (int) (F_BRCLK / aBaudrate);
+	UInt16 aBaudDiv = (UInt16) (F_BRCLK / aBaudrate);
 
 	//Initialisation du port USCI
 	switch (this->serialPort) {
@@ -169,7 +169,7 @@ void iUART::config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
  */
 char iUART::read() {
 	if (isEnabled) {
-		char aByteToRead = 0;
+		UInt8 aByteToRead = 0;
 
 		aByteToRead =
 				this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.OutIndex];
@@ -291,7 +291,7 @@ bool iUART::isBufferEmpty() {
  *
  */
 void iUART::interruptHandler() {
-	char aReceivedChar = 0;
+	UInt8 aReceivedChar = 0;
 	//Lecture du byte recu et ceci clear l'interruption
 	aReceivedChar = UCA0RXBUF;
 

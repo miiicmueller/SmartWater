@@ -7,4 +7,11 @@ typedef enum {
 	kActive, kError, kSuspended, kClosed, kBusy
 } kStatusEnum;
 
+typedef char SInt8;
+typedef unsigned char UInt8;
+typedef int SInt16;
+typedef unsigned int UInt16;
+typedef long SInt32;
+typedef unsigned long UInt32;
+
 #endif

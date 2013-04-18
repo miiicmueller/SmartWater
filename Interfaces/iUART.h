@@ -17,6 +17,7 @@ But : Interface de communication serielle UART
 #include <string>
 #include <assert.h>
 #include "../Def/enum_types.h"
+#include "../Def/def.h"
 
 #include "Interface.h"
 
@@ -25,10 +26,10 @@ But : Interface de communication serielle UART
 
 //Structure du buffer tournant
 typedef struct {
-	char UsciRecBuf[kSciRecBufSize ];
-	int InIndex;
-	int OutIndex;
-	int ByteCount;
+	UInt8 UsciRecBuf[kSciRecBufSize ];
+	UInt16 InIndex;
+	UInt16 OutIndex;
+	UInt8 ByteCount;
 	bool BufferIsFull;
 } USCIRecBufStruct;
 
@@ -53,9 +54,9 @@ private:
 public:
 	iUART(UARTPortEnum aPort, UARTSendModeEnum aSendMode,
 			UARTStopBitsEnum aStopBits, UARTPartityEnum aParity,
-			UARTDataCfgEnum aDataCfg, int aBaudrate);
+			UARTDataCfgEnum aDataCfg, UInt16 aBaudrate);
 	void config(UARTSendModeEnum aSendMode, UARTStopBitsEnum aStopBits,
-			UARTPartityEnum aParity, UARTDataCfgEnum aDataCfg, int aBaudrate);
+			UARTPartityEnum aParity, UARTDataCfgEnum aDataCfg, UInt16 aBaudrate);
 	bool getStatusFlag(UARTStatusFlag aStatFlag);
 	void enable();
 	void disable();
