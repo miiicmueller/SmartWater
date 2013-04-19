@@ -12,28 +12,35 @@
 #include <stdlib.h>
 #include "../Def/def.h"
 
-typedef enum {
-	kActive, kError, kSuspended, kClosed, kBusy, kUnInitialized
-} kStatusEnum;
+typedef enum
+    {
+    kActive,
+    kError,
+    kSuspended,
+    kClosed,
+    kBusy,
+    kUnInitialized
+    } kStatusEnum;
 
-class Interface {
+class Interface
+    {
 public:
-	//tools
-	kStatusEnum status;	//état dans lequel se trouve l'interface
+    //tools
+    kStatusEnum status;	//état dans lequel se trouve l'interface
 
 public:
-	//constructeur
-	Interface();
+    //constructeur
+    Interface();
 
-	//méthodes virtuelles pures que les classes filles devront implémenter
-	virtual bool write(char aData) = 0;
-	virtual char read() = 0;
+    //méthodes virtuelles pures que les classes filles devront implémenter
+    virtual bool write(char aData) = 0;
+    virtual char read() = 0;
 
-	//permet de connaître l'état de l'interface
-	kStatusEnum getStatus();
+    //permet de connaître l'état de l'interface
+    kStatusEnum getStatus();
 
-	//destructeur
-	~Interface();
-};
+    //destructeur
+    ~Interface();
+    };
 
 #endif

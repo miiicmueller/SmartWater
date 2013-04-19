@@ -10,15 +10,18 @@
 #include "Interface.h"
 
 //constructeur
-Interface::Interface() {
-}
+Interface::Interface()
+    {
+    }
 
 //permet de connaître l'état de l'interface
-kStatusEnum Interface::getStatus() {
-	return this->status;
-}
+kStatusEnum Interface::getStatus()
+    {
+    return this->status;
+    }
 
 //destructeur
-Interface::~Interface() {
-}
+Interface::~Interface()
+    {
+    }
 
