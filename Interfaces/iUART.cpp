@@ -16,8 +16,7 @@
 #include "../Def/def.h"
 
 //TODO fixer cette valeur à la bonne fréquence
-#define F_BRCLK (UInt16)15000
-
+#define F_BRCLK (UInt32) 4000000 //4MHz
 //Initalisation des attributs UART_x statiques
 iUART* iUART::USCI_0 = NULL;
 iUART* iUART::USCI_1 = NULL;
@@ -35,8 +34,7 @@ iUART* iUART::USCI_1 = NULL;
  */
 iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 	iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
-	iUARTDataCfgEnum aDataCfg, UInt16 aBaudrate) :
-	Interface()
+	iUARTDataCfgEnum aDataCfg, UInt16 aBaudrate)
     {
     //Assignation du port de communcation
     this->serialPort = aPort;
@@ -58,6 +56,7 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 	if (this->USCI_0 == NULL)
 	    {
 	    USCI_0 = this;
+
 	    }
 	else
 	    {
@@ -123,7 +122,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
     {
 
     //Calcul de la division
-    UInt16 aBaudDiv = (UInt16) (F_BRCLK / aBaudrate);
+    UInt16 aBaudDiv = (UInt16) (F_BRCLK / (UInt32) aBaudrate);
 
     //Initialisation du port USCI
     switch (this->serialPort)
@@ -196,12 +195,87 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	//Configuration de l'interruption à la reception
 	UCA0IE |= UCRXIE;
 
+	//Configuration du clock
+	UCA0CTL1 |= UCSSEL__SMCLK;
+
+	//Configuration des port I/O
+	P3SEL |= 0x18; // Selection de RX et TX
+
+	//Configuration modulation
+	UCA0MCTL = 0x00 ;
+	UCA0MCTL |= (6<<4) ;
+
 	break;
 
     case kUSCI_A1:
 	//Obligation de mettre le bit UCSWRST à 1
 	// pour permettre de configurer
 	UCA1CTL1 |= UCSWRST;
+
+	//Test du mode | LSB ou MSB first
+	if (kMSBFirst == aSendMode)
+	    {
+	    UCA1CTL0 |= UCMSB;
+	    }
+	else
+	    {
+	    UCA1CTL0 &= ~UCMSB;
+	    }
+
+	// Configuration des bits de stop
+	if (k1StBits == aStopBits)
+	    {
+	    UCA1CTL0 &= UCSPB;
+	    }
+	else
+	    {
+	    UCA1CTL0 |= UCSPB;
+	    }
+
+	//Configuration de la paritée
+	switch (aParity)
+	    {
+	case kNone: //Pas de paritée
+	    UCA1CTL0 &= ~UCPEN;
+	    break;
+	case kOdd: // Parity impair
+	    UCA1CTL0 |= UCPEN;
+	    UCA1CTL0 &= ~UCPAR;
+	    break;
+	case kEven: // parity paire
+	    UCA1CTL0 |= UCPEN;
+	    UCA1CTL0 |= UCPAR;
+	    break;
+	default:
+	    ;
+	    }
+
+	// Configuration en mode UART => sans bit d'adresse
+	UCA0CTL1 &= ~(UCMODE0 | UCMODE1);
+
+	//Configuration de transmission asynchrone
+	UCA0CTL1 &= ~(UCSYNC);
+
+	// Configuration de la longeur de donées à tranmettre
+	if (k7bits == aDataCfg)
+	    {
+	    UCA1CTL0 |= UC7BIT;
+	    }
+	else
+	    {
+	    UCA1CTL0 &= ~UC7BIT;
+	    }
+
+	//Configuration du baudrate
+	UCA1BR0 = (char) aBaudDiv;
+	UCA1BR1 = (char) (aBaudDiv >> 8);
+	//TODO penser à ajouter le reste quand on connaîtra la fréquence CPU
+
+	//Configuration de l'interruption à la reception
+	UCA1IE |= UCRXIE;
+
+	//Configuration du clock
+	UCA1CTL1 |= UCSSEL__SMCLK;
 
 	break;
     default:

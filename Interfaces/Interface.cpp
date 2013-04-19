@@ -6,7 +6,6 @@
 
 #include <string>
 #include <assert.h>
-
 #include "Interface.h"
 
 //constructeur

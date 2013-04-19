@@ -44,14 +44,14 @@ typedef enum
 
 typedef enum
     {
-    kLSBFirst,
-    kMSBFirst
+    kLSBFirst=0,
+    kMSBFirst=1
     } iUARTSendModeEnum;
 
 typedef enum
     {
-    kUSCI_A0,
-    kUSCI_A1
+    kUSCI_A0 = 0,
+    kUSCI_A1 = 1
     } iUARTPortEnum;
 
 typedef enum
