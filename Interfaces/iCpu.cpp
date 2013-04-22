@@ -3,11 +3,20 @@
 
 #include "iCpu.h"
 
+iCpu::iCpu()
+    {
 
-void iCpu::setPowerMode(char mode)
-{
-}
+    }
 
-void iCpu::setFrequency(int divider)
-{
-}
+void iCpu::setPowerMode(char aMode)
+    {
+    }
+
+void iCpu::setFrequency(int aDivider)
+    {
+    }
+
+kStatusEnum iCpu::getStatus()
+    {
+
+    }

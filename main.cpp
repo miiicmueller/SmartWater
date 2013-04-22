@@ -12,6 +12,7 @@ int main(void)
     WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 
     Init_Clock();
+    //TODO Rajouter l'initialisation iCpu
 
     //Declaration d'un iUart
     iUART iUart(kUSCI_A0, kLSBFirst, k2StBits, kNone, k8bits, 9600);
@@ -38,8 +39,12 @@ void Init_Clock(void)
     //Utilisation de SMCLK
     //Activer XT2CLK sur SMCLK
     UCSCTL4 |= (SELS0 | SELS2);
-    UCSCTL6 |= XT2BYPASS;
     UCSCTL5 &= 0xFE3F; // Division par 1
+    UCSCTL6 = 0x00; // Pas de drive trop fort
+    UCSCTL6 &= ~XT2BYPASS; // Pas de bypass, mais crystal
+
+
+    UCSCTL7 &= XT2OFFG ;
 
     }
 

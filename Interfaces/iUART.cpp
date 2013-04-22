@@ -16,7 +16,7 @@
 #include "../Def/def.h"
 
 //TODO fixer cette valeur à la bonne fréquence
-#define F_BRCLK (UInt32) 4000000 //4MHz
+#define F_BRCLK 4000000
 //Initalisation des attributs UART_x statiques
 iUART* iUART::USCI_0 = NULL;
 iUART* iUART::USCI_1 = NULL;
@@ -187,11 +187,17 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	    UCA0CTL0 &= ~UC7BIT;
 	    }
 
-	//Configuration du baudrate
+	//Configuration du baudrate avec over sampling
+
+	//Configuration modulation
+	UCA0MCTL = 0x00;
+	UCA0MCTL |= (UCBRF0 | UCOS16);
+
+	aBaudDiv >>= 4; // Division par 16
 	UCA0BR0 = (char) aBaudDiv;
 	UCA0BR1 = (char) (aBaudDiv >> 8);
-	//TODO penser à ajouter le reste quand on connaîtra la fréquence CPU
 
+	//round([(N/16) – INT(N/16)] × 16)
 	//Configuration de l'interruption à la reception
 	UCA0IE |= UCRXIE;
 
@@ -199,11 +205,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	UCA0CTL1 |= UCSSEL__SMCLK;
 
 	//Configuration des port I/O
-	P3SEL |= 0x18; // Selection de RX et TX
-
-	//Configuration modulation
-	UCA0MCTL = 0x00 ;
-	UCA0MCTL |= (6<<4) ;
+	P3SEL |= 0x18;	// Selection de RX et TX
 
 	break;
 

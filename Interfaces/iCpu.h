@@ -6,12 +6,29 @@
 
 #include "Interface.h"
 
-class iCpu : public Interface
-{
+#define XT2_FREQ 4000000 // Frequence premier quartz
+#define XT1_FREQ 32768 // Frequence low quartz
+typedef enum
+    {
+    kSMCLK,
+    kMCLK,
+    kACLK
+    } lineFreqEnum;
+
+class iCpu: public Interface
+    {
+private:
+    long smclk_freq;
+    long mclk_freq;
+    long aclk_freq;
+
 public:
-	void setPowerMode(char mode);
+    iCpu();
 
-	void setFrequency(int divider);
+    void setPowerMode(char aMode);
+    void setFrequency(int aDivider);
+    long getFrequency(lineFreqEnum aLineFreq);
+    kStatusEnum getStatus();
 
-};
+    };
 #endif
