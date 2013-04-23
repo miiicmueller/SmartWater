@@ -17,6 +17,7 @@
 
 //TODO fixer cette valeur à la bonne fréquence
 #define F_BRCLK 4000000
+
 //Initalisation des attributs UART_x statiques
 iUART* iUART::USCI_0 = NULL;
 iUART* iUART::USCI_1 = NULL;

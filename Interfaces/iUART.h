@@ -106,6 +106,7 @@ public:
     void disable();
     char read();
     bool write(char aData);
+    //TODO Rajouter fonction sendString
     bool isBufferEmpty();
 
     };

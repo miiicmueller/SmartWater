@@ -8,6 +8,7 @@ iCpu::iCpu()
 
     }
 
+
 void iCpu::setPowerMode(char aMode)
     {
     }
