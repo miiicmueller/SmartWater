@@ -37,16 +37,23 @@ void Init_Clock(void)
 
     //Configuration de la fréquence
     //Selectionner la fct Xt2 sur les IOs
-    P5SEL |= (0x04 | 0x08);
-
+    P5SEL |= (0x04);
+    P5SEL |= (0x04);
     //Utilisation de SMCLK
-    //Activer XT2CLK sur SMCLK
-    UCSCTL4 |= (SELS0 | SELS2);
-    UCSCTL5 &= 0xFE3F; // Division par 1
     UCSCTL6 = 0x00; // Pas de drive trop fort
     UCSCTL6 &= ~XT2BYPASS; // Pas de bypass, mais crystal
 
-    UCSCTL7 &= XT2OFFG;
+    //Activer XT2CLK sur SMCLK
+    UCSCTL4 |= (SELS0 | SELS2);
+    UCSCTL5 &= 0xFE3F; // Division par 1
+
+    do
+	{
+	UCSCTL7 &= ~(XT2OFFG + XT1LFOFFG + DCOFFG);
+	// Clear XT2,XT1,DCO fault flags
+	SFRIFG1 &= ~OFIFG;                      // Clear fault flags
+	}
+    while (UCSCTL7 & XT2OFFG != 0x00);                   // Test oscillator fault flag
 
     }
 
