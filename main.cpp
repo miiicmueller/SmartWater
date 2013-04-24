@@ -35,7 +35,7 @@ int main(void)
 void Init_Clock(void)
     {
 
-    //Configuration de la fréquence
+    //Configuration de la frï¿½quence
     //Selectionner la fct Xt2 sur les IOs
     P5SEL |= (0x04);
     P5SEL |= (0x04);
@@ -53,7 +53,7 @@ void Init_Clock(void)
 	// Clear XT2,XT1,DCO fault flags
 	SFRIFG1 &= ~OFIFG;                      // Clear fault flags
 	}
-    while (UCSCTL7 & XT2OFFG != 0x00);                   // Test oscillator fault flag
+    while (UCSCTL7 & XT2OFFG != 0x00);             // Test oscillator fault flag
 
     }
 

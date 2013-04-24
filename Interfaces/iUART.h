@@ -1,6 +1,6 @@
 /*
  ------------------------------------------------------------
- Copyright 2003-2007 Haute Ecole ARC Ingénierie,
+ Copyright 2003-2007 Haute Ecole ARC Ingï¿½nierie,
  Switzerland. All rights reserved
  ------------------------------------------------------------
  Nom du fichier :  iUART.h
@@ -20,8 +20,10 @@
 
 #include "Interface.h"
 
-// Buffer de 200 caractères
+// Buffer de 200 caractï¿½res
 #define kSciRecBufSize ((unsigned char)(200))
+
+using namespace std;
 
 typedef enum
     {
@@ -44,8 +46,8 @@ typedef enum
 
 typedef enum
     {
-    kLSBFirst=0,
-    kMSBFirst=1
+    kLSBFirst = 0,
+    kMSBFirst = 1
     } iUARTSendModeEnum;
 
 typedef enum
@@ -81,7 +83,7 @@ private:
     bool isEnabled;
     iUARTRecBufStruct USCIRingBuffer;
 
-    //Variable global pour gérer l'affectations des
+    //Variable global pour gï¿½rer l'affectations des
     // interruptions
     static iUART* USCI_0;
     static iUART* USCI_1;
@@ -106,7 +108,8 @@ public:
     void disable();
     char read();
     bool write(char aData);
-    //TODO Rajouter fonction sendString
+    bool sendString(string aString);
+    bool sendString(char* aString);
     bool isBufferEmpty();
 
     };

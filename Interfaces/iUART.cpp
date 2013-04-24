@@ -1,6 +1,6 @@
 /*
  ------------------------------------------------------------
- Copyright 2003-200x Haute Ecole ARC Ingénierie,
+ Copyright 2003-200x Haute Ecole ARC Ingï¿½nierie,
  Switzerland. All rights reserved
  ------------------------------------------------------------
  Nom du fichier : iUART.cpp
@@ -15,7 +15,7 @@
 #include "iUART.h"
 #include "../Def/def.h"
 
-//TODO fixer cette valeur à la bonne fréquence
+//TODO fixer cette valeur ï¿½ la bonne frï¿½quence
 #define F_BRCLK 4000000
 
 //Initalisation des attributs UART_x statiques
@@ -28,8 +28,8 @@ iUART* iUART::USCI_1 = NULL;
  * aPort : Port de communication
  * aSendMode : LSB ou MSB en premier
  * aStopBits : nbr de stop bits
- * aParity : Parité de la communication
- * aDataCfg : format de donnée sur 8 ou 7 bits
+ * aParity : Paritï¿½ de la communication
+ * aDataCfg : format de donnï¿½e sur 8 ou 7 bits
  * aBaudrate : vitesse de transmission
  *
  */
@@ -52,7 +52,7 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
     switch (this->serialPort)
 	{
     case kUSCI_A0:
-	// On doit tester si le pointeur n'est pas utilisé
+	// On doit tester si le pointeur n'est pas utilisï¿½
 	// par un autre objet
 	if (this->USCI_0 == NULL)
 	    {
@@ -61,11 +61,11 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 	    }
 	else
 	    {
-	    // Impossible de créer l'objet voulu
+	    // Impossible de crï¿½er l'objet voulu
 	    }
 	break;
     case kUSCI_A1:
-	// On doit tester si le pointeur n'est pas utilisé
+	// On doit tester si le pointeur n'est pas utilisï¿½
 	// par un autre objet
 	if (this->USCI_1 == NULL)
 	    {
@@ -73,7 +73,7 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 	    }
 	else
 	    {
-	    // Impossible de créer l'objet voulu
+	    // Impossible de crï¿½er l'objet voulu
 	    }
 	break;
     default:
@@ -87,7 +87,7 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
  */
 iUART::~iUART()
     {
-    //Libération de la pile d'interruption
+    //Libï¿½ration de la pile d'interruption
     switch (this->serialPort)
 	{
     case kUSCI_A0:
@@ -108,13 +108,13 @@ iUART::~iUART()
     }
 
 /**
- * Fonction de configuration du port assigné dans le constructeur
+ * Fonction de configuration du port assignï¿½ dans le constructeur
  * On peut tout modifier sauf le port
  *
  * aSendMode : LSB ou MSB en premier
  * aStopBits : nbr de stop bits
- * aParity : Parité de la communication
- * aDataCfg : format de donnée sur 8 ou 7 bits
+ * aParity : Paritï¿½ de la communication
+ * aDataCfg : format de donnï¿½e sur 8 ou 7 bits
  * aBaudrate : vitesse de transmission
  *
  */
@@ -130,7 +130,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	{
 
     case kUSCI_A0:
-	//Obligation de mettre le bit UCSWRST à 1
+	//Obligation de mettre le bit UCSWRST ï¿½ 1
 	// pour permettre de configurer
 	UCA0CTL1 |= UCSWRST;
 
@@ -154,10 +154,10 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	    UCA0CTL0 |= UCSPB;
 	    }
 
-	//Configuration de la paritée
+	//Configuration de la paritï¿½e
 	switch (aParity)
 	    {
-	case kNone: //Pas de paritée
+	case kNone: //Pas de paritï¿½e
 	    UCA0CTL0 &= ~UCPEN;
 	    break;
 	case kOdd: // Parity impair
@@ -178,7 +178,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	//Configuration de transmission asynchrone
 	UCA0CTL0 &= ~(UCSYNC);
 
-	// Configuration de la longeur de donées à tranmettre
+	// Configuration de la longeur de donï¿½es ï¿½ tranmettre
 	if (k7bits == aDataCfg)
 	    {
 	    UCA0CTL0 |= UC7BIT;
@@ -198,8 +198,8 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	UCA0BR0 = (char) aBaudDiv;
 	UCA0BR1 = (char) (aBaudDiv >> 8);
 
-	//round([(N/16) – INT(N/16)] × 16)
-	//Configuration de l'interruption à la reception
+	//round([(N/16) ï¿½ INT(N/16)] ï¿½ 16)
+	//Configuration de l'interruption ï¿½ la reception
 	UCA0IE |= UCRXIE;
 
 	//Configuration du clock
@@ -211,7 +211,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	break;
 
     case kUSCI_A1:
-	//Obligation de mettre le bit UCSWRST à 1
+	//Obligation de mettre le bit UCSWRST ï¿½ 1
 	// pour permettre de configurer
 	UCA1CTL1 |= UCSWRST;
 
@@ -235,10 +235,10 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	    UCA1CTL0 |= UCSPB;
 	    }
 
-	//Configuration de la paritée
+	//Configuration de la paritï¿½e
 	switch (aParity)
 	    {
-	case kNone: //Pas de paritée
+	case kNone: //Pas de paritï¿½e
 	    UCA1CTL0 &= ~UCPEN;
 	    break;
 	case kOdd: // Parity impair
@@ -259,7 +259,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	//Configuration de transmission asynchrone
 	UCA0CTL1 &= ~(UCSYNC);
 
-	// Configuration de la longeur de donées à tranmettre
+	// Configuration de la longeur de donï¿½es ï¿½ tranmettre
 	if (k7bits == aDataCfg)
 	    {
 	    UCA1CTL0 |= UC7BIT;
@@ -272,9 +272,9 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	//Configuration du baudrate
 	UCA1BR0 = (char) aBaudDiv;
 	UCA1BR1 = (char) (aBaudDiv >> 8);
-	//TODO penser à ajouter le reste quand on connaîtra la fréquence CPU
+	//TODO penser ï¿½ ajouter le reste quand on connaï¿½tra la frï¿½quence CPU
 
-	//Configuration de l'interruption à la reception
+	//Configuration de l'interruption ï¿½ la reception
 	UCA1IE |= UCRXIE;
 
 	//Configuration du clock
@@ -300,10 +300,10 @@ char iUART::read()
 	aByteToRead =
 		this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.OutIndex];
 
-	// On incrémente seulement après avoir lu .
+	// On incrï¿½mente seulement aprï¿½s avoir lu .
 	this->USCIRingBuffer.OutIndex++;
 
-	// Si on a atteint la dernière case on revient à 0
+	// Si on a atteint la derniï¿½re case on revient ï¿½ 0
 	if (kSciRecBufSize <= this->USCIRingBuffer.OutIndex)
 	    {
 	    this->USCIRingBuffer.OutIndex = 0;
@@ -322,12 +322,12 @@ char iUART::read()
 
 /**
  * Fonction pour transmettre "1" byte sur la ligne
- * !! La méthode enable doit avoir été préalablement appelée
+ * !! La mï¿½thode enable doit avoir ï¿½tï¿½ prï¿½alablement appelï¿½e
  *
  */
 bool iUART::write(char aData)
     {
-    //test si l'interface est activé
+    //test si l'interface est activï¿½
     if (isEnabled)
 	{
 	//Selection du port
@@ -355,9 +355,9 @@ bool iUART::write(char aData)
 
 /**
  * Fonction qui permet de lire 1 flag de status du port
- * !! La méthode enable doit avoir été préalablement appelée
+ * !! La mï¿½thode enable doit avoir ï¿½tï¿½ prï¿½alablement appelï¿½e
  *
- * aFlag : nom du flag à lire
+ * aFlag : nom du flag ï¿½ lire
  *
  */
 bool iUART::getStatusFlag(iUARTStatusFlag aFlag)
@@ -428,7 +428,7 @@ bool iUART::isBufferEmpty()
     }
 
 /**
- * Handler d'interruption propre à chaque objets
+ * Handler d'interruption propre ï¿½ chaque objets
  *
  */
 void iUART::interruptHandler()
@@ -440,14 +440,14 @@ void iUART::interruptHandler()
     // Test que le buffer ne soit pas plein
     if (false == this->USCIRingBuffer.BufferIsFull)
 	{
-	//Alors on écrit le byte recus dans le buffer
+	//Alors on ï¿½crit le byte recus dans le buffer
 	this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
 		aReceivedChar;
 
-	//On incrément l'index et le nombre de byte recus
+	//On incrï¿½ment l'index et le nombre de byte recus
 	this->USCIRingBuffer.InIndex++;
 
-	// Si on a atteint la dernière case on revient à 0
+	// Si on a atteint la derniï¿½re case on revient ï¿½ 0
 	if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
 	    {
 	    this->USCIRingBuffer.InIndex = 0;
@@ -467,16 +467,55 @@ void iUART::interruptHandler()
 	}
     }
 
+// TODO - Tester les performances des fonctions send string
+
+/**
+ * Fonction pour envoyer une chaÃ®ne de caractÃ¨re de type string
+ *
+ * aString : ChaÃ®ne Ã  envoyer
+ * retour  : "true" si la chaÃ®ne Ã  bien Ã©tÃ© transmise
+ */
+bool iUART::sendString(string aString)
+    {
+    int i = 0;
+    bool result = false;
+
+    //Test si la chaÃ®ne est vide
+    if (aString.empty() == false)
+	{
+	for (i = 0; i < aString.size() | result == false; i++)
+	    {
+	    result = this->write(aString.at(i));
+	    }
+	return result;
+	}
+    else
+	{
+	return false;
+	}
+    }
+
+/**
+ * Fonction pour envoyer une chaÃ®ne de caractÃ¨re de type char*
+ *
+ * aString : ChaÃ®ne Ã  envoyer
+ * retour  : 1 si la chaÃ®ne Ã  bien Ã©tÃ© transmise
+ */
+bool iUART::sendString(char* aString)
+    {
+    return sendString(string(aString));
+    }
+
 //-------------- INTERRUPT HANDLER | FRIEND OF iUart ------------
 
 // USCIA0 Interrupt handler
 #pragma vector=USCI_A0_VECTOR
 __interrupt void USCI_A0(void)
     {
-    //Vérifiation que c'est bien un interruption en reception
+//Vï¿½rifiation que c'est bien un interruption en reception
     if ((UCA0IFG & UCRXIFG)== UCRXIFG)
 	{
-	// On teste si le pointeur iUART_0 a été  affecté
+	// On teste si le pointeur iUART_0 a ï¿½tï¿½  affectï¿½
 	if (iUART::USCI_0 != NULL)
 	    {
 	    iUART::USCI_0->interruptHandler();
@@ -489,10 +528,10 @@ __interrupt void USCI_A0(void)
 #pragma vector=USCI_A1_VECTOR
 __interrupt void USCI_A1(void)
     {
-    //Vérifiation que c'est bien un interruption en reception
+//Vï¿½rifiation que c'est bien un interruption en reception
     if ((UCA1IFG & UCRXIFG)== UCRXIFG)
 	{
-	// On teste si le pointeur iUART_1 a été  affecté
+	// On teste si le pointeur iUART_1 a ï¿½tï¿½  affectï¿½
 	if (iUART::USCI_1 != NULL)
 	    {
 	    iUART::USCI_1->interruptHandler();
