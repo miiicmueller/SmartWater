@@ -20,10 +20,15 @@ int main(void)
     //Activation de l'uart
     iUart.enable();
 
+    iUart.sendString("Hello World !");
     while (1)
 	{
-	//Envoie d'un truc
-	iUart.write('S');
+	// Un caractère à été recu
+	if (iUart.isBufferEmpty() == false)
+	    {
+	    //On le renvoie
+	    iUart.write(iUart.read());
+	    }
 	}
     return 0;
 
@@ -35,7 +40,7 @@ int main(void)
 void Init_Clock(void)
     {
 
-    //Configuration de la fr�quence
+    //Configuration de la fr�quence
     //Selectionner la fct Xt2 sur les IOs
     P5SEL |= (0x04);
     P5SEL |= (0x04);
@@ -53,7 +58,7 @@ void Init_Clock(void)
 	// Clear XT2,XT1,DCO fault flags
 	SFRIFG1 &= ~OFIFG;                      // Clear fault flags
 	}
-    while (UCSCTL7 & XT2OFFG != 0x00);                   // Test oscillator fault flag
+    while (UCSCTL7 & XT2OFFG != 0x00);             // Test oscillator fault flag
 
     }
 
