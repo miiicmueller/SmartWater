@@ -4,9 +4,6 @@
 //But : interface mettant à disposition l'utilisation des ports en entrées/sorties digitales
 //*****************************************************************************
 
-#include <string>
-#include <assert.h>
-
 #include "iDIO.h"
 
 //offset à ajouter à l'adresse de base d'un port pour atteindre ses registres

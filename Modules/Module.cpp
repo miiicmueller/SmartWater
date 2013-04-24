@@ -1,17 +1,17 @@
-#include <string>
-#include <assert.h>
+//*****************************************************************************
+//Nom du fichier : Module.cpp
+//Auteur et Date : SAVY Cyrille 24.04.2013
+//But : classe abstraite de la couche Module
+//*****************************************************************************
 
 #include "Module.h"
 
+//constructeur
+Module::Module()
+    {
+    }
 
-void Module::mOpen()
-{
-}
-
-void Module::mClose()
-{
-}
-
-void Module::mSetup()
-{
-}
+//destructeur
+Module::~Module()
+    {
+    }

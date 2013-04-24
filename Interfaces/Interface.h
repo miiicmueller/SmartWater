@@ -7,9 +7,6 @@
 #ifndef __INTERFACE__
 #define __INTERFACE__
 
-#include <string>
-#include <assert.h>
-#include <stdlib.h>
 #include "../Def/def.h"
 
 typedef enum
@@ -40,7 +37,7 @@ public:
     kStatusEnum getStatus();
 
     //destructeur
-    ~Interface();
+    virtual ~Interface();
     };
 
 #endif

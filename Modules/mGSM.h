@@ -1,40 +1,58 @@
-#ifndef M_G_S_M_H
-#define M_G_S_M_H
+//*****************************************************************************
+//Nom du fichier : Module.cpp
+//Auteur et Date : SAVY Cyrille 24.04.2013
+//But : classe abstraite de la couche Module
+//*****************************************************************************
+
+#ifndef __MGSM__
+#define __MGSM__
 
 #include <string>
-#include <assert.h>
 
 #include "Module.h"
+#include "../Interfaces/iUART.h"
+#include "../Interfaces/iDIO.h"
+#include "../Tools/tCommandesAT.h"
 
-using namespace std ;
+using namespace std;
 
-class mGSM : public Module
-{
+class mGSM: public Module
+    {
 private:
-	bool isPresent;
+    //input
+    iDIO* outputGSM;
+    iUART* uartGSM;
+    tCommandesAT* commandesATGSM;
 
-	bool isUnlocked;
+    //tools
+    bool isPresent;
+    bool isUnlocked;
+    bool isActivate;
 
-	std::string SMSReceived;
-
-	bool isActivate;
-
-
-private:
-	void sendCommandAT(std::string command, std::string data);
-
-	bool controlPassword();
-
-	void unlockSIM();
+    //output
+    std::string SMSReceived;
 
 public:
-	string getSMS();
+    //constructeur
+    mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM);
 
-	void sendSMS(std::string data);
+    bool activateModule();
 
-	bool activateModule();
+    bool desactivateModule();
 
-	bool desactivateModule();
+    string getSMS();
 
-};
+    void sendSMS(std::string data);
+
+    //destructeur
+    ~mGSM();
+
+private:
+    void sendCommandAT(std::string command, std::string data);
+
+    bool controlPassword();
+
+    void unlockSIM();
+
+    };
 #endif

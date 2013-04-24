@@ -4,8 +4,6 @@
 //But : classe abstraite de la couche interface
 //*****************************************************************************
 
-#include <string>
-#include <assert.h>
 #include "Interface.h"
 
 //constructeur

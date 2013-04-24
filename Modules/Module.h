@@ -1,17 +1,30 @@
-#ifndef MODULE_H
-#define MODULE_H
+//*****************************************************************************
+//Nom du fichier : Module.h
+//Auteur et Date : SAVY Cyrille 24.04.2013
+//But : classe abstraite de la couche Module
+//*****************************************************************************
 
-#include <string>
-#include <assert.h>
+#ifndef __MODULE__
+#define __MODULE__
 
 class Module
-{
+    {
 public:
-	void mOpen();
+    //constructeur
+    Module();
 
-	void mClose();
+    //ouverture du module
+    virtual void mOpen() = 0;
 
-	void mSetup();
+    //fermeture du module
+    virtual void mClose() = 0;
 
-};
+    //configuration du module
+    virtual void mSetup() = 0;
+
+    //destructeur
+    virtual ~Module();
+
+    };
+
 #endif
