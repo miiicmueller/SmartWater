@@ -111,6 +111,8 @@ public:
     bool sendString(string aString);
     bool sendString(char* aString);
     bool isBufferEmpty();
+    int availableCharToRead();
+    void readFullBuffer(char* aBuffer);
 
     };
 #endif

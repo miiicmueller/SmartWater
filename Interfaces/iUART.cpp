@@ -434,36 +434,73 @@ bool iUART::isBufferEmpty()
 void iUART::interruptHandler()
     {
     UInt8 aReceivedChar = 0;
-    //Lecture du byte recu et ceci clear l'interruption
-    aReceivedChar = UCA0RXBUF;
-
-    // Test que le buffer ne soit pas plein
-    if (false == this->USCIRingBuffer.BufferIsFull)
+    if (this->serialPort == kUSCI_A0)
 	{
-	//Alors on �crit le byte recus dans le buffer
-	this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
-		aReceivedChar;
+	//Lecture du byte recu et ceci clear l'interruption
+	aReceivedChar = UCA0RXBUF;
 
-	//On incr�ment l'index et le nombre de byte recus
-	this->USCIRingBuffer.InIndex++;
-
-	// Si on a atteint la derni�re case on revient � 0
-	if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
+	// Test que le buffer ne soit pas plein
+	if (false == this->USCIRingBuffer.BufferIsFull)
 	    {
-	    this->USCIRingBuffer.InIndex = 0;
+	    //Alors on �crit le byte recus dans le buffer
+	    this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
+		    aReceivedChar;
+
+	    //On incr�ment l'index et le nombre de byte recus
+	    this->USCIRingBuffer.InIndex++;
+
+	    // Si on a atteint la derni�re case on revient � 0
+	    if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
+		{
+		this->USCIRingBuffer.InIndex = 0;
+		}
+
+	    this->USCIRingBuffer.ByteCount++;
 	    }
 
-	this->USCIRingBuffer.ByteCount++;
+	//Test si on a rempli le buffer Si on a recu n char
+	if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount)
+	    {
+	    this->USCIRingBuffer.BufferIsFull = true;
+	    }
+	else
+	    {
+	    this->USCIRingBuffer.BufferIsFull = false;
+	    }
 	}
+    else if (this->serialPort == kUSCI_A1)
+	{
+	//Lecture du byte recu et ceci clear l'interruption
+	aReceivedChar = UCA1RXBUF;
 
-    //Test si on a rempli le buffer Si on a recu n char
-    if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount)
-	{
-	this->USCIRingBuffer.BufferIsFull = true;
-	}
-    else
-	{
-	this->USCIRingBuffer.BufferIsFull = false;
+	// Test que le buffer ne soit pas plein
+	if (false == this->USCIRingBuffer.BufferIsFull)
+	    {
+	    //Alors on �crit le byte recus dans le buffer
+	    this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
+		    aReceivedChar;
+
+	    //On incr�ment l'index et le nombre de byte recus
+	    this->USCIRingBuffer.InIndex++;
+
+	    // Si on a atteint la derni�re case on revient � 0
+	    if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
+		{
+		this->USCIRingBuffer.InIndex = 0;
+		}
+
+	    this->USCIRingBuffer.ByteCount++;
+	    }
+
+	//Test si on a rempli le buffer Si on a recu n char
+	if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount)
+	    {
+	    this->USCIRingBuffer.BufferIsFull = true;
+	    }
+	else
+	    {
+	    this->USCIRingBuffer.BufferIsFull = false;
+	    }
 	}
     }
 
@@ -483,7 +520,7 @@ bool iUART::sendString(string aString)
     //Test si la chaîne est vide
     if (aString.empty() == false)
 	{
-	for (i = 0; i < aString.size() | result == false; i++)
+	for (i = 0; i < aString.size(); i++)
 	    {
 	    result = this->write(aString.at(i));
 	    }
@@ -496,9 +533,37 @@ bool iUART::sendString(string aString)
     }
 
 /**
+ * Fonction qui permet d'obtenir le nombre de caractère contenu
+ * dans le buffer
+ *
+ * retour  : nombre de caractère contenu dans le buffer
+ */
+int iUART::availableCharToRead()
+    {
+    return this->USCIRingBuffer.ByteCount;
+    }
+
+/**
+ * Fonction qui permet d'obtenir l'ensemble des bytes recus
+ * en mémoire
+ *
+ * retour  : chaîne de caractère
+ */
+void iUART::readFullBuffer(char* aBuffer)
+    {
+    int aCharNum = this->availableCharToRead();
+    int i = 0;
+
+    for (i = aCharNum; i > 0; i--)
+	{
+	aBuffer[i] = this->read();
+	}
+    }
+
+/**
  * Fonction pour envoyer une chaîne de caractère de type char*
  *
- * aString : Chaîne à envoyer
+ * aString : Chaîne à envoyeriUart
  * retour  : 1 si la chaîne à bien été transmise
  */
 bool iUART::sendString(char* aString)

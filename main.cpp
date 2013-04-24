@@ -20,10 +20,15 @@ int main(void)
     //Activation de l'uart
     iUart.enable();
 
+    iUart.sendString("Hello World !");
     while (1)
 	{
-	//Envoie d'un truc
-	iUart.write('S');
+	// Un caractère à été recu
+	if (iUart.isBufferEmpty() == false)
+	    {
+	    //On le renvoie
+	    iUart.write(iUart.read());
+	    }
 	}
     return 0;
 
