@@ -14,24 +14,12 @@ mGSM::mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM)
     this->outputGSM = aOutputGSM;
     this->uartGSM = aUartGSM;
 
-    this->isPresent = false;
     this->isUnlocked = false;
-    this->isActivate = false;
+
     }
 
-bool mGSM::activateModule()
-    {
-    this->unlockSIM();
 
-    return 0;
-    }
-
-bool mGSM::desactivateModule()
-    {
-    return false;
-    }
-
-std::string mGSM::getSMS()
+bool mGSM::getSMS(char* aSMS)
     {
     return "";
     }
@@ -42,19 +30,5 @@ void mGSM::sendSMS(std::string data)
 
 //destructeur
 mGSM::~mGSM()
-    {
-    }
-
-//méthodes privées
-void mGSM::sendCommandAT(std::string command, std::string data)
-    {
-    }
-
-bool mGSM::controlPassword()
-    {
-    return false;
-    }
-
-void mGSM::unlockSIM()
     {
     }
