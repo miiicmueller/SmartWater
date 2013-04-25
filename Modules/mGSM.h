@@ -15,7 +15,6 @@
 #include "../Tools/tCommandesAT.h"
 #include "../Tools/tDate.h"
 
-
 using namespace std;
 
 class mGSM: public Module
@@ -42,6 +41,9 @@ public:
     void sendSMS(std::string aSMS);
     tDate getHour();
     int getCredit();
+    void mSetup();
+    void mOpen();
+    void mClose();
 
     //destructeur
     ~mGSM();

@@ -377,7 +377,6 @@ bool iUART::getStatusFlag(iUARTStatusFlag aFlag)
 
 /**
  * Fonction qui permet d'activer la communcation serielle
- * Ne pas oublier d'instancier juste après les interruptions
  *
  */
 void iUART::enable()
@@ -387,12 +386,12 @@ void iUART::enable()
 
     case kUSCI_A0:
 	UCA0CTL1 &= ~(UCSWRST);
-	//Configuration de l'interruption ï¿½ la reception
+	//Configuration de l'interruption à la reception
 	UCA0IE |= UCRXIE;
 	break;
     case kUSCI_A1:
 	UCA1CTL1 &= ~(UCSWRST);
-	//Configuration de l'interruption ï¿½ la reception
+	//Configuration de l'interruption à la reception
 	UCA1IE |= UCRXIE;
 	break;
     default:
@@ -412,9 +411,13 @@ void iUART::disable()
 	{
 
     case kUSCI_A0:
+	//Stop des interrupts
+	UCA0IE &= ~UCRXIE;
 	UCA0CTL1 |= UCSWRST;
 	break;
     case kUSCI_A1:
+	//Stop des interrupts
+	UCA0IE &= ~UCRXIE;
 	UCA1CTL1 |= UCSWRST;
 	break;
     default:
