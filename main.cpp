@@ -12,22 +12,26 @@ int main(void)
     WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 
     Init_Clock();
-    //TODO Rajouter l'initialisation iCpu
+
+    __bis_SR_register(GIE);
 
     //Declaration d'un iUart
-    iUART iUart(kUSCI_A0, kLSBFirst, k2StBits, kNone, k8bits, 9600);
+    iUART iUart(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits, 9600);
 
     //Activation de l'uart
     iUart.enable();
 
     iUart.sendString("Hello World !");
+
+    // For debugger
+
     while (1)
 	{
-	// Un caractère à été recu
-	if (iUart.isBufferEmpty() == false)
+	if(iUart.availableCharToRead()>10)
 	    {
-	    //On le renvoie
-	    iUart.write(iUart.read());
+	    char salut[200];
+	    iUart.readFullBuffer(salut);
+	    iUart.sendString(salut);
 	    }
 	}
     return 0;
@@ -42,23 +46,29 @@ void Init_Clock(void)
 
     //Configuration de la fr�quence
     //Selectionner la fct Xt2 sur les IOs
-    P5SEL |= (0x04);
-    P5SEL |= (0x04);
-    //Utilisation de SMCLK
-    UCSCTL6 = 0x00; // Pas de drive trop fort
-    UCSCTL6 &= ~XT2BYPASS; // Pas de bypass, mais crystal
+    P5SEL |= BIT2 + BIT3;                       // Port select XT2
 
-    //Activer XT2CLK sur SMCLK
-    UCSCTL4 |= (SELS0 | SELS2);
-    UCSCTL5 &= 0xFE3F; // Division par 1
+    UCSCTL6 &= ~XT2OFF;                       // Enable XT2
+    UCSCTL3 |= SELREF_2;                      // FLLref = REFO
+					      // Since LFXT1 is not used,
+					      // sourcing FLL with LFXT1 can cause
+					      // XT1OFFG flag to set
+    UCSCTL4 |= SELA_2;                        // ACLK=REFO,SMCLK=DCO,MCLK=DCO
 
+    // Loop until XT1,XT2 & DCO stabilizes - in this case loop until XT2 settles
     do
 	{
 	UCSCTL7 &= ~(XT2OFFG + XT1LFOFFG + DCOFFG);
 	// Clear XT2,XT1,DCO fault flags
 	SFRIFG1 &= ~OFIFG;                      // Clear fault flags
 	}
-    while (UCSCTL7 & XT2OFFG != 0x00);             // Test oscillator fault flag
+    while (SFRIFG1 & OFIFG);                   // Test oscillator fault flag
+
+    UCSCTL6 &= ~XT2DRIVE0;                    // Decrease XT2 Drive according to
+					      // expected frequency
+    UCSCTL4 |= SELS_5 + SELM_5;               // SMCLK=MCLK=XT2
 
     }
+
+
 
