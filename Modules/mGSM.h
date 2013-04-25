@@ -25,34 +25,24 @@ private:
     tCommandesAT* commandesATGSM;
 
     //tools
-    bool isPresent;
     bool isUnlocked;
-    bool isActivate;
-
-    //output
-    std::string SMSReceived;
 
 public:
+
+    string phoneNumber;
+    string codePIN;
+    int indexSMS;
+
     //constructeur
     mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM);
 
-    bool activateModule();
-
-    bool desactivateModule();
-
-    string getSMS();
-
-    void sendSMS(std::string data);
+    bool getSMS(char* aSMS);
+    void sendSMS(std::string aSMS);
+    tDate getHour();
+    int getCredit();
 
     //destructeur
     ~mGSM();
-
-private:
-    void sendCommandAT(std::string command, std::string data);
-
-    bool controlPassword();
-
-    void unlockSIM();
 
     };
 #endif
