@@ -28,12 +28,12 @@ private:
 
     //tools
     bool isUnlocked;
+    int indexSMS;
 
 public:
 
     string phoneNumber;
     string codePIN;
-    int indexSMS;
 
     //constructeur
     mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM);
