@@ -26,7 +26,7 @@ mGSM::mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM)
 void mGSM::mSetup()
     {
     // On envoie sur USCI_A0 + LSB first (on peut croiser) + pas de paritée + données de 8 bits + vitesse 115200
-    this->uartGSM->config(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits, 115200);
+    this->uartGSM->config(kLSBFirst, k1StBits, kNone, k8bits, 115200);
 
     //La sortie reset_Gsm est sir P7.3
     this->outputGSM->SetPortDirection(kOutput);
