@@ -72,31 +72,3 @@ void mGSM::sendSMS(std::string data)
 mGSM::~mGSM()
     {
     }
-
-
-
-
-OK
-AT+CMGR=2
-+CMGR: "REC READ","+41787526983","","13/04/18,19:44:55+08"
-Hello2
-
-OK
-AT+CMGR=3
-+CMGR: "REC READ","+41787526983","","13/04/18,19:47:26+08"
-Hello2
-
-OK
-AT+CMGR=4
-+CMGR: "REC READ","+41787526983","","13/04/18,19:51:09+08"
-aaaaaaaaaaaaaaaaaaaaaaa
-
-OK
-AT+CMGR=5
-+CMGR: "REC READ","+41787526983","","13/04/18,19:51:22+08"
-bbbbbbbbbbbbbbbbbbbbb
-
-OK
-AT+CMGR=6
-OK
-AT+CMGL=1
