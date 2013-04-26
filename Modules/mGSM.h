@@ -41,6 +41,9 @@ public:
     void sendSMS(std::string aSMS, std::string aPhoneNumber);
     tDate getHour();
     int getCredit();
+    void mSetup();
+    void mOpen();
+    void mClose();
 
     //destructeur
     ~mGSM();
