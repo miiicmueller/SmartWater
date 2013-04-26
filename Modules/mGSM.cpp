@@ -15,17 +15,30 @@ mGSM::mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM)
     this->uartGSM = aUartGSM;
 
     this->isUnlocked = false;
-
+    this->indexSMS = 0;
     }
 
-
-bool mGSM::getSMS(char* aSMS)
+std::string mGSM::getSMS(char* aSMS)
     {
     return "";
     }
 
-void mGSM::sendSMS(std::string data)
+void mGSM::sendSMS(std::string aSMS, std::string aPhoneNumber)
     {
+    char aReceivedChar;
+    std::string theAnswer();
+    std::string theSMS(
+	    this->commandesATGSM->aCommand + "=\"+" + aPhoneNumber + "\"\r"
+		    + aSMS + "\r\n");
+
+    this->uartGSM->sendString(theSMS);
+
+    while (false == this->uartGSM->isBufferEmpty())
+	{
+	aReceivedChar = this->uartGSM->read();
+
+	}
+
     }
 
 //destructeur

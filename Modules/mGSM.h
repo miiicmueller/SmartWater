@@ -15,7 +15,6 @@
 #include "../Tools/tCommandesAT.h"
 #include "../Tools/tDate.h"
 
-
 using namespace std;
 
 class mGSM: public Module
@@ -28,18 +27,18 @@ private:
 
     //tools
     bool isUnlocked;
+    int indexSMS;
 
 public:
 
     string phoneNumber;
     string codePIN;
-    int indexSMS;
 
     //constructeur
     mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM);
 
-    bool getSMS(char* aSMS);
-    void sendSMS(std::string aSMS);
+    string getSMS(char* aSMS);
+    void sendSMS(std::string aSMS, std::string aPhoneNumber);
     tDate getHour();
     int getCredit();
 
