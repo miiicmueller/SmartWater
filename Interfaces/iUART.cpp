@@ -199,8 +199,6 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	UCA0BR1 = (char) (aBaudDiv >> 8);
 
 	//round([(N/16) ï¿½ INT(N/16)] ï¿½ 16)
-	//Configuration de l'interruption ï¿½ la reception
-	UCA0IE |= UCRXIE;
 
 	//Configuration du clock
 	UCA0CTL1 |= UCSSEL__SMCLK;
@@ -272,10 +270,6 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	//Configuration du baudrate
 	UCA1BR0 = (char) aBaudDiv;
 	UCA1BR1 = (char) (aBaudDiv >> 8);
-	//TODO penser ï¿½ ajouter le reste quand on connaï¿½tra la frï¿½quence CPU
-
-	//Configuration de l'interruption ï¿½ la reception
-	UCA1IE |= UCRXIE;
 
 	//Configuration du clock
 	UCA1CTL1 |= UCSSEL__SMCLK;
@@ -327,18 +321,25 @@ char iUART::read()
  */
 bool iUART::write(char aData)
     {
-    //test si l'interface est activï¿½
+    //test si l'interface est activée
     if (isEnabled)
 	{
+	//attente de la fin d'une transmission
+
 	//Selection du port
 	switch (this->serialPort)
 	    {
 
 	case kUSCI_A0: // Sur le port 0
+	    while (!(UCA0IFG & UCTXIFG))
+		;
+
 	    UCA0TXBUF = aData;
 	    break;
 
 	case kUSCI_A1: // Sur le port 1
+	    while (!(UCA1IFG & UCTXIFG))
+		;
 	    UCA1TXBUF = aData;
 	    break;
 
@@ -385,9 +386,13 @@ void iUART::enable()
 
     case kUSCI_A0:
 	UCA0CTL1 &= ~(UCSWRST);
+	//Configuration de l'interruption à la reception
+	UCA0IE |= UCRXIE;
 	break;
     case kUSCI_A1:
 	UCA1CTL1 &= ~(UCSWRST);
+	//Configuration de l'interruption à la reception
+	UCA1IE |= UCRXIE;
 	break;
     default:
 	;
@@ -406,9 +411,13 @@ void iUART::disable()
 	{
 
     case kUSCI_A0:
+	//Stop des interrupts
+	UCA0IE &= ~UCRXIE;
 	UCA0CTL1 |= UCSWRST;
 	break;
     case kUSCI_A1:
+	//Stop des interrupts
+	UCA0IE &= ~UCRXIE;
 	UCA1CTL1 |= UCSWRST;
 	break;
     default:
@@ -554,10 +563,12 @@ void iUART::readFullBuffer(char* aBuffer)
     int aCharNum = this->availableCharToRead();
     int i = 0;
 
-    for (i = aCharNum; i > 0; i--)
+    for (i = 0; i < aCharNum; i++)
 	{
 	aBuffer[i] = this->read();
 	}
+    //Ne pas oublier !!
+    aBuffer[aCharNum] = '\0';
     }
 
 /**
@@ -575,9 +586,9 @@ bool iUART::sendString(char* aString)
 
 // USCIA0 Interrupt handler
 #pragma vector=USCI_A0_VECTOR
-__interrupt void USCI_A0(void)
+__interrupt void USCI_A0_ISR(void)
     {
-//Vï¿½rifiation que c'est bien un interruption en reception
+    //Vï¿½rifiation que c'est bien un interruption en reception
     if ((UCA0IFG & UCRXIFG)== UCRXIFG)
 	{
 	// On teste si le pointeur iUART_0 a ï¿½tï¿½  affectï¿½
@@ -591,9 +602,9 @@ __interrupt void USCI_A0(void)
 
 // USCIA1 Interrupt handler
 #pragma vector=USCI_A1_VECTOR
-__interrupt void USCI_A1(void)
+__interrupt void USCI_A1_ISR(void)
     {
-//Vï¿½rifiation que c'est bien un interruption en reception
+    //Vï¿½rifiation que c'est bien un interruption en reception
     if ((UCA1IFG & UCRXIFG)== UCRXIFG)
 	{
 	// On teste si le pointeur iUART_1 a ï¿½tï¿½  affectï¿½
@@ -602,5 +613,5 @@ __interrupt void USCI_A1(void)
 	    iUART::USCI_1->interruptHandler();
 	    }
 	}
-    }
 
+    }

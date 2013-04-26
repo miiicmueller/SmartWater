@@ -16,6 +16,7 @@
 
 #include <string>
 #include <assert.h>
+#include <msp430.h>
 #include "../Def/def.h"
 
 #include "Interface.h"
@@ -92,8 +93,8 @@ private:
     void interruptHandler();
 
     //Interruptions handlers
-    friend void USCI_A0(void);
-    friend void USCI_A1(void);
+    friend void USCI_A0_ISR(void);
+    friend void USCI_A1_ISR(void);
 
 public:
     iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
@@ -115,4 +116,5 @@ public:
     void readFullBuffer(char* aBuffer);
 
     };
+
 #endif
