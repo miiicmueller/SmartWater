@@ -1,7 +1,7 @@
 //*****************************************************************************
-//Nom du fichier : Module.cpp
-//Auteur et Date : SAVY Cyrille 24.04.2013
-//But : classe abstraite de la couche Module
+//Nom du fichier : mGSM.h
+//Auteurs et Date : SAVY Cyrille 24.04.2013
+//But : couche module permettant d'utiliser le module GSM de Telit : GL865
 //*****************************************************************************
 
 #ifndef __MGSM__
@@ -38,7 +38,7 @@ public:
     mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM);
 
     string getSMS(char* aSMS);
-    void sendSMS(std::string aSMS, std::string aPhoneNumber);
+    bool sendSMS(std::string aSMS, std::string aPhoneNumber);
     tDate getHour();
     int getCredit();
     void mSetup();

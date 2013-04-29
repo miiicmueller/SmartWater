@@ -8,7 +8,7 @@
 #define __IDIO__
 
 #include "Interface.h"
-#include <msp430.h>
+#include <msp430f5519.h>
 
 //énuméré contenant les addresses de base de chaque port
 typedef enum
