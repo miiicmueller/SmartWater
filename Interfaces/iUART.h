@@ -113,7 +113,8 @@ public:
     bool sendString(char* aString);
     bool isBufferEmpty();
     int availableCharToRead();
-    void readFullBuffer(char* aBuffer);
+    void iUART::readFullBuffer(char* aBuffer, int aCharToRead);
+    void iUART::readFullBuffer(string &aBuffer);
 
     };
 
