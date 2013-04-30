@@ -8,19 +8,19 @@ using namespace std;
 class tCommandesAT
     {
 public:
-    string configSMS;
-    string questWhiteList;
-    string addP41ToWhiteList;
-    string enableSMS;
-    string questSMSMode;
-    string delockPIN;
-    string questStatePIN;
-    string setModeText;
-    string getSMS;
-    string deleteSMSAll;
-    string deleteSMSPos;
-    string sendSMS;
-    string goSendSMS;
-    string endAT;
+    static string configSMS;
+    static string questWhiteList;
+    static string addP41ToWhiteList;
+    static string enableSMS;
+    static string questSMSMode;
+    static string delockPIN;
+    static string questStatePIN;
+    static string setModeText;
+    static string getSMS;
+    static string deleteSMSAll;
+    static string deleteSMSPos;
+    static string sendSMS;
+    static string goSendSMS;
+    static string endAT;
     };
 #endif

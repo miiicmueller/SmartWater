@@ -37,7 +37,7 @@ public:
     //constructeur
     mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM);
 
-    string getSMS(char* aSMS);
+    bool getSMS(char* aSMS);
     bool sendSMS(std::string aSMS, std::string aPhoneNumber);
     tDate getHour();
     int getCredit();

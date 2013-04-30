@@ -71,17 +71,18 @@ bool mGSM::getSMS(char* aSMS)
 
     // demande au module GSM le prochain SMS
     uartGSM->sendString(commandesATGSM->getSMS);
-    uartGSM->sendString(indexSMS + 48);
+
+    uartGSM->write((char) (indexSMS + 48));
     uartGSM->sendString(commandesATGSM->endAT);
 
-    WAIT(5000); // attend la réponse
+    //  WAIT(5000); // attend la réponse
 
-    uartGSM->readFullBuffer(dataReceived); // prend la trame
+    //uartGSM->readFullBuffer(dataReceived); // prend la trame
 
     // contrôle si un sms est présent dans la trame
-    while (0 != dataReceived[i]
-	    && !(true == hasSMS && "\r" == dataReceived[i - 2]
-		    && "\n" == dataReceived[i - 1])) // s'arrete au debut du texte SMS ou à la fin du buffer
+    while (0 != dataReceived[i])
+//	    && !(true == hasSMS && "\r" == dataReceived[i - 2]
+//		    && "\n" == dataReceived[i - 1])) // s'arrete au debut du texte SMS ou à la fin du buffer
 	{
 	if ('O' == dataReceived[i] && 'K' == dataReceived[i + 1]) // pas de SMS
 	    {
@@ -112,7 +113,6 @@ bool mGSM::getSMS(char* aSMS)
 
 bool mGSM::sendSMS(std::string aSMS, std::string aPhoneNumber)
     {
-    char aReceivedChar;
     std::string theAnswer("");
     UInt16 timeOutIndex = 0;
     std::string theSMS(

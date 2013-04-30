@@ -547,17 +547,32 @@ int iUART::availableCharToRead()
  * Fonction qui permet d'obtenir l'ensemble des bytes recus
  * en mémoire
  *
+ * retour  : rien
+ */
+void iUART::readFullBuffer(string &aBuffer)
+    {
+    while (!this->isBufferEmpty())
+	{
+	aBuffer.append(1, this->read());
+	}
+    }
+
+/**
+ * Fonction qui permet d'obtenir l'ensemble des bytes recus
+ * en mémoire
+ *
  * retour  : chaîne de caractère
  */
-void iUART::readFullBuffer(char* aBuffer)
+void iUART::readFullBuffer(char* aBuffer, int aCharToRead)
     {
-    int aCharNum = this->availableCharToRead();
     int i = 0;
 
-    for (i = aCharNum; i > 0; i--)
+    for (i = 0; i < aCharToRead; i++)
 	{
 	aBuffer[i] = this->read();
 	}
+
+    aBuffer[aCharToRead] = '\0';
     }
 
 /**
