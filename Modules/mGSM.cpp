@@ -113,8 +113,9 @@ bool mGSM::getSMS(char* aSMS)
 
 bool mGSM::sendSMS(std::string aSMS, std::string aPhoneNumber)
     {
-    std::string theAnswer("");
     UInt16 timeOutIndex = 0;
+
+    std::string theAnswer("");
     std::string theSMS(
 	    this->commandesATGSM->sendSMS + "=\"+" + aPhoneNumber + "\"\r"
 		    + aSMS + "\r\n");

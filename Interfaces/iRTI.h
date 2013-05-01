@@ -10,9 +10,6 @@
 #include "tDelay.h"
 #include <msp430f5519.h>
 
-#define kNbOfDelays 10
-#define kRTIper 1024
-
 class iRTI
     {
 public:
@@ -30,12 +27,13 @@ public:
     static void enable();
     static void disable();
 
+    static int freeDelays;
+
 private:
-    static int nbOfDelays;
-    static tDelay delayTab[];
+    static tDelay delaysTab[];
 
     //Interruptions handlers
-    friend void INT_TIMER_B_0(void);
+    friend void INT_TIMER_A_0(void);
     };
 
 #endif
