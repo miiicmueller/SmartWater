@@ -1,64 +1,84 @@
-#include <msp430.h> 
+#include <msp430.h>
+#include "Modules/mGSM.h"
+#include "Interfaces/iDIO.h"
 #include "Interfaces/iUART.h"
-
-//Function declarations
-void Init_Clock(void);
+#include "Tools/tCommandesAT.h"
 
 /*
  * main.c
  */
-int main(void)
-    {
-    WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+int _system_pre_init(void) {
+	// turn watchdog off
+	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+	_DINT();
 
-    Init_Clock();
-    //TODO Rajouter l'initialisation iCpu
+	return (1);
+}
 
-    //Declaration d'un iUart
-    iUART iUart(kUSCI_A0, kLSBFirst, k2StBits, kNone, k8bits, 9600);
+//Function declarations
+void Init_Clock(void);
 
-    //Activation de l'uart
-    iUart.enable();
+int main(void) {
 
-    iUart.sendString("Hello World !");
-    while (1)
-	{
-	// Un caractère à été recu
-	if (iUart.isBufferEmpty() == false)
-	    {
-	    //On le renvoie
-	    iUart.write(iUart.read());
-	    }
+	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+
+	Init_Clock();
+
+	__bis_SR_register(GIE);
+
+	//TODO Rajouter l'initialisation iCpu
+
+	//Declaration d'un iUart
+	iUART iUart(kUSCI_A0, kLSBFirst, k2StBits, kNone, k8bits, 115200);
+	iDIO iDio(0x00, 0x00);
+	tCommandesAT tComAt;
+
+	iUart.enable();
+
+	mGSM mGsm(&iDio, &iUart, &tComAt);
+	mGsm.mSetup();
+	mGsm.mOpen();
+
+	mGsm.sendSMS("Bonjour de l'it�ration (Genie Log.) IIEs test� en transmission !!", "+41767782399");
+
+	while (1) {
+
+		unsigned int i = 65535;
+
+		//	iUart.write('A');
+
+		while (i-- > 0)
+			;
 	}
-    return 0;
 
-    }
+}
 
 /*
  * ======== Init_Clock ========
  */
-void Init_Clock(void)
-    {
+void Init_Clock(void) {
 
-    //Configuration de la fr�quence
-    //Selectionner la fct Xt2 sur les IOs
-    P5SEL |= (0x04);
-    P5SEL |= (0x04);
-    //Utilisation de SMCLK
-    UCSCTL6 = 0x00; // Pas de drive trop fort
-    UCSCTL6 &= ~XT2BYPASS; // Pas de bypass, mais crystal
+	//Configuration de la fr�quence
+	//Selectionner la fct Xt2 sur les IOs
+	P5SEL |= BIT2 + BIT3;                       // Port select XT2
 
-    //Activer XT2CLK sur SMCLK
-    UCSCTL4 |= (SELS0 | SELS2);
-    UCSCTL5 &= 0xFE3F; // Division par 1
+	UCSCTL6 &= ~XT2OFF;                       // Enable XT2
+	UCSCTL3 |= SELREF_2;                      // FLLref = REFO
+	// Since LFXT1 is not used,
+	// sourcing FLL with LFXT1 can cause
+	// XT1OFFG flag to set
+	UCSCTL4 |= SELA_2;                        // ACLK=REFO,SMCLK=DCO,MCLK=DCO
 
-    do
-	{
-	UCSCTL7 &= ~(XT2OFFG + XT1LFOFFG + DCOFFG);
-	// Clear XT2,XT1,DCO fault flags
-	SFRIFG1 &= ~OFIFG;                      // Clear fault flags
-	}
-    while (UCSCTL7 & XT2OFFG != 0x00);             // Test oscillator fault flag
+	// Loop until XT1,XT2 & DCO stabilizes - in this case loop until XT2 settles
+	do {
+		UCSCTL7 &= ~(XT2OFFG + XT1LFOFFG + DCOFFG);
+		// Clear XT2,XT1,DCO fault flags
+		SFRIFG1 &= ~OFIFG;                      // Clear fault flags
+	} while (SFRIFG1 & OFIFG);                   // Test oscillator fault flag
 
-    }
+	UCSCTL6 &= ~XT2DRIVE0;                    // Decrease XT2 Drive according to
+	// expected frequency
+	UCSCTL4 |= SELS_5 + SELM_5;               // SMCLK=MCLK=XT2
+
+}
 

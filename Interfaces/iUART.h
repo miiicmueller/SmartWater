@@ -98,11 +98,11 @@ private:
 public:
     iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 	    iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
-	    iUARTDataCfgEnum aDataCfg, UInt16 aBaudrate);
+	    iUARTDataCfgEnum aDataCfg, UInt32 aBaudrate);
     ~iUART();
     void config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	    iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg,
-	    UInt16 aBaudrate);
+	    UInt32 aBaudrate);
     bool getStatusFlag(iUARTStatusFlag aStatFlag);
     void enable();
     void disable();

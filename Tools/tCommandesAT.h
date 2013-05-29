@@ -3,24 +3,24 @@
 
 #include <string>
 
+
 using namespace std;
 
-class tCommandesAT
-    {
+class tCommandesAT {
 public:
-    static string configSMS;
-    static string questWhiteList;
-    static string addP41ToWhiteList;
-    static string enableSMS;
-    static string questSMSMode;
-    static string delockPIN;
-    static string questStatePIN;
-    static string setModeText;
-    static string getSMS;
-    static string deleteSMSAll;
-    static string deleteSMSPos;
-    static string sendSMS;
-    static string goSendSMS;
-    static string endAT;
-    };
+	static const string configSMS;
+	static const string questWhiteList;
+	static const string addP41ToWhiteList;
+	static const string enableSMS;
+	static const string questSMSMode;
+	static const string delockPIN;
+	static const string questStatePIN;
+	static const string setModeText;
+	static const string getSMS;
+	static const string deleteSMSAll;
+	static const string deleteSMSPos;
+	static const string sendSMS;
+	static const string goSendSMS;
+	static const string endAT;
+};
 #endif

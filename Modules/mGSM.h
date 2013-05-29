@@ -38,7 +38,7 @@ public:
     mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM);
 
     bool getSMS(char* aSMS);
-    bool sendSMS(std::string aSMS, std::string aPhoneNumber);
+    bool sendSMS(char* aSMS, std::string aPhoneNumber);
     tDate getHour();
     int getCredit();
     void mSetup();

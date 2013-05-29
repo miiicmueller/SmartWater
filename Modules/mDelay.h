@@ -8,7 +8,7 @@
 #define __MDELAY__
 
 #include "Module.h"
-#include "iRTI.h"
+#include "../Interfaces/iRTI.h"
 
 class mDelay
     {
