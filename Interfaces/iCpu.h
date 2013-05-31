@@ -6,8 +6,6 @@
 
 #include "Interface.h"
 
-#define XT2_FREQ 4000000 // Frequence premier quartz
-#define XT1_FREQ 32768 // Frequence low quartz
 typedef enum
     {
     kSMCLK,

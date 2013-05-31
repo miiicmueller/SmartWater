@@ -97,43 +97,54 @@ bool mGSM::getSMS(char* aSMS) {
 	bool hasSMS = false;
 
 	// demande au module GSM le prochain SMS
-	//uartGSM->sendString(commandesATGSM->getSMS);
+	uartGSM->sendString(commandesATGSM->getSMS);
 
-	uartGSM->write((char) (indexSMS + 48));
-	//uartGSM->sendString(commandesATGSM->endAT);
+	//uartGSM->write((char) (indexSMS + 48));
+	uartGSM->write(indexSMS + 48); // choisit le message à lire
+	uartGSM->sendString(commandesATGSM->endAT);
 
-	//  WAIT(5000); // attend la réponse
+	for(int pp=0 ; pp<400 ; pp++){for(int qq=0 ; qq<65000 ; qq++){}}// attend la réponse
 
-	//uartGSM->readFullBuffer(dataReceived); // prend la trame
+
+
+
+	uartGSM->readFullBuffer(dataReceived, uartGSM->availableCharToRead()); // prend la trame
 
 	// contrôle si un sms est présent dans la trame
-	while (0 != dataReceived[i])
-//	    && !(true == hasSMS && "\r" == dataReceived[i - 2]
-//		    && "\n" == dataReceived[i - 1])) // s'arrete au debut du texte SMS ou à la fin du buffer
+	while (0 != dataReceived[i] && !(true == hasSMS && '\r' == dataReceived[i - 2] && '\n' == dataReceived[i - 1])) // s'arrete au debut du texte SMS ; ou à la fin du buffer
 	{
+// regarder depuis ici en sachant : OK
+//		AT+CMGR=3
+//		+CMGR: "REC READ","+41787526983","","13/04/18,19:47:26+08"
+//		Hello2
+//
+//		OK
+		// voir si '\r' c'est oki?
+
+		// regarde si SMS présent
 		if ('O' == dataReceived[i] && 'K' == dataReceived[i + 1]) // pas de SMS
-				{
+			{
 			indexSMS = 1; // tous les SMS sont lus, prochain sms à index 1
-			//uartGSM->sendString(commandesATGSM->deleteSMSAll); // efface tous SMS
-			//uartGSM->sendString(commandesATGSM->endAT);
+			uartGSM->sendString(commandesATGSM->deleteSMSAll); // efface tous SMS
+			uartGSM->sendString(commandesATGSM->endAT);
 			return false; //sms absent
-		} else if ('+' == dataReceived[i] && 'C' == dataReceived[i + 1]
-				&& 'M' == dataReceived[i + 2] && 'G' == dataReceived[i + 3]) // sms présent
-						{
+			}
+		else if ('+' == dataReceived[i] && 'C' == dataReceived[i + 1] && 'M' == dataReceived[i + 2] && 'G' == dataReceived[i + 3]) // sms présent
+			{
 			hasSMS = true;
-		}
+			}
 		i++;
 	}
 
 	// transcrit le texte reçu
-	while (!('O' == dataReceived[i + 5] && 'K' == dataReceived[i + 6])) // s'arrete à la fin du message texte
+	while (!('O' == dataReceived[i + 4] && 'K' == dataReceived[i + 5]))// s'arrete à la fin du message texte
 	{
-		aSMS[j] = dataReceived[i];
+		aSMS[j] = dataReceived[i]; // transcrit (le teste intéressant uniquement)
 		i++;
 		j++;
 	}
 
-	indexSMS++; // prochain SMS à être lu
+	this->indexSMS++; // prochain SMS à être lu
 	return true;
 }
 
