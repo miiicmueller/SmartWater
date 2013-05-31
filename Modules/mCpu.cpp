@@ -2,12 +2,10 @@
 #include <assert.h>
 
 #include "mCpu.h"
-#include "iCpu.h"
+#include "../Interfaces/iCpu.h"
 
-void mCpu::setPowerMode(char mode)
-    {
-    }
+void mCpu::setPowerMode(char mode) {
+}
 
-void mCpu::setFrequency(int divider)
-    {
-    }
+void mCpu::setFrequency(int divider) {
+}
