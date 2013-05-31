@@ -20,6 +20,9 @@ void Init_Clock(void);
 
 int main(void) {
 
+	char smsReceived[100]; // sms recu
+	bool hasSMSRecu = false;
+
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 
 	Init_Clock();
@@ -39,17 +42,10 @@ int main(void) {
 	mGsm.mSetup();
 	mGsm.mOpen();
 
-	mGsm.sendSMS("Bonjour de l'itération (Genie Log.) IIEs testé en transmission !!", "+41767782399");
+	hasSMSRecu = mGsm.getSMS(smsReceived); // prend le sms toujours le suivant
 
-	while (1) {
+	bool banane = hasSMSRecu;
 
-		unsigned int i = 65535;
-
-		//	iUart.write('A');
-
-		while (i-- > 0)
-			;
-	}
 
 }
 
