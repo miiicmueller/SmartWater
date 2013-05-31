@@ -10,7 +10,7 @@
 class gCompute : public Gestionnaire
 {
 private:
-	std::string smsToSend;
+	char* smsToSend;
 
 	int smsNb;
 

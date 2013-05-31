@@ -16,7 +16,7 @@ private:
 
 	int tempSensValues;
 
-	std::string smsTab;
+	char* smsTab;
 
 	int smsNb;
 
@@ -30,7 +30,7 @@ public:
 
 	int getTempSensValue(char tempSensNb);
 
-	std::string getSms(int nSms);
+	char* getSms(int nSms);
 
 	int getSmsNb();
 

@@ -168,15 +168,12 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 
 		//Configuration modulation
 		UCA0MCTL = 0x00;
-		UCA0MCTL |= (UCBRF0 | UCOS16);
+		UCA0MCTL |= UCBRS_1 + UCBRS_2;            // Modulation UCBRSx=6, UCBRFx=0
 
-		aBaudDiv >>= 4; // Division par 16
+		//aBaudDiv >>= 4; // Division par 16
 		UCA0BR0 = (char) aBaudDiv;
 		UCA0BR1 = (char) (aBaudDiv >> 8);
 
-		//round([(N/16) � INT(N/16)] � 16)
-		//Configuration de l'interruption � la reception
-		UCA0IE |= UCRXIE;
 
 		//Configuration du clock
 		UCA0CTL1 |= UCSSEL__SMCLK;
@@ -235,13 +232,13 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 			UCA1CTL0 &= ~UC7BIT;
 		}
 
+
+		UCA1MCTL |= UCBRS_1 + UCBRS_2;            // Modulation UCBRSx=6, UCBRFx=0
+
 		//Configuration du baudrate
 		UCA1BR0 = (char) aBaudDiv;
 		UCA1BR1 = (char) (aBaudDiv >> 8);
-		//TODO penser � ajouter le reste quand on conna�tra la fr�quence CPU
 
-		//Configuration de l'interruption � la reception
-		UCA1IE |= UCRXIE;
 
 		//Configuration du clock
 		UCA1CTL1 |= UCSSEL__SMCLK;
@@ -341,9 +338,15 @@ void iUART::enable() {
 
 	case kUSCI_A0:
 		UCA0CTL1 &= ~(UCSWRST);
+
+		//Configuration de l'interruption � la reception
+		UCA0IE |= UCRXIE;
 		break;
 	case kUSCI_A1:
 		UCA1CTL1 &= ~(UCSWRST);
+
+		//Configuration de l'interruption � la reception
+		UCA1IE |= UCRXIE;
 		break;
 	default:
 		;
@@ -446,27 +449,6 @@ void iUART::interruptHandler() {
 // TODO - Tester les performances des fonctions send string
 
 /**
- * Fonction pour envoyer une chaîne de caractère de type string
- *
- * aString : Chaîne à envoyer
- * retour  : "true" si la chaîne à bien été transmise
- */
-bool iUART::sendString(string aString) {
-	int i = 0;
-	bool result = false;
-
-	//Test si la chaîne est vide
-	if (aString.empty() == false) {
-		for (i = 0; i < aString.size(); i++) {
-			result = this->write(aString.at(i));
-		}
-		return result;
-	} else {
-		return false;
-	}
-}
-
-/**
  * Fonction qui permet d'obtenir le nombre de caractère contenu
  * dans le buffer
  *
@@ -476,23 +458,12 @@ int iUART::availableCharToRead() {
 	return this->USCIRingBuffer.ByteCount;
 }
 
-/**
- * Fonction qui permet d'obtenir l'ensemble des bytes recus
- * en mémoire
- *
- * retour  : rien
- */
-void iUART::readFullBuffer(string &aBuffer) {
-	while (!this->isBufferEmpty()) {
-		aBuffer.append(1, this->read());
-	}
-}
 
 /**
  * Fonction qui permet d'obtenir l'ensemble des bytes recus
- * en mémoire
+ * en m�moire
  *
- * retour  : chaîne de caractère
+ * retour  : chaine de caractere
  */
 void iUART::readFullBuffer(char* aBuffer, int aCharToRead) {
 	int i = 0;
@@ -510,14 +481,16 @@ void iUART::readFullBuffer(char* aBuffer, int aCharToRead) {
  * aString : Chaîne à envoyeriUart
  * retour  : 1 si la chaîne à bien été transmise
  */
-bool iUART::sendString(char* aString) {
+bool iUART::sendString(const char* aString) {
 	int i = 0;
+	unsigned int j = 0 ;
 	bool result = false;
 
 	//Test si la chaîne est vide
 	if (aString != NULL) {
 		for (i = 0; aString[i] != '\0'; i++) {
 			result = this->write(aString[i]);
+			for(j=0;j<65535;j++);
 		}
 		return result;
 	} else {

@@ -108,12 +108,10 @@ public:
     void disable();
     char read();
     bool write(char aData);
-    bool sendString(string aString);
-    bool sendString(char* aString);
+    bool sendString(const char* aString);
     bool isBufferEmpty();
     int availableCharToRead();
     void iUART::readFullBuffer(char* aBuffer, int aCharToRead);
-    void iUART::readFullBuffer(string &aBuffer);
 
     };
 #endif

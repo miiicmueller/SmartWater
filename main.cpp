@@ -20,16 +20,18 @@ void Init_Clock(void);
 
 int main(void) {
 
+
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 
 	Init_Clock();
 
 	__bis_SR_register(GIE);
+	// Enter LPM0, interrupts enabled
 
 	//TODO Rajouter l'initialisation iCpu
 
 	//Declaration d'un iUart
-	iUART iUart(kUSCI_A0, kLSBFirst, k2StBits, kNone, k8bits, 115200);
+	iUART iUart(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits, 115200);
 	iDIO iDio(0x00, 0x00);
 	tCommandesAT tComAt;
 
@@ -39,16 +41,11 @@ int main(void) {
 	mGsm.mSetup();
 	mGsm.mOpen();
 
-	mGsm.sendSMS("Bonjour de l'itération (Genie Log.) IIEs testé en transmission !!", "+41767782399");
+	mGsm.sendSMS("Salut Toto", "+41798183833");
 
 	while (1) {
 
-		unsigned int i = 65535;
-
-		//	iUart.write('A');
-
-		while (i-- > 0)
-			;
+		iUart.sendString("Salut Simon");
 	}
 
 }
