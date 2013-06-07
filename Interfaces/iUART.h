@@ -25,93 +25,84 @@
 
 using namespace std;
 
-typedef enum
-    {
-    k7bits,
-    k8bits
-    } iUARTDataCfgEnum;
+typedef enum {
+	k7bits, k8bits
+} iUARTDataCfgEnum;
 
-typedef enum
-    {
-    k1StBits,
-    k2StBits
-    } iUARTStopBitsEnum;
+typedef enum {
+	k1StBits, k2StBits
+} iUARTStopBitsEnum;
 
-typedef enum
-    {
-    kNone,
-    kOdd,
-    kEven
-    } iUARTPartityEnum;
+typedef enum {
+	kNone, kOdd, kEven
+} iUARTPartityEnum;
 
-typedef enum
-    {
-    kLSBFirst = 0,
-    kMSBFirst = 1
-    } iUARTSendModeEnum;
+typedef enum {
+	kLSBFirst = 0, kMSBFirst = 1
+} iUARTSendModeEnum;
 
-typedef enum
-    {
-    kUSCI_A0 = 0,
-    kUSCI_A1 = 1
-    } iUARTPortEnum;
+typedef enum {
+	kUSCI_A0 = 0, kUSCI_A1 = 1
+} iUARTPortEnum;
 
-typedef enum
-    {
-    kUCBUSY = 0x01,
-    kUCRXERR = 0x04,
-    kUCPE = 0x10,
-    kUCOE = 0x20,
-    kUCFE = 0x40,
-    kUCLISTEN = 0x80
-    } iUARTStatusFlag;
+typedef enum {
+	kUCBUSY = 0x01,
+	kUCRXERR = 0x04,
+	kUCPE = 0x10,
+	kUCOE = 0x20,
+	kUCFE = 0x40,
+	kUCLISTEN = 0x80
+} iUARTStatusFlagEnum;
+
+typedef enum {
+	k4800,k9600, k19200, k57600, k115200
+} iUARTBaudrateEnum;
 
 //Structure du buffer tournant
-typedef struct
-    {
-    UInt8 UsciRecBuf[kSciRecBufSize ];
-    UInt16 InIndex;
-    UInt16 OutIndex;
-    UInt8 ByteCount;
-    bool BufferIsFull;
-    } iUARTRecBufStruct;
+typedef struct {
+	UInt8 UsciRecBuf[kSciRecBufSize ];
+	UInt16 InIndex;
+	UInt16 OutIndex;
+	UInt8 ByteCount;
+	bool BufferIsFull;
+} iUARTRecBufStruct;
 
-class iUART: public Interface
-    {
+class iUART: public Interface {
 private:
-    iUARTPortEnum serialPort;
-    bool isEnabled;
-    iUARTRecBufStruct USCIRingBuffer;
+	iUARTPortEnum serialPort;
+	bool isEnabled;
+	iUARTRecBufStruct USCIRingBuffer;
 
-    //Variable global pour g�rer l'affectations des
-    // interruptions
-    static iUART* USCI_0;
-    static iUART* USCI_1;
+	//Variable global pour g�rer l'affectations des
+	// interruptions
+	static iUART* USCI_0;
+	static iUART* USCI_1;
 
-    // Fonction d'interruption propre a chaque objet
-    void interruptHandler();
+	// Fonction d'interruption propre a chaque objet
+	void interruptHandler();
 
-    //Interruptions handlers
-    friend void USCI_A0(void);
-    friend void USCI_A1(void);
+	//Interruptions handlers
+	friend void USCI_A0(void);
+	friend void USCI_A1(void);
 
 public:
-    iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
-	    iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
-	    iUARTDataCfgEnum aDataCfg, UInt32 aBaudrate);
-    ~iUART();
-    void config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
-	    iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg,
-	    UInt32 aBaudrate);
-    bool getStatusFlag(iUARTStatusFlag aStatFlag);
-    void enable();
-    void disable();
-    char read();
-    bool write(char aData);
-    bool sendString(const char* aString);
-    bool isBufferEmpty();
-    int availableCharToRead();
-    void iUART::readFullBuffer(char* aBuffer, int aCharToRead);
+	iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
+			iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
+			iUARTDataCfgEnum aDataCfg, iUARTBaudrateEnum aBaudrate);
+	~iUART();
+	void config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
+			iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg,
+			iUARTBaudrateEnum aBaudrate);
+	bool getStatusFlag(iUARTStatusFlagEnum aStatFlag);
+	void enable();
+	void disable();
+	char read();
+	bool write(char aData);
+	bool sendString(const char* aString);
+	bool isBufferEmpty();
+	int availableCharToRead();
+	int readLine(char* aBuffer);
+	void clearReceptionBuffer();
 
-    };
+};
 #endif

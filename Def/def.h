@@ -1,11 +1,10 @@
 #ifndef __DEF__
 #define __DEF__
 
-#define F_CPU 24000000UL
 
 #define kFreq_MCLK	25000000UL
-#define kFreq_SMCLK	4000000UL
-#define kFreq_ACLK	32768UL
+#define kFreq_SMCLK	 4000000UL
+#define kFreq_ACLK	   32768UL
 
 typedef char SInt8;
 typedef unsigned char UInt8;

@@ -26,7 +26,7 @@ mGSM::mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM) {
  */
 void mGSM::mSetup() {
 	// On envoie sur USCI_A0 + LSB first (on peut croiser) + pas de paritée + données de 8 bits + vitesse 115200
-	this->uartGSM->config(kLSBFirst, k2StBits, kNone, k8bits, 115200);
+	this->uartGSM->config(kLSBFirst, k2StBits, kNone, k8bits, k115200);
 
 	//La sortie reset_Gsm est sir P7.3
 	this->outputGSM->SetPortDirection(kOutput);
@@ -34,6 +34,7 @@ void mGSM::mSetup() {
 	//Mode pleine puissance : à voir ...
 	this->outputGSM->SetPortDriveStrength(kFullStrength);
 
+	this->indexSMS = 1;
 }
 
 /**
@@ -42,6 +43,7 @@ void mGSM::mSetup() {
 void mGSM::mOpen() {
 
 	const char* theCommand;
+	char reponseGsm[10];
 
 	//Autorisation de communiquer et enable des interruptions
 	this->uartGSM->enable();
@@ -49,14 +51,31 @@ void mGSM::mOpen() {
 	//Au bol : On met à 1 le reset et la sortie MOS
 	this->outputGSM->write(1);
 
+	//vitesse
+	theCommand = this->commandesATGSM->configBaud19200;
+	this->uartGSM->sendString(theCommand);
+
+	theCommand = this->commandesATGSM->endAT;
+	this->uartGSM->sendString(theCommand);
+
+	this->uartGSM->disable();
+	this->uartGSM->config(kLSBFirst, k2StBits, kNone, k8bits, k9600);
+	this->uartGSM->enable();
+
+	this->uartGSM->clearReceptionBuffer();
+
 	//Mode SMS
 	theCommand = this->commandesATGSM->enableSMS;
 
 	this->uartGSM->sendString(theCommand);
 
 	theCommand = this->commandesATGSM->endAT;
-
 	this->uartGSM->sendString(theCommand);
+
+	//Attente du ok
+	while (this->uartGSM->availableCharToRead() <= 5)
+		;
+	this->uartGSM->readLine(reponseGsm);
 
 	//delocker la carte SIM
 	theCommand = this->commandesATGSM->delockPIN;
@@ -65,11 +84,13 @@ void mGSM::mOpen() {
 	theCommand = "5906";
 	this->uartGSM->sendString(theCommand);
 
-
 	theCommand = this->commandesATGSM->endAT;
 	this->uartGSM->sendString(theCommand);
 
-
+	//Attente du ok
+	while (this->uartGSM->availableCharToRead() <= 3)
+		;
+	this->uartGSM->readLine(reponseGsm);
 
 	//Mode SMS
 	theCommand = this->commandesATGSM->setModeText;
@@ -77,6 +98,12 @@ void mGSM::mOpen() {
 
 	theCommand = this->commandesATGSM->endAT;
 	this->uartGSM->sendString(theCommand);
+
+	//Attente du ok
+	while (this->uartGSM->availableCharToRead() <= 3)
+		;
+	this->uartGSM->readLine(reponseGsm);
+
 }
 
 /**
@@ -99,19 +126,21 @@ bool mGSM::getSMS(char* aSMS) {
 	// demande au module GSM le prochain SMS
 	uartGSM->sendString(commandesATGSM->getSMS);
 
-	//uartGSM->write((char) (indexSMS + 48));
-	uartGSM->write(indexSMS + 48); // choisit le message à lire
+	uartGSM->write((char) (indexSMS + 48));
+	//uartGSM->write(indexSMS + 48); // choisit le message à lire
 	uartGSM->sendString(commandesATGSM->endAT);
 
-	for(int pp=0 ; pp<400 ; pp++){for(int qq=0 ; qq<65000 ; qq++){}}// attend la réponse
+	for (unsigned int pp = 0; pp < 100; pp++) {
+		for (unsigned int qq = 0; qq < 65000; qq++) {
+		}
+	} // attend la réponse
 
-
-
-
-	uartGSM->readFullBuffer(dataReceived, uartGSM->availableCharToRead()); // prend la trame
+	uartGSM->readLine(dataReceived); // prend la trame
 
 	// contrôle si un sms est présent dans la trame
-	while (0 != dataReceived[i] && !(true == hasSMS && '\r' == dataReceived[i - 2] && '\n' == dataReceived[i - 1])) // s'arrete au debut du texte SMS ; ou à la fin du buffer
+	while (0 != dataReceived[i]
+			&& !(true == hasSMS && '\r' == dataReceived[i - 2]
+					&& '\n' == dataReceived[i - 1])) // s'arrete au debut du texte SMS ; ou à la fin du buffer
 	{
 // regarder depuis ici en sachant : OK
 //		AT+CMGR=3
@@ -123,21 +152,21 @@ bool mGSM::getSMS(char* aSMS) {
 
 		// regarde si SMS présent
 		if ('O' == dataReceived[i] && 'K' == dataReceived[i + 1]) // pas de SMS
-			{
+				{
 			indexSMS = 1; // tous les SMS sont lus, prochain sms à index 1
 			uartGSM->sendString(commandesATGSM->deleteSMSAll); // efface tous SMS
 			uartGSM->sendString(commandesATGSM->endAT);
 			return false; //sms absent
-			}
-		else if ('+' == dataReceived[i] && 'C' == dataReceived[i + 1] && 'M' == dataReceived[i + 2] && 'G' == dataReceived[i + 3]) // sms présent
-			{
+		} else if ('+' == dataReceived[i] && 'C' == dataReceived[i + 1]
+				&& 'M' == dataReceived[i + 2] && 'G' == dataReceived[i + 3]) // sms présent
+						{
 			hasSMS = true;
-			}
+		}
 		i++;
 	}
 
 	// transcrit le texte reçu
-	while (!('O' == dataReceived[i + 4] && 'K' == dataReceived[i + 5]))// s'arrete à la fin du message texte
+	while (!('O' == dataReceived[i + 4] && 'K' == dataReceived[i + 5])) // s'arrete à la fin du message texte
 	{
 		aSMS[j] = dataReceived[i]; // transcrit (le teste intéressant uniquement)
 		i++;
@@ -154,10 +183,7 @@ bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber) {
 	char* theAnswer;
 	const char* theSMS = this->commandesATGSM->sendSMS;
 
-
 	this->uartGSM->sendString(theSMS);
-
-
 
 	theSMS = aPhoneNumber;
 
@@ -169,8 +195,6 @@ bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber) {
 
 	theSMS = aSMS;
 	this->uartGSM->sendString(aSMS);
-
-
 
 	this->uartGSM->write(0x1A);
 

@@ -35,7 +35,7 @@ iUART* iUART::USCI_1 = NULL;
  */
 iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 		iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
-		iUARTDataCfgEnum aDataCfg, UInt32 aBaudrate) {
+		iUARTDataCfgEnum aDataCfg, iUARTBaudrateEnum aBaudrate) {
 	//Assignation du port de communcation
 	this->serialPort = aPort;
 	//Configuration du port USCI
@@ -107,10 +107,8 @@ iUART::~iUART() {
  *
  */
 void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
-		iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg, UInt32 aBaudrate) {
-
-	//Calcul de la division
-	UInt16 aBaudDiv = (UInt16) (F_BRCLK / aBaudrate);
+		iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg,
+		iUARTBaudrateEnum aBaudrate) {
 
 	//Initialisation du port USCI
 	switch (this->serialPort) {
@@ -166,17 +164,49 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 
 		//Configuration du baudrate avec over sampling
 
-		//Configuration modulation
-		UCA0MCTL = 0x00;
-		UCA0MCTL |= UCBRS_1 + UCBRS_2;            // Modulation UCBRSx=6, UCBRFx=0
-
-		//aBaudDiv >>= 4; // Division par 16
-		UCA0BR0 = (char) aBaudDiv;
-		UCA0BR1 = (char) (aBaudDiv >> 8);
-
-
 		//Configuration du clock
 		UCA0CTL1 |= UCSSEL__SMCLK;
+
+		switch (aBaudrate) {
+		case k4800:
+			break;
+		case k9600:
+			//Modulation
+			UCA0MCTL = 0x00;
+			UCA0MCTL |= UCOS16;
+			UCA0MCTL |= ((0xB6) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+			UCA0MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+			//Configuration du baudrate
+			UCA0BRW = 26;
+			break;
+		case k19200:
+			//Modulation
+			UCA0MCTL = 0x00;
+			UCA0MCTL |= UCOS16;
+			UCA0MCTL |= ((0x84) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+			UCA0MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+			//Configuration du baudrate
+			UCA0BRW = 13;
+			break;
+		case k57600:
+			//Modulation
+			UCA0MCTL = 0x00;
+			UCA0MCTL |= UCOS16;
+			UCA0MCTL |= ((0x55) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+			UCA0MCTL |= (UCBRF0 | UCBRF2);
+			//Configuration du baudrate
+			UCA0BRW = 4;
+			break;
+		case k115200:
+			//Modulation
+			UCA0MCTL = 0x00;
+			UCA0MCTL |= UCOS16;
+			UCA0MCTL |= ((0xBB) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+			UCA0MCTL |= (UCBRF1);
+			//Configuration du baudrate
+			UCA0BRW = 2;
+			break;
+		}
 
 		//Configuration des port I/O
 		P3SEL |= 0x18;	// Selection de RX et TX
@@ -232,17 +262,49 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 			UCA1CTL0 &= ~UC7BIT;
 		}
 
-
-		UCA1MCTL |= UCBRS_1 + UCBRS_2;            // Modulation UCBRSx=6, UCBRFx=0
-
-		//Configuration du baudrate
-		UCA1BR0 = (char) aBaudDiv;
-		UCA1BR1 = (char) (aBaudDiv >> 8);
-
-
 		//Configuration du clock
 		UCA1CTL1 |= UCSSEL__SMCLK;
 
+		switch (aBaudrate) {
+		case k4800:
+					break;
+		case k9600:
+			//Modulation
+			UCA1MCTL = 0x00;
+			UCA1MCTL |= UCOS16;
+			UCA1MCTL |= ((0xB6) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+			UCA1MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+			//Configuration du baudrate
+			UCA1BRW = 26;
+			break;
+		case k19200:
+			//Modulation
+			UCA1MCTL = 0x00;
+			UCA1MCTL |= UCOS16;
+			UCA1MCTL |= ((0x84) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+			UCA1MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+			//Configuration du baudrate
+			UCA1BRW = 13;
+			break;
+		case k57600:
+			//Modulation
+			UCA1MCTL = 0x00;
+			UCA1MCTL |= UCOS16;
+			UCA1MCTL |= ((0x55) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+			UCA1MCTL |= (UCBRF0 | UCBRF2);
+			//Configuration du baudrate
+			UCA1BRW = 4;
+			break;
+		case k115200:
+			//Modulation
+			UCA1MCTL = 0x00;
+			UCA1MCTL |= UCOS16;
+			UCA1MCTL |= ((0xBB) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+			UCA1MCTL |= (UCBRF1);
+			//Configuration du baudrate
+			UCA1BRW = 2;
+			break;
+		}
 		break;
 	default:
 		;
@@ -317,7 +379,7 @@ bool iUART::write(char aData) {
  * aFlag : nom du flag ï¿½ lire
  *
  */
-bool iUART::getStatusFlag(iUARTStatusFlag aFlag) {
+bool iUART::getStatusFlag(iUARTStatusFlagEnum aFlag) {
 	switch (this->serialPort) {
 	case kUSCI_A0:
 		return ((UCA0STAT & aFlag) == aFlag) ? true : false;
@@ -458,21 +520,32 @@ int iUART::availableCharToRead() {
 	return this->USCIRingBuffer.ByteCount;
 }
 
-
 /**
  * Fonction qui permet d'obtenir l'ensemble des bytes recus
- * en mémoire
+ * en mémoire séparé d'un CR+LF
  *
- * retour  : chaine de caractere
+ * aBuffer : Buffer d'entrée qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+ * retour  : -1 si on a rien trouvé sinon la taille de la chaîne
  */
-void iUART::readFullBuffer(char* aBuffer, int aCharToRead) {
+int iUART::readLine(char* aBuffer) {
 	int i = 0;
 
-	for (i = 0; i < aCharToRead; i++) {
+	//Detection du CR+LF
+	for (i = 0; i < this->USCIRingBuffer.ByteCount || aBuffer[i] == '\r'; i++) {
 		aBuffer[i] = this->read();
 	}
-
-	aBuffer[aCharToRead] = '\0';
+	if (i < this->USCIRingBuffer.ByteCount) //CR detecté
+			{
+		//lecture du LF
+		aBuffer[i] = this->read();
+		aBuffer[i + 1] = this->read();
+		//Effacement de CR+LF
+		aBuffer[i] = '\0';
+		aBuffer[i - 1] = '\0';
+		return i;
+	} else {
+		return -1;
+	}
 }
 
 /**
@@ -483,19 +556,26 @@ void iUART::readFullBuffer(char* aBuffer, int aCharToRead) {
  */
 bool iUART::sendString(const char* aString) {
 	int i = 0;
-	unsigned int j = 0 ;
+	unsigned int j = 0;
 	bool result = false;
 
 	//Test si la chaÃ®ne est vide
 	if (aString != NULL) {
 		for (i = 0; aString[i] != '\0'; i++) {
 			result = this->write(aString[i]);
-			for(j=0;j<65535;j++);
 		}
 		return result;
 	} else {
 		return false;
 	}
+}
+
+void iUART::clearReceptionBuffer() {
+	//initialiser le buffer tournant
+	this->USCIRingBuffer.BufferIsFull = false;
+	this->USCIRingBuffer.ByteCount = 0;
+	this->USCIRingBuffer.InIndex = 0;
+	this->USCIRingBuffer.OutIndex = 0;
 }
 
 //-------------- INTERRUPT HANDLER | FRIEND OF iUart ------------

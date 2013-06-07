@@ -9,6 +9,7 @@ using namespace std;
 class tCommandesAT {
 public:
 	static const char* configSMS;
+	static const char* configBaud19200;
 	static const char* questWhiteList;
 	static const char* addP41ToWhiteList;
 	static const char* enableSMS;
