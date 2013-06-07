@@ -1,17 +1,15 @@
 #ifndef M_CPU_H
 #define M_CPU_H
 
-#include <string>
 #include <assert.h>
+#include "iCpu.h"
 
-#include "Module.h"
-
-class mCpu : public Module
-{
+class mCpu
+    {
 public:
-	void setPowerMode(char mode);
+    static void setPowerMode(powerModeEnum aMode);
 
-	void setFrequency(int divider);
+    static void configFrequency();
 
-};
+    };
 #endif
