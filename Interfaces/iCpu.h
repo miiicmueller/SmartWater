@@ -4,29 +4,21 @@
 #include <string>
 #include <assert.h>
 
-#include "Interface.h"
-
 typedef enum
     {
     kSMCLK,
     kMCLK,
     kACLK
-    } lineFreqEnum;
+    } powerModeEnum;
 
-class iCpu: public Interface
+class iCpu
     {
 private:
-    long smclk_freq;
-    long mclk_freq;
-    long aclk_freq;
+    static void SetVcoreUp(unsigned int level);
 
 public:
-    iCpu();
-
-    void setPowerMode(char aMode);
-    void setFrequency(int aDivider);
-    long getFrequency(lineFreqEnum aLineFreq);
-    kStatusEnum getStatus();
+    static void setPowerMode(powerModeEnum aMode);
+    static void configFrequency(void);
 
     };
 #endif

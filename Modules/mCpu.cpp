@@ -1,13 +1,14 @@
-#include <string>
 #include <assert.h>
 
 #include "mCpu.h"
 #include "iCpu.h"
 
-void mCpu::setPowerMode(char mode)
+void mCpu::setPowerMode(powerModeEnum aMode)
     {
+    iCpu::setPowerMode(aMode);
     }
 
-void mCpu::setFrequency(int divider)
+void mCpu::configFrequency()
     {
+    iCpu::configFrequency();
     }
