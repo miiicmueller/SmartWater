@@ -22,18 +22,24 @@ void Init_Clock(void);
 int main(void)
     {
 
-    WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+	char smsReceived[100]; // sms recu
+	bool hasSMSRecu = false;
+
+
+	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+
 
     Init_Clock();
 
-    __bis_SR_register(GIE);
+	__bis_SR_register(GIE);
+	// Enter LPM0, interrupts enabled
 
     //TODO Rajouter l'initialisation iCpu
 
-    //Declaration d'un iUart
-    iUART iUart(kUSCI_A0, kLSBFirst, k2StBits, kNone, k8bits, 115200);
-    iDIO iDio(0x00, 0x00);
-    tCommandesAT tComAt;
+	//Declaration d'un iUart
+	iUART iUart(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits, 115200);
+	iDIO iDio(0x00, 0x00);
+	tCommandesAT tComAt;
 
     iUart.enable();
 
@@ -41,22 +47,14 @@ int main(void)
     mGsm.mSetup();
     mGsm.mOpen();
 
-    mGsm.sendSMS(
-	    "Bonjour de l'itération (Genie Log.) IIEs testé en transmission !!",
-	    "+41767782399");
+	hasSMSRecu = mGsm.getSMS(smsReceived); // prend le sms toujours le suivant
 
-    while (1)
-	{
 
-	unsigned int i = 65535;
+	bool banane = hasSMSRecu;
 
-	//	iUart.write('A');
-
-	while (i-- > 0)
-	    ;
-	}
 
     }
+
 
 /*
  * ======== Init_Clock ========

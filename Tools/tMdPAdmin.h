@@ -9,7 +9,7 @@
 class tMdPAdmin : public tParameters
 {
 private:
-	std::string mdPAdmin;
+	char* mdPAdmin;
 
 };
 #endif

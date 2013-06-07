@@ -31,14 +31,14 @@ private:
 
 public:
 
-    string phoneNumber;
-    string codePIN;
+    char* phoneNumber;
+    char* codePIN;
 
     //constructeur
     mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM);
 
     bool getSMS(char* aSMS);
-    bool sendSMS(char* aSMS, std::string aPhoneNumber);
+    bool sendSMS(char* aSMS, char* aPhoneNumber);
     tDate getHour();
     int getCredit();
     void mSetup();

@@ -19,7 +19,7 @@ int gInput::getTempSensValue(char tempSensNb)
 	return 0;
 }
 
-std::string gInput::getSms(int nSms)
+char* gInput::getSms(int nSms)
 {
 	return "";
 }
