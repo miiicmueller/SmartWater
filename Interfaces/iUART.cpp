@@ -267,7 +267,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 
 		switch (aBaudrate) {
 		case k4800:
-					break;
+			break;
 		case k9600:
 			//Modulation
 			UCA1MCTL = 0x00;
