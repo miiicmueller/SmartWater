@@ -47,7 +47,7 @@ void iCpu::configFrequency() {
 		UCSCTL7 &= ~(XT2OFFG + XT1LFOFFG + DCOFFG);
 		// Clear XT2,XT1,DCO fault flags
 		SFRIFG1 &= ~OFIFG;                      // Clear fault flags
-	} while (SFRIFG1 & OFIFG);                   // Test oscillator fault flag
+	} while (SFRIFG1 & OFIFG);                  // Test oscillator fault flag
 
 	UCSCTL5 = 0x0000;	//all dividers divide by 1
 	UCSCTL4 |= SELS_5 | SELM_4;	// Set ACLK = REFO
