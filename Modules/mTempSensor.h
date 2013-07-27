@@ -3,21 +3,29 @@
 
 #include <string>
 #include <assert.h>
+#include "Interfaces/iI2C.h"
 
 #include "Module.h"
 
-class mTempSensor : public Module
-{
+typedef enum {
+	kTemperature = 0x00,
+	kConfiguration = 0x01,
+	kTempLow = 0x02,
+	kTempHigh = 0x03
+} mTempSensorRegEnum;
+
+class mTempSensor: public Module {
 private:
 	char sensorAddress;
-
+	iI2C *i2c_1;
 public:
-	bool isSleeping;
-
-
-public:
+	mTempSensor(char sensorAddress, iI2C *i2cBus);
+	~mTempSensor();
 	int readTemp();
-	int sleep();
+	bool configSensor(mTempSensorRegEnum aRegister, char aValue);
+	void mOpen();
+	void mClose();
+	void mSetup();
 
 };
 #endif

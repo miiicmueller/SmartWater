@@ -26,7 +26,7 @@ mGSM::mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM) {
  */
 void mGSM::mSetup() {
 	// On envoie sur USCI_A0 + LSB first (on peut croiser) + pas de paritée + données de 8 bits + vitesse 115200
-	this->uartGSM->config(kLSBFirst, k2StBits, kNone, k8bits, k115200);
+	this->uartGSM->config(kLSBFirst, k1StBits, kNone, k8bits, k115200);
 
 	//La sortie reset_Gsm est sir P7.3
 	this->outputGSM->SetPortDirection(kOutput);
@@ -58,8 +58,11 @@ void mGSM::mOpen() {
 	theCommand = this->commandesATGSM->endAT;
 	this->uartGSM->sendString(theCommand);
 
+	while (this->uartGSM->availableCharToRead() <= 5);
+	this->uartGSM->readLine(reponseGsm);
+
 	this->uartGSM->disable();
-	this->uartGSM->config(kLSBFirst, k2StBits, kNone, k8bits, k9600);
+	this->uartGSM->config(kLSBFirst, k1StBits, kNone, k8bits, k9600);
 	this->uartGSM->enable();
 
 	this->uartGSM->clearReceptionBuffer();
@@ -73,6 +76,7 @@ void mGSM::mOpen() {
 	this->uartGSM->sendString(theCommand);
 
 	//Attente du ok
+
 	while (this->uartGSM->availableCharToRead() <= 5)
 		;
 	this->uartGSM->readLine(reponseGsm);
@@ -88,7 +92,7 @@ void mGSM::mOpen() {
 	this->uartGSM->sendString(theCommand);
 
 	//Attente du ok
-	while (this->uartGSM->availableCharToRead() <= 3)
+	while (this->uartGSM->availableCharToRead() <= 5)
 		;
 	this->uartGSM->readLine(reponseGsm);
 
@@ -100,7 +104,7 @@ void mGSM::mOpen() {
 	this->uartGSM->sendString(theCommand);
 
 	//Attente du ok
-	while (this->uartGSM->availableCharToRead() <= 3)
+	while (this->uartGSM->availableCharToRead() <= 5)
 		;
 	this->uartGSM->readLine(reponseGsm);
 

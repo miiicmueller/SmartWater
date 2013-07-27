@@ -1,8 +1,14 @@
 #include <msp430.h>
-#include "Modules/mGSM.h"
-#include "Modules/mCpu.h"
+
 #include "Interfaces/iDIO.h"
 #include "Interfaces/iUART.h"
+#include "Interfaces/iI2C.h"
+
+#include "Modules/mGSM.h"
+#include "Modules/mCpu.h"
+#include "Modules/mEEPROM.h"
+#include "Modules/mTempSensor.h"
+
 #include "Tools/tCommandesAT.h"
 
 #include <intrinsics.h>
@@ -20,46 +26,52 @@
  * main.c
  */
 
+unsigned int monEssai ;
+float temp = 0.0 ;
+
 #ifdef __cplusplus
 extern "C" {
 #endif
+
 
 int _system_pre_init(void) {
 // turn watchdog off
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 	_DINT();
-
+	monEssai = 0 ;
 	return (1);
 }
 
 #ifdef __cplusplus
 }
 #endif
-//void Init_Clock(void);
-//void SetVcoreUp(unsigned int level);
 
 //Global flags set by events
 volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
 
+
 int main(void) {
 
-	char smsReceived[100]; // sms recu
+	int i = 0;
 	bool hasSMSRecu = false;
 
 	mCpu::configFrequency();
 
 	__bis_SR_register(GIE);
 
-	//Declaration d'un iUart
-	iUART iUart(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits, k9600);
-	iDIO iDio(0x00, 0x00);
-	tCommandesAT tComAt;
+	//I2Cs
+	iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
 
-	mGSM mGsm(&iDio, &iUart, &tComAt);
-	mGsm.mSetup();
-	mGsm.mOpen();
+	mEEPROM DataBase(0x50, &iI2C_1);
+	mTempSensor CaptCarte(0x48, &iI2C_1);
+
+	CaptCarte.mOpen();
+	CaptCarte.configSensor(kConfiguration,0x60);
 
 	while (1) {
-	}
-}
 
+		monEssai = CaptCarte.readTemp();
+		temp = (monEssai >> 4 ) * 0.0625;
+	}
+
+}

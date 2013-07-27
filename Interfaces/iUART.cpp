@@ -47,6 +47,8 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 	this->USCIRingBuffer.InIndex = 0;
 	this->USCIRingBuffer.OutIndex = 0;
 
+	this->inde = 0;
+
 	//intialiser les adresse poiteur d'instance iUart pour les interruptions
 	switch (this->serialPort) {
 	case kUSCI_A0:
@@ -450,6 +452,7 @@ bool iUART::isBufferEmpty() {
  *
  */
 void iUART::interruptHandler() {
+
 	UInt8 aReceivedChar = 0;
 	if (this->serialPort == kUSCI_A0) {
 		//Lecture du byte recu et ceci clear l'interruption
@@ -478,6 +481,7 @@ void iUART::interruptHandler() {
 		} else {
 			this->USCIRingBuffer.BufferIsFull = false;
 		}
+
 	} else if (this->serialPort == kUSCI_A1) {
 		//Lecture du byte recu et ceci clear l'interruption
 		aReceivedChar = UCA1RXBUF;
@@ -529,16 +533,20 @@ int iUART::availableCharToRead() {
  */
 int iUART::readLine(char* aBuffer) {
 	int i = 0;
+	int aByteCount = this->USCIRingBuffer.ByteCount;
+
+	//On enlève les premier \r\n
+	this->read();
+	this->read();
 
 	//Detection du CR+LF
-	for (i = 0; i < this->USCIRingBuffer.ByteCount || aBuffer[i] == '\r'; i++) {
+	for (i = 0; (i < (aByteCount - 2)) && (aBuffer[i - 1] != 0x0D); i++) {
 		aBuffer[i] = this->read();
 	}
-	if (i < this->USCIRingBuffer.ByteCount) //CR detecté
+	if (i < (aByteCount - 2)) //CR detecté
 			{
 		//lecture du LF
 		aBuffer[i] = this->read();
-		aBuffer[i + 1] = this->read();
 		//Effacement de CR+LF
 		aBuffer[i] = '\0';
 		aBuffer[i - 1] = '\0';

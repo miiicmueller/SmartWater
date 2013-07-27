@@ -85,6 +85,9 @@ private:
 	friend void USCI_A0(void);
 	friend void USCI_A1(void);
 
+	char test[100];
+	int inde ;
+
 public:
 	iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 			iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
