@@ -1,7 +1,7 @@
 //*****************************************************************************
 //Nom du fichier : iDIO.h
 //Auteur et Date : SAVY Cyrille 18.04.2013
-//But : interface mettant à disposition l'utilisation des ports en entrées/sorties digitales
+//But : interface mettant ï¿½ disposition l'utilisation des ports en entrï¿½es/sorties digitales
 //*****************************************************************************
 
 #ifndef __IDIO__
@@ -10,7 +10,7 @@
 #include "Interface.h"
 #include <msp430f5519.h>
 
-//énuméré contenant les addresses de base de chaque port
+//ï¿½numï¿½rï¿½ contenant les addresses de base de chaque port
 typedef enum
     {
     kPort_1 = __MSP430_BASEADDRESS_PORT1_R__,
@@ -23,28 +23,28 @@ typedef enum
     kPort_8 = __MSP430_BASEADDRESS_PORT8_R__ + 1
     } iDIOPortAddressEnum;
 
-//énuméré définissant la direction d'un port
+//ï¿½numï¿½rï¿½ dï¿½finissant la direction d'un port
 typedef enum
     {
     kInput = 0,
     kOutput = 1
     } iDIOPortDirectionEnum;
 
-//énuméré définissant l'activation ou la désactivation des résistances d'entrée du port
+//ï¿½numï¿½rï¿½ dï¿½finissant l'activation ou la dï¿½sactivation des rï¿½sistances d'entrï¿½e du port
 typedef enum
     {
     kResistorDisable = 0,
     kResistorEnable = 1
     } iDIOPortResistorActivationEnum;
 
-//énuméré définissant le type de résistance d'entrée du port (soit pull-up, soit pull-down)
+//ï¿½numï¿½rï¿½ dï¿½finissant le type de rï¿½sistance d'entrï¿½e du port (soit pull-up, soit pull-down)
 typedef enum
     {
     kPullDown = 0,
     kPullUp = 1
     } iDIOPortResistorPolarityEnum;
 
-//énuméré définissant la force de la sortie
+//ï¿½numï¿½rï¿½ dï¿½finissant la force de la sortie
 typedef enum
     {
     kReducedStrength = 0,
@@ -56,19 +56,20 @@ class iDIO: public Interface
 private:
     //input
     char* thePortAddress;	//adresse de base du port
-    char theMask;	//masque indiquant les bits utilisés par cette interface
+    char theMask;	//masque indiquant les bits utilisï¿½s par cette interface
 
 public:
     //constructeur
     iDIO(char* aPortAddress, char aMask);
 
-    //nouvelles méthodes
+    //nouvelles mï¿½thodes
     void SetPortDirection(iDIOPortDirectionEnum aDirection);
     void SetPortResistorEnable(iDIOPortResistorActivationEnum aState);
     void SetPortResistorPolarity(iDIOPortResistorPolarityEnum aPolarity);
     void SetPortDriveStrength(iDIOPortDriveStrengthEnum aStrength);
+    static void InitAllPort();
 
-    //méthodes virtuelles pures héritées devant être définies
+    //mï¿½thodes virtuelles pures hï¿½ritï¿½es devant ï¿½tre dï¿½finies
     virtual bool write(char aData);
     virtual char read();
 

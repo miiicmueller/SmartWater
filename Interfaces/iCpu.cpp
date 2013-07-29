@@ -1,6 +1,8 @@
 #include <assert.h>
 #include <msp430.h>
 
+#include "F5xx_F6xx_Core_Lib/HAL_UCS.h"
+#include "F5xx_F6xx_Core_Lib/HAL_PMM.h"
 #include "iCpu.h"
 
 void iCpu::setPowerMode(powerModeEnum aMode) {
@@ -14,16 +16,19 @@ void iCpu::configFrequency() {
 
 	// Increase Vcore setting to level3 to support fsystem=25MHz
 	// NOTE: Change core voltage one level at a time..
-	SetVcoreUp(0x01);
-	SetVcoreUp(0x02);
-	SetVcoreUp(0x03);
+//	SetVcoreUp(0x01);
+//	SetVcoreUp(0x02);
+//	SetVcoreUp(0x03);
+	SetVCore(1);
+	SetVCore(2);
+	SetVCore(3);
 
-	UCSCTL6 = XT2DRIVE_1 | XT1OFF ;
+	UCSCTL6 = XT2DRIVE_1 | XT1OFF;
 
 	UCSCTL3 = SELREF_2;               // Set DCO FLL reference = REFO
-	UCSCTL4 |= SELA_2 ;	// Set ACLK = REFO
-	//UCSCTL6 = XT2DRIVE_1 | XT2BYPASS | XT1OFF;//activation de xt2 et désactivation de xt1
-	//UCSCTL6 = XT2DRIVE_1 | XT1OFF ;   //activation de xt2 et désactivation de xt1
+	UCSCTL4 |= SELA_2;	// Set ACLK = REFO
+	//UCSCTL6 = XT2DRIVE_1 | XT2BYPASS | XT1OFF;//activation de xt2 et dï¿½sactivation de xt1
+	//UCSCTL6 = XT2DRIVE_1 | XT1OFF ;   //activation de xt2 et dï¿½sactivation de xt1
 
 	__bis_SR_register(SCG0);
 	// Disable the FLL control loop

@@ -1,12 +1,12 @@
 //*****************************************************************************
 //Nom du fichier : iDIO.cpp
 //Auteur et Date : SAVY Cyrille 18.04.2013
-//But : interface mettant à disposition l'utilisation des ports en entrées/sorties digitales
+//But : interface mettant ï¿½ disposition l'utilisation des ports en entrï¿½es/sorties digitales
 //*****************************************************************************
 
 #include "iDIO.h"
 
-//offset à ajouter à l'adresse de base d'un port pour atteindre ses registres
+//offset ï¿½ ajouter ï¿½ l'adresse de base d'un port pour atteindre ses registres
 typedef enum
     {
     kPortInput = 0x00,
@@ -24,15 +24,15 @@ iDIO::iDIO(char* aPortAddress, char aMask)
     this->thePortAddress = aPortAddress;
     this->status = kUnInitialized;
 
-    //mets les bits concernés à 0 (digital I/O function selected)
+    //mets les bits concernï¿½s ï¿½ 0 (digital I/O function selected)
     *((this->thePortAddress) + kPortSelect) = (*((this->thePortAddress)
 	    + kPortSelect) & ~(this->theMask));
     }
 
-//nouvelles méthodes
+//nouvelles mï¿½thodes
 void iDIO::SetPortDirection(iDIOPortDirectionEnum aPortDirection)
     {
-    //mets les bits concernés dans la direction souhaitée
+    //mets les bits concernï¿½s dans la direction souhaitï¿½e
     *((this->thePortAddress) + kPortDirection) =
 	    (this->theMask * aPortDirection)
 		    | (*((this->thePortAddress) + kPortDirection)
@@ -41,7 +41,7 @@ void iDIO::SetPortDirection(iDIOPortDirectionEnum aPortDirection)
 
 void iDIO::SetPortResistorEnable(iDIOPortResistorActivationEnum aState)
     {
-    //mets les bits concernés à dans l'état souhaité (resistors disabled/enabled)
+    //mets les bits concernï¿½s ï¿½ dans l'ï¿½tat souhaitï¿½ (resistors disabled/enabled)
     *((this->thePortAddress) + kPortResistorEnable) = (this->theMask * aState)
 	    | (*((this->thePortAddress) + kPortResistorEnable)
 		    & ~(this->theMask));
@@ -49,20 +49,20 @@ void iDIO::SetPortResistorEnable(iDIOPortResistorActivationEnum aState)
 
 void iDIO::SetPortResistorPolarity(iDIOPortResistorPolarityEnum aPolarity)
     {
-    //la résistance appliquée est configurée par le registre de sortie
+    //la rï¿½sistance appliquï¿½e est configurï¿½e par le registre de sortie
     this->write((char) (0xFF * aPolarity));
     }
 
 void iDIO::SetPortDriveStrength(iDIOPortDriveStrengthEnum aStrength)
     {
-    //mets les bits concernés à dans l'état souhaité (full drive strength, reduced drive strength)
+    //mets les bits concernï¿½s ï¿½ dans l'ï¿½tat souhaitï¿½ (full drive strength, reduced drive strength)
     *((this->thePortAddress) + kPortDriveStrength) =
 	    (this->theMask * aStrength)
 		    | (*((this->thePortAddress) + kPortDriveStrength)
 			    & ~(this->theMask));
     }
 
-//méthodes virtuelles pures héritées devant être définies
+//mï¿½thodes virtuelles pures hï¿½ritï¿½es devant ï¿½tre dï¿½finies
 bool iDIO::write(char aData)
     {
     *((this->thePortAddress) + kPortOutput) = (aData & (this->theMask))
@@ -75,6 +75,27 @@ char iDIO::read()
     {
     return (*(this->thePortAddress) & (this->theMask));
     }
+
+void iDIO::InitAllPort()
+{
+		//Initialization of ports (all unused pins as outputs with low-level
+		P1OUT = 0x00;
+		P1DIR = 0xFF;
+		P2OUT = 0x00;
+		P2DIR = 0xFF;
+		P3OUT = 0x00;
+		P3DIR = 0xFF;
+		P4OUT = 0x00;
+		P4DIR = 0xFF;
+		P5OUT = 0x00;
+		P5DIR = 0xFF;
+		P6OUT = 0x00;
+		P6DIR = 0xFF;
+		P7OUT = 0x00;
+		P7DIR = 0xFF;
+		P8OUT = 0x00;
+		P8DIR = 0xFF;
+}
 
 //destructeur
 iDIO::~iDIO()

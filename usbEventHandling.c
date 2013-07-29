@@ -42,7 +42,6 @@
 #include "USB_API/USB_Common/usb.h"
 #include "F5xx_F6xx_Core_Lib/HAL_UCS.h"
 
-
 #ifdef _CDC_
 #include "USB_API/USB_CDC_API/UsbCdc.h"
 #endif
@@ -66,51 +65,47 @@ extern volatile BYTE bCDCDataReceived_event;    //data received event
  * If this function gets executed, it's a sign that the output of the USB PLL has failed.
  * returns TRUE to keep CPU awake
  */
-BYTE USB_handleClockEvent ()
-{
-    //TO DO: You can place your code here
+BYTE USB_handleClockEvent() {
+	//TO DO: You can place your code here
 
-    return (TRUE);                              //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
+	return (TRUE); //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
 }
 
 /*
  * If this function gets executed, it indicates that a valid voltage has just been applied to the VBUS pin.
  * returns TRUE to keep CPU awake
  */
-BYTE USB_handleVbusOnEvent ()
-{
-    //TO DO: You can place your code here
+BYTE USB_handleVbusOnEvent() {
+	//TO DO: You can place your code here
 
-    //We switch on USB and connect to the BUS
-    if (USB_enable() == kUSB_succeed){
-        USB_reset();
-        USB_connect();                          //generate rising edge on DP -> the host enumerates our device as full speed device
-    }
-    return (TRUE);                              //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
+	//We switch on USB and connect to the BUS
+	if (USB_enable() == kUSB_succeed) {
+		USB_reset();
+		USB_connect(); //generate rising edge on DP -> the host enumerates our device as full speed device
+	}
+	return (TRUE); //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
 }
 
 /*
  * If this function gets executed, it indicates that a valid voltage has just been removed from the VBUS pin.
  * returns TRUE to keep CPU awake
  */
-BYTE USB_handleVbusOffEvent ()
-{
-    //TO DO: You can place your code here
+BYTE USB_handleVbusOffEvent() {
+	//TO DO: You can place your code here
 
-    XT2_Stop();
+	XT2_Stop();
 
-    return (TRUE);                              //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
+	return (TRUE); //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
 }
 
 /*
  * If this function gets executed, it indicates that the USB host has issued a USB reset event to the device.
  * returns TRUE to keep CPU awake
  */
-BYTE USB_handleResetEvent ()
-{
-    //TO DO: You can place your code here
+BYTE USB_handleResetEvent() {
+	//TO DO: You can place your code here
 
-    return (TRUE);                              //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
+	return (TRUE); //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
 }
 
 /*
@@ -118,11 +113,10 @@ BYTE USB_handleResetEvent ()
  * operation.
  * returns TRUE to keep CPU awake
  */
-BYTE USB_handleSuspendEvent ()
-{
-    //TO DO: You can place your code here
+BYTE USB_handleSuspendEvent() {
+	//TO DO: You can place your code here
 
-    return (TRUE);                              //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
+	return (TRUE); //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
 }
 
 /*
@@ -130,11 +124,10 @@ BYTE USB_handleSuspendEvent ()
  * operation.
  * returns TRUE to keep CPU awake
  */
-BYTE USB_handleResumeEvent ()
-{
-    //TO DO: You can place your code here
+BYTE USB_handleResumeEvent() {
+	//TO DO: You can place your code here
 
-    return (TRUE);                              //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
+	return (TRUE); //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
 }
 
 /*
@@ -142,11 +135,10 @@ BYTE USB_handleResumeEvent ()
  * after host assigned the address to the device.
  * returns TRUE to keep CPU awake
  */
-BYTE USB_handleEnumCompleteEvent ()
-{
-    //TO DO: You can place your code here
+BYTE USB_handleEnumCompleteEvent() {
+	//TO DO: You can place your code here
 
-    return (TRUE);                              //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
+	return (TRUE); //return TRUE to wake the main loop (in the case the CPU slept before interrupt)
 }
 
 #ifdef _CDC_
@@ -155,60 +147,54 @@ BYTE USB_handleEnumCompleteEvent ()
  * This event indicates that data has been received for interface intfNum, but no data receive operation is underway.
  * returns TRUE to keep CPU awake
  */
-BYTE USBCDC_handleDataReceived (BYTE intfNum)
-{
-    //TO DO: You can place your code here
+BYTE USBCDC_handleDataReceived(BYTE intfNum) {
+	//TO DO: You can place your code here
 
-    bCDCDataReceived_event = TRUE;
+	bCDCDataReceived_event = TRUE;
 
-    return (TRUE);                              //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (TRUE); //return FALSE to go asleep after interrupt (in the case the CPU slept before
+				   //interrupt)
 }
 
 /*
  * This event indicates that a send operation on interface intfNum has just been completed.
  * returns TRUE to keep CPU awake
  */
-BYTE USBCDC_handleSendCompleted (BYTE intfNum)
-{
-    //TO DO: You can place your code here
+BYTE USBCDC_handleSendCompleted(BYTE intfNum) {
+	//TO DO: You can place your code here
 
-    return (FALSE);                             //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (FALSE); //return FALSE to go asleep after interrupt (in the case the CPU slept before
+					//interrupt)
 }
 
 /*
  * This event indicates that a receive operation on interface intfNum has just been completed.
  */
-BYTE USBCDC_handleReceiveCompleted (BYTE intfNum)
-{
-    //TO DO: You can place your code here
+BYTE USBCDC_handleReceiveCompleted(BYTE intfNum) {
+	//TO DO: You can place your code here
 
-    return (FALSE);                             //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (FALSE); //return FALSE to go asleep after interrupt (in the case the CPU slept before
+					//interrupt)
 }
 
 /*
  * This event indicates that new line coding params have been received from the host
  */
-BYTE USBCDC_handleSetLineCoding (BYTE intfNum, ULONG lBaudrate)
-{
-    //TO DO: You can place your code here
+BYTE USBCDC_handleSetLineCoding(BYTE intfNum, ULONG lBaudrate) {
+	//TO DO: You can place your code here
 
-    return (FALSE);                             //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (FALSE); //return FALSE to go asleep after interrupt (in the case the CPU slept before
+					//interrupt)
 }
 
 /*
  * This event indicates that new line state has been received from the host
  */
-BYTE USBCDC_handleSetControlLineState (BYTE intfNum, BYTE lineState)
-{
+BYTE USBCDC_handleSetControlLineState(BYTE intfNum, BYTE lineState) {
 	return FALSE;
 }
 
 #endif //_CDC_
-
 #ifdef _HID_
 /*
  * This event indicates that data has been received for interface intfNum, but no data receive operation is underway.
@@ -216,10 +202,10 @@ BYTE USBCDC_handleSetControlLineState (BYTE intfNum, BYTE lineState)
  */
 BYTE USBHID_handleDataReceived (BYTE intfNum)
 {
-    //TO DO: You can place your code here
+	//TO DO: You can place your code here
 
-    return (FALSE);                             //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (FALSE);//return FALSE to go asleep after interrupt (in the case the CPU slept before
+				   //interrupt)
 }
 
 /*
@@ -228,10 +214,10 @@ BYTE USBHID_handleDataReceived (BYTE intfNum)
  */
 BYTE USBHID_handleSendCompleted (BYTE intfNum)
 {
-    //TO DO: You can place your code here
+	//TO DO: You can place your code here
 
-    return (FALSE);                             //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (FALSE);//return FALSE to go asleep after interrupt (in the case the CPU slept before
+				   //interrupt)
 }
 
 /*
@@ -239,10 +225,10 @@ BYTE USBHID_handleSendCompleted (BYTE intfNum)
  */
 BYTE USBHID_handleReceiveCompleted (BYTE intfNum)
 {
-    //TO DO: You can place your code here
+	//TO DO: You can place your code here
 
-    return (FALSE);                             //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (FALSE);//return FALSE to go asleep after interrupt (in the case the CPU slept before
+				   //interrupt)
 }
 
 /*
@@ -251,7 +237,7 @@ BYTE USBHID_handleReceiveCompleted (BYTE intfNum)
  */
 BYTE USBHID_handleBootProtocol (BYTE protocol, BYTE intfnum)
 {
-    return (FALSE);
+	return (FALSE);
 }
 
 /*
@@ -261,23 +247,23 @@ BYTE USBHID_handleBootProtocol (BYTE protocol, BYTE intfnum)
  * phase as well as the interface number.
  */
 BYTE *USBHID_handleSetReport (BYTE reportType, BYTE reportId,
-    WORD dataLength,
-    BYTE intfnum)
+		WORD dataLength,
+		BYTE intfnum)
 {
 	switch (reportType) {
 		case USB_REQ_HID_INPUT:
-			//Return pointer to input Report Buffer
-			return (0);
+		//Return pointer to input Report Buffer
+		return (0);
 		case USB_REQ_HID_OUTPUT:
-			//Return pointer to output Report Buffer
-			return (0);
+		//Return pointer to output Report Buffer
+		return (0);
 
 		case USB_REQ_HID_FEATURE:
-			//Return pointer to feature Report Buffer
-			return (0);
+		//Return pointer to feature Report Buffer
+		return (0);
 
 		default:
-			return (0);
+		return (0);
 	}
 }
 
@@ -289,7 +275,7 @@ BYTE *USBHID_handleSetReport (BYTE reportType, BYTE reportId,
 BYTE USBHID_handleSetReportDataAvailable (BYTE intfnum)
 {
 	//Process received data based on currentReportType
-    return (TRUE);
+	return (TRUE);
 }
 
 /*
@@ -299,37 +285,34 @@ BYTE USBHID_handleSetReportDataAvailable (BYTE intfnum)
  * as the interface number.
  */
 BYTE *USBHID_handleGetReport (BYTE reportType, BYTE reportId,
-    WORD requestedLength,
-    BYTE intfnum)
+		WORD requestedLength,
+		BYTE intfnum)
 {
 	//report data should be ready in buffers for Get Report.
 	switch (reportType) {
 		case USB_REQ_HID_INPUT:
-			//Return pointer to input Report Buffer
-			return (0);
+		//Return pointer to input Report Buffer
+		return (0);
 		case USB_REQ_HID_OUTPUT:
-			//Return pointer to OUTput Report Buffer
-			return (0);
+		//Return pointer to OUTput Report Buffer
+		return (0);
 		case USB_REQ_HID_FEATURE:
-			//Return pointer to FEATURE Report Buffer
-			return (0);
+		//Return pointer to FEATURE Report Buffer
+		return (0);
 		default:
-			return (0);
+		return (0);
 	}
 }
 
 #endif //_HID_
-
 #ifdef _MSC_
 BYTE USBMSC_handleBufferEvent (VOID)
 {
-    return (FALSE);                             //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (FALSE); //return FALSE to go asleep after interrupt (in the case the CPU slept before
+					//interrupt)
 }
 
 #endif //_MSC_
-
-
 #ifdef _PHDC_
 
 /*
@@ -338,10 +321,10 @@ BYTE USBMSC_handleBufferEvent (VOID)
  */
 BYTE USBPHDC_handleDataReceived (BYTE intfNum)
 {
-    //TO DO: You can place your code here
+	//TO DO: You can place your code here
 
-    return (TRUE);                              //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (TRUE);//return FALSE to go asleep after interrupt (in the case the CPU slept before
+				  //interrupt)
 }
 
 /*
@@ -350,10 +333,10 @@ BYTE USBPHDC_handleDataReceived (BYTE intfNum)
  */
 BYTE USBPHDC_handleSendCompleted (BYTE intfNum)
 {
-    //TO DO: You can place your code here
+	//TO DO: You can place your code here
 
-    return (FALSE);                             //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (FALSE);//return FALSE to go asleep after interrupt (in the case the CPU slept before
+				   //interrupt)
 }
 
 /*
@@ -361,17 +344,15 @@ BYTE USBPHDC_handleSendCompleted (BYTE intfNum)
  */
 BYTE USBPHDC_handleReceiveCompleted (BYTE intfNum)
 {
-    //TO DO: You can place your code here
+	//TO DO: You can place your code here
 
-    return (FALSE);                             //return FALSE to go asleep after interrupt (in the case the CPU slept before
-                                                //interrupt)
+	return (FALSE);//return FALSE to go asleep after interrupt (in the case the CPU slept before
+				   //interrupt)
 }
 
 #endif //_PHDC_
-
 /*----------------------------------------------------------------------------+
  | End of source file                                                          |
  +----------------------------------------------------------------------------*/
 /*------------------------ Nothing Below This Line --------------------------*/
-
 

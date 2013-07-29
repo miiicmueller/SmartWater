@@ -3,17 +3,24 @@
 
 #include <string>
 #include <assert.h>
+#include "Interfaces/iUSB.h"
 
 #include "Module.h"
 
-class mUSB : public Module
-{
+class mUSB: public Module {
+private:
+	iUSB *usbPort ;
+	char *serialBuffer;
 public:
-	bool getCommand(int* cmd, char* values);
-
-	void sendReply(int* values, int valNum);
-
+	mUSB(volatile BYTE *bCDCDataReceived_event);
+	~mUSB();
+	bool getCommand(int* cmd);
+	void sendReply(char* aMessage);
 	bool isConnected();
+
+	void mOpen();
+	void mClose();
+	void mSetup();
 
 };
 #endif
