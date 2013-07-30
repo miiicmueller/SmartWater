@@ -4,6 +4,11 @@
 #include "mEEPROM.h"
 #include "Interfaces/iI2C.h"
 
+/**
+ * Création d'une EEPROM
+ * moduleAddress : Adresse de l'EEPROM
+ * i2cBus : Noeud i2c sur lequel il est connecté.
+ */
 mEEPROM::mEEPROM(char moduleAddress, iI2C *i2cBus) {
 	this->moduleAddress = moduleAddress;
 	this->i2c_1 = i2cBus;
@@ -14,18 +19,32 @@ mEEPROM::~mEEPROM() {
 
 }
 
-//Ouverture d'un port I2C
+/**
+ * Activation du port I2C
+ */
 void mEEPROM::mOpen() {
 	this->i2c_1->enable();
 }
 
+/**
+ * Surtout pas de bus i2c->disable !!
+ * Plusieurs autres composant peuvent être sur le bus !
+ */
 void mEEPROM::mClose() {
 }
 
+/**
+ * Inutilisée
+ */
 void mEEPROM::mSetup() {
 //Noting to do pour l'instant
 }
 
+/**
+ * Ecriture d'un byte dans l'EEPROM
+ * address : Adresse mémoire sur 16 bits (64k)
+ * value : Valeur à affecter sur 8 bits
+ */
 bool mEEPROM::write(int address, char value) {
 
 	unsigned char aAdr_hi;
@@ -123,6 +142,11 @@ bool mEEPROM::write(int address, char value) {
 
 }
 
+/**
+ * Lecteur d'un byte dans l'EEPROM
+ * address : Adresse mémoire sur 16 bits (64k)
+ * retour : Valeur lue
+ */
 char mEEPROM::read(int address) {
 
 	unsigned char aAdr_hi;
@@ -203,6 +227,10 @@ char mEEPROM::read(int address) {
 	}
 }
 
+/**
+ * Vérification que le cycle d'écriture est bien terminé.
+ * Sinon l'EEPROM ne répond pas
+ */
 void mEEPROM::ackPolling() {
 	while (this->i2c_1->getStatusFlag(kBUSY) == true)
 		;

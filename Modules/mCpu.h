@@ -8,8 +8,6 @@ class mCpu
     {
 public:
     static void setPowerMode(powerModeEnum aMode);
-
     static void configFrequency();
-
     };
 #endif

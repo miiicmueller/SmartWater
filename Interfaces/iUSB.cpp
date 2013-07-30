@@ -13,13 +13,20 @@
 
 #include "iUSB.h"
 
+//TODO : Rechercher une solution pour réveiller le micro par l'USB
+
 char iUSB::usbBuffer[MAX_BUFFERSIZE] = "";
 
+/**
+ * Constructeur de l'USB
+ * *bCDCDataReceived_event : Variable globale changée dans usbEventHandling.c !!!!
+ * A ne pas oublier !!
+ */
 iUSB::iUSB(volatile BYTE *bCDCDataReceived_event) {
 	this->bufferSize = MAX_BUFFERSIZE;
 	this->usbState = kStateDisconnected;
 	this->dataReceived = bCDCDataReceived_event;
-	this->usbSerialBuffer = iUSB::usbBuffer ;
+	this->usbSerialBuffer = iUSB::usbBuffer;
 	this->config();
 	this->getConnectionState();
 	this->clearSerialBuffer();
@@ -29,6 +36,9 @@ iUSB::~iUSB() {
 
 }
 
+/**
+ * Configuration de l'USB et de ses Events
+ */
 void iUSB::config() {
 
 	//Ne pas oublier d'avoir setVcore(3) avant
@@ -49,14 +59,24 @@ void iUSB::config() {
 
 }
 
+/**
+ * Macro d'initialisation de l'USB
+ */
 void iUSB::initUSB() {
 	USB_init();
 }
 
+/**
+ * Test si des données sont disponibles
+ * retour : valeur booléenne
+ */
 bool iUSB::isDataAvailable() {
 	return (bool) *(this->dataReceived);
 }
 
+/**
+ * Nettoye le buffer de reception de l'USB
+ */
 void iUSB::clearSerialBuffer() {
 	char i = 0;
 
@@ -65,10 +85,18 @@ void iUSB::clearSerialBuffer() {
 	}
 }
 
+/**
+ * Retourne la taille MAX du buffer configurée (est inchangable en execution)
+ */
 int iUSB::getBufferSize() {
 	return this->bufferSize;
 }
 
+/**
+ * Renvoie une trame qui finit par "\r" !
+ * FrameBuffer : tableau pour recevoir les byte. De taille this->bufferSize !
+ * Revoie true si l'on a une trame disponible
+ */
 bool iUSB::getFullFrame(char* FrameBuffer) {
 
 	//Tester si l'on a recu qqch
@@ -98,20 +126,34 @@ bool iUSB::getFullFrame(char* FrameBuffer) {
 	}
 }
 
+/**
+ * Permet de transmettre une trame sur l'USB
+ * FrameBuffer : Tableau de char à envoyer
+ */
 void iUSB::sendFullFrame(char* FrameBuffer) {
 	cdcSendDataInBackground((BYTE*) FrameBuffer, strlen(FrameBuffer),
 			CDC0_INTFNUM, 0); //Send the response over USB
 	this->clearSerialBuffer();
 }
 
+/**
+ * Non utilisée
+ */
 bool iUSB::write(char aData) {
 	return false;
 }
 
+/**
+ * Non utilisée
+ */
 char iUSB::read() {
 	return 0;
 }
 
+/**
+ * Permet de vérifier l'état de la connexion USB
+ * retour : iUsbStateEnum état en cours
+ */
 iUsbStateEnum iUSB::getConnectionState() {
 	switch (USB_connectionState()) {
 	case ST_USB_DISCONNECTED:
@@ -194,7 +236,7 @@ iUsbStateEnum iUSB::getConnectionState() {
 /*
  * ======== retInString ========
  */
-//This function returns true if there's an 0x0D character in the string; and if so,
+//This function returns TRUE if there's an 0x0D character in the string; and if so,
 //it trims the 0x0D and anything that had followed it.
 BYTE iUSB::retInString(char* string) {
 	BYTE retPos = 0, i, len;

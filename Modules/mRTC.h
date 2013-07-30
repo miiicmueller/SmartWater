@@ -3,21 +3,25 @@
 
 #include <string>
 #include <assert.h>
+#include "Interfaces/iRTC.h"
 
 #include "Module.h"
 
-class mRTC : public Module
-{
+class mRTC: public Module {
+private:
+	iRTC *iRtc;
 public:
-	void readDate(int year, char month, char date);
-
-	void readTime(char hour, char minute, char second);
-
-	void setDate(int year, char month, char date);
-
-	void setHour(char hour, char minute, char second);
-
-	void setAlarm(char hour, char minute, char second);
+	mRTC();
+	~mRTC();
+	void mOpen();
+	void mClose();
+	void mSetup();
+	void readDate(int *aYear, char *aMonth, char *aDay, char *aDayOfWeek);
+	void readTime(char *aHour, char *aMinute, char *aSecond);
+	void setDate(int aYear, char aMonth, char aDay, char aDayOfWeek);
+	void setHour(char aHour, char aMinute, char aSecond);
+	void setAlarm(char aMinute);
+	void calibration(int aTemperature);
 
 };
 #endif

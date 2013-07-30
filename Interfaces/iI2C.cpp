@@ -3,10 +3,20 @@
 
 #include "iI2C.h"
 
+//FIXME Le code marche bien pour USCI_B1 mais à plein de lacune pour le B0.
+//Donc a ajouter pour la prochaine utilisation
+
 //Initalisation des attributs UART_x statiques
 iI2C* iI2C::USCI_B0 = NULL;
 iI2C* iI2C::USCI_B1 = NULL;
 
+/**
+ * Constructeur de base
+ * i2cSpeed : Vitesse de transmission
+ * i2cPort : Port de l'i2c à utiliser
+ * i2cMode : Mode master ou slave
+ * i2cAddress : Adresse i2c du maître
+ */
 iI2C::iI2C(iI2CSpeedEnum i2cSpeed, iI2CPortEnum i2cPort, iI2CModesEnum i2cMode,
 		char i2cAddress) {
 
@@ -42,6 +52,9 @@ iI2C::iI2C(iI2CSpeedEnum i2cSpeed, iI2CPortEnum i2cPort, iI2CModesEnum i2cMode,
 	}
 }
 
+/**
+ * Libère les pointeurs de port
+ */
 iI2C::~iI2C() {
 	//Lib�ration de la pile d'interruption
 	switch (this->i2cPort) {
@@ -60,6 +73,9 @@ iI2C::~iI2C() {
 	}
 }
 
+/**
+ * Fonction de config du l'i2c
+ */
 void iI2C::config(iI2CSpeedEnum i2cSpeed, iI2CModesEnum i2cMode,
 		char i2cAddress) {
 	switch (this->i2cPort) {
@@ -129,6 +145,9 @@ void iI2C::config(iI2CSpeedEnum i2cSpeed, iI2CModesEnum i2cMode,
 	}
 }
 
+/**
+ * Activation de l'i2c
+ */
 void iI2C::enable() {
 	switch (this->i2cPort) {
 	case kUSCI_B0:
@@ -152,6 +171,9 @@ void iI2C::enable() {
 	this->isEnabled = true;
 }
 
+/**
+ * Desactivation de l'i2c
+ */
 void iI2C::disable() {
 	switch (this->i2cPort) {
 	case kUSCI_B0:
@@ -166,15 +188,28 @@ void iI2C::disable() {
 	this->isEnabled = false;
 }
 
+/**
+ * Ecriture sur le bus i2c.
+ * Le retour ne signifie rien
+ */
 bool iI2C::write(char aData) {
 	//Ecrire la donnée
 	UCB1TXBUF = aData;
+	return true ;
 }
 
+/**
+ * Lecture du byte recu sur l'i2c
+ * Retour : valeur du byte recu
+ */
 char iI2C::read() {
 	return UCB1RXBUF;
 }
 
+/**
+ * Configuration de l'adresse de l'esclave en cours de communcation
+ * aSlaveAddr : Adresse de l'esclave
+ */
 void iI2C::setSlaveAddr(char aSlaveAddr) {
 	//Set Slave address
 	UCB1I2CSA = aSlaveAddr;
@@ -182,11 +217,19 @@ void iI2C::setSlaveAddr(char aSlaveAddr) {
 	UCB1CTL0 &= ~UCSLA10;
 }
 
+/**
+ * Emission d'une condition de start
+ */
 void iI2C::start() {
 
 	UCB1CTL1 |= UCTXSTT;
 }
 
+
+/**
+ * Lecture d'un flag de l'i2c
+ * aFlag : Flag i2c à lire
+ */
 bool iI2C::getStatusFlag(iI2CFlagEnum aFlag) {
 	switch (aFlag) {
 	case kTXIFG:
@@ -206,15 +249,24 @@ bool iI2C::getStatusFlag(iI2CFlagEnum aFlag) {
 	}
 }
 
+/**
+ * Emission d'une condition de stop
+ */
 void iI2C::stop() {
 	UCB1CTL1 |= UCTXSTP;
 }
 
+/**
+ * Toggle en mode d'écriture . (Address slave avec RW = 0)
+ */
 void iI2C::setWriteMode() {
 	//Mode transmission
 	UCB1CTL1 |= UCTR;
 }
 
+/**
+ * Toggle en mode de lecture . (Address slave avec RW = 1)
+ */
 void iI2C::setReadMode() {
 	UCB1CTL1 &= ~UCTR;
 }
@@ -225,6 +277,28 @@ void iI2C::setReadMode() {
 //------------------------------------------------------------------------------
 #pragma vector = USCI_B1_VECTOR
 __interrupt void USCI_B1_ISR(void) {
+	switch (__even_in_range(UCB1IV, 12)) {
+	case 0:
+		break;                           // Vector  0: No interrupts
+	case 2:
+		break;                           // Vector  2: ALIFG
+	case 4:
+		break;                           // Vector  4: NACKIFG
+	case 6:
+		break;                           // Vector  6: STTIFG
+	case 8:
+		break;                           // Vector  8: STPIFG
+	case 10:
+		break;                           // Vector 10: RXIFG
+	case 12:                                  // Vector 12: TXIFG
+		break;
+	default:
+		break;
+	}
+}
+
+#pragma vector = USCI_B0_VECTOR
+__interrupt void USCI_B0_ISR(void) {
 	switch (__even_in_range(UCB1IV, 12)) {
 	case 0:
 		break;                           // Vector  0: No interrupts

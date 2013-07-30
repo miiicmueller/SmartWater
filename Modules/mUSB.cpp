@@ -5,6 +5,11 @@
 
 #include "mUSB.h"
 
+/**
+ * Constructeur de base
+ * *bCDCDataReceived_event : Variable globale changée dans usbEventHandling.c !!!!
+ * A ne pas oublier !!
+ */
 mUSB::mUSB(volatile BYTE *bCDCDataReceived_event) {
 	this->usbPort = new iUSB(bCDCDataReceived_event);
 }
@@ -13,6 +18,10 @@ mUSB::~mUSB() {
 
 }
 
+/**
+ * Test si l'on a recu une commande : A déterminer selon le protocole
+ */
+//TODO : Faire le protocole de communication. Ce code est à titre d'exemple
 bool mUSB::getCommand(int* cmd) {
 	if (this->usbPort->isDataAvailable() == true) {
 		//Some data is in the buffer; begin receiving a
@@ -23,6 +32,9 @@ bool mUSB::getCommand(int* cmd) {
 				return true;
 			} else if (!(strcmp(command, "cmd2"))) { //Compare to string #2, and respond
 				*cmd = 2;
+				return true;
+			} else if (!(strcmp(command, "cmd3"))) { //Compare to string #2, and respond
+				*cmd = 3;
 				return true;
 			} else {
 				*cmd = 0;
@@ -37,10 +49,17 @@ bool mUSB::getCommand(int* cmd) {
 	}
 }
 
+/**
+ * Envoie d'une string sur l'USB
+ * aMessage : Message à transmettre
+ */
 void mUSB::sendReply(char* aMessage) {
 	this->usbPort->sendFullFrame(aMessage);
 }
 
+/**
+ * Test si l'USB est prêt ou non
+ */
 bool mUSB::isConnected() {
 	switch (this->usbPort->getConnectionState()) {
 	case kStateActive:
@@ -50,14 +69,23 @@ bool mUSB::isConnected() {
 	}
 }
 
+/**
+ * Non utilisée
+ */
 void mUSB::mOpen() {
 
 }
 
+/**
+ * Non utilisée
+ */
 void mUSB::mClose() {
 
 }
 
+/**
+ * Non utilisée
+ */
 void mUSB::mSetup() {
 
 }

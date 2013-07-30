@@ -3,6 +3,11 @@
 
 #include "mTempSensor.h"
 
+/**
+ * Création d'un senseur de temperature
+ * sensorAddress : Adresse du capteur
+ * i2cBus : Noeud i2c sur lequel il est connecté.
+ */
 mTempSensor::mTempSensor(char sensorAddress, iI2C *i2cBus) {
 	this->sensorAddress = sensorAddress;
 	this->i2c_1 = i2cBus;
@@ -11,16 +16,33 @@ mTempSensor::~mTempSensor() {
 
 }
 
+/**
+ * Activation du bus i2c
+ */
 void mTempSensor::mOpen() {
 	this->i2c_1->enable();
 }
+
+/**
+ * Surtout pas de bus i2c->disable !!
+ * Plusieurs autres composant peuvent être sur le bus !
+ */
 void mTempSensor::mClose() {
 
 }
+
+/**
+ * Inutilisée
+ */
 void mTempSensor::mSetup() {
 
 }
 
+/**
+ * Aquisition de la température
+ * Donne un entier sur 16 bits (12bits)
+ * POur avoir la température en degrée : Temp = (retour >> 4 )*0.0625
+ */
 int mTempSensor::readTemp() {
 
 	char tempLSB = 0;
@@ -92,6 +114,11 @@ int mTempSensor::readTemp() {
 
 }
 
+/**
+ * Permet d'acceder à un registre du capteur pour sa configuration
+ * aRegister : Registre à configurer
+ * aValue : Valeur à écrire dans le registre
+ */
 bool mTempSensor::configSensor(mTempSensorRegEnum aRegister, char aValue) {
 	//Config de l'adress du slave
 	this->i2c_1->setSlaveAddr(this->sensorAddress);

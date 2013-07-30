@@ -77,7 +77,6 @@ BYTE USB_handleClockEvent() {
  */
 BYTE USB_handleVbusOnEvent() {
 	//TO DO: You can place your code here
-
 	//We switch on USB and connect to the BUS
 	if (USB_enable() == kUSB_succeed) {
 		USB_reset();

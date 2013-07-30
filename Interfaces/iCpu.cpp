@@ -4,10 +4,41 @@
 #include "F5xx_F6xx_Core_Lib/HAL_UCS.h"
 #include "F5xx_F6xx_Core_Lib/HAL_PMM.h"
 #include "iCpu.h"
+#include <msp430f5519.h>
 
+/**
+ * Permet de changer de mode d'exécution
+ * aMode : Mode Low Power N . Conserve les interruptions
+ */
 void iCpu::setPowerMode(powerModeEnum aMode) {
+
+	switch (aMode) {
+	case kActiveMode:
+		//Rien pour l'instant
+		break;
+	case kLPM0:
+		__bis_SR_register(LPM0_bits + GIE);
+		break;
+	case kLPM1:
+		__bis_SR_register(LPM1_bits + GIE);
+		break;
+	case kLPM2:
+		__bis_SR_register(LPM2_bits + GIE);
+		break;
+	case kLPM3:
+		__bis_SR_register(LPM3_bits + GIE);
+		break;
+	case kLPM4:
+		__bis_SR_register(LPM4_bits + GIE);
+			break;
+	default :
+
+	}
 }
 
+/**
+ * Configure la fréquence de base
+ */
 void iCpu::configFrequency() {
 	volatile unsigned int i;
 

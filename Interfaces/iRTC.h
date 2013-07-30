@@ -3,18 +3,32 @@
 
 #include <string>
 #include <assert.h>
+#include <msp430f5519.h>
 
 #include "Interface.h"
 
-class iRTC : public Interface
-{
+class iRTC: public Interface {
 private:
-	static void wakeUpInterrupt();
+	char aMinuteAlarme;
+	char aDeltaMinuteAlarme;
+	static iRTC* RTC_A ;
+	void wakeUpInterrupt();
+	bool write(char aData);
+	char read();
 
+	friend void RTC_A(void);
 public:
-	void setAlarm(char day, char dayOW, char hour, char min);
-
-	void calibration();
+	iRTC();
+	~iRTC();
+	void setAlarm(char aMinute);
+	void resetAlarm();
+	void readDate(int *aYear, char *aMonth, char *aDay, char *aDayOfWeek);
+	void readTime(char *aHour, char *aMinute, char *aSecond);
+	void setDate(int aYear, char aMonth, char aDay, char aDayOfWeek);
+	void setHour(char aHour, char aMinute, char aSecond);
+	void calibration(int aTemperature);
+	void enableRTC();
+	void disableRTC();
 
 };
 #endif

@@ -3,12 +3,16 @@
 
 #include <string>
 #include <assert.h>
+#include <msp430f5519.h>
 
 typedef enum
     {
-    kSMCLK,
-    kMCLK,
-    kACLK
+	kActiveMode,
+    kLPM0,
+    kLPM1,
+    kLPM2,
+    kLPM3,
+    kLPM4,
     } powerModeEnum;
 
 class iCpu
