@@ -61,7 +61,6 @@ private:
 public:
     //constructeur
     iDIO(char* aPortAddress, char aMask);
-
     //nouvelles m�thodes
     void SetPortDirection(iDIOPortDirectionEnum aDirection);
     void SetPortResistorEnable(iDIOPortResistorActivationEnum aState);

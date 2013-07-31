@@ -57,6 +57,9 @@ void iUSB::config() {
 		USB_handleVbusOnEvent();
 	}
 
+	//desactiver LDO
+	USBPWRCTL &= ~(SLDOEN);      // Disable the VUSB LDO and the SLDO
+
 }
 
 /**

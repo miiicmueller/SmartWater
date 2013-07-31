@@ -15,7 +15,7 @@
 #include "iUART.h"
 #include "../Def/def.h"
 
-//TODO fixer cette valeur à la bonne frï¿½quence
+//TODO fixer cette valeur ï¿½ la bonne frï¿½quence
 #define F_BRCLK 4000000
 
 //Initalisation des attributs UART_x statiques
@@ -47,7 +47,7 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 	this->USCIRingBuffer.InIndex = 0;
 	this->USCIRingBuffer.OutIndex = 0;
 
-	this->inde = 0;
+	this->dataReceived = false;
 
 	//intialiser les adresse poiteur d'instance iUart pour les interruptions
 	switch (this->serialPort) {
@@ -74,6 +74,8 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 		;
 	}
 
+	this->clearReceptionBuffer();
+	this->clearInternalSerialBuffer();
 }
 
 /**
@@ -454,6 +456,9 @@ bool iUART::isBufferEmpty() {
 void iUART::interruptHandler() {
 
 	UInt8 aReceivedChar = 0;
+
+	this->dataReceived = true;
+
 	if (this->serialPort == kUSCI_A0) {
 		//Lecture du byte recu et ceci clear l'interruption
 		aReceivedChar = UCA0RXBUF;
@@ -512,6 +517,46 @@ void iUART::interruptHandler() {
 	}
 }
 
+/**
+ * Fonction qui permet d'obtenir l'ensemble des bytes recus
+ * en mï¿½moire sï¿½parï¿½ d'un CR+LF
+ *
+ * aBuffer : Buffer d'entrï¿½e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+ * retour  : -1 si on a rien trouvï¿½ sinon la taille de la chaï¿½ne
+ */
+bool iUART::readFrame(char* string) {
+	char i = 0;
+	char nDataReceived = 0;
+
+	nDataReceived = this->USCIRingBuffer.ByteCount;
+
+	//Tester si l'on a recu qqch
+	if ((this->dataReceived == true) || (nDataReceived != 0)) {
+		char pieceOfString[kSciRecBufSize ] = ""; //Holds the new addition to the string
+
+		//Recuperation des bytes recus
+		for (i = 0; i < nDataReceived; i++) {
+			pieceOfString[i] = this->read();
+		}
+
+		strcat(this->uartBuffer, pieceOfString);
+
+		// Test \r
+		if (retInString(this->uartBuffer)) {
+			strcpy(string, this->uartBuffer);
+			this->clearInternalSerialBuffer();
+			this->dataReceived = false;
+			return true;
+		} else {
+			this->dataReceived = false;
+			return false;
+		}
+
+	} else {
+		return false;
+	}
+}
+
 // TODO - Tester les performances des fonctions send string
 
 /**
@@ -524,37 +569,37 @@ int iUART::availableCharToRead() {
 	return this->USCIRingBuffer.ByteCount;
 }
 
-/**
- * Fonction qui permet d'obtenir l'ensemble des bytes recus
- * en mémoire séparé d'un CR+LF
- *
- * aBuffer : Buffer d'entrée qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
- * retour  : -1 si on a rien trouvé sinon la taille de la chaîne
- */
-int iUART::readLine(char* aBuffer) {
-	int i = 0;
-	int aByteCount = this->USCIRingBuffer.ByteCount;
-
-	//On enlève les premier \r\n
-	this->read();
-	this->read();
-
-	//Detection du CR+LF
-	for (i = 0; (i < (aByteCount - 2)) && (aBuffer[i - 1] != 0x0D); i++) {
-		aBuffer[i] = this->read();
-	}
-	if (i < (aByteCount - 2)) //CR detecté
-			{
-		//lecture du LF
-		aBuffer[i] = this->read();
-		//Effacement de CR+LF
-		aBuffer[i] = '\0';
-		aBuffer[i - 1] = '\0';
-		return i;
-	} else {
-		return -1;
-	}
-}
+///**
+// * Fonction qui permet d'obtenir l'ensemble des bytes recus
+// * en mï¿½moire sï¿½parï¿½ d'un CR+LF
+// *
+// * aBuffer : Buffer d'entrï¿½e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+// * retour  : -1 si on a rien trouvï¿½ sinon la taille de la chaï¿½ne
+// */
+//int iUART::readLine(char* aBuffer) {
+//	int i = 0;
+//	int aByteCount = this->USCIRingBuffer.ByteCount;
+//
+//	//On enlï¿½ve les premier \r\n
+//	this->read();
+//	this->read();
+//
+//	//Detection du CR+LF
+//	for (i = 0; (i < (aByteCount - 2)) && (aBuffer[i - 1] != 0x0D); i++) {
+//		aBuffer[i] = this->read();
+//	}
+//	if (i < (aByteCount - 2)) //CR detectï¿½
+//			{
+//		//lecture du LF
+//		aBuffer[i] = this->read();
+//		//Effacement de CR+LF
+//		aBuffer[i] = '\0';
+//		aBuffer[i - 1] = '\0';
+//		return i;
+//	} else {
+//		return -1;
+//	}
+//}
 
 /**
  * Fonction pour envoyer une chaÃ®ne de caractÃ¨re de type char*
@@ -584,6 +629,54 @@ void iUART::clearReceptionBuffer() {
 	this->USCIRingBuffer.ByteCount = 0;
 	this->USCIRingBuffer.InIndex = 0;
 	this->USCIRingBuffer.OutIndex = 0;
+}
+
+void iUART::clearInternalSerialBuffer() {
+	char i = 0;
+	for (i = 0; i < kSciRecBufSize ; i++) {
+		this->uartBuffer[i] = 0x00;
+	}
+}
+
+//This function returns TRUE if there's an 0x0D character in the string; and if so,
+//it trims the 0x0D and anything that had followed it.
+bool iUART::retInString(char* string) {
+	char retPos = 0, i, len;
+	char tempStr[kSciRecBufSize ] = "";
+
+	strncpy(tempStr, string, strlen(string));        //Make a copy of the string
+	len = strlen(tempStr);
+	while ((tempStr[retPos] != 0x0A) && (tempStr[retPos] != 0x0D)
+			&& (retPos++ < len))
+		;        //Find 0x0D; if not found, retPos ends up at len
+
+	if ((retPos < len) && (tempStr[retPos] == 0x0D)) { //If 0x0D was actually found...
+		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
+			string[i] = 0x00;
+		}
+		strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
+		return true; //...and tell the calling function that we did so
+	} else if ((retPos < len) && (tempStr[retPos] == 0x0A)) { //If 0x0D was actually found...
+		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
+			string[i] = 0x00;
+		}
+		strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
+		return true; //...and tell the calling function that we did so
+	} else if (tempStr[retPos] == 0x0D) {
+		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
+			string[i] = 0x00;
+		}
+		strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
+		return true; //...and tell the calling function that we did so
+	} else if (retPos < len) {
+		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
+			string[i] = 0x00;
+		}
+		strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
+		return true; //...and tell the calling function that we did so
+	}
+
+	return false;                                 //Otherwise, it wasn't found
 }
 
 //-------------- INTERRUPT HANDLER | FRIEND OF iUart ------------

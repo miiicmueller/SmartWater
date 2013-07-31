@@ -21,7 +21,7 @@
 #include "Interface.h"
 
 // Buffer de 200 caract�res
-#define kSciRecBufSize ((unsigned char)(200))
+#define kSciRecBufSize ((unsigned char)(50))
 
 using namespace std;
 
@@ -55,7 +55,7 @@ typedef enum {
 } iUARTStatusFlagEnum;
 
 typedef enum {
-	k4800,k9600, k19200, k57600, k115200
+	k4800, k9600, k19200, k57600, k115200
 } iUARTBaudrateEnum;
 
 //Structure du buffer tournant
@@ -70,7 +70,9 @@ typedef struct {
 class iUART: public Interface {
 private:
 	iUARTPortEnum serialPort;
+	char uartBuffer[kSciRecBufSize];
 	bool isEnabled;
+	bool dataReceived;
 	iUARTRecBufStruct USCIRingBuffer;
 
 	//Variable global pour g�rer l'affectations des
@@ -84,9 +86,7 @@ private:
 	//Interruptions handlers
 	friend void USCI_A0(void);
 	friend void USCI_A1(void);
-
-	char test[100];
-	int inde ;
+	int availableCharToRead();
 
 public:
 	iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
@@ -103,9 +103,11 @@ public:
 	bool write(char aData);
 	bool sendString(const char* aString);
 	bool isBufferEmpty();
-	int availableCharToRead();
-	int readLine(char* aBuffer);
+//	int readLine(char* aBuffer);
 	void clearReceptionBuffer();
+	void clearInternalSerialBuffer();
+	bool retInString(char* string);
+	bool readFrame(char* string);
 
 };
 #endif

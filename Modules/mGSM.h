@@ -21,13 +21,17 @@ class mGSM: public Module
     {
 private:
     //input
-    iDIO* outputGSM;
+    iDIO* enableGSM;
+    iDIO* resetGSM;
     iUART* uartGSM;
+    static iUART uartGSMStat;
     tCommandesAT* commandesATGSM;
 
     //tools
     bool isUnlocked;
     int indexSMS;
+
+    void _delay_us(long aDelay);
 
 public:
 
@@ -35,7 +39,7 @@ public:
     char* codePIN;
 
     //constructeur
-    mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM);
+    mGSM();
 
     bool getSMS(char* aSMS);
     bool sendSMS(char* aSMS, char* aPhoneNumber);

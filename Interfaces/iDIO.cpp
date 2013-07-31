@@ -7,97 +7,89 @@
 #include "iDIO.h"
 
 //offset � ajouter � l'adresse de base d'un port pour atteindre ses registres
-typedef enum
-    {
-    kPortInput = 0x00,
-    kPortOutput = 0x02,
-    kPortDirection = 0x04,
-    kPortResistorEnable = 0x06,
-    kPortDriveStrength = 0x08,
-    kPortSelect = 0x0A
-    } kRegisterOffset;
+typedef enum {
+	kPortInput = 0x00,
+	kPortOutput = 0x02,
+	kPortDirection = 0x04,
+	kPortResistorEnable = 0x06,
+	kPortDriveStrength = 0x08,
+	kPortSelect = 0x0A
+} kRegisterOffset;
 
 //constructeur
-iDIO::iDIO(char* aPortAddress, char aMask)
-    {
-    this->theMask = aMask;
-    this->thePortAddress = aPortAddress;
-    this->status = kUnInitialized;
+iDIO::iDIO(char* aPortAddress, char aMask) {
+	this->theMask = aMask;
+	this->thePortAddress = aPortAddress;
+	this->status = kUnInitialized;
 
-    //mets les bits concern�s � 0 (digital I/O function selected)
-    *((this->thePortAddress) + kPortSelect) = (*((this->thePortAddress)
-	    + kPortSelect) & ~(this->theMask));
-    }
+	//mets les bits concern�s � 0 (digital I/O function selected)
+	*((this->thePortAddress) + kPortSelect) = (*((this->thePortAddress)
+			+ kPortSelect) & ~(this->theMask));
+}
 
 //nouvelles m�thodes
-void iDIO::SetPortDirection(iDIOPortDirectionEnum aPortDirection)
-    {
-    //mets les bits concern�s dans la direction souhait�e
-    *((this->thePortAddress) + kPortDirection) =
-	    (this->theMask * aPortDirection)
-		    | (*((this->thePortAddress) + kPortDirection)
-			    & ~(this->theMask));
-    }
+void iDIO::SetPortDirection(iDIOPortDirectionEnum aPortDirection) {
+	//mets les bits concern�s dans la direction souhait�e
+	*((this->thePortAddress) + kPortDirection) =
+			(this->theMask * aPortDirection)
+					| (*((this->thePortAddress) + kPortDirection)
+							& ~(this->theMask));
+}
 
-void iDIO::SetPortResistorEnable(iDIOPortResistorActivationEnum aState)
-    {
-    //mets les bits concern�s � dans l'�tat souhait� (resistors disabled/enabled)
-    *((this->thePortAddress) + kPortResistorEnable) = (this->theMask * aState)
-	    | (*((this->thePortAddress) + kPortResistorEnable)
-		    & ~(this->theMask));
-    }
+void iDIO::SetPortResistorEnable(iDIOPortResistorActivationEnum aState) {
+	//mets les bits concern�s � dans l'�tat souhait� (resistors disabled/enabled)
+	*((this->thePortAddress) + kPortResistorEnable) = (this->theMask * aState)
+			| (*((this->thePortAddress) + kPortResistorEnable)
+					& ~(this->theMask));
+}
 
-void iDIO::SetPortResistorPolarity(iDIOPortResistorPolarityEnum aPolarity)
-    {
-    //la r�sistance appliqu�e est configur�e par le registre de sortie
-    this->write((char) (0xFF * aPolarity));
-    }
+void iDIO::SetPortResistorPolarity(iDIOPortResistorPolarityEnum aPolarity) {
+	//la r�sistance appliqu�e est configur�e par le registre de sortie
+	this->write((char) (0xFF * aPolarity));
+}
 
-void iDIO::SetPortDriveStrength(iDIOPortDriveStrengthEnum aStrength)
-    {
-    //mets les bits concern�s � dans l'�tat souhait� (full drive strength, reduced drive strength)
-    *((this->thePortAddress) + kPortDriveStrength) =
-	    (this->theMask * aStrength)
-		    | (*((this->thePortAddress) + kPortDriveStrength)
-			    & ~(this->theMask));
-    }
+void iDIO::SetPortDriveStrength(iDIOPortDriveStrengthEnum aStrength) {
+	//mets les bits concern�s � dans l'�tat souhait� (full drive strength, reduced drive strength)
+	*((this->thePortAddress) + kPortDriveStrength) =
+			(this->theMask * aStrength)
+					| (*((this->thePortAddress) + kPortDriveStrength)
+							& ~(this->theMask));
+}
 
 //m�thodes virtuelles pures h�rit�es devant �tre d�finies
-bool iDIO::write(char aData)
-    {
-    *((this->thePortAddress) + kPortOutput) = (aData & (this->theMask))
-	    | (*(this->thePortAddress) & ~(this->theMask));
+bool iDIO::write(char aData) {
+	*((this->thePortAddress) + kPortOutput) = (aData & (this->theMask))
+			| (*(this->thePortAddress) & ~(this->theMask));
 
-    return true;
-    }
+	return true;
+}
 
-char iDIO::read()
-    {
-    return (*(this->thePortAddress) & (this->theMask));
-    }
+char iDIO::read() {
+	return (*(this->thePortAddress) & (this->theMask));
+}
 
-void iDIO::InitAllPort()
-{
-		//Initialization of ports (all unused pins as outputs with low-level
-		P1OUT = 0x00;
-		P1DIR = 0xFF;
-		P2OUT = 0x00;
-		P2DIR = 0xFF;
-		P3OUT = 0x00;
-		P3DIR = 0xFF;
-		P4OUT = 0x00;
-		P4DIR = 0xFF;
-		P5OUT = 0x00;
-		P5DIR = 0xFF;
-		P6OUT = 0x00;
-		P6DIR = 0xFF;
-		P7OUT = 0x00;
-		P7DIR = 0xFF;
-		P8OUT = 0x00;
-		P8DIR = 0xFF;
+void iDIO::InitAllPort() {
+	//Initialization of ports (all unused pins as outputs with low-level
+	P1OUT = 0x00;
+	P1DIR = 0xFF;
+	P2OUT = 0x00;
+	P2DIR = 0xFF;
+	P3OUT = 0x00;
+	P3DIR = 0xFF;
+	P4OUT = 0x00;
+	P4DIR = 0xFF;
+	P5OUT = 0x00;
+	P5DIR = 0xFF;
+	P6OUT = 0x00;
+	P6DIR = 0xFF;
+	P7OUT = 0x00;
+	P7DIR = 0xFF;
+	P8OUT = 0x00;
+	P8DIR = 0xFF;
+	PJDIR = 0xFF;
+	PJOUT = 0x00;
 }
 
 //destructeur
-iDIO::~iDIO()
-    {
-    }
+iDIO::~iDIO() {
+}

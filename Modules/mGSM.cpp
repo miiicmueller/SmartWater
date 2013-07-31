@@ -5,19 +5,25 @@
 //*****************************************************************************
 
 #include "mGSM.h"
+#include "Def/def.h"
 
-//méthodes publiques
+iUART mGSM::uartGSMStat(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits, k9600);
+
+//mï¿½thodes publiques
 //constructeur
-mGSM::mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM) {
+mGSM::mGSM() {
 	//Initialisation des attributs
-	this->commandesATGSM = aCommandesATGSM;
-	this->outputGSM = aOutputGSM;
-	this->uartGSM = aUartGSM;
-	this->isUnlocked = false;
+	this->commandesATGSM = new tCommandesAT;
+	//Mauvaise sortie juste pour test
+	this->enableGSM = new iDIO((char*) kPort_7, BIT0);
+	this->resetGSM = new iDIO((char*) kPort_7, BIT3);
 
+	this->uartGSM = &mGSM::uartGSMStat;
+
+	this->isUnlocked = false;
 	this->indexSMS = 0;
 
-	//Configuration des classes associées
+	//Configuration des classes associï¿½es
 	mSetup();
 }
 
@@ -25,31 +31,36 @@ mGSM::mGSM(iDIO* aOutputGSM, iUART* aUartGSM, tCommandesAT* aCommandesATGSM) {
  * Fonction de configuration du module GSM
  */
 void mGSM::mSetup() {
-	// On envoie sur USCI_A0 + LSB first (on peut croiser) + pas de paritée + données de 8 bits + vitesse 115200
+	// On envoie sur USCI_A0 + LSB first (on peut croiser) + pas de paritï¿½e + donnï¿½es de 8 bits + vitesse 115200
 	this->uartGSM->config(kLSBFirst, k1StBits, kNone, k8bits, k115200);
 
-	//La sortie reset_Gsm est sir P7.3
-	this->outputGSM->SetPortDirection(kOutput);
-
-	//Mode pleine puissance : à voir ...
-	this->outputGSM->SetPortDriveStrength(kFullStrength);
+	this->enableGSM->SetPortDirection(kOutput);
+	this->enableGSM->SetPortDriveStrength(kFullStrength);
+	this->resetGSM->SetPortDirection(kOutput);
+	this->resetGSM->SetPortDriveStrength(kFullStrength);
 
 	this->indexSMS = 1;
 }
 
 /**
- * Fonction permettant l'ouverture du periphérique GSM
+ * Fonction permettant l'ouverture du periphï¿½rique GSM
  */
 void mGSM::mOpen() {
 
 	const char* theCommand;
-	char reponseGsm[10];
+	char reponseGsm[kSciRecBufSize ];
+
+	bool isOk, isError;
 
 	//Autorisation de communiquer et enable des interruptions
 	this->uartGSM->enable();
 
-	//Au bol : On met à 1 le reset et la sortie MOS
-	this->outputGSM->write(1);
+	//Au bol : On met ï¿½ 1 le reset et la sortie MOS
+	this->enableGSM->write(BIT0);
+	_delay_us(1000);
+	this->resetGSM->write(BIT3);
+
+	_delay_us(1000000);
 
 	//vitesse
 	theCommand = this->commandesATGSM->configBaud19200;
@@ -58,14 +69,29 @@ void mGSM::mOpen() {
 	theCommand = this->commandesATGSM->endAT;
 	this->uartGSM->sendString(theCommand);
 
-	while (this->uartGSM->availableCharToRead() <= 5);
-	this->uartGSM->readLine(reponseGsm);
+	//Test de la rÃ©ponse
+
+	isOk = false;
+	isError = false;
+
+	do {
+		if (this->uartGSM->readFrame(reponseGsm) == true) {
+			if (!(strcmp(reponseGsm, "ERROR"))) { //Compare to string #1, and respond
+				isError = true;
+			} else if (!(strcmp(reponseGsm, "OK"))) { //Compare to string #2, and respond
+				isOk = true;
+			} else {
+
+			}
+		}
+	} while ((isOk == false) && (isError == false));
 
 	this->uartGSM->disable();
 	this->uartGSM->config(kLSBFirst, k1StBits, kNone, k8bits, k9600);
 	this->uartGSM->enable();
 
 	this->uartGSM->clearReceptionBuffer();
+	this->uartGSM->clearInternalSerialBuffer();
 
 	//Mode SMS
 	theCommand = this->commandesATGSM->enableSMS;
@@ -75,26 +101,47 @@ void mGSM::mOpen() {
 	theCommand = this->commandesATGSM->endAT;
 	this->uartGSM->sendString(theCommand);
 
-	//Attente du ok
+	//Test de la rÃ©ponse
+	isOk = false;
+	isError = false;
 
-	while (this->uartGSM->availableCharToRead() <= 5)
-		;
-	this->uartGSM->readLine(reponseGsm);
+	do {
+		if (this->uartGSM->readFrame(reponseGsm) == true) {
+			if (!(strcmp(reponseGsm, "ERROR"))) { //Compare to string #1, and respond
+				isError = true;
+			} else if (!(strcmp(reponseGsm, "OK"))) { //Compare to string #2, and respond
+				isOk = true;
+			} else {
+
+			}
+		}
+	} while ((isOk == false) && (isError == false));
 
 	//delocker la carte SIM
 	theCommand = this->commandesATGSM->delockPIN;
 	this->uartGSM->sendString(theCommand);
 
-	theCommand = "5906";
+	theCommand = "8131";
 	this->uartGSM->sendString(theCommand);
 
 	theCommand = this->commandesATGSM->endAT;
 	this->uartGSM->sendString(theCommand);
 
-	//Attente du ok
-	while (this->uartGSM->availableCharToRead() <= 5)
-		;
-	this->uartGSM->readLine(reponseGsm);
+	//Test de la rÃ©ponse
+	isOk = false;
+	isError = false;
+
+	do {
+		if (this->uartGSM->readFrame(reponseGsm) == true) {
+			if (!(strcmp(reponseGsm, "ERROR"))) { //Compare to string #1, and respond
+				isError = true;
+			} else if (!(strcmp(reponseGsm, "OK"))) { //Compare to string #2, and respond
+				isOk = true;
+			} else {
+
+			}
+		}
+	} while ((isOk == false) && (isError == false));
 
 	//Mode SMS
 	theCommand = this->commandesATGSM->setModeText;
@@ -103,48 +150,61 @@ void mGSM::mOpen() {
 	theCommand = this->commandesATGSM->endAT;
 	this->uartGSM->sendString(theCommand);
 
-	//Attente du ok
-	while (this->uartGSM->availableCharToRead() <= 5)
-		;
-	this->uartGSM->readLine(reponseGsm);
+	//Test de la rÃ©ponse
+	isOk = false;
+	isError = false;
+
+	do {
+		if (this->uartGSM->readFrame(reponseGsm) == true) {
+			if (!(strcmp(reponseGsm, "ERROR"))) { //Compare to string #1, and respond
+				isError = true;
+			} else if (!(strcmp(reponseGsm, "OK"))) { //Compare to string #2, and respond
+				isOk = true;
+			} else {
+
+			}
+		}
+	} while ((isOk == false) && (isError == false));
 
 }
 
 /**
- * Fonction permettant de fermer le periphérique GSM
+ * Fonction permettant de fermer le periphï¿½rique GSM
  */
 void mGSM::mClose() {
-	//Fin de communication et on lève les interrupts
+	//Fin de communication et on lï¿½ve les interrupts
 	this->uartGSM->disable();
 
-	//Au bol : On met à 0 le reset et la sortie MOS
-	this->outputGSM->write(0);
+	//Au bol : On met ï¿½ 0 le reset et la sortie MOS
+	this->enableGSM->write(~BIT0);
+	this->resetGSM->write(~BIT3);
 }
 
 bool mGSM::getSMS(char* aSMS) {
-	char dataReceived[200]; // data reçues du buffer
-	int i = 0; // itérateur pour buffer
-	int j = 0; // itérateur pour texte uniquement
+	char dataReceived[200]; // data reï¿½ues du buffer
+	int i = 0; // itï¿½rateur pour buffer
+	int j = 0; // itï¿½rateur pour texte uniquement
 	bool hasSMS = false;
 
 	// demande au module GSM le prochain SMS
 	uartGSM->sendString(commandesATGSM->getSMS);
 
 	uartGSM->write((char) (indexSMS + 48));
-	//uartGSM->write(indexSMS + 48); // choisit le message à lire
+	//uartGSM->write(indexSMS + 48); // choisit le message ï¿½ lire
 	uartGSM->sendString(commandesATGSM->endAT);
 
 	for (unsigned int pp = 0; pp < 100; pp++) {
 		for (unsigned int qq = 0; qq < 65000; qq++) {
 		}
-	} // attend la réponse
+	} // attend la rï¿½ponse
 
-	uartGSM->readLine(dataReceived); // prend la trame
+	while (this->uartGSM->readFrame(dataReceived))
+		;
 
-	// contrôle si un sms est présent dans la trame
+	// contrï¿½le si un sms est prï¿½sent dans la trame
 	while (0 != dataReceived[i]
 			&& !(true == hasSMS && '\r' == dataReceived[i - 2]
-					&& '\n' == dataReceived[i - 1])) // s'arrete au debut du texte SMS ; ou à la fin du buffer
+					&& '\n' == dataReceived[i - 1])) // s'arrete au debut du texte SMS ; ou ï¿½ la fin du buffer
 	{
 // regarder depuis ici en sachant : OK
 //		AT+CMGR=3
@@ -154,37 +214,39 @@ bool mGSM::getSMS(char* aSMS) {
 //		OK
 		// voir si '\r' c'est oki?
 
-		// regarde si SMS présent
+		// regarde si SMS prï¿½sent
 		if ('O' == dataReceived[i] && 'K' == dataReceived[i + 1]) // pas de SMS
 				{
-			indexSMS = 1; // tous les SMS sont lus, prochain sms à index 1
+			indexSMS = 1; // tous les SMS sont lus, prochain sms ï¿½ index 1
 			uartGSM->sendString(commandesATGSM->deleteSMSAll); // efface tous SMS
 			uartGSM->sendString(commandesATGSM->endAT);
 			return false; //sms absent
 		} else if ('+' == dataReceived[i] && 'C' == dataReceived[i + 1]
-				&& 'M' == dataReceived[i + 2] && 'G' == dataReceived[i + 3]) // sms présent
+				&& 'M' == dataReceived[i + 2] && 'G' == dataReceived[i + 3]) // sms prï¿½sent
 						{
 			hasSMS = true;
 		}
 		i++;
 	}
 
-	// transcrit le texte reçu
-	while (!('O' == dataReceived[i + 4] && 'K' == dataReceived[i + 5])) // s'arrete à la fin du message texte
+	// transcrit le texte reï¿½u
+	while (!('O' == dataReceived[i + 4] && 'K' == dataReceived[i + 5])) // s'arrete ï¿½ la fin du message texte
 	{
-		aSMS[j] = dataReceived[i]; // transcrit (le teste intéressant uniquement)
+		aSMS[j] = dataReceived[i]; // transcrit (le teste intï¿½ressant uniquement)
 		i++;
 		j++;
 	}
 
-	this->indexSMS++; // prochain SMS à être lu
+	this->indexSMS++; // prochain SMS ï¿½ ï¿½tre lu
 	return true;
 }
 
 bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber) {
-	UInt16 timeOutIndex = 0;
 
-	char* theAnswer;
+	char theAnswer[kSciRecBufSize];
+	bool isOk = false;
+	bool isError = false;
+
 	const char* theSMS = this->commandesATGSM->sendSMS;
 
 	this->uartGSM->sendString(theSMS);
@@ -202,8 +264,33 @@ bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber) {
 
 	this->uartGSM->write(0x1A);
 
+	//Test de la rÃ©ponse
+	isOk = false;
+	isError = false;
+
+	do {
+		if (this->uartGSM->readFrame(theAnswer) == true) {
+			if (!(strcmp(theAnswer, "+CMS ERROR: 331"))) { //Compare to string #1, and respond
+				isError = true;
+			} else if (!(strcmp(theAnswer, "OK"))) { //Compare to string #2, and respond
+				isOk = true;
+			} else {
+
+			}
+		}
+	} while ((isOk == false) && (isError == false));
+
 }
 
 //destructeur
 mGSM::~mGSM() {
+}
+
+//Fonciton utile
+void mGSM::_delay_us(long aDelay) {
+	long i = 0;
+	for (i = 0; i < aDelay; i++) {
+		//Pour 1us
+		__delay_cycles(25);
+	}
 }
