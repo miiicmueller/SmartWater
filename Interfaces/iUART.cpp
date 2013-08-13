@@ -356,13 +356,13 @@ bool iUART::write(char aData) {
 		switch (this->serialPort) {
 
 		case kUSCI_A0: // Sur le port 0
-			while (!(UCA0IFG & UCTXIFG))
+			while (!((UCA0IFG & UCTXIFG)== UCTXIFG))
 				;
 			UCA0TXBUF = aData;
 			break;
 
 		case kUSCI_A1: // Sur le port 1
-			while (!(UCA1IFG & UCTXIFG))
+			while (!((UCA0IFG & UCTXIFG)== UCTXIFG))
 				;
 			UCA1TXBUF = aData;
 			break;
@@ -607,7 +607,7 @@ int iUART::availableCharToRead() {
  * aString : Chaîne à envoyeriUart
  * retour  : 1 si la chaîne à bien été transmise
  */
-bool iUART::sendString(const char* aString) {
+bool iUART::sendString(char* aString) {
 	int i = 0;
 	unsigned int j = 0;
 	bool result = false;

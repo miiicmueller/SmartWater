@@ -9,13 +9,20 @@
 
 iUART mGSM::uartGSMStat(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits, k9600);
 
+void clear_buffer(char* buffer, int size) {
+	int i = 0;
+	for (i = 0; i < size; i++) {
+		buffer[i] = 0;
+	}
+}
+
 //m�thodes publiques
 //constructeur
 mGSM::mGSM() {
 	//Initialisation des attributs
 	this->commandesATGSM = new tCommandesAT;
-	//Mauvaise sortie juste pour test
-	this->enableGSM = new iDIO((char*) kPort_7, BIT0);
+	//Activation GSM
+	this->enableGSM = new iDIO((char*) kPort_7, BIT4);
 	this->resetGSM = new iDIO((char*) kPort_7, BIT3);
 
 	this->uartGSM = &mGSM::uartGSMStat;
@@ -47,7 +54,7 @@ void mGSM::mSetup() {
  */
 void mGSM::mOpen() {
 
-	const char* theCommand;
+	char theCommand[kSciRecBufSize ];
 	char reponseGsm[kSciRecBufSize ];
 
 	bool isOk, isError;
@@ -56,23 +63,24 @@ void mGSM::mOpen() {
 	this->uartGSM->enable();
 
 	//Au bol : On met � 1 le reset et la sortie MOS
-	this->enableGSM->write(BIT0);
+	this->enableGSM->write(BIT4);
 	_delay_us(1000);
 	this->resetGSM->write(BIT3);
 
 	_delay_us(1000000);
 
 	//vitesse
-	theCommand = this->commandesATGSM->configBaud19200;
-	this->uartGSM->sendString(theCommand);
+	//theCommand = this->commandesATGSM->configBaud19200;
+	this->uartGSM->sendString(this->commandesATGSM->configBaud19200);
 
-	theCommand = this->commandesATGSM->endAT;
-	this->uartGSM->sendString(theCommand);
+	//theCommand = this->commandesATGSM->endAT;
+	this->uartGSM->sendString(this->commandesATGSM->endAT);
 
 	//Test de la réponse
 
 	isOk = false;
 	isError = false;
+	clear_buffer(reponseGsm, kSciRecBufSize );
 
 	do {
 		if (this->uartGSM->readFrame(reponseGsm) == true) {
@@ -93,17 +101,20 @@ void mGSM::mOpen() {
 	this->uartGSM->clearReceptionBuffer();
 	this->uartGSM->clearInternalSerialBuffer();
 
+	_delay_us(1000000);
+
 	//Mode SMS
-	theCommand = this->commandesATGSM->enableSMS;
+	//theCommand = this->commandesATGSM->enableSMS;
 
-	this->uartGSM->sendString(theCommand);
+	this->uartGSM->sendString(this->commandesATGSM->enableSMS);
 
-	theCommand = this->commandesATGSM->endAT;
-	this->uartGSM->sendString(theCommand);
+	//theCommand = this->commandesATGSM->endAT;
+	this->uartGSM->sendString(this->commandesATGSM->endAT);
 
 	//Test de la réponse
 	isOk = false;
 	isError = false;
+	clear_buffer(reponseGsm, kSciRecBufSize );
 
 	do {
 		if (this->uartGSM->readFrame(reponseGsm) == true) {
@@ -116,20 +127,26 @@ void mGSM::mOpen() {
 			}
 		}
 	} while ((isOk == false) && (isError == false));
+
+	this->uartGSM->clearReceptionBuffer();
+	this->uartGSM->clearInternalSerialBuffer();
+
+	_delay_us(1000000);
 
 	//delocker la carte SIM
-	theCommand = this->commandesATGSM->delockPIN;
-	this->uartGSM->sendString(theCommand);
+	//theCommand = this->commandesATGSM->delockPIN;
+	this->uartGSM->sendString(this->commandesATGSM->delockPIN);
 
-	theCommand = "8131";
-	this->uartGSM->sendString(theCommand);
+	//theCommand = "5906";
+	this->uartGSM->sendString("5906");
 
-	theCommand = this->commandesATGSM->endAT;
-	this->uartGSM->sendString(theCommand);
+	//theCommand = this->commandesATGSM->endAT;
+	this->uartGSM->sendString(this->commandesATGSM->endAT);
 
 	//Test de la réponse
 	isOk = false;
 	isError = false;
+	clear_buffer(reponseGsm, kSciRecBufSize );
 
 	do {
 		if (this->uartGSM->readFrame(reponseGsm) == true) {
@@ -142,17 +159,23 @@ void mGSM::mOpen() {
 			}
 		}
 	} while ((isOk == false) && (isError == false));
+
+	this->uartGSM->clearReceptionBuffer();
+	this->uartGSM->clearInternalSerialBuffer();
+
+	_delay_us(1000000);
 
 	//Mode SMS
-	theCommand = this->commandesATGSM->setModeText;
-	this->uartGSM->sendString(theCommand);
+	//theCommand = this->commandesATGSM->setModeText;
+	this->uartGSM->sendString(this->commandesATGSM->setModeText);
 
-	theCommand = this->commandesATGSM->endAT;
-	this->uartGSM->sendString(theCommand);
+	//theCommand = this->commandesATGSM->endAT;
+	this->uartGSM->sendString(this->commandesATGSM->endAT);
 
 	//Test de la réponse
 	isOk = false;
 	isError = false;
+	clear_buffer(reponseGsm, kSciRecBufSize );
 
 	do {
 		if (this->uartGSM->readFrame(reponseGsm) == true) {
@@ -165,6 +188,9 @@ void mGSM::mOpen() {
 			}
 		}
 	} while ((isOk == false) && (isError == false));
+
+	this->uartGSM->clearReceptionBuffer();
+	this->uartGSM->clearInternalSerialBuffer();
 
 }
 
@@ -247,20 +273,34 @@ bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber) {
 	bool isOk = false;
 	bool isError = false;
 
-	const char* theSMS = this->commandesATGSM->sendSMS;
+	_delay_us(1000000);
 
-	this->uartGSM->sendString(theSMS);
+	this->uartGSM->clearReceptionBuffer();
+	this->uartGSM->clearInternalSerialBuffer();
+	clear_buffer(theAnswer,kSciRecBufSize);
 
-	theSMS = aPhoneNumber;
+	//char theSMS[kSciRecBufSize] = this->commandesATGSM->sendSMS;
 
-	this->uartGSM->sendString(theSMS);
+	this->uartGSM->sendString(this->commandesATGSM->sendSMS);
 
-	theSMS = "\"\r\n";
+	_delay_us(1000000);
 
-	this->uartGSM->sendString(theSMS);
+	//theSMS = aPhoneNumber;
 
-	theSMS = aSMS;
+	this->uartGSM->sendString(aPhoneNumber);
+
+	_delay_us(1000000);
+
+	//theSMS = "\"\r\n";
+
+	this->uartGSM->sendString("\"\r\n");
+
+	_delay_us(1000000);
+
+	//theSMS = aSMS;
 	this->uartGSM->sendString(aSMS);
+
+	_delay_us(1000000);
 
 	this->uartGSM->write(0x1A);
 
@@ -271,6 +311,9 @@ bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber) {
 	do {
 		if (this->uartGSM->readFrame(theAnswer) == true) {
 			if (!(strcmp(theAnswer, "+CMS ERROR: 331"))) { //Compare to string #1, and respond
+				isError = true;
+			}
+			if (!(strcmp(theAnswer, "+CMS ERROR: 311"))) { //Compare to string #1, and respond
 				isError = true;
 			} else if (!(strcmp(theAnswer, "OK"))) { //Compare to string #2, and respond
 				isOk = true;

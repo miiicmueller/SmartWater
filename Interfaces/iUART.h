@@ -101,7 +101,7 @@ public:
 	void disable();
 	char read();
 	bool write(char aData);
-	bool sendString(const char* aString);
+	bool sendString(char* aString);
 	bool isBufferEmpty();
 //	int readLine(char* aBuffer);
 	void clearReceptionBuffer();

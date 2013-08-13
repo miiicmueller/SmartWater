@@ -53,40 +53,55 @@ void main(void) {
 	__bis_SR_register(GIE);
 
 	mUSB commUsb(&bCDCDataReceived_event);
-	//iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
+	iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
 	mRTC RTC;
 
 	mGSM mGsm;
 
-//	iDIO enableGSM((char*) kPort_7, BIT0);
+	iDIO enableGSM((char*) kPort_7, BIT4);
+	enableGSM.SetPortDirection(kOutput);
+	enableGSM.SetPortDriveStrength(kFullStrength);
+	enableGSM.write(~BIT4);
+
+//
+	iDIO resetGSM((char*) kPort_7, BIT3);
+	resetGSM.SetPortDirection(kOutput);
+	resetGSM.SetPortDriveStrength(kFullStrength);
+	resetGSM.write(~BIT3);
+//
+//	iDIO CTSel2((char*) kPort_6, BIT1);
+//	enableCT.SetPortDirection(kOutput);
+//	enableCT.SetPortDriveStrength(kFullStrength);
+//	enableCT.write(~BIT1);
+
 //	iDIO resetGSM((char*) kPort_7, BIT3);
 //	iUART uart(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits,
 //				k9600);
 
-	//mEEPROM DataBase(0x50, &iI2C_1);
-	//mTempSensor CaptCarte(0x48, &iI2C_1);
+//	mEEPROM DataBase(0x50, &iI2C_1);
+//	mTempSensor CaptCarte(0x48, &iI2C_1);
 
-	//DataBase.mOpen();
-	//CaptCarte.mOpen();
-	RTC.mOpen();
-	mGsm.mOpen();
+//	DataBase.mOpen();
+//	CaptCarte.mOpen();
+//	RTC.mOpen();
+//	mGsm.mOpen();
 
 	//CaptCarte.configSensor(kConfiguration, 0x60);
-	RTC.setHour(17, 0, 0);
-	RTC.setAlarm(1);
+	//RTC.setHour(17, 0, 0);
+	//RTC.setAlarm(1);
 
-	__enable_interrupt();    //Enable interrupts globally
+//	__enable_interrupt();    //Enable interrupts globally
 
-	mGsm.sendSMS("Coucou","+41795983902");
+	//mGsm.sendSMS("Coucou", "+41798183833");
 
 	while (1) {
 
 		int cmd = 0;
 
 		// On endort le processeur en niveau 3 (voir datasheet page 20)
-		//mCpu::setPowerMode(kLPM3);
+		mCpu::setPowerMode(kLPM3);
 
-		//Check the USB state and directly main loop accordingly
+//		//Check the USB state and directly main loop accordingly
 //		if (commUsb.isConnected()) {
 //			if (commUsb.getCommand(&cmd)) {
 //				switch (cmd) {
