@@ -41,6 +41,7 @@ char tempToSend[MAX_BUFFERSIZE] = "";
  */
 void main(void) {
 
+	char leMessage[kSciRecBufSize];
 
 	// Important pour la basse consommation
 	iDIO::InitAllPort();
@@ -49,8 +50,6 @@ void main(void) {
 
 	__bis_SR_register(GIE);
 
-
-
 	mGSM mGsm;
 
 	mGsm.mOpen();
@@ -58,8 +57,13 @@ void main(void) {
 
 	__enable_interrupt();    //Enable interrupts globally
 
-	mGsm.sendSMS("Coucou2\rapreCR\napreLF\r\napreCRLF", "+41787526983");
 
-	while (1) {}
+
+
+	while (1) {
+
+		mGsm.getSMS(leMessage);
+
+	}
 }
 

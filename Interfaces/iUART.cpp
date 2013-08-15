@@ -174,12 +174,11 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 		switch (aBaudrate) {
 		case k300:
 			//Modulation
-			UCA1MCTL = 0x00;
-			UCA1MCTL |= UCOS16;
-			UCA1MCTL |= ((0xB6) << 8);      // Modulation UCBRSx=6, UCBRFx=0
-			UCA1MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+			UCA0MCTL = 0x00;
+			UCA0MCTL |= UCOS16;
+			UCA0MCTL |= UCBRS_0 + UCBRF_1;
 			//Configuration du baudrate
-			UCA1BRW = 832;
+			UCA0BRW = 832;
 			break;
 		case k4800:
 			break;
@@ -577,6 +576,32 @@ bool iUART::readFrame(char* string) {
 	}
 }
 
+
+/**
+ * Fonction qui permet d'obtenir l'ensemble des bytes recus
+ * en m�moire s�par� d'un CR+LF
+ *
+ * aBuffer : Buffer d'entr�e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+ * retour  : -1 si on a rien trouv� sinon la taille de la cha�ne
+ */
+bool iUART::readFrameSimon(char* stringReceive) {
+	unsigned char i = 0;
+	unsigned char nDataReceived = this->USCIRingBuffer.ByteCount;
+
+	//Tester si l'on a recu qqch
+	if (!((this->dataReceived == true) || (nDataReceived != 0)))
+		{
+		return false; // buf empty
+		}
+
+	//Recuperation des bytes recus
+	for (i = 0; i < nDataReceived; i++)
+		{
+		stringReceive[i] = this->read();
+		}
+	return true;
+}
+
 // TODO - Tester les performances des fonctions send string
 
 /**
@@ -649,6 +674,12 @@ void iUART::clearReceptionBuffer() {
 	this->USCIRingBuffer.ByteCount = 0;
 	this->USCIRingBuffer.InIndex = 0;
 	this->USCIRingBuffer.OutIndex = 0;
+
+	//clear contenu buffer
+	for(int i=0; i<kSciRecBufSize; i++)
+		{
+		this->USCIRingBuffer.UsciRecBuf[i]=0;
+		}
 }
 
 void iUART::clearInternalSerialBuffer() {

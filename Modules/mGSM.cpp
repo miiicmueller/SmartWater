@@ -82,22 +82,30 @@ void mGSM::mOpen() {
 	//theCommand = this->commandesATGSM->endAT;
 	this->uartGSM->sendString(this->commandesATGSM->endAT);
 
+	_delay_us(1000000);
+
 	//Test de la réponse
 	isOk = false;
 	isError = false;
 	clear_buffer(reponseGsm, kSciRecBufSize );
 
-	do {
-		if (this->uartGSM->readFrame(reponseGsm) == true) {
-			if (!(strcmp(reponseGsm, "ERROR"))) { //Compare to string #1, and respond
-				isError = true;
-			} else if (!(strcmp(reponseGsm, "OK"))) { //Compare to string #2, and respond
-				isOk = true;
-			} else {
 
+	while ( (isOk == false) && (isError == false) )
+	{
+		this->uartGSM->readFrameSimon(reponseGsm);
+		for(int i=0; i<kSciRecBufSize; i++)
+		{
+			if ( reponseGsm[i] == 'E' && reponseGsm[i+1] == 'R' && reponseGsm[i+2] == 'R' && reponseGsm[i+3] == 'O' && reponseGsm[i+4] == 'R')
+			{
+				isError = true;
+			}
+			else if ( reponseGsm[i] == 'O' && reponseGsm[i+1] == 'K')
+			{
+				isOk = true;
 			}
 		}
-	} while ((isOk == false) && (isError == false));
+	}
+
 
 	this->uartGSM->clearReceptionBuffer();
 	this->uartGSM->clearInternalSerialBuffer();
@@ -125,28 +133,34 @@ void mGSM::mOpen() {
 	//theCommand = this->commandesATGSM->endAT;
 	this->uartGSM->sendString(this->commandesATGSM->endAT);
 
+
+	_delay_us(1000000);
+
 	//Test de la réponse
 	isOk = false;
 	isError = false;
 	clear_buffer(reponseGsm, kSciRecBufSize );
 
-	do {
-		if (this->uartGSM->readFrame(reponseGsm) == true) {
-			if (!(strcmp(reponseGsm, "ERROR"))) { //Compare to string #1, and respond
+	while ( (isOk == false) && (isError == false) )
+	{
+		this->uartGSM->readFrameSimon(reponseGsm);
+		for(int i=0; i<kSciRecBufSize; i++)
+		{
+			if ( reponseGsm[i] == 'E' && reponseGsm[i+1] == 'R' && reponseGsm[i+2] == 'R' && reponseGsm[i+3] == 'O' && reponseGsm[i+4] == 'R')
+			{
 				isError = true;
-			} else if (!(strcmp(reponseGsm, "OK"))) { //Compare to string #2, and respond
+			}
+			else if ( reponseGsm[i] == 'O' && reponseGsm[i+1] == 'K')
+			{
 				isOk = true;
-			} else {
-
 			}
 		}
-	} while ((isOk == false) && (isError == false));
+	}
 
 
 	this->uartGSM->clearReceptionBuffer();
 	this->uartGSM->clearInternalSerialBuffer();
 
-	_delay_us(1000000);
 
 	//Mode SMS
 	//theCommand = this->commandesATGSM->setModeText;
@@ -155,22 +169,29 @@ void mGSM::mOpen() {
 	//theCommand = this->commandesATGSM->endAT;
 	this->uartGSM->sendString(this->commandesATGSM->endAT);
 
+
+	_delay_us(1000000);
+
 	//Test de la réponse
 	isOk = false;
 	isError = false;
 	clear_buffer(reponseGsm, kSciRecBufSize );
 
-	do {
-		if (this->uartGSM->readFrame(reponseGsm) == true) {
-			if (!(strcmp(reponseGsm, "ERROR"))) { //Compare to string #1, and respond
+	while ( (isOk == false) && (isError == false) )
+	{
+		this->uartGSM->readFrameSimon(reponseGsm);
+		for(int i=0; i<kSciRecBufSize; i++)
+		{
+			if ( reponseGsm[i] == 'E' && reponseGsm[i+1] == 'R' && reponseGsm[i+2] == 'R' && reponseGsm[i+3] == 'O' && reponseGsm[i+4] == 'R')
+			{
 				isError = true;
-			} else if (!(strcmp(reponseGsm, "OK"))) { //Compare to string #2, and respond
+			}
+			else if ( reponseGsm[i] == 'O' && reponseGsm[i+1] == 'K')
+			{
 				isOk = true;
-			} else {
-
 			}
 		}
-	} while ((isOk == false) && (isError == false));
+	}
 
 	this->uartGSM->clearReceptionBuffer();
 	this->uartGSM->clearInternalSerialBuffer();
@@ -190,8 +211,8 @@ void mGSM::mClose() {
 }
 
 bool mGSM::getSMS(char* aSMS) {
-	char dataReceived[200]; // data re�ues du buffer
-	int i = 0; // it�rateur pour buffer
+	char dataReceived[kSciRecBufSize]; // data re�ues du buffer
+	int i = 13; // it�rateur pour buffer
 	int j = 0; // it�rateur pour texte uniquement
 	bool hasSMS = false;
 
@@ -207,8 +228,7 @@ bool mGSM::getSMS(char* aSMS) {
 		}
 	} // attend la r�ponse
 
-	while (this->uartGSM->readFrame(dataReceived))
-		;
+	this->uartGSM->readFrameSimon(dataReceived);
 
 	// contr�le si un sms est pr�sent dans la trame
 	while (0 != dataReceived[i]
@@ -227,8 +247,11 @@ bool mGSM::getSMS(char* aSMS) {
 		if ('O' == dataReceived[i] && 'K' == dataReceived[i + 1]) // pas de SMS
 				{
 			indexSMS = 1; // tous les SMS sont lus, prochain sms � index 1
-			uartGSM->sendString(commandesATGSM->deleteSMSAll); // efface tous SMS
-			uartGSM->sendString(commandesATGSM->endAT);
+			//ne pas tout effacer durant les tests
+			//ne pas tout effacer durant les tests
+			//ne pas tout effacer durant les tests
+			//uartGSM->sendString(commandesATGSM->deleteSMSAll); // efface tous SMS
+			//uartGSM->sendString(commandesATGSM->endAT);
 			return false; //sms absent
 		} else if ('+' == dataReceived[i] && 'C' == dataReceived[i + 1]
 				&& 'M' == dataReceived[i + 2] && 'G' == dataReceived[i + 3]) // sms pr�sent

@@ -21,7 +21,7 @@
 #include "Interface.h"
 
 // Buffer de 200 caract�res
-#define kSciRecBufSize ((unsigned char)(50))
+#define kSciRecBufSize ((unsigned char)(200))
 
 using namespace std;
 
@@ -108,6 +108,7 @@ public:
 	void clearInternalSerialBuffer();
 	bool retInString(char* string);
 	bool readFrame(char* string);
+	bool readFrameSimon(char* string);
 
 };
 #endif
