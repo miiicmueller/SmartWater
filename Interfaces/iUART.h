@@ -55,7 +55,7 @@ typedef enum {
 } iUARTStatusFlagEnum;
 
 typedef enum {
-	k4800, k9600, k19200, k57600, k115200
+	k300,k4800, k9600, k19200, k57600, k115200
 } iUARTBaudrateEnum;
 
 //Structure du buffer tournant

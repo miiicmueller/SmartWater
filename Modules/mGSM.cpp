@@ -7,7 +7,7 @@
 #include "mGSM.h"
 #include "Def/def.h"
 
-iUART mGSM::uartGSMStat(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits, k9600);
+iUART mGSM::uartGSMStat(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits, k115200);
 
 void clear_buffer(char* buffer, int size) {
 	int i = 0;
@@ -28,7 +28,7 @@ mGSM::mGSM() {
 	this->uartGSM = &mGSM::uartGSMStat;
 
 	this->isUnlocked = false;
-	this->indexSMS = 0;
+	this->indexSMS = 1;
 
 	//Configuration des classes associï¿½es
 	mSetup();
@@ -45,8 +45,6 @@ void mGSM::mSetup() {
 	this->enableGSM->SetPortDriveStrength(kFullStrength);
 	this->resetGSM->SetPortDirection(kOutput);
 	this->resetGSM->SetPortDriveStrength(kFullStrength);
-
-	this->indexSMS = 1;
 }
 
 /**
@@ -54,7 +52,6 @@ void mGSM::mSetup() {
  */
 void mGSM::mOpen() {
 
-	char theCommand[kSciRecBufSize ];
 	char reponseGsm[kSciRecBufSize ];
 
 	bool isOk, isError;
@@ -69,42 +66,16 @@ void mGSM::mOpen() {
 
 	_delay_us(1000000);
 
-	//vitesse
-	//theCommand = this->commandesATGSM->configBaud19200;
-	this->uartGSM->sendString(this->commandesATGSM->configBaud19200);
-
-	//theCommand = this->commandesATGSM->endAT;
-	this->uartGSM->sendString(this->commandesATGSM->endAT);
-
-	//Test de la rÃ©ponse
-
-	isOk = false;
-	isError = false;
-	clear_buffer(reponseGsm, kSciRecBufSize );
-
-	do {
-		if (this->uartGSM->readFrame(reponseGsm) == true) {
-			if (!(strcmp(reponseGsm, "ERROR"))) { //Compare to string #1, and respond
-				isError = true;
-			} else if (!(strcmp(reponseGsm, "OK"))) { //Compare to string #2, and respond
-				isOk = true;
-			} else {
-
-			}
-		}
-	} while ((isOk == false) && (isError == false));
-
-	this->uartGSM->disable();
-	this->uartGSM->config(kLSBFirst, k1StBits, kNone, k8bits, k9600);
-	this->uartGSM->enable();
-
-	this->uartGSM->clearReceptionBuffer();
-	this->uartGSM->clearInternalSerialBuffer();
-
-	_delay_us(1000000);
 
 	//Mode SMS
 	//theCommand = this->commandesATGSM->enableSMS;
+
+	// il faudra mieux tester et ne pas faire ce qui vient, par la suite !
+	//this->uartGSM->sendString(this->commandesATGSM->questSMSMode);
+	//this->uartGSM->sendString(this->commandesATGSM->endAT);
+
+
+
 
 	this->uartGSM->sendString(this->commandesATGSM->enableSMS);
 
@@ -133,6 +104,17 @@ void mGSM::mOpen() {
 
 	_delay_us(1000000);
 
+
+
+
+	//controle (mal) si la carte sim est deja delockée
+	////this->uartGSM->sendString(this->commandesATGSM->questStatePIN);
+	////this->uartGSM->sendString(this->commandesATGSM->endAT);
+
+
+
+
+
 	//delocker la carte SIM
 	//theCommand = this->commandesATGSM->delockPIN;
 	this->uartGSM->sendString(this->commandesATGSM->delockPIN);
@@ -159,6 +141,7 @@ void mGSM::mOpen() {
 			}
 		}
 	} while ((isOk == false) && (isError == false));
+
 
 	this->uartGSM->clearReceptionBuffer();
 	this->uartGSM->clearInternalSerialBuffer();
