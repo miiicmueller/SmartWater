@@ -8,6 +8,7 @@
 #define __MGSM__
 
 #include <string>
+#include <assert.h>
 
 #include "Module.h"
 #include "../Interfaces/iUART.h"

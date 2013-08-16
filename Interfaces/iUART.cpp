@@ -579,12 +579,13 @@ bool iUART::readFrame(char* string) {
 
 /**
  * Fonction qui permet d'obtenir l'ensemble des bytes recus
- * en m�moire s�par� d'un CR+LF
+ * en memoire dans le buffer
  *
- * aBuffer : Buffer d'entr�e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
- * retour  : -1 si on a rien trouv� sinon la taille de la cha�ne
+ * stringReceived : pointeur sur le tableau de recuperation du buffer
+ *
+ * retour  : true si il y a au moins un caractere dans le buffer
  */
-bool iUART::readFrameSimon(char* stringReceive) {
+bool iUART::readFullFrame(char* stringReceived) {
 	unsigned char i = 0;
 	unsigned char nDataReceived = this->USCIRingBuffer.ByteCount;
 
@@ -597,7 +598,7 @@ bool iUART::readFrameSimon(char* stringReceive) {
 	//Recuperation des bytes recus
 	for (i = 0; i < nDataReceived; i++)
 		{
-		stringReceive[i] = this->read();
+		stringReceived[i] = this->read();
 		}
 	return true;
 }

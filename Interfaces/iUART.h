@@ -86,7 +86,6 @@ private:
 	//Interruptions handlers
 	friend void USCI_A0(void);
 	friend void USCI_A1(void);
-	int availableCharToRead();
 
 public:
 	iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
@@ -108,7 +107,8 @@ public:
 	void clearInternalSerialBuffer();
 	bool retInString(char* string);
 	bool readFrame(char* string);
-	bool readFrameSimon(char* string);
+	int availableCharToRead();
+	bool readFullFrame(char* stringReceived);
 
 };
 #endif

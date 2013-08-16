@@ -6,9 +6,11 @@
 #include "Modules/mGSM.h"
 #include "Modules/mCpu.h"
 #include "Modules/mEEPROM.h"
+#include "Modules/mCompteur.h"
 #include "Modules/mTempSensor.h"
 #include "Modules/mUSB.h"
 #include "Modules/mRTC.h"
+#include "Def/def.h"
 
 #include "Tools/tCommandesAT.h"
 
@@ -41,8 +43,7 @@ char tempToSend[MAX_BUFFERSIZE] = "";
  */
 void main(void) {
 
-	char leMessage[kSciRecBufSize];
-
+	UInt32 valeurCompteur=0;
 	// Important pour la basse consommation
 	iDIO::InitAllPort();
 
@@ -50,19 +51,26 @@ void main(void) {
 
 	__bis_SR_register(GIE);
 
-	mGSM mGsm;
 
-	mGsm.mOpen();
+	__enable_interrupt(); //Enable interrupts globally
 
+	long valeurwCompteur=0;
+	UInt16 valeurCompte4ur=5;
+	valeurCompteur++;
 
-	__enable_interrupt();    //Enable interrupts globally
+	mCompteur monCompteur(kMeter1);
+	monCompteur.mOpen();
+	valeurCompteur = monCompteur.mRead();
+
+	if (valeurCompteur<300)
+	    {
+	    valeurCompteur=300;
+	    }
 
 
 
 
 	while (1) {
-
-		mGsm.getSMS(leMessage);
 
 	}
 }
