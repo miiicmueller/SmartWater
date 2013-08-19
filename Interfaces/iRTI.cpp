@@ -7,10 +7,7 @@
 #include "iRTI.h"
 
 #define kNbOfDelays	10
-#define kRTIper		1024
-//TODO : fixer la valeur de kTA0_Period
-#define kTA0_Period	500
-
+#define kTA0_Period	25000 // clk à 25 000 000 Hz, divisé par 25 000, cela fait 1000Hz, soit 1ms
 //initialisation des attributs statiques
 int iRTI::freeDelays = kNbOfDelays;
 tDelay iRTI::delaysTab[kNbOfDelays];
@@ -59,20 +56,20 @@ bool iRTI::isDone()
 //méthodes statiques, qui agissent sur toutes les instances de la classe
 void iRTI::config()
     {
-    //TODO : sélectionner la source d'horloge pour le timer (cf. p. 476 user's guide) et le diviseur
-    TA0CTL |= (TAIE); //up mode,
-
+    TA0CTL |= (TASSEL__SMCLK); //sélection de la source d'horloge du compteur (divisé par 1 par défaut)
     TA0CCR0 = kTA0_Period; //nombre de pas à compter pour avoir une période de 1ms
     }
 
 void iRTI::enable()
     {
-    TA0CTL |= (MC_0); //stop mode,
+    TA0CTL |= (TAIE); //timer A interrupt enable,
+    TA0CTL |= (MC_1); //up mode,
     }
 
 void iRTI::disable()
     {
-    TA0CTL |= (MC_1); //up mode,
+    TA0CTL &= ~(TAIE); //timer A interrupt disable,
+    TA0CTL |= (MC_0); //stop mode,
     }
 
 //interrupt handler
