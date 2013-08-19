@@ -15,7 +15,7 @@
 #include "iUART.h"
 #include "../Def/def.h"
 
-//TODO fixer cette valeur � la bonne fr�quence
+// fixer cette valeur a la bonne frequence
 #define F_BRCLK 4000000
 
 //Initalisation des attributs UART_x statiques
@@ -172,6 +172,14 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 		UCA0CTL1 |= UCSSEL__SMCLK;
 
 		switch (aBaudrate) {
+		case k300:
+			//Modulation
+			UCA0MCTL = 0x00;
+			UCA0MCTL |= UCOS16;
+			UCA0MCTL |= UCBRS_0 + UCBRF_1;
+			//Configuration du baudrate
+			UCA0BRW = 832;
+			break;
 		case k4800:
 			break;
 		case k9600:
@@ -204,11 +212,10 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 		case k115200:
 			//Modulation
 			UCA0MCTL = 0x00;
-			UCA0MCTL |= UCOS16;
-			UCA0MCTL |= ((0xBB) << 8);      // Modulation UCBRSx=6, UCBRFx=0
-			UCA0MCTL |= (UCBRF1);
+			UCA0MCTL &= ~UCOS16;
+			UCA0MCTL |= UCBRS_6 + UCBRF_0;
 			//Configuration du baudrate
-			UCA0BRW = 2;
+			UCA0BRW = 34;
 			break;
 		}
 
@@ -254,10 +261,10 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 		}
 
 		// Configuration en mode UART => sans bit d'adresse
-		UCA0CTL1 &= ~(UCMODE0 | UCMODE1);
+		UCA1CTL1 &= ~(UCMODE0 | UCMODE1);
 
 		//Configuration de transmission asynchrone
-		UCA0CTL1 &= ~(UCSYNC);
+		UCA1CTL1 &= ~(UCSYNC);
 
 		// Configuration de la longeur de don�es � tranmettre
 		if (k7bits == aDataCfg) {
@@ -270,6 +277,15 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 		UCA1CTL1 |= UCSSEL__SMCLK;
 
 		switch (aBaudrate) {
+		case k300:
+			//Modulation
+			UCA1MCTL = 0x00;
+			UCA1MCTL |= UCOS16;
+			UCA1MCTL |= ((0xB6) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+			UCA1MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+			//Configuration du baudrate
+			UCA1BRW = 832;
+			break;
 		case k4800:
 			break;
 		case k9600:
@@ -302,13 +318,16 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 		case k115200:
 			//Modulation
 			UCA1MCTL = 0x00;
-			UCA1MCTL |= UCOS16;
-			UCA1MCTL |= ((0xBB) << 8);      // Modulation UCBRSx=6, UCBRFx=0
-			UCA1MCTL |= (UCBRF1);
+			UCA1MCTL &= ~UCOS16;
+			UCA1MCTL |= UCBRS_6 + UCBRF_0;
 			//Configuration du baudrate
-			UCA1BRW = 2;
+			UCA1BRW = 34;
 			break;
 		}
+
+		//Configuration des port I/O
+		P4SEL |= (BIT4 + BIT5);	// Selection de RX et TX
+
 		break;
 	default:
 		;
@@ -557,6 +576,33 @@ bool iUART::readFrame(char* string) {
 	}
 }
 
+
+/**
+ * Fonction qui permet d'obtenir l'ensemble des bytes recus
+ * en memoire dans le buffer
+ *
+ * stringReceived : pointeur sur le tableau de recuperation du buffer
+ *
+ * retour  : true si il y a au moins un caractere dans le buffer
+ */
+bool iUART::readFullFrame(char* stringReceived) {
+	unsigned char i = 0;
+	unsigned char nDataReceived = this->USCIRingBuffer.ByteCount;
+
+	//Tester si l'on a recu qqch
+	if (!((this->dataReceived == true) || (nDataReceived != 0)))
+		{
+		return false; // buf empty
+		}
+
+	//Recuperation des bytes recus
+	for (i = 0; i < nDataReceived; i++)
+		{
+		stringReceived[i] = this->read();
+		}
+	return true;
+}
+
 // TODO - Tester les performances des fonctions send string
 
 /**
@@ -629,6 +675,12 @@ void iUART::clearReceptionBuffer() {
 	this->USCIRingBuffer.ByteCount = 0;
 	this->USCIRingBuffer.InIndex = 0;
 	this->USCIRingBuffer.OutIndex = 0;
+
+	//clear contenu buffer
+	for(int i=0; i<kSciRecBufSize; i++)
+		{
+		this->USCIRingBuffer.UsciRecBuf[i]=0;
+		}
 }
 
 void iUART::clearInternalSerialBuffer() {

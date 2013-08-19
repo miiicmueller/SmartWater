@@ -32,7 +32,7 @@ private:
 	static tDelay delaysTab[];
 
 	//Interruptions handlers
-	friend void INT_TIMER_A_0(void);
+	friend void INT_TIMER_A_1(void);
 };
 
 #endif
