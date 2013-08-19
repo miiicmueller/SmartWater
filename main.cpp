@@ -54,8 +54,6 @@ void main(void) {
 
 	__enable_interrupt(); //Enable interrupts globally
 
-	long valeurwCompteur=0;
-	UInt16 valeurCompte4ur=5;
 	valeurCompteur++;
 
 	mCompteur monCompteur(kMeter1);
