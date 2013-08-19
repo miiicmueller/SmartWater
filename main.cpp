@@ -6,10 +6,12 @@
 #include "Modules/mGSM.h"
 #include "Modules/mCpu.h"
 #include "Modules/mEEPROM.h"
+#include "Modules/mCompteur.h"
 #include "Modules/mTempSensor.h"
 #include "Modules/mUSB.h"
 #include "Modules/mRTC.h"
 #include "Modules/mDelay.h"
+#include "Def/def.h"
 
 #include "Tools/tCommandesAT.h"
 
@@ -51,6 +53,7 @@ void main(void)
      char min = 0;
      char hr = 0;*/
 
+    UInt32 valeurCompteur = 0;
     // Important pour la basse consommation
     iDIO::InitAllPort();
 
@@ -63,6 +66,8 @@ void main(void)
     //mRTC RTC;
 
     /*mGSM mGsm;
+
+     valeurCompteur++;
 
      iDIO enableGSM((char*) kPort_7, BIT4);
      enableGSM.SetPortDirection(kOutput);
@@ -94,15 +99,23 @@ void main(void)
     //CaptCarte.configSensor(kConfiguration, 0x60);
     //RTC.setHour(17, 0, 0);
     //RTC.setAlarm(1);
-//	__enable_interrupt();    //Enable interrupts globally
     //mGsm.sendSMS("Coucou", "+41798183833");
+
+    if (valeurCompteur < 300)
+	{
+	valeurCompteur = 300;
+	}
+
     iDIO aLed((char*) kPort_7, BIT0);
     aLed.SetPortDirection(kOutput);
     aLed.write(0xff);
 
     mDelay aDelay;
+    mCompteur monCompteur(kMeter1);
+    monCompteur.mOpen();
+    valeurCompteur = monCompteur.mRead();
 
-    i=0;
+    i = 0;
     aLed.write(i);
     aDelay.startDelay(1000);
 
@@ -111,11 +124,10 @@ void main(void)
 
 	if (aDelay.isDone())
 	    {
-	    i=~i;
+	    i = ~i;
 	    aLed.write(i);
 	    aDelay.startDelay(1000);
 	    }
-
 
 	// On endort le processeur en niveau 3 (voir datasheet page 20)
 
