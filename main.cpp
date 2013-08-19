@@ -9,24 +9,27 @@
 #include "Modules/mTempSensor.h"
 #include "Modules/mUSB.h"
 #include "Modules/mRTC.h"
+#include "Modules/mDelay.h"
 
 #include "Tools/tCommandesAT.h"
 
 #include "USB_API/USB_Common/types.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+    {
 #endif
 
-int _system_pre_init(void) {
+    int _system_pre_init(void)
+	{
 // turn watchdog off
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 	_DINT();
 	return (1);
-}
+	}
 
 #ifdef __cplusplus
-}
+    }
 #endif
 
 //OBLIGATOIRE POUR L'USB
@@ -39,67 +42,82 @@ char tempToSend[MAX_BUFFERSIZE] = "";
 /*
  * ======== main ========
  */
-void main(void) {
+void main(void)
+    {
 
-	char sec = 0;
-	char min = 0;
-	char hr = 0;
+    char i;
 
-	// Important pour la basse consommation
-	iDIO::InitAllPort();
+    /*char sec = 0;
+     char min = 0;
+     char hr = 0;*/
 
-	mCpu::configFrequency();
+    // Important pour la basse consommation
+    iDIO::InitAllPort();
 
-	__bis_SR_register(GIE);
+    mCpu::configFrequency();
 
-	mUSB commUsb(&bCDCDataReceived_event);
-	iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
-	mRTC RTC;
+    __bis_SR_register(GIE);
 
-	mGSM mGsm;
+    //mUSB commUsb(&bCDCDataReceived_event);
+    //iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
+    //mRTC RTC;
 
-	iDIO enableGSM((char*) kPort_7, BIT4);
-	enableGSM.SetPortDirection(kOutput);
-	enableGSM.SetPortDriveStrength(kFullStrength);
-	enableGSM.write(~BIT4);
+    /*mGSM mGsm;
 
-//
-	iDIO resetGSM((char*) kPort_7, BIT3);
-	resetGSM.SetPortDirection(kOutput);
-	resetGSM.SetPortDriveStrength(kFullStrength);
-	resetGSM.write(~BIT3);
+     iDIO enableGSM((char*) kPort_7, BIT4);
+     enableGSM.SetPortDirection(kOutput);
+     enableGSM.SetPortDriveStrength(kFullStrength);
+     enableGSM.write(~BIT4);
+
+     //
+     iDIO resetGSM((char*) kPort_7, BIT3);
+     resetGSM.SetPortDirection(kOutput);
+     resetGSM.SetPortDriveStrength(kFullStrength);
+     resetGSM.write(~BIT3);*/
+
+    mDelay::mSetup();
+    mDelay::mOpen();
 //
 //	iDIO CTSel2((char*) kPort_6, BIT1);
 //	enableCT.SetPortDirection(kOutput);
 //	enableCT.SetPortDriveStrength(kFullStrength);
 //	enableCT.write(~BIT1);
-
 //	iDIO resetGSM((char*) kPort_7, BIT3);
 //	iUART uart(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits,
 //				k9600);
-
 //	mEEPROM DataBase(0x50, &iI2C_1);
 //	mTempSensor CaptCarte(0x48, &iI2C_1);
-
 //	DataBase.mOpen();
 //	CaptCarte.mOpen();
 //	RTC.mOpen();
 //	mGsm.mOpen();
-
-	//CaptCarte.configSensor(kConfiguration, 0x60);
-	//RTC.setHour(17, 0, 0);
-	//RTC.setAlarm(1);
-
+    //CaptCarte.configSensor(kConfiguration, 0x60);
+    //RTC.setHour(17, 0, 0);
+    //RTC.setAlarm(1);
 //	__enable_interrupt();    //Enable interrupts globally
+    //mGsm.sendSMS("Coucou", "+41798183833");
+    iDIO aLed((char*) kPort_7, BIT0);
+    aLed.SetPortDirection(kOutput);
+    aLed.write(0xff);
 
-	//mGsm.sendSMS("Coucou", "+41798183833");
+    mDelay aDelay;
 
-	while (1) {
+    i=0;
+    aLed.write(i);
+    aDelay.startDelay(1000);
 
-		int cmd = 0;
+    while (1)
+	{
 
-		// On endort le processeur en niveau 3 (voir datasheet page 20)
-		mCpu::setPowerMode(kLPM3);
+	if (aDelay.isDone())
+	    {
+	    i=~i;
+	    aLed.write(i);
+	    aDelay.startDelay(1000);
+	    }
+
+
+	// On endort le processeur en niveau 3 (voir datasheet page 20)
 
 //		//Check the USB state and directly main loop accordingly
 //		if (commUsb.isConnected()) {
@@ -135,5 +153,5 @@ void main(void) {
 //		}
 
 	}
-}
+    }
 
