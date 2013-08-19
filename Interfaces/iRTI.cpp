@@ -7,7 +7,7 @@
 #include "iRTI.h"
 
 #define kNbOfDelays	10
-#define kTA0_Period	25000 // clk à 25 000 000 Hz, divisé par 25 000, cela fait 1000Hz, soit 1ms
+#define kTA0_Period	4000 // clk à 4 000 000 Hz, divisé par 4 000, cela fait 1000Hz, soit 1ms
 //initialisation des attributs statiques
 int iRTI::freeDelays = kNbOfDelays;
 tDelay iRTI::delaysTab[kNbOfDelays];
@@ -73,8 +73,8 @@ void iRTI::disable()
     }
 
 //interrupt handler
-#pragma vector=TIMER0_A0_VECTOR
-__interrupt void INT_TIMER_A_0(void)
+#pragma vector=TIMER0_A1_VECTOR
+__interrupt void INT_TIMER_A_1(void)
     {
     int i = 0;
 
@@ -86,9 +86,12 @@ __interrupt void INT_TIMER_A_0(void)
 
 	    if (iRTI::delaysTab[i].counter == 0)
 		{
-		iRTI::delaysTab[i].isDone = false;
+		iRTI::delaysTab[i].isDone = true;
 		}
 	    }
+	i++;
 	}
+
+    i=(TA0IV);//reset du flag d'interruption en lisant TA0IV
     }
 
