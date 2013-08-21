@@ -83,38 +83,95 @@ void mCompteur::mClose() {
 //avec 02514 comme indice
 //----------------------------------------------------------------
 UInt32 mCompteur::mRead() {
-	char aResponseMeter[kSciRecBufReceptionSize ] = "";
-	char aDummy[kSciRecBufReceptionSize ] = "";
+	UInt8 aFabFlVers[22] = { 0 };
+	UInt8 aDebitMesure[14] = { 0 };
+	UInt8 aDateFabr[15] = { 0 };
+	UInt8 aSerialNum[15] = { 0 };
+	UInt8 aTailleNom[15] = { 0 };
+
+	UInt8 aDummy[5] = { 0 };
+
 	UInt32 aRet = 0;
 	bool aIsOk;
 	UInt8 aNumb1; //variables bidons recuperant des valeurs non-importantes de la trame
 	UInt8 aNumb2;
 
-//efface le buffer de reception
+	//efface le buffer de reception
 	mCompteur::uart.clearInternalSerialBuffer();
 
-//re-active le compteur, pour qu'il r-envoie la trame
+	//re-active le compteur, pour qu'il r-envoie la trame
 	this->enable.write(kDisableMeter);
 	this->enable.write(kEnableMeter);
 
-//lecture de la premi�re partie de la trame
-	while (!mCompteur::uart.readFrame(aDummy))
+	//lecture de la premi�re partie de la trame
+
+	//FIXME Quand le fonction  "readFrame" sera modifiée, il faut enlever la lecture des Dummy et attendre d'abord les 85 caractères
+
+	//Recupération des données fabricant fluide et version
+	while (!mCompteur::uart.readFrame(aFabFlVers))
 		;
 	while (!mCompteur::uart.readFrame(aDummy))
 		;
-	while (!mCompteur::uart.readFrame(aResponseMeter))
+
+	//Recuperation de la valeur du compteur
+	while (!mCompteur::uart.readFrame(aDebitMesure))
 		;
 	while (!mCompteur::uart.readFrame(aDummy))
 		;
+
+	//Recupération de la date de fabrication
+	while (!mCompteur::uart.readFrame(aDateFabr))
+		;
 	while (!mCompteur::uart.readFrame(aDummy))
 		;
+
+	//Récuperation du numéro de série
+	while (!mCompteur::uart.readFrame(aSerialNum))
+		;
+	while (!mCompteur::uart.readFrame(aDummy))
+		;
+
+	//Récuperation de la taille normalisée
+	while (!mCompteur::uart.readFrame(aTailleNom))
+		;
+	while (!mCompteur::uart.readFrame(aDummy))
+		;
+
+	//Fin de trame
 	while (!mCompteur::uart.readFrame(aDummy))
 		;
 	while (!mCompteur::uart.readFrame(aDummy))
 		;
 
-//capture de l'indice
-	aIsOk = sscanf(aResponseMeter, "%d.%d(%d*m3)", &aNumb1, &aNumb2, &aRet);
+	//Récuperation du fabricant, fluide, version
+	sscanf((char*) aFabFlVers, "/%s %s      %s",
+			&(this->compteurParam->aManufacturer),
+			&(this->compteurParam->aFluide), &(this->compteurParam->aVersNum));
+
+	//Récuperation de la date de fabrication
+	sscanf((char*) aDateFabr, "%d.%d(%s)", &aNumb1, &aNumb2,
+			&(this->compteurParam->aFabDate));
+
+	this->compteurParam->aFabDate[strlen((char*) this->compteurParam->aFabDate)
+			- 1] = 0x00;
+
+	//Récuperation du numéro de série
+	sscanf((char*) aSerialNum, "%d.%d(%s)", &aNumb1, &aNumb2,
+			&(this->compteurParam->aSerialNum));
+
+	this->compteurParam->aSerialNum[strlen(
+			(char*) this->compteurParam->aSerialNum) - 1] = 0x00;
+
+	//Récuperation de la taille nominale
+	sscanf((char*) aTailleNom, "%d.%d(%s)", &aNumb1, &aNumb2,
+			&(this->compteurParam->aNominalSize));
+
+	this->compteurParam->aNominalSize[strlen(
+			(char*) this->compteurParam->aNominalSize) - 1] = 0x00;
+
+	//Récupération de l'indice
+	aIsOk = sscanf((char*) aDebitMesure, "%d.%d(%d*m3)", &aNumb1, &aNumb2,
+			&aRet);
 
 //retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
 	if (aIsOk) {

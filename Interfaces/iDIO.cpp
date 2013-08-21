@@ -57,14 +57,14 @@ void iDIO::SetPortDriveStrength(iDIOPortDriveStrengthEnum aStrength) {
 }
 
 //methodes virtuelles pures heritees devant etre definies
-bool iDIO::write(char aData) {
+bool iDIO::write(UInt8 aData) {
 	*((this->thePortAddress) + kPortOutput) = (aData & (this->theMask))
 			| (*(this->thePortAddress) & ~(this->theMask));
 
 	return true;
 }
 
-char iDIO::read() {
+UInt8 iDIO::read() {
 	return (*(this->thePortAddress) & (this->theMask));
 }
 

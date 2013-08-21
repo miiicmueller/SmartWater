@@ -39,8 +39,8 @@ private:
 
 	void config();
 	BYTE retInString(char* string);
-	bool write(char aData);
-	char read();
+	bool write(UInt8 aData);
+	UInt8 read();
 public:
 	iUSB(volatile BYTE *bCDCDataReceived_event);
 	~iUSB();

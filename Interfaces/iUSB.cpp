@@ -142,14 +142,14 @@ void iUSB::sendFullFrame(char* FrameBuffer) {
 /**
  * Non utilisée
  */
-bool iUSB::write(char aData) {
+bool iUSB::write(UInt8 aData) {
 	return false;
 }
 
 /**
  * Non utilisée
  */
-char iUSB::read() {
+UInt8 iUSB::read() {
 	return 0;
 }
 
