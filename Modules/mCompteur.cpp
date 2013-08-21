@@ -46,10 +46,6 @@ mCompteur::mCompteur(iMeterChannel aChannel)
 	{
 	this->channelCodeMultiplexer = 0;
 	}
-
-    //parametrage des entrees
-    this->channelMultiplexer.SetPortDirection(kOutput);
-    this->enable.SetPortDirection(kOutput);
     }
 
 
@@ -58,6 +54,9 @@ mCompteur::mCompteur(iMeterChannel aChannel)
 //----------------------------------------------------------------
 void mCompteur::mSetup()
     {
+    //parametrage des entrees
+    this->channelMultiplexer.SetPortDirection(kOutput);
+    this->enable.SetPortDirection(kOutput);
     }
 
 
@@ -86,12 +85,19 @@ void mCompteur::mClose()
 //----------------------------------------------------------------
 //lecture de l'indice du compteur
 //
-//retour : la valeur de l'indice du compteur
+//retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
+//
+//exemple de format de trame : "/GWF Wasser      V4.1\r\n7.0(02514*m3)\r\n0.09(03-11-04)\r\n0.00(0434448)\r\n0.01(DN20)\r\n!\r\n"
+//avec 02514 comme indice
 //----------------------------------------------------------------
 UInt32 mCompteur::mRead()
     {
     char aResponseMeter[kSciRecBufSize ] = "";
+    char aDummy[kSciRecBufSize ] = "";
     UInt32 aRet = 0;
+    bool aIsOk;
+    UInt8 aNumb1; //variables bidons recuperant des valeurs non-importantes de la trame
+    UInt8 aNumb2;
 
     //efface le buffer de reception
     mCompteur::uart.clearInternalSerialBuffer();
@@ -100,31 +106,29 @@ UInt32 mCompteur::mRead()
     this->enable.write(kDisableMeter);
     this->enable.write(kEnableMeter);
 
-    //attend la fin de la trame
-    while (mCompteur::uart.availableCharToRead() <85) // installer un time out
+
+    //lecture de la première partie de la trame
+    while(!mCompteur::uart.readFrame(aDummy));
+    while(!mCompteur::uart.readFrame(aDummy));
+    while(!mCompteur::uart.readFrame(aResponseMeter));
+    while(!mCompteur::uart.readFrame(aDummy));
+    while(!mCompteur::uart.readFrame(aDummy));
+    while(!mCompteur::uart.readFrame(aDummy));
+    while(!mCompteur::uart.readFrame(aDummy));
+
+
+    //capture de l'indice
+    aIsOk=sscanf(aResponseMeter,"%d.%d(%d*m3)", &aNumb1, &aNumb2, &aRet);
+
+    //retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
+    if (aIsOk)
 	{
-	//if timeout then return 0 et lit quand emem avant la frame
+	return aRet;
 	}
-
-    //lecture de la trame
-    mCompteur::uart.readFullFrame(aResponseMeter);
-
-    //controle que l'indice du compteur comporte uniquement des chiffres
-    for(int i=0; i<kNumberFigures; i++)
+    else
 	{
-	if(aResponseMeter[kPositionValue] < 48 || aResponseMeter[kPositionValue] > 57)
-	    {
-	    aRet=0; // cest faux
-	    }
+	return 0;
 	}
-
-    //converti l'indice (de tableau de char en long)
-    aRet = (aResponseMeter[kPositionValue] - 48) * 10000
-	    + (aResponseMeter[kPositionValue+1] - 48) * 1000
-	    + (aResponseMeter[kPositionValue+2] - 48) * 100
-	    + (aResponseMeter[kPositionValue+3] - 48) * 10
-	    + (aResponseMeter[kPositionValue+4] - 48);
-    return aRet;
     }
 
 

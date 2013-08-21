@@ -10,13 +10,12 @@ char tCommandesAT::addP41ToWhiteList[25] = "AT#SMSATWL=0,1,0,\"+41*\""; // ajout
 char tCommandesAT::enableSMS[22] = "AT#SMSATRUN=1";
 char tCommandesAT::questSMSMode[22] = "AT#SMSATRUN?";
 char tCommandesAT::delockPIN[22] = "AT+CPIN=";
-char tCommandesAT::questStatePIN[22] = "AT+CPIN=?"; // �tat de la carte SIM ; savoir si elle est lock�e
+char tCommandesAT::questStatePIN[22] = "AT+CPIN?"; // �tat de la carte SIM ; savoir si elle est lock�e
 char tCommandesAT::setModeText[22] = "AT+CMGF=1";
 char tCommandesAT::getSMS[22] = "AT+CMGR=";
 char tCommandesAT::deleteSMSAll[22] = "AT+CMGD=1,4";
-char tCommandesAT::deleteSMSPos[22] = "AT+CMGD=";
+char tCommandesAT::deleteSMSPos[22] = "AT+CMGD="; //effacer un SMS a une position choisie
 char tCommandesAT::sendSMS[22] = "AT+CMGS=\"";
-char tCommandesAT::goSendSMS[22] = "\u001a";
 char tCommandesAT::endAT[22] = "\r";
-char tCommandesAT::configBaud19200[22] = "AT+IPR=9600";
+char tCommandesAT::configBaud9600[22] = "AT+IPR=9600";
 

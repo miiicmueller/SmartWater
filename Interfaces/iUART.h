@@ -21,7 +21,8 @@
 #include "Interface.h"
 
 // Buffer de 200 caract�res
-#define kSciRecBufSize ((unsigned char)(200))
+#define kSciRecBufReceptionSize ((unsigned char)(200))
+#define kSciRecBufTransmissionSize ((unsigned char)(270))
 
 using namespace std;
 
@@ -60,7 +61,7 @@ typedef enum {
 
 //Structure du buffer tournant
 typedef struct {
-	UInt8 UsciRecBuf[kSciRecBufSize ];
+	UInt8 UsciRecBuf[kSciRecBufReceptionSize ];
 	UInt16 InIndex;
 	UInt16 OutIndex;
 	UInt8 ByteCount;
@@ -70,7 +71,7 @@ typedef struct {
 class iUART: public Interface {
 private:
 	iUARTPortEnum serialPort;
-	char uartBuffer[kSciRecBufSize];
+	char uartBuffer[kSciRecBufReceptionSize];
 	bool isEnabled;
 	bool dataReceived;
 	iUARTRecBufStruct USCIRingBuffer;

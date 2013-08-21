@@ -11,6 +11,7 @@
 #include "Modules/mUSB.h"
 #include "Modules/mRTC.h"
 #include "Def/def.h"
+#include <string.h>
 
 #include "Tools/tCommandesAT.h"
 
@@ -43,7 +44,12 @@ char tempToSend[MAX_BUFFERSIZE] = "";
  */
 void main(void) {
 
+	char maString[10] = {'s','a','l','1','2','3','r','r','w', '\0'};
 	UInt32 valeurCompteur=0;
+	bool retourRRR;
+	bool retourRRR2;
+	long lavaleur=0;
+	long lavaleur2=0;
 	// Important pour la basse consommation
 	iDIO::InitAllPort();
 
@@ -55,6 +61,16 @@ void main(void) {
 	__enable_interrupt(); //Enable interrupts globally
 
 	valeurCompteur++;
+
+
+
+	retourRRR=retourRRR2;
+
+	if (retourRRR || retourRRR2)
+	    {
+	    lavaleur=0;
+	    }
+
 
 	mCompteur monCompteur(kMeter1);
 	monCompteur.mOpen();

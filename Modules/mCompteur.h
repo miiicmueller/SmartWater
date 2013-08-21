@@ -67,7 +67,10 @@ public:
     //----------------------------------------------------------------
     //lecture de l'indice du compteur
     //
-    //retour : la valeur de l'indice du compteur
+    //retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
+    //
+    //exemple de format de trame : "/GWF Wasser      V4.1\r\n7.0(02514*m3)\r\n0.09(03-11-04)\r\n0.00(0434448)\r\n0.01(DN20)\r\n!\r\n"
+    //avec 02514 comme indice
     //----------------------------------------------------------------
     UInt32 mRead();
 
