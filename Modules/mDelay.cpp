@@ -11,11 +11,11 @@ mDelay::mDelay()
     {
     if (this->theDelayRTI.delayNumber != -1)
 	{
-	this->disponibility = false;
+	this->disponibility = true;
 	}
     else
 	{
-	this->disponibility = true;
+	this->disponibility = false;
 	}
     }
 

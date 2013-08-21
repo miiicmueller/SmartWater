@@ -15,7 +15,7 @@
 #include "iUART.h"
 #include "../Def/def.h"
 
-//TODO fixer cette valeur � la bonne fr�quence
+// fixer cette valeur a la bonne frequence
 #define F_BRCLK 4000000
 
 //Initalisation des attributs UART_x statiques

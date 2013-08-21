@@ -7,7 +7,6 @@
 #ifndef __MDELAY__
 #define __MDELAY__
 
-#include "Module.h"
 #include "../Interfaces/iRTI.h"
 
 class mDelay

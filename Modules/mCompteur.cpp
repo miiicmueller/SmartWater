@@ -92,8 +92,8 @@ void mCompteur::mClose()
 //----------------------------------------------------------------
 UInt32 mCompteur::mRead()
     {
-    char aResponseMeter[kSciRecBufSize ] = "";
-    char aDummy[kSciRecBufSize ] = "";
+    char aResponseMeter[kSciRecBufReceptionSize ] = "";
+    char aDummy[kSciRecBufReceptionSize ] = "";
     UInt32 aRet = 0;
     bool aIsOk;
     UInt8 aNumb1; //variables bidons recuperant des valeurs non-importantes de la trame

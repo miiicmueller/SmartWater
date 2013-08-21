@@ -4,18 +4,11 @@
 #include "tParameters.h"
 
 
-void tParameters::get()
+void tParameters::getId()
 {
 }
 
-void tParameters::set()
+void tParameters::setId()
 {
 }
 
-void tParameters::save()
-{
-}
-
-void tParameters::load()
-{
-}

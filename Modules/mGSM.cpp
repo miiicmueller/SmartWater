@@ -127,7 +127,7 @@ void mGSM::mClose()
 //----------------------------------------------------------------
 bool mGSM::getSMS(char* aSMS)
     {
-    char aDataReceived[kSciRecBufSize]; // data recues du buffer
+    char aDataReceived[kSciRecBufReceptionSize]; // data recues du buffer
     bool aIsOk = false;
 
     // demande le prochain SMS
@@ -145,7 +145,7 @@ bool mGSM::getSMS(char* aSMS)
 	return false;
 	}
 
-    for(int i=0; 0!=aDataReceived[i] && i<kSciRecBufSize; i++) //efface la premiere partie
+    for(int i=0; 0!=aDataReceived[i] && i<kSciRecBufReceptionSize; i++) //efface la premiere partie
 	{
 	aDataReceived[i]=0;
 	}
@@ -188,7 +188,7 @@ bool mGSM::getSMS(char* aSMS)
 	{
 	while(!mGSM::uart.readFrame(aDataReceived)); //lit le message
 
-	for(int i=0; aDataReceived[i]!=0 && i<kSciRecBufSize; i++)
+	for(int i=0; aDataReceived[i]!=0 && i<kSciRecBufReceptionSize; i++)
 	    {
 	    aSMS[i]=aDataReceived[i]; // copie le SMS
 	    }
@@ -208,7 +208,7 @@ bool mGSM::getSMS(char* aSMS)
 //----------------------------------------------------------------
 bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber)
     {
-    char aAnswer[kSciRecBufSize];
+    char aAnswer[kSciRecBufReceptionSize];
     UInt16 aValue; //variable de recuperation de valeur dans trame
 
     //sequence d'envoi
@@ -268,13 +268,13 @@ bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber)
 	    case 332 :
 		this->state=kErrorSendSmsTimeOut; break;
 	    default :
-		this->state=kError;
+		this->state=kErrorGeneral;
 	    }
 	return false;
 	}
     else //message d'erreur non-connu
 	{
-	this->state=kError;
+	this->state=kErrorGeneral;
 	return false;
 	}
     }
@@ -292,7 +292,7 @@ mGSM::~mGSM()
 //----------------------------------------------------------------
 bool mGSM::mCheckResponse(char* aGoodResponse, UInt16 aTimeOutMs)
     {
-    char aAnswer[kSciRecBufSize ];
+    char aAnswer[kSciRecBufReceptionSize ];
 
     mGSM::timeOut.startDelay(aTimeOutMs);
 

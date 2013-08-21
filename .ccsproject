@@ -1,3 +1,19 @@
+<<<<<<< HEAD
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<?ccsproject version="1.0"?>
+
+<projectOptions>
+<deviceVariant value="MSP430F5529"/>
+<deviceEndianness value="little"/>
+<codegenToolVersion value="3.3.3"/>
+<isElfFormat value="false"/>
+<linkerCommandFile value="lnk_msp430f5529.cmd"/>
+<rts value="libc.a"/>
+<deviceFamily value="MSP430"/>
+<connection value="common/targetdb/connections/TIMSP430-USB.xml"/>
+<isTargetManual value="false"/>
+</projectOptions>
+=======
 <?xml version="1.0" encoding="UTF-8" ?>
 <?ccsproject version="1.0"?>
 <projectOptions>
@@ -11,3 +27,4 @@
 	<connection value="common/targetdb/connections/TIMSP430-USB.xml"/>
 	<isTargetManual value="false"/>
 </projectOptions>
+>>>>>>> refs/remotes/origin/master

@@ -21,7 +21,7 @@ typedef enum // choix du compteur
     {
     kOk, //valeur  generale
     kDisconnected,
-    kError,
+    kErrorGeneral,
     kErrorEnterPin, // erreurs de parametrage
     kErrorSetModeSms,
     kErrorSetModeText,
@@ -40,7 +40,7 @@ typedef enum // choix du compteur
     kErrorMemoryFailure,
     kErrorMemoryFull,
     kErrorSendSmsTimeOut
-    } iState;
+    } mGSMStateEnum;
 
 
 using namespace std;
@@ -56,7 +56,7 @@ private:
     //tools
     static tCommandesAT commandesAtGsm; //commandes pour contrôler le module GSM
     int indexSMS; //index designant le prochaine SMS a devoir etre lu
-    iState state; // etat du module
+    mGSMStateEnum state; // etat du module
     static mDelay timeOut;
 
 

@@ -22,6 +22,7 @@
 
 // Buffer de 200 caract�res
 #define kSciRecBufReceptionSize ((unsigned char)(200))
+#define kSciRecBufSize ((unsigned char)(200))
 #define kSciRecBufTransmissionSize ((unsigned char)(270))
 
 using namespace std;
