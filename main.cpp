@@ -12,6 +12,7 @@
 #include "Modules/mRTC.h"
 #include "Modules/mDelay.h"
 #include "Def/def.h"
+#include <string.h>
 
 #include "Tools/tCommandesAT.h"
 #include "Tools/tMode.h"
@@ -21,18 +22,20 @@
 #include "USB_API/USB_Common/types.h"
 
 #ifdef __cplusplus
-extern "C" {
+extern "C"
+    {
 #endif
 
-int _system_pre_init(void) {
+    int _system_pre_init(void)
+	{
 // turn watchdog off
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 	_DINT();
 	return (1);
-}
+	}
 
 #ifdef __cplusplus
-}
+    }
 #endif
 
 //OBLIGATOIRE POUR L'USB
