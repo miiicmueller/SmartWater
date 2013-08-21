@@ -15,6 +15,8 @@
 #define kMPADMIN_BASE_ID 	0x0700
 #define kAVAIL_BASE_ID 		0x0800
 #define kALARMNUM_BASE_ID 	0x0900
+#define kCOMPTEUR_BASE_ID 	0x0A00
+
 
 
 
