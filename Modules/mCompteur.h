@@ -35,7 +35,7 @@ private:
 
 	//tool
 	UInt8 channelCodeMultiplexer; // code pour que le multiplexeur selectionne le bon compteur
-	tCompteur	compteurParam;
+	tCompteur	*compteurParam;
 
 public:
     //----------------------------------------------------------------
@@ -43,7 +43,7 @@ public:
     //
     //aChannel : choix du compteur d'eau
     //----------------------------------------------------------------
-    mCompteur(iMeterChannel aChannel);
+    mCompteur(iMeterChannel aChannel,mEEPROM *mEeprom);
 
     //----------------------------------------------------------------
     //destructeur

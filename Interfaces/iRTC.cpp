@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "iRTC.h"
+#include "Interfaces/iCpu.h"
 
 iRTC* iRTC::RTC_A = NULL;
 

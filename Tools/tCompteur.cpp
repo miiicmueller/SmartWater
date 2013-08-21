@@ -46,6 +46,7 @@ void tCompteur::save() {
 }
 void tCompteur::load() {
 	UInt8 aDataTab[46] = { 0 };
+	UInt8 i = 0;
 
 	//Récupération des données
 	this->mPeriphSauv->load(this->aId, aDataTab);
