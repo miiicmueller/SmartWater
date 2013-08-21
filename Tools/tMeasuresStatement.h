@@ -3,32 +3,19 @@
 
 #include <string>
 #include <assert.h>
+#include "Def/def.h"
+#include "tParameters.h"
+#include "Modules/mEEPROM.h"
 
-class tMeasuresStatement
+class tMeasuresStatement : public tParameters
 {
-private:
-	int MonthlyConsumption[12];
-
-	int CurrentMonthConsumption[31];
-
-	int addressEEPROM;
-
-	int nBytes;
-
-
-private:
-	void save();
 
 public:
-	void getMonthlyConsumption();
+	UInt16 MonthlyConsumption[12];
+	UInt16 CurrentMonthConsumption[31];
 
-	void getCurrentMonthComsumption();
-
-	void setMonthlyConsumption();
-
-	void setCurrentMonthComsumption();
-
+	tMeasuresStatement(mEEPROM *mEeprom, UInt16 aModeNum);
+	void save();
 	void load();
-
 };
 #endif

@@ -1,17 +1,19 @@
 //*****************************************************************************
 //Nom du fichier : tDelay.h
 //Auteurs et Date : SAVY Cyrille 29.04.2013
-//But : structure d'un delay utilisé dans mDelays et iRTI
+//But : structure d'un delay utilisï¿½ dans mDelays et iRTI
 //*****************************************************************************
 
 #ifndef __TDELAY__
 #define __TDELAY__
 
+#include "Def/def.h"
+
 class tDelay
     {
 public:
     //input
-    int counter;
+    UInt16 counter;
 
     //output
     bool isFree;

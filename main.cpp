@@ -16,24 +16,23 @@
 #include "Tools/tCommandesAT.h"
 #include "Tools/tMode.h"
 #include "Tools/tMonthsLimits.h"
+#include "Tools/tTemperatureOffset.h"
 
 #include "USB_API/USB_Common/types.h"
 
 #ifdef __cplusplus
-extern "C"
-    {
+extern "C" {
 #endif
 
-    int _system_pre_init(void)
-	{
+int _system_pre_init(void) {
 // turn watchdog off
 	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
 	_DINT();
 	return (1);
-	}
+}
 
 #ifdef __cplusplus
-    }
+}
 #endif
 
 //OBLIGATOIRE POUR L'USB
@@ -42,124 +41,38 @@ volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received
 /*
  * ======== main ========
  */
-void main(void)
-    {
+void main(void) {
 
-    char i;
+	char sec = 0;
+	char min = 0;
+	char hr = 0;
+	UInt8 aDataTab[10] = { 0 };
 
-    UInt32 valeurCompteur = 0;
-    // Important pour la basse consommation
-    iDIO::InitAllPort();
+// Important pour la basse consommation
+	iDIO::InitAllPort();
 
-    mCpu::configFrequency();
+	mCpu::configFrequency();
 
+	__bis_SR_register(GIE);
 
-    __bis_SR_register(GIE);
+	iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
 
-    //mUSB commUsb(&bCDCDataReceived_event);
-    //iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
-    //mRTC RTC;
+//Init de l'EEPROM
+	mEEPROM test(0x50, &iI2C_1);
+	test.mOpen();
 
-    /*mGSM mGsm;
+	tTemperatureOffset tOffset(&test, 1);
 
-     valeurCompteur++;
+	tOffset.aOffset.aFloatVal = 10.546;
 
-     iDIO enableGSM((char*) kPort_7, BIT4);
-     enableGSM.SetPortDirection(kOutput);
-     enableGSM.SetPortDriveStrength(kFullStrength);
-     enableGSM.write(~BIT4);
+	tOffset.save();
 
-     //
-     iDIO resetGSM((char*) kPort_7, BIT3);
-     resetGSM.SetPortDirection(kOutput);
-     resetGSM.SetPortDriveStrength(kFullStrength);
-     resetGSM.write(~BIT3);*/
+	tOffset.aOffset.aFloatVal = 11.238;
 
-    mDelay::mSetup();
-    mDelay::mOpen();
-//
-//	iDIO CTSel2((char*) kPort_6, BIT1);
-//	enableCT.SetPortDirection(kOutput);
-//	enableCT.SetPortDriveStrength(kFullStrength);
-//	enableCT.write(~BIT1);
-//	iDIO resetGSM((char*) kPort_7, BIT3);
-//	iUART uart(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits,
-//				k9600);
-//	mEEPROM DataBase(0x50, &iI2C_1);
-//	mTempSensor CaptCarte(0x48, &iI2C_1);
-//	DataBase.mOpen();
-//	CaptCarte.mOpen();
-//	RTC.mOpen();
-//	mGsm.mOpen();
-    //CaptCarte.configSensor(kConfiguration, 0x60);
-    //RTC.setHour(17, 0, 0);
-    //RTC.setAlarm(1);
-    //mGsm.sendSMS("Coucou", "+41798183833");
+	tOffset.load();
 
-    if (valeurCompteur < 300)
-	{
-	valeurCompteur = 300;
-	}
-
-    iDIO aLed((char*) kPort_7, BIT0);
-    aLed.SetPortDirection(kOutput);
-    aLed.write(0xff);
-
-    mDelay aDelay;
-    mCompteur monCompteur(kMeter1);
-    monCompteur.mOpen();
-    valeurCompteur = monCompteur.mRead();
-
-    i = 0;
-    aLed.write(i);
-    aDelay.startDelay(1000);
-
-
-    while (1)
-	{
-
-	if (aDelay.isDone())
-	    {
-	    i = ~i;
-	    aLed.write(i);
-	    aDelay.startDelay(1000);
-	    }
-
-	// On endort le processeur en niveau 3 (voir datasheet page 20)
-
-//		//Check the USB state and directly main loop accordingly
-//		if (commUsb.isConnected()) {
-//			if (commUsb.getCommand(&cmd)) {
-//				switch (cmd) {
-//				case 1:
-//					temperature = CaptCarte.readTemp();
-//					DataBase.write(0x0000, (char) temperature);
-//					DataBase.ackPolling();
-//					DataBase.write(0x0001, (char) (temperature >> 8));
-//					DataBase.ackPolling();
-//					sprintf(tempToSend, "Tempe.:%d\r\n", temperature >> 4);
-//					commUsb.sendReply(tempToSend);
-//					break;
-//				case 2:
-//					int eepromVal = 0;
-//					eepromVal = (int) DataBase.read(0x0000);
-//					eepromVal += (int) (DataBase.read(0x0001) << 8);
-//
-//					sprintf(tempToSend, "EEPROM:%d\r\n", eepromVal >> 4);
-//					commUsb.sendReply(tempToSend);
-//					break;
-//				case 3:
-//					RTC.readTime(&hr, &min, &sec);
-//					sprintf(tempToSend, "%d:%d:%d\r\n", hr, min, sec);
-//					commUsb.sendReply(tempToSend);
-//					break;
-//				default:
-//					commUsb.sendReply("Cmd invalide\r\n");
-//				}
-//			}
-//
-//		}
+	while (1) {
 
 	}
-    }
+}
 
