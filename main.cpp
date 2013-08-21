@@ -12,8 +12,12 @@
 #include "Modules/mRTC.h"
 #include "Modules/mDelay.h"
 #include "Def/def.h"
+#include <string.h>
 
 #include "Tools/tCommandesAT.h"
+#include "Tools/tMode.h"
+#include "Tools/tMonthsLimits.h"
+#include "Tools/tTemperatureOffset.h"
 
 #include "USB_API/USB_Common/types.h"
 

@@ -3,17 +3,18 @@
 
 #include <string>
 #include <assert.h>
+#include "Def/def.h"
 
 class tDate
 {
 public:
-	int year;
-	char month;
-	char date;
-	char dayOfWeek;
-	char hour;
-	char minute;
-	char second;
+	UInt16 year;
+	UInt8 month;
+	UInt8 date;
+	UInt8 dayOfWeek;
+	UInt8 hour;
+	UInt8 minute;
+	UInt8 second;
 
 	tDate();
 

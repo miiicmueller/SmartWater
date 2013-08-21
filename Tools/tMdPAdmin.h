@@ -8,8 +8,12 @@
 
 class tMdPAdmin : public tParameters
 {
-private:
-	char* mdPAdmin;
+public:
+	UInt8 mdPAdmin[20];
+
+	tMdPAdmin(mEEPROM *mEeprom,UInt16 aModeNum);
+	void save();
+	void load();
 
 };
 #endif

@@ -9,7 +9,7 @@ using namespace std;
 class tCommandesAT {
 public:
 	static  char configSMS[];
-	static  char configBaud19200[];
+	static  char configBaud9600[];
 	static  char questWhiteList[];
 	static  char addP41ToWhiteList[];
 	static  char enableSMS[];
