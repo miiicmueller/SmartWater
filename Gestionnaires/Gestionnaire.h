@@ -7,9 +7,10 @@
 class Gestionnaire
 {
 public:
-	void execute();
 
-	void setup();
+	virtual void execute() = 0;
+
+	virtual void setup() = 0;
 
 };
 #endif

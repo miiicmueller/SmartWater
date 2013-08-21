@@ -6,15 +6,30 @@
 
 #include "Gestionnaire.h"
 #include "../Tools/tDate.h"
+#include "gInput.h"
 
-class gCompute : public Gestionnaire
-{
+class gCompute: public Gestionnaire
+    {
 private:
-	char* smsToSend;
+    char* smsToSend;
 
-	int smsNb;
+    int smsNb;
 
-	tDate nextAlarm;
+    tDate nextAlarm;
 
-};
+    gInput* theGInput;
+
+public:
+    //----------------------------------------------------------------
+    //constructeur
+    //
+    //gInput : le gestionnaire qui contient les entrées
+    //----------------------------------------------------------------
+    gCompute(gInput* theGInput);
+
+    void setup();
+
+    void execute();
+
+    };
 #endif

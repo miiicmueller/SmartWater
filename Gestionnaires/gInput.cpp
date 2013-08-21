@@ -3,33 +3,45 @@
 
 #include "gInput.h"
 
+gInput::gInput()
+    {
+    this->smsTab = NULL;
+    }
+
+void gInput::setup()
+    {
+    }
+
+void gInput::execute()
+    {
+    }
 
 int gInput::getCounterValue(char counterNb)
-{
-	return 0;
-}
+    {
+    return this->counterValues;
+    }
 
 int gInput::getBatteryValue()
-{
-	return 0;
-}
+    {
+    return this->tempSensValues;
+    }
 
 int gInput::getTempSensValue(char tempSensNb)
-{
-	return 0;
-}
+    {
+    return this->tempSensValues;
+    }
 
 char* gInput::getSms(int nSms)
-{
-	return "";
-}
+    {
+    return this->smsTab;
+    }
 
 int gInput::getSmsNb()
-{
-	return 0;
-}
+    {
+    return this->smsNb;
+    }
 
-tDate* gInput::getCurrentTime()
-{
-	return new tDate();
-}
+tDate gInput::getCurrentTime()
+    {
+    return this->currentTime;
+    }

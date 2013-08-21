@@ -5,15 +5,28 @@
 #include <assert.h>
 
 #include "Gestionnaire.h"
+#include "gInput.h"
 
-class gTerminal : public Gestionnaire
-{
+class gTerminal: public Gestionnaire
+    {
 private:
-	bool pipeOpen;
+    bool pipeOpen;
 
+    gInput* theGInput;
 
 public:
-	bool getPipeOpen();
+    //----------------------------------------------------------------
+    //constructeur
+    //
+    //gInput : le gestionnaire qui contient les entrées
+    //----------------------------------------------------------------
+    gTerminal(gInput* theGInput);
 
-};
+    bool getPipeOpen();
+
+    void setup();
+
+    void execute();
+
+    };
 #endif

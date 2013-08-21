@@ -17,6 +17,12 @@
 
 #include "USB_API/USB_Common/types.h"
 
+#include "Gestionnaires/gInput.h"
+#include "Gestionnaires/gCompute.h"
+#include "Gestionnaires/gOutput.h"
+#include "Gestionnaires/gSleep.h"
+#include "Gestionnaires/gTerminal.h"
+
 #ifdef __cplusplus
 extern "C"
     {
@@ -61,11 +67,15 @@ void main(void)
 
     __bis_SR_register(GIE);
 
-    //mUSB commUsb(&bCDCDataReceived_event);
-    //iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
-    //mRTC RTC;
+    gInput theGInput;
+    gCompute theGCompute(&theGInput);
+    gOutput theGOutput(&theGCompute);
 
-    /*mGSM mGsm;
+    /*mUSB commUsb(&bCDCDataReceived_event);
+     iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
+     mRTC RTC;
+
+     mGSM mGsm;
 
      valeurCompteur++;
 
@@ -74,7 +84,6 @@ void main(void)
      enableGSM.SetPortDriveStrength(kFullStrength);
      enableGSM.write(~BIT4);
 
-     //
      iDIO resetGSM((char*) kPort_7, BIT3);
      resetGSM.SetPortDirection(kOutput);
      resetGSM.SetPortDriveStrength(kFullStrength);
@@ -101,32 +110,81 @@ void main(void)
     //RTC.setAlarm(1);
     //mGsm.sendSMS("Coucou", "+41798183833");
 
-    if (valeurCompteur < 300)
-	{
-	valeurCompteur = 300;
-	}
+    /*if (valeurCompteur < 300)
+     {
+     valeurCompteur = 300;
+     }*/
 
-    iDIO aLed((char*) kPort_7, BIT0);
-    aLed.SetPortDirection(kOutput);
-    aLed.write(0xff);
+    iDIO cptEnable((char*) kPort_6, BIT2);
+    cptEnable.SetPortDirection(kOutput);
 
-    mDelay aDelay;
-    mCompteur monCompteur(kMeter1);
-    monCompteur.mOpen();
-    valeurCompteur = monCompteur.mRead();
+    iDIO cptSim((char*) kPort_6, BIT3);
+    cptSim.SetPortDirection(kOutput);
 
-    i = 0;
-    aLed.write(i);
-    aDelay.startDelay(1000);
+    iDIO cptSel_1((char*) kPort_6, BIT0);
+    cptSel_1.SetPortDirection(kOutput);
+
+    iDIO cptSel_2((char*) kPort_6, BIT1);
+    cptSel_2.SetPortDirection(kOutput);
+
+    iDIO cptRxd((char*) kPort_4, BIT5);
+    cptRxd.SetPortDirection(kInput);
+
+    iDIO aLed_1((char*) kPort_7, BIT0);
+    aLed_1.SetPortDirection(kOutput);
+
+    iDIO aLed_2((char*) kPort_7, BIT1);
+    aLed_2.SetPortDirection(kOutput);
+
+    //iUART uart(kUSCI_A1, kLSBFirst, k1StBits, kEven, k7bits, k300);
+
+    /*mCompteur monCompteur(kMeter1);
+     monCompteur.mOpen();
+     valeurCompteur = monCompteur.mRead();*/
+
+    cptEnable.write(kHigh);
+    cptSel_1.write(kHigh);
+    cptSel_2.write(kLow);
+
+//    while (1)
+//	{
+//	cptEnable.write(kHigh);
+//	cptEnable.write(kLow);
+//	cptEnable.write(kHigh);
+//	cptEnable.write(kLow);
+//	cptEnable.write(kHigh);
+//	cptEnable.write(kLow);
+//	}
+
+    mDelay aDelay_1;
+    i = 0xff;
+    aDelay_1.startDelay(1);
+
+    mDelay aDelay_2;
+    aDelay_2.startDelay(1);
 
     while (1)
 	{
 
-	if (aDelay.isDone())
+	if (aDelay_1.isDone())
 	    {
 	    i = ~i;
-	    aLed.write(i);
-	    aDelay.startDelay(1000);
+	    cptSim.write(i);
+	    aLed_1.write(i);
+	    aDelay_1.startDelay(20);
+	    }
+
+	if (aDelay_2.isDone())
+	    {
+	    if (cptRxd.read() != 0)
+		{
+		aLed_2.write(kHigh);
+		}
+	    else
+		{
+		aLed_2.write(kLow);
+		}
+	    aDelay_2.startDelay(1);
 	    }
 
 	// On endort le processeur en niveau 3 (voir datasheet page 20)
