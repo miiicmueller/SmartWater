@@ -18,7 +18,6 @@ tAvailability::tAvailability(mEEPROM *mEeprom, UInt16 aModeNum) {
 
 void tAvailability::save() {
 	UInt8 aDataTab[4] = { 0 };
-	UInt8 i = 0;
 
 	//Sérialisation
 	aDataTab[0] = (UInt8) this->aInterval;
@@ -32,7 +31,6 @@ void tAvailability::save() {
 }
 void tAvailability::load() {
 	UInt8 aDataTab[4] = { 0 };
-	UInt8 i = 0;
 
 	//Récupération des données
 	this->mPeriphSauv->load(this->aId, aDataTab);

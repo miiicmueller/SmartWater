@@ -12,7 +12,7 @@ typedef enum
     kLPM1,
     kLPM2,
     kLPM3,
-    kLPM4,
+    kLPM4
     } powerModeEnum;
 
 class iCpu

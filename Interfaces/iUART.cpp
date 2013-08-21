@@ -655,7 +655,6 @@ int iUART::availableCharToRead() {
  */
 bool iUART::sendString(char* aString) {
 	int i = 0;
-	unsigned int j = 0;
 	bool result = false;
 
 	//Test si la chaîne est vide
