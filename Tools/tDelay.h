@@ -13,7 +13,7 @@ class tDelay
     {
 public:
     //input
-    UInt16 counter;
+    UInt32 counter;
 
     //output
     bool isFree;

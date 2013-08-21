@@ -24,7 +24,8 @@ public:
     static void mSetup();
 
     //méthodes
-    void startDelay(int aTimeMs);
+    void startDelayMS(int aTimeMs);
+    void startDelayUS(int aTimeUs);
     bool isDone();
 
     //destructeur

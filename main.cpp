@@ -63,7 +63,6 @@ void main(void)
      char min = 0;
      char hr = 0;*/
 
-    UInt32 valeurCompteur = 0;
     // Important pour la basse consommation
     iDIO::InitAllPort();
 
@@ -74,6 +73,22 @@ void main(void)
     gInput theGInput;
     gCompute theGCompute(&theGInput);
     gOutput theGOutput(&theGCompute);
+
+    mDelay::mSetup();
+    mDelay::mOpen();
+
+    iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
+    UInt16 moduleAddress = 0x50;
+    mEEPROM aEEPROM(moduleAddress, &i2cBus);
+    mCompteur aCompteur(kMeterSimulation, &aEEPROM);
+
+    while (1)
+	{
+	aCompteur.mOpen();
+	aCompteur.mSetup();
+	aCompteur.simulationCpt(16987);
+	aCompteur.mClose();
+	}
 
     /*mUSB commUsb(&bCDCDataReceived_event);
      iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
@@ -93,8 +108,6 @@ void main(void)
      resetGSM.SetPortDriveStrength(kFullStrength);
      resetGSM.write(~BIT3);*/
 
-    mDelay::mSetup();
-    mDelay::mOpen();
 //
 //	iDIO CTSel2((char*) kPort_6, BIT1);
 //	enableCT.SetPortDirection(kOutput);
@@ -113,7 +126,6 @@ void main(void)
     //RTC.setHour(17, 0, 0);
     //RTC.setAlarm(1);
     //mGsm.sendSMS("Coucou", "+41798183833");
-
     /*if (valeurCompteur < 300)
      {
      valeurCompteur = 300;
@@ -162,10 +174,10 @@ void main(void)
 
     mDelay aDelay_1;
     i = 0xff;
-    aDelay_1.startDelay(1);
+    aDelay_1.startDelayMS(1);
 
     mDelay aDelay_2;
-    aDelay_2.startDelay(1);
+    aDelay_2.startDelayMS(1);
 
     while (1)
 	{
@@ -175,7 +187,7 @@ void main(void)
 	    i = ~i;
 	    cptSim.write(i);
 	    aLed_1.write(i);
-	    aDelay_1.startDelay(20);
+	    aDelay_1.startDelayMS(20);
 	    }
 
 	if (aDelay_2.isDone())
@@ -188,7 +200,7 @@ void main(void)
 		{
 		aLed_2.write(kLow);
 		}
-	    aDelay_2.startDelay(1);
+	    aDelay_2.startDelayMS(1);
 	    }
 
 	// On endort le processeur en niveau 3 (voir datasheet page 20)

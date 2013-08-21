@@ -136,7 +136,7 @@ bool mGSM::getSMS(char* aSMS)
     mGSM::uart.write((char) (indexSMS + 48));
     mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 
-    mGSM::timeOut.startDelay(kTimeOutResponse);
+    mGSM::timeOut.startDelayMS(kTimeOutResponse);
     while(!mGSM::uart.readFrame(aDataReceived) && !mGSM::timeOut.isDone()); //attend premiere partie (echo de la commande : non-interessant)
 
     if(mGSM::timeOut.isDone()) //erreur
@@ -150,7 +150,7 @@ bool mGSM::getSMS(char* aSMS)
 	aDataReceived[i]=0;
 	}
 
-    mGSM::timeOut.startDelay(kTimeOutResponse);
+    mGSM::timeOut.startDelayMS(kTimeOutResponse);
     while(!mGSM::uart.readFrame(aDataReceived) && !mGSM::timeOut.isDone()); //attend deuxieme partie
 
     if(mGSM::timeOut.isDone())
@@ -219,7 +219,7 @@ bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber)
     mGSM::uart.sendString(aSMS);
     mGSM::uart.write(0x1A); // "Ctrl + Z"
 
-    mGSM::timeOut.startDelay(kTimeOutSendSms);
+    mGSM::timeOut.startDelayMS(kTimeOutSendSms);
     while (!mGSM::uart.readFrame(aAnswer) && !mGSM::timeOut.isDone()); // attend reponse
 
     if(mGSM::timeOut.isDone()) //timeOut échu
@@ -294,7 +294,7 @@ bool mGSM::mCheckResponse(char* aGoodResponse, UInt16 aTimeOutMs)
     {
     char aAnswer[kSciRecBufReceptionSize ];
 
-    mGSM::timeOut.startDelay(aTimeOutMs);
+    mGSM::timeOut.startDelayMS(aTimeOutMs);
 
     while(!mGSM::uart.readFrame(aAnswer) && !mGSM::timeOut.isDone()); //lit le message
 
