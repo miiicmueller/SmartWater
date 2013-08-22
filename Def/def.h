@@ -17,11 +17,7 @@
 #define kALARMNUM_BASE_ID 	0x0900
 #define kCOMPTEUR_BASE_ID 	0x0A00
 
-
-
-
 #define kFREE_BASE_ID 0xFF01
-
 
 //Déclaration des types
 typedef char SInt8;
@@ -31,12 +27,10 @@ typedef unsigned int UInt16;
 typedef long SInt32;
 typedef unsigned long UInt32;
 
-typedef union {
+typedef union
+    {
     unsigned char aCharArray[sizeof(float)];
     float aFloatVal;
-} Float32;
-
-
-
+    } Float32;
 
 #endif

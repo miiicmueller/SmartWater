@@ -7,7 +7,6 @@
 #ifndef M_COMPTEUR_H
 #define M_COMPTEUR_H
 
-
 #include "Module.h"
 #include "../Def/def.h"
 #include "../Interfaces/iUART.h"
@@ -21,9 +20,7 @@ typedef enum // choix du compteur
     kMeterSimulation
     } iMeterChannel;
 
-
 using namespace std;
-
 
 class mCompteur: public Module
     {
@@ -33,10 +30,10 @@ private:
     static iDIO enable; // entree d'activation de la lecteur des compteurs
     static iDIO channelMultiplexer; // entree de selection du comtpeur desire
 
-	//tool
-	UInt8 channelCodeMultiplexer; // code pour que le multiplexeur selectionne le bon compteur
-	tCompteur	*compteurParam;
-	UInt8 aStatus ;
+    //tool
+    UInt8 channelCodeMultiplexer; // code pour que le multiplexeur selectionne le bon compteur
+    tCompteur *compteurParam;
+    UInt8 aStatus;
 
 public:
     //----------------------------------------------------------------
@@ -44,7 +41,7 @@ public:
     //
     //aChannel : choix du compteur d'eau
     //----------------------------------------------------------------
-    mCompteur(iMeterChannel aChannel,mEEPROM *mEeprom);
+    mCompteur(iMeterChannel aChannel, mEEPROM *mEeprom);
 
     //----------------------------------------------------------------
     //destructeur
