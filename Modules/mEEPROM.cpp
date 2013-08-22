@@ -869,7 +869,7 @@ bool mEEPROM::ackPolling()
 	;
 
     //1s de timeout
-    delayTimeout.startDelay(1000);
+    delayTimeout.startDelayMS(1000);
 
     do
 	{

@@ -20,48 +20,52 @@ mDelay mGSM::timeOut;
 //----------------------------------------------------------------
 //constructeur
 //----------------------------------------------------------------
-mGSM::mGSM() {
-	//Initialisation des attributs
-	this->indexSMS = 1;
-	this->state = kDisconnected; // etat initial
-}
+mGSM::mGSM()
+    {
+    //Initialisation des attributs
+    this->indexSMS = 1;
+    this->state = kDisconnected; // etat initial
+    }
 
 //----------------------------------------------------------------
 // Fonction de configuration du module GSM
 //----------------------------------------------------------------
-void mGSM::mSetup() {
-	// On envoie sur USCI_A0 + LSB first (on peut croiser) + pas de paritee + donneees de 8 bits + vitesse 115200
-	mGSM::uart.config(kLSBFirst, k1StBits, kNone, k8bits, k115200);
+void mGSM::mSetup()
+    {
+    // On envoie sur USCI_A0 + LSB first (on peut croiser) + pas de parite + donneees de 8 bits + vitesse 115200
+    mGSM::uart.config(kLSBFirst, k1StBits, kNone, k8bits, k115200);
 
-	//parametrage des entrees
-	mGSM::enable.SetPortDirection(kOutput);
-	mGSM::enable.SetPortDriveStrength(kFullStrength);
-	mGSM::reset.SetPortDirection(kOutput);
-	mGSM::reset.SetPortDriveStrength(kFullStrength);
-}
+    //parametrage des entrees
+    mGSM::enable.SetPortDirection(kOutput);
+    mGSM::enable.SetPortDriveStrength(kFullStrength);
+    mGSM::reset.SetPortDirection(kOutput);
+    mGSM::reset.SetPortDriveStrength(kFullStrength);
+    }
 
 //----------------------------------------------------------------
 // Fonction permettant l'ouverture du peripherique GSM
 //----------------------------------------------------------------
-void mGSM::mOpen() {
-	bool aIsOk = false;
-	this->state = kOk;
+void mGSM::mOpen()
+    {
+    bool aIsOk = false;
+    this->state = kOk;
 
-	//autorisation de communiquer et enable des interruptions
-	mGSM::uart.enable();
-	mGSM::enable.write(BIT4);
-	mGSM::reset.write(BIT3);
+    //autorisation de communiquer et enable des interruptions
+    mGSM::uart.enable();
+    mGSM::enable.write(BIT4);
+    mGSM::reset.write(BIT3);
 
-	mGSM::uart.clearInternalSerialBuffer(); //efface le buffer
+    mGSM::uart.clearInternalSerialBuffer(); //efface le buffer
 
 	//enable mode sms
 	mGSM::uart.sendString(mGSM::commandesAtGsm.enableSMS);
 	mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 	aIsOk = mCheckResponse((UInt8*)"OK", kTimeOutResponse); //test la reponse
 
-	//maj etat module
-	if (!aIsOk) {
-		this->state = kErrorSetModeSms;
+    //maj etat module
+    if (!aIsOk)
+	{
+	this->state = kErrorSetModeSms;
 	}
 
 	//controle si la carte SIM est deja delockee
@@ -82,7 +86,7 @@ void mGSM::mOpen() {
 		}
 	}
 
-	// passe les SMS en mode texte (par d�faut "Mode PDU" -> non-traitable)
+	// passe les SMS en mode texte (par defaut "Mode PDU" -> non-traitable)
 	mGSM::uart.sendString(mGSM::commandesAtGsm.setModeText);
 	mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 	aIsOk = mCheckResponse((UInt8*)"OK", kTimeOutResponse); //test la reponse
@@ -126,7 +130,7 @@ bool mGSM::getSMS(UInt8* aSMS) {
 	mGSM::uart.write((char) (indexSMS + 48));
 	mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 
-	mGSM::timeOut.startDelay(kTimeOutResponse);
+	mGSM::timeOut.startDelayMS(kTimeOutResponse);
 	while (!mGSM::uart.readFrame(aDataReceived) && !mGSM::timeOut.isDone())
 		; //attend premiere partie (echo de la commande : non-interessant)
 
@@ -141,7 +145,7 @@ bool mGSM::getSMS(UInt8* aSMS) {
 		aDataReceived[i] = 0;
 	}
 
-	mGSM::timeOut.startDelay(kTimeOutResponse);
+	mGSM::timeOut.startDelayMS(kTimeOutResponse);
 	while (!mGSM::uart.readFrame(aDataReceived) && !mGSM::timeOut.isDone())
 		; //attend deuxieme partie
 
@@ -191,7 +195,7 @@ bool mGSM::getSMS(UInt8* aSMS) {
 //envoi un SMS
 //
 //aSMS : pointe la variable contenant le SMS a envoyer
-//aPhoneNumber : pointe la varialble contenant le num�ro de telephone
+//aPhoneNumber : pointe la varialble contenant le numero de telephone
 //retour : true si le SMS a ete envoye
 //----------------------------------------------------------------
 bool mGSM::sendSMS(UInt8* aSMS, UInt8* aPhoneNumber) {
@@ -206,11 +210,11 @@ bool mGSM::sendSMS(UInt8* aSMS, UInt8* aPhoneNumber) {
 	mGSM::uart.sendString(aSMS);
 	mGSM::uart.write(0x1A); // "Ctrl + Z"
 
-	mGSM::timeOut.startDelay(kTimeOutSendSms);
+	mGSM::timeOut.startDelayMS(kTimeOutSendSms);
 	while (!mGSM::uart.readFrame(aAnswer) && !mGSM::timeOut.isDone())
 		; // attend reponse
 
-	if (mGSM::timeOut.isDone()) //timeOut �chu
+	if (mGSM::timeOut.isDone()) //timeOut echu
 	{
 		//quitte le processus
 		mGSM::uart.write(0x1B); //"ESC"
@@ -277,19 +281,20 @@ bool mGSM::sendSMS(UInt8* aSMS, UInt8* aPhoneNumber) {
 }
 
 //destructeur
-mGSM::~mGSM() {
-}
+mGSM::~mGSM()
+    {
+    }
 
 //----------------------------------------------------------------
-//controle si une reponse recue du GSM et la compare avec deux possibilit�s
+//controle si une reponse recue du GSM et la compare avec deux possibilites
 //
 //aGoodResponse : bonne reponse, renvoie true
-//aTimeOutMs : duree en milliseconde durant laquelle la m�thode essaie de trouver correpondance
+//aTimeOutMs : duree en milliseconde durant laquelle la methode essaie de trouver correpondance
 //----------------------------------------------------------------
 bool mGSM::mCheckResponse(UInt8* aGoodResponse, UInt16 aTimeOutMs) {
 	UInt8 aAnswer[kSciRecBufReceptionSize ];
 
-	mGSM::timeOut.startDelay(aTimeOutMs);
+	mGSM::timeOut.startDelayMS(aTimeOutMs);
 
 	while (!mGSM::uart.readFrame(aAnswer) && !mGSM::timeOut.isDone())
 		; //lit le message
