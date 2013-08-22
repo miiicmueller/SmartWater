@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "mEEPROM.h"
+#include "mDelay.h"
 #include "Interfaces/iI2C.h"
 
 // Adresse de base de la table
@@ -32,6 +33,7 @@ mEEPROM::mEEPROM(UInt16 moduleAddress, iI2C *i2cBus) {
 	this->availableData = (UInt16) 0xFFFF - (UInt16) kDATA_BASE_ADR;
 	this->usedBytes = 0;
 	this->i2c_1 = i2cBus;
+	this->aStatus = 0;
 
 }
 
@@ -49,10 +51,14 @@ void mEEPROM::mOpen() {
 	bool aHasNext = false;
 
 	this->i2c_1->enable();
-	this->usedBytes = 0,
+	this->usedBytes = 0;
 
 	//On attend que l'EEPROM soit prete
-	this->ackPolling();
+	if (!this->ackPolling()) {
+		//mOpen error
+		this->aStatus = 1;
+		return;
+	}
 
 	//Si le premier byte est un zero alors on a rien Ou si on as pas pu lire
 	aByteTemp = this->read(kTABLE_BASE_ADR);
@@ -92,6 +98,14 @@ void mEEPROM::mSetup() {
 
 }
 
+/**
+ * Permet de tester l'état du module
+ * retour : valeur du status
+ */
+UInt8 mEEPROM::getStatus() {
+	return this->aStatus;
+}
+
 /*
  * Libère de la mémoire allouée.
  * UInt16 aId : Id unique d'un objet. Le byte de poids faible ne doit jamais valoir 0 !!!
@@ -107,8 +121,12 @@ bool mEEPROM::free(UInt16 aId) {
 
 	UInt16 aLastSize = 0;
 
+	// L'Open de l'EEPROM a eu une erreur
+	if (this->aStatus != 0) {
+		return false;
+	}
 	//L'EEPROM est vide
-	if (this->usedBytes == 0) {
+	else if (this->usedBytes == 0) {
 		return false;
 	}
 	//On parcours la table
@@ -143,12 +161,16 @@ bool mEEPROM::free(UInt16 aId) {
 			this->write(i + kIdLowPos, (UInt8) kFREE_BASE_ID);
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			//On enregistre la partie haute de l'Id
 			this->write(i + kIdHighPos, (UInt8) (kFREE_BASE_ID >> 8));
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 
 			// On retire les bytes utilisés
 			this->usedBytes -= aLastSize;
@@ -175,8 +197,12 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize) {
 	UInt16 aNewAdress = 0;
 	UInt16 i = 0;
 
+	// L'Open de l'EEPROM a eu une erreur
+	if (this->aStatus != 0) {
+		return false;
+	}
 	//L'EEPROM est vide
-	if (this->usedBytes == 0) {
+	else if (this->usedBytes == 0) {
 		//Calcul de la nouvelle addresse en fonction des bytes utilisés
 		aNewAdress = kDATA_BASE_ADR + this->usedBytes;
 		this->usedBytes += aSize;
@@ -185,32 +211,44 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize) {
 		this->write(i + kIdLowPos, (UInt8) aId);
 
 		//On attend que l'EEPROM soit prete
-		this->ackPolling();
+		if (!this->ackPolling()) {
+			return false;
+		}
 		//On enregistre la partie haute de l'Id
 		this->write(i + kIdHighPos, (UInt8) (aId >> 8));
 
 		//On attend que l'EEPROM soit prete
-		this->ackPolling();
+		if (!this->ackPolling()) {
+			return false;
+		}
 		//On enregistre la partie basse de l'adresse
 		this->write(i + kAdrLowPos, (UInt8) aNewAdress);
 
 		//On attend que l'EEPROM soit prete
-		this->ackPolling();
+		if (!this->ackPolling()) {
+			return false;
+		}
 		//On enregistre la partie haute de l'adresse
 		this->write(i + kAdrHighPos, (UInt8) (aNewAdress >> 8));
 
 		//On attend que l'EEPROM soit prete
-		this->ackPolling();
+		if (!this->ackPolling()) {
+			return false;
+		}
 		//On enregistre la partie basse de la taille
 		this->write(i + kSizeLowPos, (UInt8) aSize);
 
 		//On attend que l'EEPROM soit prete
-		this->ackPolling();
+		if (!this->ackPolling()) {
+			return false;
+		}
 		//On enregistre la partie haute de la taille
 		this->write(i + kSizeHighPos, (UInt8) (aSize >> 8));
 
 		//On attend que l'EEPROM soit prete
-		this->ackPolling();
+		if (!this->ackPolling()) {
+			return false;
+		}
 		//On enregistre la fin des enregistrement
 		this->write(i + kRecordSize, 0x00);
 
@@ -236,7 +274,9 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize) {
 		//Lecture de la table pour vérifier si l'ID existe. Sinon on ne fait rien
 
 		//On attend que l'EEPROM soit prete
-		this->ackPolling();
+		if (!this->ackPolling()) {
+			return false;
+		}
 
 		aHasNext = true;
 		aIdFound = false;
@@ -283,23 +323,30 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize) {
 			this->write(i + kIdLowPos, (UInt8) aId);
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			//On enregistre la partie haute de l'Id
 			this->write(i + kIdHighPos, (UInt8) (aId >> 8));
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
-
+			if (!this->ackPolling()) {
+				return false;
+			}
 			//On enregistre la partie basse de la taille
 			this->write(i + kSizeLowPos, (UInt8) aSize);
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			//On enregistre la partie haute de la taille
 			this->write(i + kSizeHighPos, (UInt8) (aSize >> 8));
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 
 			return true;
 		}
@@ -310,32 +357,44 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize) {
 			this->write(i + kIdLowPos, (UInt8) aId);
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			//On enregistre la partie haute de l'Id
 			this->write(i + kIdHighPos, (UInt8) (aId >> 8));
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			//On enregistre la partie basse de l'adresse
 			this->write(i + kAdrLowPos, (UInt8) aNewAdress);
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			//On enregistre la partie haute de l'adresse
 			this->write(i + kAdrHighPos, (UInt8) (aNewAdress >> 8));
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			//On enregistre la partie basse de la taille
 			this->write(i + kSizeLowPos, (UInt8) aSize);
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			//On enregistre la partie haute de la taille
 			this->write(i + kSizeHighPos, (UInt8) (aSize >> 8));
 
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			//On enregistre la fin des enregistrement
 			this->write(i + kRecordSize, 0x00);
 
@@ -369,9 +428,14 @@ bool mEEPROM::load(UInt16 aId, UInt8 aDataTab[]) {
 	UInt16 aLastSize = 0;
 
 	//Lecture de la table pour vérifier si l'ID existe. Sinon on ne fait rien
-
+	// L'Open de l'EEPROM a eu une erreur
+	if (this->aStatus != 0) {
+		return false;
+	}
 	//On attend que l'EEPROM soit prete
-	this->ackPolling();
+	else if (!this->ackPolling()) {
+		return false;
+	}
 
 	aHasNext = true;
 	aIdFound = false;
@@ -406,7 +470,9 @@ bool mEEPROM::load(UInt16 aId, UInt8 aDataTab[]) {
 	if (aIdFound == true) {
 		for (i = 0; i < aLastSize; i++) {
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			aDataTab[i] = this->read(aLastAdr + i);
 		}
 		return true;
@@ -433,10 +499,16 @@ bool mEEPROM::store(UInt16 aId, UInt8 aDataTab[]) {
 	UInt16 aLastAdr = 0;
 	UInt16 aLastSize = 0;
 
+	// L'Open de l'EEPROM a eu une erreur
+	if (this->aStatus != 0) {
+		return false;
+	}
 	//Lecture de la table pour vérifier si l'ID existe. Sinon on ne fait rien
 
 	//On attend que l'EEPROM soit prete
-	this->ackPolling();
+	else if (!this->ackPolling()) {
+		return false;
+	}
 
 	aHasNext = true;
 	aIdFound = false;
@@ -471,7 +543,9 @@ bool mEEPROM::store(UInt16 aId, UInt8 aDataTab[]) {
 	if (aIdFound == true) {
 		for (i = 0; i < aLastSize; i++) {
 			//On attend que l'EEPROM soit prete
-			this->ackPolling();
+			if (!this->ackPolling()) {
+				return false;
+			}
 			this->write(aLastAdr + i, aDataTab[i]);
 		}
 		return true;
@@ -486,6 +560,11 @@ bool mEEPROM::store(UInt16 aId, UInt8 aDataTab[]) {
  */
 void mEEPROM::initIdTable() {
 	this->i2c_1->enable();
+	if (!this->ackPolling()) {
+		//Pas d'initialisation possible
+		this->aStatus = 2;
+		return;
+	}
 	this->write(kTABLE_BASE_ADR, 0x00);
 }
 
@@ -680,12 +759,25 @@ char mEEPROM::read(UInt16 address) {
  * Vérification que le cycle d'écriture est bien terminé.
  * Sinon l'EEPROM ne répond pas
  */
-void mEEPROM::ackPolling() {
+bool mEEPROM::ackPolling() {
+	mDelay delayTimeout;
+
+	if (delayTimeout.disponibility == false) {
+		return false;
+	}
+
 	while (this->i2c_1->getStatusFlag(kBUSY) == true)
 		;
+
+	//1s de timeout
+	delayTimeout.startDelay(1000);
+
 	do {
 		UCB1STAT = 0x00;                        // clear I2C interrupt flags
-		this->i2c_1->setWriteMode();  // I2CTRX=1 => Transmit Mode (R/W bit = 0)
+		//Config de l'adress du slave
+		this->i2c_1->setSlaveAddr(this->moduleAddress);
+		this->i2c_1->setWriteMode();// I2CTRX=1 => Transmit Mode (R/W bit = 0)
+
 		UCB1CTL1 &= ~UCTXSTT;
 		this->i2c_1->start();                    // start condition is generated
 		while (this->i2c_1->getStatusFlag(kSTT) == true) // wait till I2CSTT bit was cleared
@@ -696,7 +788,13 @@ void mEEPROM::ackPolling() {
 		this->i2c_1->stop();                // stop condition is generated after
 		while (this->i2c_1->getStatusFlag(kSTP) == true)
 			; // wait till stop bit is reset
-		__delay_cycles(500);                    // Software delay
+		// Software delay
+		__delay_cycles(500);
+		if (delayTimeout.isDone()) {
+			return false;
+		}
 	} while (this->i2c_1->getStatusFlag(kNACK) == true);
+
+	return true;
 }
 

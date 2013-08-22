@@ -36,6 +36,7 @@ private:
 	//tool
 	UInt8 channelCodeMultiplexer; // code pour que le multiplexeur selectionne le bon compteur
 	tCompteur	*compteurParam;
+	UInt8 aStatus ;
 
 public:
     //----------------------------------------------------------------

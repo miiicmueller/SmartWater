@@ -16,12 +16,14 @@ typedef enum {
 
 class mTempSensor: public Module {
 private:
-	char sensorAddress;
+	UInt8 sensorAddress;
+	UInt8 aStatus;
 	iI2C *i2c_1;
 public:
 	mTempSensor(char sensorAddress, iI2C *i2cBus);
 	~mTempSensor();
-	int readTemp();
+	UInt16 readTemp();
+	UInt8 getStatus();
 	bool configSensor(mTempSensorRegEnum aRegister, char aValue);
 	void mOpen();
 	void mClose();

@@ -73,10 +73,13 @@ void main(void) {
 
 	iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
 	mEEPROM eeprom(0x50, &iI2C_1);
+	mTempSensor temp(0x20, &iI2C_1);
+
 	eeprom.mOpen();
+	temp.mOpen();
 	//iUART uart(kUSCI_A1, kLSBFirst, k1StBits, kEven, k7bits, k300);
 
-	mCompteur monCompteur(kMeter1,&eeprom);
+	mCompteur monCompteur(kMeter1, &eeprom);
 	monCompteur.mOpen();
 	valeurCompteur = monCompteur.mRead();
 

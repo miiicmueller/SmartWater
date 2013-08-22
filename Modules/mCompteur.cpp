@@ -35,16 +35,24 @@ mCompteur::mCompteur(iMeterChannel aChannel, mEEPROM *mEeprom) {
 		this->channelCodeMultiplexer = 0;
 	}
 
-	// A vérifier
-	this->compteurParam = new tCompteur(mEeprom, aChannel);
+	//Vérification de l'EEPROM
+	if (mEeprom->getStatus() != 0) {
+		//EEPROM ERROR
+		this->aStatus = 1;
+	} else {
+		// A vérifier
+		this->compteurParam = new tCompteur(mEeprom, aChannel);
 
-	//Initialisation du paramètre tCompteur
-	strcpy((char*) this->compteurParam->aManufacturer, "NA");
-	strcpy((char*) this->compteurParam->aFluide, "NA");
-	strcpy((char*) this->compteurParam->aVersNum, "NA");
-	strcpy((char*) this->compteurParam->aFabDate, "NA");
-	strcpy((char*) this->compteurParam->aSerialNum, "NA");
-	strcpy((char*) this->compteurParam->aNominalSize, "NA");
+		//Initialisation du paramètre tCompteur
+		strcpy((char*) this->compteurParam->aManufacturer, "NA");
+		strcpy((char*) this->compteurParam->aFluide, "NA");
+		strcpy((char*) this->compteurParam->aVersNum, "NA");
+		strcpy((char*) this->compteurParam->aFabDate, "NA");
+		strcpy((char*) this->compteurParam->aSerialNum, "NA");
+		strcpy((char*) this->compteurParam->aNominalSize, "NA");
+
+		this->aStatus = 0;
+	}
 }
 
 //----------------------------------------------------------------
