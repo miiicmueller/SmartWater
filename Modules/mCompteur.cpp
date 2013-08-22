@@ -10,7 +10,7 @@
 #define kDisableMeter 0 // desactivation des comtpeurs
 #define kNumberFigures 5 // nombre de chiffres que comporte l'indice du compteur
 #define kPositionValue 27 // position ou se situe l'indice du compteur dans la trame
-#define kBitTimeUs 3333 //duree de 1 bit (a 300 bps)
+#define kBitTimeUs 33 //duree de 1 bit (a 300 bps) (3300us)
 //declaration des attributs objets
 iUART mCompteur::uart(kUSCI_A1, kLSBFirst, k1StBits, kEven, k7bits, k300);
 iDIO mCompteur::channelMultiplexer((char*) kPort_6, BIT0 | BIT1);
@@ -135,7 +135,11 @@ UInt32 mCompteur::mRead()
 //----------------------------------------------------------------
 void mCompteur::simulationCpt(int aIndex)
     {
-    char aFrame[] = "salut";
+    char aFrame[90];
+
+    sprintf(aFrame,
+	    "/SIM Wasser      V1.0\r\n7.0(%5d*m3)\r\n0.09(22-08-13)\r\n0.00(0000000)\r\n0.01(DN20)\r\n!\r\n",
+	    aIndex);
 
     this->channelMultiplexer.write(channelCodeMultiplexer);
     this->enable.write(kEnableMeter);
@@ -176,7 +180,7 @@ void mCompteur::sendChar(char aChar)
 
     this->cptSim.write(kHigh);	//bit de start
 
-    aDelay.startDelayUS(kBitTimeUs);
+    aDelay.startDelay100US(kBitTimeUs);
     while (!aDelay.isDone())
 	{
 	}
@@ -195,7 +199,7 @@ void mCompteur::sendChar(char aChar)
 
 	aChar = aChar >> 1;
 
-	aDelay.startDelayUS(kBitTimeUs);
+	aDelay.startDelay100US(kBitTimeUs);
 	while (!aDelay.isDone())
 	    {
 	    }
@@ -204,7 +208,7 @@ void mCompteur::sendChar(char aChar)
 
     this->cptSim.write(kLow); //stop bit
 
-    aDelay.startDelayUS(kBitTimeUs);
+    aDelay.startDelay100US(kBitTimeUs);
     while (!aDelay.isDone())
 	{
 	}

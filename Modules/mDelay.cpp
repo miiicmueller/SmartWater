@@ -36,20 +36,20 @@ void mDelay::mSetup()
     }
 
 //méthodes
-void mDelay::startDelayMS(int aTimeMs)
+void mDelay::startDelayMS(UInt32 aTimeMs)
     {
     if (this->disponibility == true)
 	{
-	this->theDelayRTI.startDelayUS(aTimeMs * 1000);
+	this->theDelayRTI.startDelay100US(aTimeMs * 10);
 	}
     }
 
 //méthodes
-void mDelay::startDelayUS(int aTimeUs)
+void mDelay::startDelay100US(UInt32 aTime100Us)
     {
     if (this->disponibility == true)
 	{
-	this->theDelayRTI.startDelayUS(aTimeUs);
+	this->theDelayRTI.startDelay100US(aTime100Us);
 	}
     }
 

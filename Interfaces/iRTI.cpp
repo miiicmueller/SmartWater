@@ -6,8 +6,8 @@
 
 #include "iRTI.h"
 
-#define kNbOfDelays	10
-#define kTA0_Period	4 // clk à 4 000 000 Hz, divisé par 4, cela fait 1 000 000Hz, soit 1us
+#define kNbOfDelays	5
+#define kTA0_Period	400 // clk à 4 000 000 Hz, divisé par 400, cela fait 10 000Hz, soit 100us
 //initialisation des attributs statiques
 int iRTI::freeDelays = kNbOfDelays;
 tDelay iRTI::delaysTab[kNbOfDelays];
@@ -42,9 +42,9 @@ iRTI::~iRTI()
     }
 
 //méthodes publiques
-void iRTI::startDelayUS(int aTimeUs)
+void iRTI::startDelay100US(int aTime100Us)
     {
-    this->delaysTab[this->delayNumber].counter = aTimeUs;
+    this->delaysTab[this->delayNumber].counter = aTime100Us;
     this->delaysTab[this->delayNumber].isDone = false;
     }
 

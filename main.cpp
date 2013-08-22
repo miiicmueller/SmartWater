@@ -82,13 +82,10 @@ void main(void)
     mEEPROM aEEPROM(moduleAddress, &i2cBus);
     mCompteur aCompteur(kMeterSimulation, &aEEPROM);
 
-    while (1)
-	{
-	aCompteur.mOpen();
-	aCompteur.mSetup();
-	aCompteur.simulationCpt(16987);
-	aCompteur.mClose();
-	}
+    aCompteur.mOpen();
+    aCompteur.mSetup();
+    aCompteur.simulationCpt(16987);
+    aCompteur.mClose();
 
     /*mUSB commUsb(&bCDCDataReceived_event);
      iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
@@ -122,10 +119,10 @@ void main(void)
 //	CaptCarte.mOpen();
 //	RTC.mOpen();
 //	mGsm.mOpen();
-    //CaptCarte.configSensor(kConfiguration, 0x60);
-    //RTC.setHour(17, 0, 0);
-    //RTC.setAlarm(1);
-    //mGsm.sendSMS("Coucou", "+41798183833");
+//CaptCarte.configSensor(kConfiguration, 0x60);
+//RTC.setHour(17, 0, 0);
+//RTC.setAlarm(1);
+//mGsm.sendSMS("Coucou", "+41798183833");
     /*if (valeurCompteur < 300)
      {
      valeurCompteur = 300;
@@ -152,7 +149,7 @@ void main(void)
     iDIO aLed_2((char*) kPort_7, BIT1);
     aLed_2.SetPortDirection(kOutput);
 
-    //iUART uart(kUSCI_A1, kLSBFirst, k1StBits, kEven, k7bits, k300);
+//iUART uart(kUSCI_A1, kLSBFirst, k1StBits, kEven, k7bits, k300);
 
     /*mCompteur monCompteur(kMeter1);
      monCompteur.mOpen();

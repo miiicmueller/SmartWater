@@ -19,7 +19,7 @@ public:
     iRTI();
     ~iRTI();
 
-    void startDelayUS(int aTimeUs);
+    void startDelay100US(int aTime100Us);
     bool isDone();
 
     //méthodes statiques, qui agissent sur toutes les instances de la classe
