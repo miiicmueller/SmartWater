@@ -13,8 +13,8 @@ private:
 	char aDeltaMinuteAlarme;
 	static iRTC* RTC_A ;
 	void wakeUpInterrupt();
-	bool write(char aData);
-	char read();
+	bool write(UInt8 aData);
+	UInt8 read();
 
 	friend void RTC_A(void);
 public:

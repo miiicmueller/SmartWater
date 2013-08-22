@@ -15,6 +15,7 @@ private:
 
 	UInt16 availableData;
 	UInt16 usedBytes;
+	UInt8 aStatus;
 
 	bool write(UInt16 address, UInt8 value);
 	char read(UInt16 address);
@@ -23,6 +24,7 @@ public:
 	mEEPROM(UInt16 moduleAddress,iI2C *i2cBus);
 	~mEEPROM();
 	void initIdTable();
+	UInt8 getStatus();
 	bool malloc(UInt16 aId,UInt16 size);
 	bool free(UInt16 aId);
 	bool load(UInt16 aId,UInt8 aDataTab[]);
@@ -30,6 +32,6 @@ public:
 	void mOpen();
 	void mClose();
 	void mSetup();
-	void ackPolling();
+	bool ackPolling();
 };
 #endif

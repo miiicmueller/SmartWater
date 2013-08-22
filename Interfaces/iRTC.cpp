@@ -177,7 +177,7 @@ void iRTC::wakeUpInterrupt() {
  * @Deprecated
  * Inutile
  */
-bool iRTC::write(char aData) {
+bool iRTC::write(UInt8 aData) {
 	return false;
 }
 
@@ -185,7 +185,7 @@ bool iRTC::write(char aData) {
  * @Deprecated
  * Inutile
  */
-char iRTC::read() {
+UInt8 iRTC::read() {
 	return 0;
 }
 

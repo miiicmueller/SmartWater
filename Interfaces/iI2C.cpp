@@ -192,7 +192,7 @@ void iI2C::disable() {
  * Ecriture sur le bus i2c.
  * Le retour ne signifie rien
  */
-bool iI2C::write(char aData) {
+bool iI2C::write(UInt8 aData) {
 	//Ecrire la donnée
 	UCB1TXBUF = aData;
 	return true ;
@@ -202,7 +202,7 @@ bool iI2C::write(char aData) {
  * Lecture du byte recu sur l'i2c
  * Retour : valeur du byte recu
  */
-char iI2C::read() {
+UInt8 iI2C::read() {
 	return UCB1RXBUF;
 }
 

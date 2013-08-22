@@ -339,7 +339,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
  * Fonction pour lire "1" byte recus dans le buffer tourant
  *
  */
-char iUART::read() {
+UInt8 iUART::read() {
 	if (isEnabled) {
 		UInt8 aByteToRead = 0;
 
@@ -368,7 +368,7 @@ char iUART::read() {
  * !! La m�thode enable doit avoir �t� pr�alablement appel�e
  *
  */
-bool iUART::write(char aData) {
+bool iUART::write(UInt8 aData) {
 	//test si l'interface est activ�
 	if (isEnabled) {
 		//Selection du port
@@ -543,26 +543,26 @@ void iUART::interruptHandler() {
  * aBuffer : Buffer d'entr�e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
  * retour  : -1 si on a rien trouv� sinon la taille de la cha�ne
  */
-bool iUART::readFrame(char* string) {
-	char i = 0;
-	char nDataReceived = 0;
+bool iUART::readFrame(UInt8* string) {
+	UInt8 i = 0;
+	UInt8 nDataReceived = 0;
 
 	nDataReceived = this->USCIRingBuffer.ByteCount;
 
 	//Tester si l'on a recu qqch
 	if ((this->dataReceived == true) || (nDataReceived != 0)) {
-		char pieceOfString[kSciRecBufSize ] = ""; //Holds the new addition to the string
+		UInt8 pieceOfString[kSciRecBufSize ] = ""; //Holds the new addition to the string
 
 		//Recuperation des bytes recus
 		for (i = 0; i < nDataReceived; i++) {
 			pieceOfString[i] = this->read();
 		}
 
-		strcat(this->uartBuffer, pieceOfString);
+		strcat((char*)this->uartBuffer, (char*)pieceOfString);
 
 		// Test \r
 		if (retInString(this->uartBuffer)) {
-			strcpy(string, this->uartBuffer);
+			strcpy((char*)string, (char*)this->uartBuffer);
 			this->clearInternalSerialBuffer();
 			this->dataReceived = false;
 			return true;
@@ -585,9 +585,9 @@ bool iUART::readFrame(char* string) {
  *
  * retour  : true si il y a au moins un caractere dans le buffer
  */
-bool iUART::readFullFrame(char* stringReceived) {
-	unsigned char i = 0;
-	unsigned char nDataReceived = this->USCIRingBuffer.ByteCount;
+bool iUART::readFullFrame(UInt8* stringReceived) {
+	UInt8 i = 0;
+	UInt8 nDataReceived = this->USCIRingBuffer.ByteCount;
 
 	//Tester si l'on a recu qqch
 	if (!((this->dataReceived == true) || (nDataReceived != 0)))
@@ -611,7 +611,7 @@ bool iUART::readFullFrame(char* stringReceived) {
  *
  * retour  : nombre de caractère contenu dans le buffer
  */
-int iUART::availableCharToRead() {
+UInt16 iUART::availableCharToRead() {
 	return this->USCIRingBuffer.ByteCount;
 }
 
@@ -653,8 +653,8 @@ int iUART::availableCharToRead() {
  * aString : Chaîne à envoyeriUart
  * retour  : 1 si la chaîne à bien été transmise
  */
-bool iUART::sendString(char* aString) {
-	int i = 0;
+bool iUART::sendString(UInt8* aString) {
+	UInt16 i = 0;
 	bool result = false;
 
 	//Test si la chaîne est vide
@@ -676,14 +676,14 @@ void iUART::clearReceptionBuffer() {
 	this->USCIRingBuffer.OutIndex = 0;
 
 	//clear contenu buffer
-	for(int i=0; i<kSciRecBufSize; i++)
+	for(UInt16 i=0; i<kSciRecBufSize; i++)
 		{
 		this->USCIRingBuffer.UsciRecBuf[i]=0;
 		}
 }
 
 void iUART::clearInternalSerialBuffer() {
-	char i = 0;
+	UInt8 i = 0;
 	for (i = 0; i < kSciRecBufSize ; i++) {
 		this->uartBuffer[i] = 0x00;
 	}
@@ -691,11 +691,11 @@ void iUART::clearInternalSerialBuffer() {
 
 //This function returns TRUE if there's an 0x0D character in the string; and if so,
 //it trims the 0x0D and anything that had followed it.
-bool iUART::retInString(char* string) {
-	char retPos = 0, i, len;
+bool iUART::retInString(UInt8* string) {
+	UInt8 retPos = 0, i, len;
 	char tempStr[kSciRecBufSize ] = "";
 
-	strncpy(tempStr, string, strlen(string));        //Make a copy of the string
+	strncpy(tempStr, (char*)string, strlen((char*)string));        //Make a copy of the string
 	len = strlen(tempStr);
 	while ((tempStr[retPos] != 0x0A) && (tempStr[retPos] != 0x0D)
 			&& (retPos++ < len))
@@ -705,25 +705,25 @@ bool iUART::retInString(char* string) {
 		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
 			string[i] = 0x00;
 		}
-		strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
+		strncpy((char*)string, tempStr, retPos); //...trim the input string to just before 0x0D
 		return true; //...and tell the calling function that we did so
 	} else if ((retPos < len) && (tempStr[retPos] == 0x0A)) { //If 0x0D was actually found...
 		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
 			string[i] = 0x00;
 		}
-		strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
+		strncpy((char*)string, tempStr, retPos); //...trim the input string to just before 0x0D
 		return true; //...and tell the calling function that we did so
 	} else if (tempStr[retPos] == 0x0D) {
 		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
 			string[i] = 0x00;
 		}
-		strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
+		strncpy((char*)string, tempStr, retPos); //...trim the input string to just before 0x0D
 		return true; //...and tell the calling function that we did so
 	} else if (retPos < len) {
 		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
 			string[i] = 0x00;
 		}
-		strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
+		strncpy((char*)string, tempStr, retPos); //...trim the input string to just before 0x0D
 		return true; //...and tell the calling function that we did so
 	}
 

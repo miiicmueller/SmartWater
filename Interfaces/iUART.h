@@ -72,7 +72,7 @@ typedef struct {
 class iUART: public Interface {
 private:
 	iUARTPortEnum serialPort;
-	char uartBuffer[kSciRecBufReceptionSize];
+	UInt8 uartBuffer[kSciRecBufReceptionSize];
 	bool isEnabled;
 	bool dataReceived;
 	iUARTRecBufStruct USCIRingBuffer;
@@ -100,17 +100,17 @@ public:
 	bool getStatusFlag(iUARTStatusFlagEnum aStatFlag);
 	void enable();
 	void disable();
-	char read();
-	bool write(char aData);
-	bool sendString(char* aString);
+	UInt8 read();
+	bool write(UInt8 aData);
+	bool sendString(UInt8* aString);
 	bool isBufferEmpty();
 //	int readLine(char* aBuffer);
 	void clearReceptionBuffer();
 	void clearInternalSerialBuffer();
-	bool retInString(char* string);
-	bool readFrame(char* string);
-	int availableCharToRead();
-	bool readFullFrame(char* stringReceived);
+	bool retInString(UInt8* string);
+	bool readFrame(UInt8* string);
+	UInt16 availableCharToRead();
+	bool readFullFrame(UInt8* stringReceived);
 
 };
 #endif
