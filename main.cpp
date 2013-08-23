@@ -77,15 +77,23 @@ void main(void)
     mDelay::mSetup();
     mDelay::mOpen();
 
-    iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
-    UInt16 moduleAddress = 0x50;
-    mEEPROM aEEPROM(moduleAddress, &i2cBus);
-    mCompteur aCompteur(kMeterSimulation, &aEEPROM);
+    /*iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
+     UInt16 moduleAddress = 0x50;
+     mEEPROM aEEPROM(moduleAddress, &i2cBus);
+     mCompteur aCompteur(kMeterSimulation, &aEEPROM);*/
 
-    aCompteur.mOpen();
-    aCompteur.mSetup();
-    aCompteur.simulationCpt(16987);
-    aCompteur.mClose();
+    gTerminal theTerminalUSB(&theGInput);
+
+    mDelay aDelay;
+
+    while (1)
+	{
+	if (aDelay.isDone())
+	    {
+	    aDelay.startDelayMS(5);
+	    theTerminalUSB.execute();
+	    }
+	}
 
     /*mUSB commUsb(&bCDCDataReceived_event);
      iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);

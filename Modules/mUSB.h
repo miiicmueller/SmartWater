@@ -4,6 +4,7 @@
 #include <string>
 #include <assert.h>
 #include "Interfaces/iUSB.h"
+#include "def.h"
 
 #include "Module.h"
 

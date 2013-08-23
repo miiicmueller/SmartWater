@@ -5,7 +5,7 @@
 #define kFreq_SMCLK	 4000000UL
 #define kFreq_ACLK	   32768UL
 
-//ID de base pour les paramètres
+//ID de base pour les parametres
 #define kMODE_BASE_ID 		0x0100
 #define kMONTHSLIM_BASE_ID 	0x0200
 #define kUNITNAME_BASE_ID 	0x0300
@@ -19,7 +19,9 @@
 
 #define kFREE_BASE_ID 0xFF01
 
-//Déclaration des types
+#define nop()	__bis_SR_register(GIE)
+
+//Declaration des types
 typedef char SInt8;
 typedef unsigned char UInt8;
 typedef int SInt16;

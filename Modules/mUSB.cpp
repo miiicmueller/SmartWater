@@ -27,6 +27,7 @@ bool mUSB::getCommand(char* aChain)
     {
     if (this->usbPort->isDataAvailable() == true)
 	{
+	nop();
 	//Some data is in the buffer; begin receiving a
 	if (this->usbPort->getFullFrame(aChain))
 	    {
@@ -45,7 +46,7 @@ bool mUSB::getCommand(char* aChain)
 
 /**
  * Envoi d'une string sur l'USB
- * aMessage : Message Ã  transmettre
+ * aMessage : Message a  transmettre
  */
 void mUSB::sendReply(char* aMessage)
     {
