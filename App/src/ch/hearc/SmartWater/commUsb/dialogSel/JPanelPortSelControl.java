@@ -98,7 +98,7 @@ public class JPanelPortSelControl extends JPanel {
 	}
 	private void geometrie() {
 		this.setLayout(new FlowLayout(FlowLayout.CENTER));
-		this.buttonConnect = new JButton("Connect");
+		this.buttonConnect = new JButton("Open");
 		this.buttonRefresh = new JButton("Refresh");
 
 		this.add(buttonConnect);

@@ -19,6 +19,7 @@ import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
 import ch.hearc.SmartWater.commUsb.ComConnexion;
 import ch.hearc.SmartWater.dataManager.DataManager;
@@ -33,7 +34,7 @@ public class JFramePortSel extends JFrame {
 	\*------------------------------------------------------------------*/
 
 	public JFramePortSel(ResourceBundle resourceBundle,
-			ComConnexion comConnexion) {
+			ComConnexion comConnexion, JFrameSmartWater jFrameSmartWater) {
 
 		listPort = new ArrayList<String>();
 		this.comConnexion = comConnexion;
@@ -63,15 +64,14 @@ public class JFramePortSel extends JFrame {
 	public boolean isConnected() {
 		return this.isConnected;
 	}
-	
+
 	public void setConnected(boolean aState) {
 		this.isConnected = aState;
-		if(aState)
-		{
+		if (aState) {
 			this.setVisible(false);
 		}
 	}
-	
+
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
@@ -108,6 +108,9 @@ public class JFramePortSel extends JFrame {
 	private ComConnexion comConnexion;
 
 	// Tools
+	private String user;
+	private String password;
+
 	private JPanelPortSelControl jPanelPortSelControl;
 	private JPanelPortSelAff jPanelPortSelAff;
 
