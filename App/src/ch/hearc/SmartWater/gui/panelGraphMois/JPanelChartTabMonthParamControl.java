@@ -1,23 +1,24 @@
-package ch.hearc.SmartWater.gui;
+package ch.hearc.SmartWater.gui.panelGraphMois;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.FlowLayout;
-import java.util.Map;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
+import javax.swing.JSplitPane;
+import javax.swing.JTable;
+import javax.swing.table.JTableHeader;
 
-public class JPanelControleParam extends JPanel {
+public class JPanelChartTabMonthParamControl extends JPanel {
 
 	/*------------------------------------------------------------------*\
 	 |*							Constructeurs							*|
 	 \*------------------------------------------------------------------*/
-	public JPanelControleParam(ResourceBundle resourceLang) {
+	public JPanelChartTabMonthParamControl(ResourceBundle resourceLang) {
 
 		this.resourceLang = resourceLang;
 
@@ -35,23 +36,29 @@ public class JPanelControleParam extends JPanel {
 	 \*------------------------------------------------------------------*/
 
 	private void apparence() {
-
+		this.buttonWrLimits.setEnabled(true);
 	}
 
 	private void controle() {
 
+		this.buttonWrLimits.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("[Sauver limite]");
+			}
+		});
+
 	}
 
 	private void geometrie() {
-		
+
 		this.setLayout(new FlowLayout(FlowLayout.CENTER));
-		
-		this.buttonRead = new JButton((String)resourceLang.getObject("buttonRead"));
-		this.buttonSave = new JButton((String)resourceLang.getObject("buttonSave"));
-		
-		this.add(buttonRead);
-		this.add(buttonSave);
-		
+
+		this.buttonWrLimits = new JButton(
+				(String) resourceLang.getObject("buttonWrLimits"));
+
+		this.add(buttonWrLimits);
 
 	}
 
@@ -61,8 +68,6 @@ public class JPanelControleParam extends JPanel {
 
 	// Tools
 	private ResourceBundle resourceLang;
-	
-	private JButton buttonRead ;
-	private JButton buttonSave ;
-	
+
+	private JButton buttonWrLimits;
 }

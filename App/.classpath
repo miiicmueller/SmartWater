@@ -8,5 +8,6 @@
 		</attributes>
 	</classpathentry>
 	<classpathentry kind="lib" path="Deploy/ext/jfreechart-1.0.14.jar"/>
+	<classpathentry kind="lib" path="Deploy/ext/jcommon-1.0.17.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
