@@ -90,33 +90,14 @@ void mCompteur::mClose()
 //exemple de format de trame : "/GWF Wasser      V4.1\r\n7.0(02514*m3)\r\n0.09(03-11-04)\r\n0.00(0434448)\r\n0.01(DN20)\r\n!\r\n"
 //avec 02514 comme indice
 //----------------------------------------------------------------
-UInt32 mCompteur::mRead()
-    {
-    UInt8 aFabFlVers[22] =
-	{
-	0
-	};
-    UInt8 aDebitMesure[14] =
-	{
-	0
-	};
-    UInt8 aDateFabr[15] =
-	{
-	0
-	};
-    UInt8 aSerialNum[15] =
-	{
-	0
-	};
-    UInt8 aTailleNom[15] =
-	{
-	0
-	};
+UInt32 mCompteur::mRead() {
+	UInt8 aFabFlVers[22] = { 0 };
+	UInt8 aDebitMesure[14] = { 0 };
+	UInt8 aDateFabr[15] = { 0 };
+	UInt8 aSerialNum[15] = { 0 };
+	UInt8 aTailleNom[15] = { 0 };
 
-    UInt8 aDummy[5] =
-	{
-	0
-	};
+	UInt8 aDummy[5] = { 0 };
 
     UInt32 aRet = 0;
     bool aIsOk;
