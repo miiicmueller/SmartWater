@@ -4,13 +4,6 @@
 #include "gTerminal.h"
 #include <stdio.h>
 
-typedef enum
-    {
-    kTerminalDisconnected,
-    kTerminalConnected,
-    kTerminalSessionOpen
-    } gTerminalStateEnum;
-
 //OBLIGATOIRE POUR L'USB
 volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
 
@@ -39,6 +32,8 @@ gTerminal::gTerminal(gInput* theGInput)
 //----------------------------------------------------------------
 void gTerminal::setup()
     {
+    this->aTerminalState = kTerminalDisconnected;
+    this->aSessionType = kTerminalClose;
     }
 
 //----------------------------------------------------------------
@@ -48,6 +43,32 @@ void gTerminal::setup()
 //----------------------------------------------------------------
 void gTerminal::execute()
     {
+    this->commandsReceiver();
+
+    if (!this->theUSB->isConnected())
+	{
+	this->aTerminalState = kTerminalDisconnected;
+	this->aSessionType = kTerminalClose;
+	}
+
+    switch (this->aTerminalState)
+	{
+    case kTerminalDisconnected:
+	if (this->theUSB->isConnected())
+	    {
+	    this->aTerminalState = kTerminalConnected;
+	    }
+	break;
+    case kTerminalConnected:
+
+	break;
+    case kTerminalSessionOpen:
+	break;
+    default:
+	this->aTerminalState = kTerminalDisconnected;
+	this->aSessionType = kTerminalClose;
+	break;
+	}
 
     }
 
@@ -69,28 +90,32 @@ void gTerminal::commandsReceiver()
 
     if (true == this->theUSB->getCommand(aMessage))
 	{
-	if (aMessage[0] == '_')
+	if (aMessage[i] == '_')
 	    {
 	    //verification de la commande (pour securiser le sscanf)
-	    while ((i <= 100) && (aMessage[i] != '\0')
-		    && ((next_ - previous_) <= maxSizesCommands[pos]))
+	    do
 		{
-		i++;
 		if (aMessage[i] == '_')
 		    {
 		    previous_ = next_;
 		    next_ = i;
 
-		    if (pos < 3)
+		    aMessage[i] = ' ';
+
+		    if ((pos < 3) && (previous_ > 0))
 			{
 			pos++;
 			}
 		    }
+		i++;
 		}
+	    while ((i <= 100) && (aMessage[i] != '\0')
+		    && ((next_ - previous_) <= (maxSizesCommands[pos]))
+		    && (pos <= 14));
 	    if (aMessage[i] == '\0')
 		{
 		this->aCommand.parametersNumber = sscanf(aMessage,
-			"_%s_%s_%s_%s_%s_%s_%s_%s_%s_%s_%s_%s_%s_%s_%s_",
+			" %s %s %s %s %s %s %s %s %s %s %s %s %s %s %s ",
 			this->aCommand.theMode, this->aCommand.theMdp,
 			this->aCommand.theCommand,
 			this->aCommand.theParameters[0],

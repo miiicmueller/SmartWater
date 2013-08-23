@@ -23,6 +23,20 @@ typedef struct
     char theParameters[12][sizeMaxParameter];
     } gTerminalCommand;
 
+typedef enum
+    {
+    kTerminalDisconnected,
+    kTerminalConnected,
+    kTerminalSessionOpen
+    } gTerminalStateEnum;
+
+typedef enum
+    {
+    kTerminalClose,
+    kTerminalAdmin,
+    kTerminalUser
+    } gTerminalSessionEnum;
+
 using namespace std;
 
 class gTerminal: public Gestionnaire
@@ -38,6 +52,10 @@ private:
     gInput* theGInput;
 
     gTerminalCommand aCommand;
+
+    gTerminalStateEnum aTerminalState;
+
+    gTerminalSessionEnum aSessionType;
 
     void commandsReceiver();
 
