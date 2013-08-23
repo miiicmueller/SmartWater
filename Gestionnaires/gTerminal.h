@@ -6,23 +6,50 @@
 
 #include "Gestionnaire.h"
 #include "gInput.h"
+#include "Modules/mUSB.h"
+
+#define sizeMaxMode		2
+#define sizeMaxMdp		21
+#define sizeMaxCommand		9
+#define sizeMaxParameter	21
+
+typedef struct
+    {
+    bool hasCommand;
+    char theMode[sizeMaxMode];
+    char theMdp[sizeMaxMdp];
+    char theCommand[sizeMaxCommand];
+    int parametersNumber;
+    char theParameters[12][sizeMaxParameter];
+    } gTerminalCommand;
+
+using namespace std;
 
 class gTerminal: public Gestionnaire
     {
 private:
-    bool pipeOpen;
+
+    int maxSizesCommands[4];
+
+    mUSB* theUSB;
+
+    bool sessionOpen;
 
     gInput* theGInput;
+
+    gTerminalCommand aCommand;
+
+    void commandsReceiver();
+
+    void commandsSender(char* aReply);
 
 public:
     //----------------------------------------------------------------
     //constructeur
     //
-    //gInput : le gestionnaire qui contient les entrées
+    //gInput : le gestionnaire qui contient les entrees
     //----------------------------------------------------------------
     gTerminal(gInput* theGInput);
-
-    bool getPipeOpen();
 
     void setup();
 

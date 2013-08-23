@@ -13,13 +13,13 @@
 
 #include "iUSB.h"
 
-//TODO : Rechercher une solution pour réveiller le micro par l'USB
+//TODO : Rechercher une solution pour reveiller le micro par l'USB
 
 char iUSB::usbBuffer[MAX_BUFFERSIZE] = "";
 
 /**
  * Constructeur de l'USB
- * *bCDCDataReceived_event : Variable globale changée dans usbEventHandling.c !!!!
+ * *bCDCDataReceived_event : Variable globale changee dans usbEventHandling.c !!!!
  * A ne pas oublier !!
  */
 iUSB::iUSB(volatile BYTE *bCDCDataReceived_event) {
@@ -70,8 +70,8 @@ void iUSB::initUSB() {
 }
 
 /**
- * Test si des données sont disponibles
- * retour : valeur booléenne
+ * Test si des donnees sont disponibles
+ * retour : valeur booleenne
  */
 bool iUSB::isDataAvailable() {
 	return (bool) *(this->dataReceived);
@@ -89,7 +89,7 @@ void iUSB::clearSerialBuffer() {
 }
 
 /**
- * Retourne la taille MAX du buffer configurée (est inchangable en execution)
+ * Retourne la taille MAX du buffer configuree (est inchangeable en execution)
  */
 int iUSB::getBufferSize() {
 	return this->bufferSize;
@@ -131,7 +131,7 @@ bool iUSB::getFullFrame(char* FrameBuffer) {
 
 /**
  * Permet de transmettre une trame sur l'USB
- * FrameBuffer : Tableau de char à envoyer
+ * FrameBuffer : Tableau de char a� envoyer
  */
 void iUSB::sendFullFrame(char* FrameBuffer) {
 	cdcSendDataInBackground((BYTE*) FrameBuffer, strlen(FrameBuffer),
@@ -140,22 +140,22 @@ void iUSB::sendFullFrame(char* FrameBuffer) {
 }
 
 /**
- * Non utilisée
+ * Non utilisee
  */
 bool iUSB::write(UInt8 aData) {
 	return false;
 }
 
 /**
- * Non utilisée
+ * Non utilisee
  */
 UInt8 iUSB::read() {
 	return 0;
 }
 
 /**
- * Permet de vérifier l'état de la connexion USB
- * retour : iUsbStateEnum état en cours
+ * Permet de verifier l'etat de la connexion USB
+ * retour : iUsbStateEnum etat en cours
  */
 iUsbStateEnum iUSB::getConnectionState() {
 	switch (USB_connectionState()) {

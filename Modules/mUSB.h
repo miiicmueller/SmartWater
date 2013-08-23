@@ -7,20 +7,25 @@
 
 #include "Module.h"
 
-class mUSB: public Module {
+class mUSB: public Module
+    {
 private:
-	iUSB *usbPort ;
-	char *serialBuffer;
+    iUSB *usbPort;
+    char *serialBuffer;
+
 public:
-	mUSB(volatile BYTE *bCDCDataReceived_event);
-	~mUSB();
-	bool getCommand(int* cmd);
-	void sendReply(char* aMessage);
-	bool isConnected();
+    //constructeur et destructeur
+    mUSB(volatile BYTE *bCDCDataReceived_event);
+    ~mUSB();
 
-	void mOpen();
-	void mClose();
-	void mSetup();
+    //methodes heritees
+    void mOpen();
+    void mClose();
+    void mSetup();
 
-};
+    //methodes supplementaires
+    bool getCommand(char* aChain);
+    void sendReply(char* aMessage);
+    bool isConnected();
+    };
 #endif

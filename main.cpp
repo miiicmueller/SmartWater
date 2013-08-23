@@ -45,7 +45,7 @@ extern "C"
 #endif
 
 //OBLIGATOIRE POUR L'USB
-volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
+//volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
 
 unsigned int temperature;
 float temp = 0.0;

@@ -16,7 +16,7 @@
 #include "../Def/def.h"
 #include "Interface.h"
 
-#define MAX_BUFFERSIZE  30
+#define MAX_BUFFERSIZE  100
 
 typedef enum {	kStateDisconnected,
 	kStateConnNoEnum,
