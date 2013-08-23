@@ -39,6 +39,42 @@ public class LabelsBundle_fr extends ListResourceBundle
 				
 				// Boutons
 				{ "buttonRead", new String("Lire") },
-				{ "buttonSave", new String("Sauver") },};
+				{ "buttonSave", new String("Sauver") },
+				{ "buttonGetConsomm", new String("Read") },
+				{"buttonWrLimits", new String("Sauver limites")},
+
+				// Graphiques
+				{"graphConsTit", new String("Consommations mensuelle")},
+				{"graphMois", new String("Mois")},
+				{"graphVol", new String("Volume[m3]")},
+				
+				{"graphMoisJanv", new String("Janvier")},
+				{"graphMoisFev", new String("Février")},
+				{"graphMoisMar", new String("Mars")},
+				{"graphMoisAvr", new String("Avril")},
+				{"graphMoisMai", new String("Mai")},
+				{"graphMoisJuin", new String("Juin")},
+				{"graphMoisJuil", new String("Juillet")},
+				{"graphMoisAou", new String("Août")},
+				{"graphMoisSept", new String("Septembre")},
+				{"graphMoisOct", new String("Octobre")},
+				{"graphMoisNov", new String("Novembre")},
+				{"graphMoisDec", new String("Décembre")},
+
+				{"consomMois", new String("Consommation mensuelle")},
+				{"limiteMois", new String("Limites mensuelles")},
+				{"consomJourn", new String("Consommation journalière")},
+
+				//Tableau
+				{"tabHeaderMois", new String("Mois")},
+				{"tabHeaderLimit", new String("Limites")},
+				
+				//Tabs
+				{"tabPAram", new String("Paramètres")},
+				{"tabSimu", new String("Simulation")},
+				{"tabConsoMois", new String("Consommation mensuelle")},
+				{"tabConsoJour", new String("Consommation journalière")},
+				{"tabCompt", new String("Compteurs")},
+				};
 
 	}

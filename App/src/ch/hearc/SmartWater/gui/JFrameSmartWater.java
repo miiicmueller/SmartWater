@@ -6,13 +6,18 @@ import java.awt.MenuBar;
 import java.awt.MenuItem;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
 
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 
+import ch.hearc.SmartWater.commUsb.ComConnexion;
+import ch.hearc.SmartWater.commUsb.dialogSel.JFramePortSel;
 import ch.hearc.SmartWater.dataManager.DataManager;
 import ch.hearc.SmartWater.lang.JLanguages;
 
@@ -28,9 +33,11 @@ public class JFrameSmartWater extends JFrame {
 		this.parametres = new TreeMap<String, String>();
 
 		this.userCountry = System.getProperty("user.country");
-		this.userLang = System.getProperty("user.language");
+		this.userLang = "de";// System.getProperty("user.language");
 
 		this.language = new JLanguages(new Locale(this.userLang));
+
+		this.comUSB = new ComConnexion();
 
 		geometrie();
 		control();
@@ -49,8 +56,18 @@ public class JFrameSmartWater extends JFrame {
 		this.menuFichierExit.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent e) {
-				System.exit(0);
+			public void actionPerformed(ActionEvent event) {
+				if (JFrameSmartWater.this.jFramePortSel.isConnected()) {
+					try {
+						System.out
+								.println("Fermeture + Deconnection de la carte");
+						JFrameSmartWater.this.comUSB.disconnect();
+					} catch (Exception e1) {
+						e1.printStackTrace();
+						System.exit(-1);
+					}
+				}
+				JFrameSmartWater.this.dispose();
 			}
 		});
 
@@ -58,7 +75,7 @@ public class JFrameSmartWater extends JFrame {
 		this.menuFichierSave.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent event) {
 				// Appel de la classes enregistrement des
 				// paramètres
 				parametres.put("NumAlarme", "+417981838565");
@@ -69,7 +86,6 @@ public class JFrameSmartWater extends JFrame {
 				try {
 					JFrameSmartWater.this.dataManager.saveFile(parametres);
 				} catch (IOException e) {
-					e.printStackTrace();
 				}
 			}
 		});
@@ -78,7 +94,7 @@ public class JFrameSmartWater extends JFrame {
 		this.menuFichierOpen.addActionListener(new ActionListener() {
 
 			@Override
-			public void actionPerformed(ActionEvent arg0) {
+			public void actionPerformed(ActionEvent event) {
 				// Appel de la classes enregistrement des
 				// paramètres
 				Map<String, String> parametres = null;
@@ -92,11 +108,48 @@ public class JFrameSmartWater extends JFrame {
 				}
 			}
 		});
+
+		this.menuCommSel.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				JFrameSmartWater.this.jFramePortSel.updatePort();
+				JFrameSmartWater.this.jFramePortSel.setVisible(true);
+			}
+		});
+
+		// Définition de l'écouteur à l'aide d'une classe interne anonyme
+		this.addWindowListener(new WindowAdapter() {
+			public void windowClosing(WindowEvent e) {
+				JOptionPane jOptionpane = new JOptionPane();
+				int reponse = jOptionpane
+						.showConfirmDialog(JFrameSmartWater.this,
+								"Voulez-vous quitter l'application",
+								"Confirmation", JOptionPane.YES_NO_OPTION,
+								JOptionPane.QUESTION_MESSAGE);
+				if (reponse == jOptionpane.YES_OPTION) {
+					if (JFrameSmartWater.this.jFramePortSel.isConnected()) {
+						try {
+							System.out
+									.println("Fermeture + Deconnection de la carte");
+							JFrameSmartWater.this.comUSB.disconnect();
+						} catch (Exception e1) {
+							e1.printStackTrace();
+							System.exit(-1);
+						}
+					}
+					JFrameSmartWater.this.dispose();
+				}
+			}
+		});
 	}
 
 	private void geometrie() {
 		this.setLayout(new BorderLayout());
 		this.menuBar = new MenuBar();
+
+		this.jFramePortSel = new JFramePortSel(this.language.getResBundle(),
+				this.comUSB);
 
 		// Construction du Menu
 		this.menuFichier = new Menu((String) this.language.getResBundle()
@@ -144,7 +197,7 @@ public class JFrameSmartWater extends JFrame {
 		}
 
 		this.jPanelPrincipal = new JPanelPrincipal(this.parametres,
-				this.language.getResBundle());
+				this.language.getResBundle(), this.comUSB);
 
 		this.setMenuBar(menuBar);
 		this.add(jPanelPrincipal, BorderLayout.CENTER);
@@ -167,6 +220,9 @@ public class JFrameSmartWater extends JFrame {
 	// Tools
 	private static final String SOFT_VERSION = "v0.1";
 	private JLanguages language;
+
+	private ComConnexion comUSB;
+	private JFramePortSel jFramePortSel;
 
 	private String userLang;
 	private String userCountry;

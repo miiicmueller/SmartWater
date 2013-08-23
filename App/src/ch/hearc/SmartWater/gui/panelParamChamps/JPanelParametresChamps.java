@@ -1,4 +1,4 @@
-package ch.hearc.SmartWater.gui;
+package ch.hearc.SmartWater.gui.panelParamChamps;
 
 import java.awt.Container;
 import java.awt.Dimension;
@@ -14,15 +14,18 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
 
+import ch.hearc.SmartWater.commUsb.ComConnexion;
+
 public class JPanelParametresChamps extends JPanel {
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 	public JPanelParametresChamps(Map<String, String> parameters,
-			ResourceBundle resourceLang) {
+			ResourceBundle resourceLang, ComConnexion comConnection) {
 		this.parameters = parameters;
 		this.resourceLang = resourceLang;
+		this.comConnection = comConnection;
 
 		// Contruction de la liste dynamique de paramètres
 		this.jChampsParam = new JTextField[DEFAULT_PAR_NUM];
@@ -50,6 +53,25 @@ public class JPanelParametresChamps extends JPanel {
 					// this.jChampsMode.setText(valeur);
 					break;
 				default :
+			}
+		}
+	}
+
+	/**
+	 * Sauve tout les paramètres checkés par le checkbox
+	 */
+	public void saveParameters() {
+		System.out.println("[JPanelParametresChamps] Sauvegarde en cours");
+		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
+			if (this.jChampsParam[i].getName().equals("paramMode")) {
+				try {
+					this.comConnection.getNamePort();
+					this.comConnection.write("_A_PassAdmin_mode_"
+							+ this.jChampsParam[i].getText() + "_\r\n");
+				} catch (Exception e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
 			}
 		}
 	}
@@ -100,6 +122,7 @@ public class JPanelParametresChamps extends JPanel {
 			this.jLabelChampsParam[i] = new JLabel(
 					(String) resourceLang.getObject(tableParamName[i]));
 			this.jChampsParam[i] = new JTextField("");
+			this.jChampsParam[i].setName(tableParamName[i]);
 		}
 		// Contruction des box
 		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
@@ -123,6 +146,7 @@ public class JPanelParametresChamps extends JPanel {
 	private JTextField jChampsParam[];
 	private JLabel jLabelChampsParam[];
 	private JCheckBox jCheckBox[];
+	private ComConnexion comConnection;
 
 	private static int DEFAULT_PAR_NUM = 13;
 
