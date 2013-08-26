@@ -45,128 +45,44 @@ volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received
  */
 void main(void)
     {
-    int i;
-	// Important pour la basse consommation
-	iDIO::InitAllPort();
-
+    iDIO::InitAllPort();
     mCpu::configFrequency();
-
-
     __bis_SR_register(GIE);
 
-    //mUSB commUsb(&bCDCDataReceived_event);
-    //iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
-    //mRTC RTC;
-
-    /*mGSM mGsm;
-
-     valeurCompteur++;
-
-<<<<<<< HEAD
-
-
-	retourRRR=retourRRR2;
-
-	if (retourRRR || retourRRR2)
-	    {
-	    lavaleur=0;
-	    }
-
-
-	mCompteur monCompteur(kMeter1);
-	monCompteur.mOpen();
-	valeurCompteur = monCompteur.mRead();
-=======
-     iDIO enableGSM((char*) kPort_7, BIT4);
-     enableGSM.SetPortDirection(kOutput);
-     enableGSM.SetPortDriveStrength(kFullStrength);
-     enableGSM.write(~BIT4);
->>>>>>> refs/remotes/origin/master
-
-     //
-     iDIO resetGSM((char*) kPort_7, BIT3);
-     resetGSM.SetPortDirection(kOutput);
-     resetGSM.SetPortDriveStrength(kFullStrength);
-     resetGSM.write(~BIT3);*/
+    mGSM monGsm;
+    char messageRecu[kSciRecBufSize] = "";
+    char cestOk[1];
+    bool salut;
+    UInt16 monCredit;
+    tDate maDate;
+    tDate monCCredit;
 
     mDelay::mSetup();
     mDelay::mOpen();
-//
-//	iDIO CTSel2((char*) kPort_6, BIT1);
-//	enableCT.SetPortDirection(kOutput);
-//	enableCT.SetPortDriveStrength(kFullStrength);
-//	enableCT.write(~BIT1);
-//	iDIO resetGSM((char*) kPort_7, BIT3);
-//	iUART uart(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits,
-//				k9600);
-//	mEEPROM DataBase(0x50, &iI2C_1);
-//	mTempSensor CaptCarte(0x48, &iI2C_1);
-//	DataBase.mOpen();
-//	CaptCarte.mOpen();
-//	RTC.mOpen();
-//	mGsm.mOpen();
-    //CaptCarte.configSensor(kConfiguration, 0x60);
-    //RTC.setHour(17, 0, 0);
-    //RTC.setAlarm(1);
-    //mGsm.sendSMS("Coucou", "+41798183833");
+
+    strcpy((char*)monGsm.codePIN,"5906");
+    strcpy((char*)monGsm.phoneNumber,"+41774874473");
+
+    monGsm.mSetup();
+    monGsm.mOpen();
 
 
-    iDIO aLed((char*) kPort_7, BIT0);
-    aLed.SetPortDirection(kOutput);
-    aLed.write(0xff);
+    //ne pas oublier le fil !
+    // il faudra de temps en temps vider la memoire peut etre
 
-    mDelay aDelay;
-    mCompteur monCompteur(kMeter1);
-    monCompteur.mOpen();
+      salut=monGsm.sendSMS(" Unite\"Nom du site\":\r\nDate et heure 18/09/12/16:53:00\r\nDisponibilite 01:00/00:15\r\nMode S\r\nIndex 03046\r\nDebit jour 10,7\r\nDebit jour mens 8,7\r\nLimite jour mens 25,0\r\nTemperature 10,2\r\nOffset temperature 0,2\r\nCredit 29,29\r\nAlarme 0041765572263","+41787526983");
+    //salut=monGsm.sendSMS("Unite\"Nom du site\":\r\nDate et heure 18/09/12/16:53:00\r\n","+41787526983"); //ok
 
-    aDelay.startDelay(1000);
+            if(salut) { cestOk[0]=1;} else { cestOk[0]=0;}
 
+    monCCredit.year=monGsm.getCredit(); // ok
+ //   maDate=monGsm.getDate();
 
-    while (1)
+    while(1)
 	{
-
-	if (aDelay.isDone())
-	    {
-	    i = ~i;
-	    aLed.write(i);
-	    aDelay.startDelay(1000);
-	    }
-
-	// On endort le processeur en niveau 3 (voir datasheet page 20)
-
-//		//Check the USB state and directly main loop accordingly
-//		if (commUsb.isConnected()) {
-//			if (commUsb.getCommand(&cmd)) {
-//				switch (cmd) {
-//				case 1:
-//					temperature = CaptCarte.readTemp();
-//					DataBase.write(0x0000, (char) temperature);
-//					DataBase.ackPolling();
-//					DataBase.write(0x0001, (char) (temperature >> 8));
-//					DataBase.ackPolling();
-//					sprintf(tempToSend, "Tempe.:%d\r\n", temperature >> 4);
-//					commUsb.sendReply(tempToSend);
-//					break;
-//				case 2:
-//					int eepromVal = 0;
-//					eepromVal = (int) DataBase.read(0x0000);
-//					eepromVal += (int) (DataBase.read(0x0001) << 8);
-//
-//					sprintf(tempToSend, "EEPROM:%d\r\n", eepromVal >> 4);
-//					commUsb.sendReply(tempToSend);
-//					break;
-//				case 3:
-//					RTC.readTime(&hr, &min, &sec);
-//					sprintf(tempToSend, "%d:%d:%d\r\n", hr, min, sec);
-//					commUsb.sendReply(tempToSend);
-//					break;
-//				default:
-//					commUsb.sendReply("Cmd invalide\r\n");
-//				}
-//			}
-//
-//		}
-
+	salut=monGsm.getSMS(messageRecu);
+	if(salut) { cestOk[0]=1;} else { cestOk[0]=0;}
 	}
+
     }
 
