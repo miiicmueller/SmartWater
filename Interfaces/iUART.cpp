@@ -333,6 +333,11 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 		;
 
 	}
+
+	for(int i=0; i<kSciRecBufReceptionSize; i++) // initialise le buffer uart
+	    {
+	    this->uartBuffer[i]= 0;
+	    }
 }
 
 /**
@@ -575,6 +580,80 @@ bool iUART::readFrame(char* string) {
 		return false;
 	}
 }
+
+
+/**
+ * Fonction permettant d'obtenir les bytes reçus jusqu'au \r\n
+ *
+ * aString : chaine resortant la prochaine chaîne de byte reçus en mémoire, jusqu'à un CRLF
+ * retour : true si une nouvelle chaîne a ete trouvee
+ */
+bool iUART::readFrameToCRLF(char* aString)
+    {
+    char aNDataReceived = 0;
+    bool aEndString;
+    bool aIsOk;
+    aNDataReceived = this->USCIRingBuffer.ByteCount;
+    UInt16 i=0;
+    char pieceOfString[kSciRecBufSize ]; //contient les nouveaux bytes
+
+    aEndString=false;
+
+    if ((true==this->dataReceived) || (aNDataReceived != 0)) // teste si on a recu de nouveaux bytes
+	{
+	//Recuperation des bytes recus
+	for (i = 0; i < aNDataReceived && false==aEndString; i++)
+	    {
+	    pieceOfString[i] = this->read(); //prend les nouveaux bytes
+
+	    if(10==pieceOfString[i] || 13==pieceOfString[i]) // trouve LF ou CR
+		{
+		aEndString = true;
+		}
+	    }
+
+	if(0x0A==pieceOfString[0] || 0x0D==pieceOfString[0]) // ne prend pas en compte si la chaine etait vide
+	    {
+	    aIsOk=false;
+	    }
+
+	strcat(this->uartBuffer, pieceOfString); // ajoute les nouveaux bytes
+
+	if (aEndString)
+	    {
+	    for(i=0; i<kSciRecBufSize-1; i++)
+		{
+		if ('\r'==this->uartBuffer[i] || '\n'==this->uartBuffer[i])
+		    {
+		    aString[i]=0;
+		    }
+		else
+		    {
+		    aString[i]=this->uartBuffer[i];
+		    }
+		}
+	    this->clearInternalSerialBuffer();
+	    aIsOk=true;
+	    }
+	else
+	    {
+	    aIsOk=false;
+	    }
+	}
+    else
+	{
+	aIsOk=false;
+	}
+
+    if(aIsOk)
+	{
+	return true;
+	}
+    else
+	{
+	return false;
+	}
+    }
 
 
 /**

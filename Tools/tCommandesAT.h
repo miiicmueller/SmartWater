@@ -11,6 +11,8 @@ public:
 	static  char configSMS[];
 	static  char configBaud9600[];
 	static  char questWhiteList[];
+	static  char getCredit[];
+	static  char enableServiceData[];
 	static  char addP41ToWhiteList[];
 	static  char enableSMS[];
 	static  char questSMSMode[];

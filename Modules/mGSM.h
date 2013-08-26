@@ -8,6 +8,7 @@
 #define __MGSM__
 
 #include <string>
+#include <stdio.h>
 #include <assert.h>
 
 #include "Module.h"
@@ -17,6 +18,11 @@
 #include "../Tools/tDate.h"
 #include "mDelay.h"
 
+
+#define kNbFiguresPhone 12
+#define kNbFiguresPin 4
+
+
 typedef enum // choix du compteur
     {
     kOk, //valeur  generale
@@ -25,7 +31,9 @@ typedef enum // choix du compteur
     kErrorEnterPin, // erreurs de parametrage
     kErrorSetModeSms,
     kErrorSetModeText,
+    kErrorEnableServiceData,
     kErrorDeleteAllSms, // erreurs de lecture
+    kErrorGetCredit,
     kErrorReadSms,
     kErrorModePDU, // erreurs d'envoi
     kErrorModeText,
@@ -64,15 +72,22 @@ private:
     //controle si une reponse recue du GSM et la compare avec deux possibilités
     //
     //aGoodResponse : bonne reponse, renvoie true
-    //aBadResponse : reponse lorsque la commande s'est mal deroulee, renvoie false
+    //aBadResponse : mauvaise reponse, renvoie false
     //aTimeOutMs : duree en milliseconde durant laquelle la méthode essaie de trouver correpondance
     //----------------------------------------------------------------
-    bool mCheckResponse(char* aGoodResponse, UInt16 aTimeOutMs);
+    bool mCheckResponse(char* aGoodResponse, char* aBadResponse, UInt16 aTimeOutMs);
+
+    //----------------------------------------------------------------
+    //envoie le texte SMS sur l'UART en le parsant pour ne pas bourrer le FIFO du module GSM
+    //
+    //aSMS : le SMS à transmettre
+    //----------------------------------------------------------------
+    void mSenderSms(char* aSMS);
 
 public:
 
-    char* phoneNumber; //numero de telephone de la carte SIM. Format : "+417********"
-    char* codePIN;
+    UInt8 phoneNumber[kNbFiguresPhone+1]; //numero de telephone de la carte SIM. Format : "+417********"
+    UInt8 codePIN[kNbFiguresPin+1];
 
     //----------------------------------------------------------------
     //constructeur
@@ -121,7 +136,7 @@ public:
     //
     //retour :  la date complete
     //----------------------------------------------------------------
-    tDate getHour();
+    tDate getDate();
 
     //----------------------------------------------------------------
     //obtenir le credit restant
