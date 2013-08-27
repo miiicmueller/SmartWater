@@ -17,8 +17,15 @@
 #include "Tools/tCommandesAT.h"
 #include "Tools/tMode.h"
 #include "Tools/tMonthsLimits.h"
+#include "Tools/tTemperatureOffset.h"
 
 #include "USB_API/USB_Common/types.h"
+
+#include "Gestionnaires/gInput.h"
+#include "Gestionnaires/gCompute.h"
+#include "Gestionnaires/gOutput.h"
+#include "Gestionnaires/gSleep.h"
+#include "Gestionnaires/gTerminal.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -38,7 +45,7 @@ extern "C"
 #endif
 
 //OBLIGATOIRE POUR L'USB
-volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
+//volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
 
 /*
  * ======== main ========
@@ -70,9 +77,9 @@ void main(void)
     // il faudra de temps en temps vider la memoire peut etre
 
     salut =
-	    monGsm.sendSMS(
+	    monGsm.sendSMS((UInt8*)
 		    " Unite\"Nom du site\":\r\nDate et heure 18/09/12/16:53:00\r\nDisponibilite 01:00/00:15\r\nMode S\r\nIndex 03046\r\nDebit jour 10,7\r\nDebit jour mens 8,7\r\nLimite jour mens 25,0\r\nTemperature 10,2\r\nOffset temperature 0,2\r\nCredit 29,29\r\nAlarme 0041765572263",
-		    "+41787526983");
+		    (UInt8*)"+41787526983");
     //salut=monGsm.sendSMS("Unite\"Nom du site\":\r\nDate et heure 18/09/12/16:53:00\r\n","+41787526983"); //ok
 
     if (salut)

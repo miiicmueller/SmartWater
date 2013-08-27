@@ -3,4 +3,10 @@
 
 #include "gSleep.h"
 
+void gSleep::setup()
+    {
+    }
 
+void gSleep::execute()
+    {
+    }

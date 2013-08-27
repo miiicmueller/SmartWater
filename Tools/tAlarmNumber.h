@@ -8,8 +8,12 @@
 
 class tAlarmNumber : public tParameters
 {
-private:
-	char* number;
+public:
+	UInt8 aTelNumber[15];
+
+	tAlarmNumber(mEEPROM *mEeprom,UInt16 aModeNum);
+	void save();
+	void load();
 
 };
 #endif

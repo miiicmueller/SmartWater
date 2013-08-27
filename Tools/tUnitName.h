@@ -8,8 +8,11 @@
 
 class tUnitName : public tParameters
 {
-private:
-	char* name;
+public:
+	UInt8 aName[20];
 
+	tUnitName(mEEPROM *mEeprom,UInt16 aModeNum);
+	void save();
+	void load();
 };
 #endif

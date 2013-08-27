@@ -10,29 +10,30 @@
 #include "../Tools/tDelay.h"
 #include <msp430f5519.h>
 
-class iRTI {
+class iRTI
+    {
 public:
-	//tools
-	int delayNumber;
+    //tools
+    int delayNumber;
 
-	iRTI();
-	~iRTI();
+    iRTI();
+    ~iRTI();
 
-	void startDelay(int aTimeMs);
-	bool isDone();
+    void startDelay100US(int aTime100Us);
+    bool isDone();
 
-	//méthodes statiques, qui agissent sur toutes les instances de la classe
-	static void config();
-	static void enable();
-	static void disable();
+    //méthodes statiques, qui agissent sur toutes les instances de la classe
+    static void config();
+    static void enable();
+    static void disable();
 
-	static int freeDelays;
+    static int freeDelays;
 
 private:
-	static tDelay delaysTab[];
+    static tDelay delaysTab[];
 
-	//Interruptions handlers
-	friend void INT_TIMER_A_1(void);
-};
+    //Interruptions handlers
+    friend void INT_TIMER_A_1(void);
+    };
 
 #endif

@@ -28,70 +28,62 @@ iUART* iUART::USCI_1 = NULL;
  * aPort : Port de communication
  * aSendMode : LSB ou MSB en premier
  * aStopBits : nbr de stop bits
- * aParity : Parit� de la communication
- * aDataCfg : format de donn�e sur 8 ou 7 bits
+ * aParity : Paritï¿½ de la communication
+ * aDataCfg : format de donnï¿½e sur 8 ou 7 bits
  * aBaudrate : vitesse de transmission
  *
  */
 iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
-	iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
-	iUARTDataCfgEnum aDataCfg, iUARTBaudrateEnum aBaudrate)
-    {
-    //Assignation du port de communcation
-    this->serialPort = aPort;
-    //Configuration du port USCI
-    this->config(aSendMode, aStopBits, aParity, aDataCfg, aBaudrate);
+		iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
+		iUARTDataCfgEnum aDataCfg, iUARTBaudrateEnum aBaudrate) {
+	//Assignation du port de communcation
+	this->serialPort = aPort;
+	//Configuration du port USCI
+	this->config(aSendMode, aStopBits, aParity, aDataCfg, aBaudrate);
 
-    //initialiser le buffer tournant
-    this->USCIRingBuffer.BufferIsFull = false;
-    this->USCIRingBuffer.ByteCount = 0;
-    this->USCIRingBuffer.InIndex = 0;
-    this->USCIRingBuffer.OutIndex = 0;
+	//initialiser le buffer tournant
+	this->USCIRingBuffer.BufferIsFull = false;
+	this->USCIRingBuffer.ByteCount = 0;
+	this->USCIRingBuffer.InIndex = 0;
+	this->USCIRingBuffer.OutIndex = 0;
 
-    this->dataReceived = false;
+	this->dataReceived = false;
 
-    //intialiser les adresse poiteur d'instance iUart pour les interruptions
-    switch (this->serialPort)
-	{
-    case kUSCI_A0:
-	// On doit tester si le pointeur n'est pas utilis�
-	// par un autre objet
-	if (this->USCI_0 == NULL)
-	    {
-	    USCI_0 = this;
+	//intialiser les adresse poiteur d'instance iUart pour les interruptions
+	switch (this->serialPort) {
+	case kUSCI_A0:
+		// On doit tester si le pointeur n'est pas utilis�
+		// par un autre objet
+		if (this->USCI_0 == NULL) {
+			USCI_0 = this;
 
-	    }
-	else
-	    {
-	    // Impossible de cr�er l'objet voulu
-	    }
-	break;
-    case kUSCI_A1:
-	// On doit tester si le pointeur n'est pas utilis�
-	// par un autre objet
-	if (this->USCI_1 == NULL)
-	    {
-	    USCI_1 = this;
-	    }
-	else
-	    {
-	    // Impossible de cr�er l'objet voulu
-	    }
-	break;
-    default:
-	;
+		} else {
+			// Impossible de creer l'objet voulu
+		}
+		break;
+	case kUSCI_A1:
+		// On doit tester si le pointeur n'est pas utilis�
+		// par un autre objet
+		if (this->USCI_1 == NULL) {
+			USCI_1 = this;
+		} else {
+			// Impossible de creer l'objet voulu
+		}
+		break;
+	default:
+		;
 	}
 
-    this->clearReceptionBuffer();
-    this->clearInternalSerialBuffer();
-    }
+	this->clearReceptionBuffer();
+	this->clearInternalSerialBuffer();
+}
 
 /**
  * Destructeur de la classe iUart
  */
 iUART::~iUART()
     {
-    //Lib�ration de la pile d'interruption
+    //Liberation de la pile d'interruption
     switch (this->serialPort)
 	{
     case kUSCI_A0:
@@ -112,13 +104,13 @@ iUART::~iUART()
     }
 
 /**
- * Fonction de configuration du port assign� dans le constructeur
+ * Fonction de configuration du port assigne dans le constructeur
  * On peut tout modifier sauf le port
  *
  * aSendMode : LSB ou MSB en premier
  * aStopBits : nbr de stop bits
- * aParity : Parit� de la communication
- * aDataCfg : format de donn�e sur 8 ou 7 bits
+ * aParity : Parite de la communication
+ * aDataCfg : format de donnee sur 8 ou 7 bits
  * aBaudrate : vitesse de transmission
  *
  */
@@ -132,7 +124,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	{
 
     case kUSCI_A0:
-	//Obligation de mettre le bit UCSWRST � 1
+	//Obligation de mettre le bit UCSWRST ï¿½ 1
 	// pour permettre de configurer
 	UCA0CTL1 |= UCSWRST;
 
@@ -156,10 +148,10 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	    UCA0CTL0 |= UCSPB;
 	    }
 
-	//Configuration de la parit�e
+	//Configuration de la paritï¿½e
 	switch (aParity)
 	    {
-	case kNone: //Pas de parit�e
+	case kNone: //Pas de paritï¿½e
 	    UCA0CTL0 &= ~UCPEN;
 	    break;
 	case kOdd: // Parity impair
@@ -180,7 +172,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	//Configuration de transmission asynchrone
 	UCA0CTL0 &= ~(UCSYNC);
 
-	// Configuration de la longeur de don�es � tranmettre
+	// Configuration de la longeur de donï¿½es ï¿½ tranmettre
 	if (k7bits == aDataCfg)
 	    {
 	    UCA0CTL0 |= UC7BIT;
@@ -250,7 +242,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	break;
 
     case kUSCI_A1:
-	//Obligation de mettre le bit UCSWRST � 1
+	//Obligation de mettre le bit UCSWRST ï¿½ 1
 	// pour permettre de configurer
 	UCA1CTL1 |= UCSWRST;
 
@@ -274,10 +266,10 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	    UCA1CTL0 |= UCSPB;
 	    }
 
-	//Configuration de la parit�e
+	//Configuration de la paritï¿½e
 	switch (aParity)
 	    {
-	case kNone: //Pas de parit�e
+	case kNone: //Pas de paritï¿½e
 	    UCA1CTL0 &= ~UCPEN;
 	    break;
 	case kOdd: // Parity impair
@@ -298,7 +290,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
 	//Configuration de transmission asynchrone
 	UCA1CTL1 &= ~(UCSYNC);
 
-	// Configuration de la longeur de don�es � tranmettre
+	// Configuration de la longeur de donï¿½es ï¿½ tranmettre
 	if (k7bits == aDataCfg)
 	    {
 	    UCA1CTL0 |= UC7BIT;
@@ -380,7 +372,7 @@ void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
  * Fonction pour lire "1" byte recus dans le buffer tourant
  *
  */
-char iUART::read()
+UInt8 iUART::read()
     {
     if (isEnabled)
 	{
@@ -389,10 +381,10 @@ char iUART::read()
 	aByteToRead =
 		this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.OutIndex];
 
-	// On incr�mente seulement apr�s avoir lu .
+	// On incrï¿½mente seulement aprï¿½s avoir lu .
 	this->USCIRingBuffer.OutIndex++;
 
-	// Si on a atteint la derni�re case on revient � 0
+	// Si on a atteint la derniï¿½re case on revient ï¿½ 0
 	if (kSciRecBufSize <= this->USCIRingBuffer.OutIndex)
 	    {
 	    this->USCIRingBuffer.OutIndex = 0;
@@ -402,21 +394,19 @@ char iUART::read()
 
 	return aByteToRead;
 
+	} else {
+		return 0;
 	}
-    else
-	{
-	return 0;
-	}
-    }
+}
 
 /**
  * Fonction pour transmettre "1" byte sur la ligne
- * !! La m�thode enable doit avoir �t� pr�alablement appel�e
+ * !! La mï¿½thode enable doit avoir ï¿½tï¿½ prï¿½alablement appelï¿½e
  *
  */
-bool iUART::write(char aData)
+bool iUART::write(UInt8 aData)
     {
-    //test si l'interface est activ�
+    //test si l'interface est activï¿½
     if (isEnabled)
 	{
 	//Selection du port
@@ -448,9 +438,9 @@ bool iUART::write(char aData)
 
 /**
  * Fonction qui permet de lire 1 flag de status du port
- * !! La m�thode enable doit avoir �t� pr�alablement appel�e
+ * !! La mï¿½thode enable doit avoir ï¿½tï¿½ prï¿½alablement appelï¿½e
  *
- * aFlag : nom du flag � lire
+ * aFlag : nom du flag ï¿½ lire
  *
  */
 bool iUART::getStatusFlag(iUARTStatusFlagEnum aFlag)
@@ -479,13 +469,13 @@ void iUART::enable()
     case kUSCI_A0:
 	UCA0CTL1 &= ~(UCSWRST);
 
-	//Configuration de l'interruption � la reception
+	//Configuration de l'interruption ï¿½ la reception
 	UCA0IE |= UCRXIE;
 	break;
     case kUSCI_A1:
 	UCA1CTL1 &= ~(UCSWRST);
 
-	//Configuration de l'interruption � la reception
+	//Configuration de l'interruption ï¿½ la reception
 	UCA1IE |= UCRXIE;
 	break;
     default:
@@ -527,7 +517,7 @@ bool iUART::isBufferEmpty()
     }
 
 /**
- * Handler d'interruption propre � chaque objets
+ * Handler d'interruption propre ï¿½ chaque objets
  *
  */
 void iUART::interruptHandler()
@@ -545,21 +535,20 @@ void iUART::interruptHandler()
 	// Test que le buffer ne soit pas plein
 	if (false == this->USCIRingBuffer.BufferIsFull)
 	    {
-	    //Alors on �crit le byte recus dans le buffer
+	    //Alors on ï¿½crit le byte recus dans le buffer
 	    this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
 		    aReceivedChar;
 
-	    //On incr�ment l'index et le nombre de byte recus
+	    //On incrï¿½ment l'index et le nombre de byte recus
 	    this->USCIRingBuffer.InIndex++;
 
 	    // Si on a atteint la derni�re case on revient � 0
-	    if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
-		{
-		this->USCIRingBuffer.InIndex = 0;
-		}
+			if (kSciRecBufSize <= this->USCIRingBuffer.InIndex) {
+				this->USCIRingBuffer.InIndex = 0;
+			}
 
-	    this->USCIRingBuffer.ByteCount++;
-	    }
+			this->USCIRingBuffer.ByteCount++;
+		}
 
 	//Test si on a rempli le buffer Si on a recu n char
 	if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount)
@@ -580,14 +569,14 @@ void iUART::interruptHandler()
 	// Test que le buffer ne soit pas plein
 	if (false == this->USCIRingBuffer.BufferIsFull)
 	    {
-	    //Alors on �crit le byte recus dans le buffer
+	    //Alors on ï¿½crit le byte recus dans le buffer
 	    this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
 		    aReceivedChar;
 
-	    //On incr�ment l'index et le nombre de byte recus
+	    //On incrï¿½ment l'index et le nombre de byte recus
 	    this->USCIRingBuffer.InIndex++;
 
-	    // Si on a atteint la derni�re case on revient � 0
+	    // Si on a atteint la derniï¿½re case on revient ï¿½ 0
 	    if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
 		{
 		this->USCIRingBuffer.InIndex = 0;
@@ -610,22 +599,20 @@ void iUART::interruptHandler()
 
 /**
  * Fonction qui permet d'obtenir l'ensemble des bytes recus
- * en m�moire s�par� d'un CR+LF
+ * en mï¿½moire sï¿½parï¿½ d'un CR+LF
  *
- * aBuffer : Buffer d'entr�e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
- * retour  : -1 si on a rien trouv� sinon la taille de la cha�ne
+ * aBuffer : Buffer d'entrï¿½e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+ * retour  : -1 si on a rien trouvï¿½ sinon la taille de la chaï¿½ne
  */
-bool iUART::readFrame(char* string)
-    {
-    char i = 0;
-    char nDataReceived = 0;
+bool iUART::readFrame(UInt8* string) {
+	UInt8 i = 0;
+	UInt8 nDataReceived = 0;
 
     nDataReceived = this->USCIRingBuffer.ByteCount;
 
-    //Tester si l'on a recu qqch
-    if ((this->dataReceived == true) || (nDataReceived != 0))
-	{
-	char pieceOfString[kSciRecBufSize ] = ""; //Holds the new addition to the string
+	//Tester si l'on a recu qqch
+	if ((this->dataReceived == true) || (nDataReceived != 0)) {
+		UInt8 pieceOfString[kSciRecBufSize ] = ""; //Holds the new addition to the string
 
 	//Recuperation des bytes recus
 	for (i = 0; i < nDataReceived; i++)
@@ -633,12 +620,12 @@ bool iUART::readFrame(char* string)
 	    pieceOfString[i] = this->read();
 	    }
 
-	strcat(this->uartBuffer, pieceOfString);
+	strcat((char*)this->uartBuffer,(char*) pieceOfString);
 
 	// Test \r
 	if (retInString(this->uartBuffer))
 	    {
-	    strcpy(string, this->uartBuffer);
+	    strcpy((char*)string, (char*)this->uartBuffer);
 	    this->clearInternalSerialBuffer();
 	    this->dataReceived = false;
 	    return true;
@@ -657,9 +644,9 @@ bool iUART::readFrame(char* string)
     }
 
 /**
- * Fonction permettant d'obtenir les bytes re�us jusqu'au \r\n
+ * Fonction permettant d'obtenir les bytes reçus jusqu'au \r\n
  *
- * aString : chaine resortant la prochaine cha�ne de byte re�us en m�moire, jusqu'� un CRLF
+ * aString : chaine resortant la prochaine chaîne de byte reçus en mémoire, jusqu'à un CRLF
  * retour : true si une nouvelle chaine a ete trouvee
  */
 bool iUART::readFrameToCRLF(char* aString)
@@ -692,11 +679,11 @@ bool iUART::readFrameToCRLF(char* aString)
 	    }
 	else
 	    {
-	    strcat(this->uartBuffer, pieceOfString); // ajoute les nouveaux bytes
+	    strcat((char*)this->uartBuffer, (char*)pieceOfString); // ajoute les nouveaux bytes
 
 	    if (aEndString) // on a la fin d'une ligne
 		{
-		strcpy(aString, this->uartBuffer);
+		strcpy((char*)aString, (char*)this->uartBuffer);
 		this->clearInternalSerialBuffer();
 		aIsOk = true;
 		}
@@ -723,50 +710,49 @@ bool iUART::readFrameToCRLF(char* aString)
  *
  * retour  : true si il y a au moins un caractere dans le buffer
  */
-bool iUART::readFullFrame(char* stringReceived)
-    {
-    unsigned char i = 0;
-    unsigned char nDataReceived = this->USCIRingBuffer.ByteCount;
+bool iUART::readFullFrame(UInt8* stringReceived) {
+	UInt8 i = 0;
+	UInt8 nDataReceived = this->USCIRingBuffer.ByteCount;
 
-//Tester si l'on a recu qqch
-    if (!((this->dataReceived == true) || (nDataReceived != 0)))
-	{
-	return false; // buf empty
-	}
+	//Tester si l'on a recu qqch
+	if (!((this->dataReceived == true) || (nDataReceived != 0)))
+		{
+		return false; // buf empty
+		}
 
-//Recuperation des bytes recus
-    for (i = 0; i < nDataReceived; i++)
-	{
-	stringReceived[i] = this->read();
-	}
-    return true;
-    }
+	//Recuperation des bytes recus
+	for (i = 0; i < nDataReceived; i++)
+		{
+		stringReceived[i] = this->read();
+		}
+	return true;
+}
 
 // TODO - Tester les performances des fonctions send string
 
 /**
- * Fonction qui permet d'obtenir le nombre de caractère contenu
+ * Fonction qui permet d'obtenir le nombre de caractÃ¨re contenu
  * dans le buffer
  *
- * retour  : nombre de caractère contenu dans le buffer
+ * retour  : nombre de caractÃ¨re contenu dans le buffer
  */
-int iUART::availableCharToRead()
+UInt16 iUART::availableCharToRead()
     {
     return this->USCIRingBuffer.ByteCount;
     }
 
 ///**
 // * Fonction qui permet d'obtenir l'ensemble des bytes recus
-// * en m�moire s�par� d'un CR+LF
+// * en mï¿½moire sï¿½parï¿½ d'un CR+LF
 // *
-// * aBuffer : Buffer d'entr�e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
-// * retour  : -1 si on a rien trouv� sinon la taille de la cha�ne
+// * aBuffer : Buffer d'entrï¿½e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+// * retour  : -1 si on a rien trouvï¿½ sinon la taille de la chaï¿½ne
 // */
 //int iUART::readLine(char* aBuffer) {
 //	int i = 0;
 //	int aByteCount = this->USCIRingBuffer.ByteCount;
 //
-//	//On enl�ve les premier \r\n
+//	//On enlï¿½ve les premier \r\n
 //	this->read();
 //	this->read();
 //
@@ -774,7 +760,7 @@ int iUART::availableCharToRead()
 //	for (i = 0; (i < (aByteCount - 2)) && (aBuffer[i - 1] != 0x0D); i++) {
 //		aBuffer[i] = this->read();
 //	}
-//	if (i < (aByteCount - 2)) //CR detect�
+//	if (i < (aByteCount - 2)) //CR detectï¿½
 //			{
 //		//lecture du LF
 //		aBuffer[i] = this->read();
@@ -788,104 +774,84 @@ int iUART::availableCharToRead()
 //}
 
 /**
- * Fonction pour envoyer une chaîne de caractère de type char*
+ * Fonction pour envoyer une chaÃ®ne de caractÃ¨re de type char*
  *
- * aString : Chaîne à envoyeriUart
- * retour  : 1 si la chaîne à bien été transmise
+ * aString : ChaÃ®ne Ã  envoyeriUart
+ * retour  : 1 si la chaÃ®ne Ã  bien Ã©tÃ© transmise
  */
-bool iUART::sendString(char* aString)
-    {
-    int i = 0;
-    unsigned int j = 0;
-    bool result = false;
+bool iUART::sendString(UInt8* aString) {
+	UInt16 i = 0;
+	bool result = false;
 
-//Test si la chaîne est vide
-    if (aString != NULL)
-	{
-	for (i = 0; aString[i] != '\0'; i++)
-	    {
-	    result = this->write(aString[i]);
-	    }
-	return result;
+	//Test si la chaîne est vide
+	if (aString != NULL) {
+		for (i = 0; aString[i] != '\0'; i++) {
+			result = this->write(aString[i]);
+		}
+		return result;
+	} else {
+		return false;
 	}
-    else
-	{
-	return false;
-	}
-    }
+}
 
-void iUART::clearReceptionBuffer()
-    {
-//initialiser le buffer tournant
-    this->USCIRingBuffer.BufferIsFull = false;
-    this->USCIRingBuffer.ByteCount = 0;
-    this->USCIRingBuffer.InIndex = 0;
-    this->USCIRingBuffer.OutIndex = 0;
+void iUART::clearReceptionBuffer() {
+	//initialiser le buffer tournant
+	this->USCIRingBuffer.BufferIsFull = false;
+	this->USCIRingBuffer.ByteCount = 0;
+	this->USCIRingBuffer.InIndex = 0;
+	this->USCIRingBuffer.OutIndex = 0;
 
-//clear contenu buffer
-    for (int i = 0; i < kSciRecBufSize ; i++)
-	{
-	this->USCIRingBuffer.UsciRecBuf[i] = 0;
-	}
-    }
+	//clear contenu buffer
+	for(UInt16 i=0; i<kSciRecBufSize; i++)
+		{
+		this->USCIRingBuffer.UsciRecBuf[i]=0;
+		}
+}
 
-void iUART::clearInternalSerialBuffer()
-    {
-    char i = 0;
-    for (i = 0; i < kSciRecBufSize ; i++)
-	{
-	this->uartBuffer[i] = 0x00;
+void iUART::clearInternalSerialBuffer() {
+	UInt8 i = 0;
+	for (i = 0; i < kSciRecBufSize ; i++) {
+		this->uartBuffer[i] = 0x00;
 	}
     }
+
 
 //This function returns TRUE if there's an 0x0D character in the string; and if so,
 //it trims the 0x0D and anything that had followed it.
-bool iUART::retInString(char* string)
-    {
-    char retPos = 0, i, len;
-    char tempStr[kSciRecBufSize ] = "";
+bool iUART::retInString(UInt8* string) {
+	UInt8 retPos = 0, i, len;
+	char tempStr[kSciRecBufSize ] = "";
 
-    strncpy(tempStr, string, strlen(string));        //Make a copy of the string
-    len = strlen(tempStr);
-    while ((tempStr[retPos] != 0x0A) && (tempStr[retPos] != 0x0D)
-	    && (retPos++ < len))
-	;        //Find 0x0D; if not found, retPos ends up at len
+	strncpy(tempStr, (char*)string, strlen((char*)string));        //Make a copy of the string
+	len = strlen(tempStr);
+	while ((tempStr[retPos] != 0x0A) && (tempStr[retPos] != 0x0D)
+			&& (retPos++ < len))
+		;        //Find 0x0D; if not found, retPos ends up at len
 
-    if ((retPos < len) && (tempStr[retPos] == 0x0D))
-	{ //If 0x0D was actually found...
-	for (i = 0; i < kSciRecBufSize ; i++)
-	    {       //Empty the buffer
-	    string[i] = 0x00;
-	    }
-	strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
-	return true; //...and tell the calling function that we did so
-	}
-    else if ((retPos < len) && (tempStr[retPos] == 0x0A))
-	{ //If 0x0D was actually found...
-	for (i = 0; i < kSciRecBufSize ; i++)
-	    {       //Empty the buffer
-	    string[i] = 0x00;
-	    }
-	strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
-	return true; //...and tell the calling function that we did so
-	}
-    else if (tempStr[retPos] == 0x0D)
-	{
-	for (i = 0; i < kSciRecBufSize ; i++)
-	    {       //Empty the buffer
-	    string[i] = 0x00;
-	    }
-	strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
-	return true; //...and tell the calling function that we did so
-	}
-    else if (retPos < len)
-	{
-	for (i = 0; i < kSciRecBufSize ; i++)
-	    {       //Empty the buffer
-	    string[i] = 0x00;
-	    }
-	strncpy(string, tempStr, retPos); //...trim the input string to just before 0x0D
-	return true; //...and tell the calling function that we did so
+	if ((retPos < len) && (tempStr[retPos] == 0x0D)) { //If 0x0D was actually found...
+		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
+			string[i] = 0x00;
+		}
+		strncpy((char*)string, tempStr, retPos); //...trim the input string to just before 0x0D
+		return true; //...and tell the calling function that we did so
+	} else if ((retPos < len) && (tempStr[retPos] == 0x0A)) { //If 0x0D was actually found...
+		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
+			string[i] = 0x00;
+		}
+		strncpy((char*)string, tempStr, retPos); //...trim the input string to just before 0x0D
+		return true; //...and tell the calling function that we did so
+	} else if (tempStr[retPos] == 0x0D) {
+		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
+			string[i] = 0x00;
+		}
+		strncpy((char*)string, tempStr, retPos); //...trim the input string to just before 0x0D
+		return true; //...and tell the calling function that we did so
+	} else if (retPos < len) {
+		for (i = 0; i < kSciRecBufSize ; i++) {       //Empty the buffer
+			string[i] = 0x00;
+		}
+		strncpy((char*)string, tempStr, retPos); //...trim the input string to just before 0x0D
+		return true; //...and tell the calling function that we did so
 	}
 
     return false;                                 //Otherwise, it wasn't found
@@ -897,10 +863,10 @@ bool iUART::retInString(char* string)
 #pragma vector=USCI_A0_VECTOR
 __interrupt void USCI_A0(void)
     {
-//V�rifiation que c'est bien un interruption en reception
+//Vï¿½rifiation que c'est bien un interruption en reception
     if ((UCA0IFG & UCRXIFG)== UCRXIFG)
 	{
-	// On teste si le pointeur iUART_0 a �t�  affect�
+	// On teste si le pointeur iUART_0 a ï¿½tï¿½  affectï¿½
 	if (iUART::USCI_0 != NULL)
 	    {
 	    iUART::USCI_0->interruptHandler();
@@ -913,10 +879,10 @@ __interrupt void USCI_A0(void)
 #pragma vector=USCI_A1_VECTOR
 __interrupt void USCI_A1(void)
     {
-//V�rifiation que c'est bien un interruption en reception
+//Vï¿½rifiation que c'est bien un interruption en reception
     if ((UCA1IFG & UCRXIFG)== UCRXIFG)
 	{
-	// On teste si le pointeur iUART_1 a �t�  affect�
+	// On teste si le pointeur iUART_1 a ï¿½tï¿½  affectï¿½
 	if (iUART::USCI_1 != NULL)
 	    {
 	    iUART::USCI_1->interruptHandler();

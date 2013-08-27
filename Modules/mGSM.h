@@ -82,7 +82,7 @@ private:
     //
     //aSMS : le SMS à transmettre
     //----------------------------------------------------------------
-    void mSenderSms(char* aSMS);
+    void mSenderSms(UInt8* aSMS);
 
 public:
 
@@ -129,7 +129,7 @@ public:
     //aPhoneNumber : pointe la varialble contenant le numéro de telephone
     //retour : 	true si le SMS a ete envoye
     //----------------------------------------------------------------
-    bool sendSMS(char* aSMS, char* aPhoneNumber);
+    bool sendSMS(UInt8* aSMS, UInt8* aPhoneNumber);
 
     //----------------------------------------------------------------
     //obtenir l'heure

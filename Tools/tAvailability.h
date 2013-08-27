@@ -8,10 +8,14 @@
 
 class tAvailability : public tParameters
 {
-private:
-	int interval;
+public:
+	UInt16 aInterval;
+	UInt16 aTime;
 
-	int time;
+	tAvailability(mEEPROM *mEeprom,UInt16 aModeNum);
+	void save();
+	void load();
+
 
 };
 #endif

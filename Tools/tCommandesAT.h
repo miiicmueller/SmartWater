@@ -2,28 +2,28 @@
 #define T_COMMANDES_A_T_H
 
 #include <string>
-
+#include "Def/def.h"
 
 using namespace std;
 
 class tCommandesAT {
 public:
-	static  char configSMS[];
-	static  char configBaud9600[];
-	static  char questWhiteList[];
-	static  char getCredit[];
-	static  char enableServiceData[];
-	static  char addP41ToWhiteList[];
-	static  char enableSMS[];
-	static  char questSMSMode[];
-	static  char delockPIN[];
-	static  char questStatePIN[];
-	static  char setModeText[];
-	static  char getSMS[];
-	static  char deleteSMSAll[];
-	static  char deleteSMSPos[];
-	static  char sendSMS[];
-	static  char goSendSMS[];
-	static  char endAT[];
+	static  UInt8 configSMS[];
+	static  UInt8 configBaud9600[];
+	static  UInt8 enableServiceData[];
+	static  UInt8 questWhiteList[];
+	static  UInt8 addP41ToWhiteList[];
+	static  UInt8 enableSMS[];
+	static  UInt8 questSMSMode[];
+	static  UInt8 delockPIN[];
+	static  UInt8 questStatePIN[];
+	static  UInt8 getCredit[];
+	static  UInt8 setModeText[];
+	static  UInt8 getSMS[];
+	static  UInt8 deleteSMSAll[];
+	static  UInt8 deleteSMSPos[];
+	static  UInt8 sendSMS[];
+	static  UInt8 goSendSMS[];
+	static  UInt8 endAT[];
 };
 #endif

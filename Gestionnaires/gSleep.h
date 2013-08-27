@@ -6,7 +6,15 @@
 
 #include "Gestionnaire.h"
 
-class gSleep : public Gestionnaire
-{
-};
+class gSleep: public Gestionnaire
+    {
+public:
+    gSleep();
+
+    void setup();
+
+    void execute();
+private:
+
+    };
 #endif

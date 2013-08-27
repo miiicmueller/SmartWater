@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "iRTC.h"
+#include "Interfaces/iCpu.h"
 
 iRTC* iRTC::RTC_A = NULL;
 
@@ -23,8 +24,6 @@ iRTC::iRTC() {
 
 	iRTC::RTC_A = this;
 
-
-
 }
 
 /**
@@ -37,16 +36,19 @@ iRTC::~iRTC() {
 
 /**
  * Activation du reveil du micro tout les xx minutes
- * aMin : delta de temps entre les alarmes
+ * aMin : minutes absolues pour l'alarme
  */
 void iRTC::setAlarm(char aMin) {
-	char aTempSec, aTempHr;
-	this->aDeltaMinuteAlarme = aMin;
-	//Recuperation de l'heure en cours
-	this->readTime(&aTempSec, &this->aMinuteAlarme, &aTempHr);
-	this->aMinuteAlarme += this->aDeltaMinuteAlarme;
+//	char aTempSec, aTempHr;
+//	this->aDeltaMinuteAlarme = aMin;
+//	//Recuperation de l'heure en cours
+//	this->readTime(&aTempSec, &this->aMinuteAlarme, &aTempHr);
+//	this->aMinuteAlarme += this->aDeltaMinuteAlarme;
+//	RTCAHOUR = 0x00;
+	//RTCAMIN = this->aMinuteAlarme + 0x80;
+
 	RTCAHOUR = 0x00;
-	RTCAMIN = this->aMinuteAlarme + 0x80;
+	RTCAMIN = aMin + 0x80;
 	RTCADOW = 0x00;
 	RTCADAY = 0x00;
 	RTCCTL01 |= RTCAIE;
@@ -163,19 +165,19 @@ void iRTC::disableRTC() {
  */
 void iRTC::wakeUpInterrupt() {
 
-	//Write crap here
-	P1DIR |= BIT0;
-	P1OUT ^= BIT0;
+	//Réveil du microcontrolleur
+	iCpu::setPowerMode(kActiveMode);
+
 	//Réamorcage de l'alarme
-	this->aMinuteAlarme += this->aDeltaMinuteAlarme;
-	RTCAMIN = this->aMinuteAlarme + 0x80;
+//	this->aMinuteAlarme += this->aDeltaMinuteAlarme;
+//	RTCAMIN = this->aMinuteAlarme + 0x80;
 }
 
 /**
  * @Deprecated
  * Inutile
  */
-bool iRTC::write(char aData) {
+bool iRTC::write(UInt8 aData) {
 	return false;
 }
 
@@ -183,7 +185,7 @@ bool iRTC::write(char aData) {
  * @Deprecated
  * Inutile
  */
-char iRTC::read() {
+UInt8 iRTC::read() {
 	return 0;
 }
 

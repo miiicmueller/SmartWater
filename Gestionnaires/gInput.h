@@ -7,34 +7,42 @@
 #include "Gestionnaire.h"
 #include "../Tools/tDate.h"
 
-class gInput : public Gestionnaire
-{
+class gInput: public Gestionnaire
+    {
 private:
-	int counterValues;
+    int counterValues;
 
-	int batteryValue;
+    int batteryValue;
 
-	int tempSensValues;
+    int tempSensValues;
 
-	char* smsTab;
+    char* smsTab;
 
-	int smsNb;
+    int smsNb;
 
-	tDate* currentTime;
-
+    tDate currentTime;
 
 public:
-	int getCounterValue(char counterNb);
+    //----------------------------------------------------------------
+    //constructeur
+    //----------------------------------------------------------------
+    gInput();
 
-	int getBatteryValue();
+    int getCounterValue(char counterNb);
 
-	int getTempSensValue(char tempSensNb);
+    int getBatteryValue();
 
-	char* getSms(int nSms);
+    int getTempSensValue(char tempSensNb);
 
-	int getSmsNb();
+    char* getSms(int nSms);
 
-	tDate* getCurrentTime();
+    int getSmsNb();
 
-};
+    tDate getCurrentTime();
+
+    void setup();
+
+    void execute();
+
+    };
 #endif

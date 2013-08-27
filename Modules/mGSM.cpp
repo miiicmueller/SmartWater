@@ -62,27 +62,16 @@ void mGSM::mOpen()
     mGSM::enable.write(BIT4);
     mGSM::reset.write(BIT3);
 
-    mGSM::timeOut.startDelay(kTimeToEnableIo); // attend que les io soient changees
+    mGSM::timeOut.startDelayMS(kTimeToEnableIo); // attend que les io soient changees
     while (!mGSM::timeOut.isDone())
 	;
 
     mGSM::uart.clearInternalSerialBuffer(); //efface le buffer
     mGSM::uart.clearReceptionBuffer();
 
-//    //ralentit al vitesse de communication
-//    mGSM::uart.sendString(mGSM::commandesAtGsm.configBaud9600);
-//    mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
-//    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
-//    while (!mGSM::timeOut.isDone())
-//	;
-//    mGSM::uart.config(kLSBFirst, k1StBits, kNone, k8bits, k9600);
-//    mGSM::uart.enable();
-//    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
-//    while (!mGSM::timeOut.isDone())
-//	;
 
     //enable mode sms
-    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
+    mGSM::timeOut.startDelayMS(kWaitCommand); // attend avant commande
     while (!mGSM::timeOut.isDone())
 	;
 
@@ -98,7 +87,7 @@ void mGSM::mOpen()
 	}
 
     mGSM::uart.clearReceptionBuffer();
-    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
+    mGSM::timeOut.startDelayMS(kWaitCommand); // attend avant commande
     while (!mGSM::timeOut.isDone())
 	;
 
@@ -111,13 +100,13 @@ void mGSM::mOpen()
     //deverouille la carte SIM, si besoin est
     if (!aIsOk)
 	{
-	mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
+	mGSM::timeOut.startDelayMS(kWaitCommand); // attend avant commande
 	while (!mGSM::timeOut.isDone())
 	    ;
 
 	mGSM::uart.clearReceptionBuffer();
 	mGSM::uart.sendString(mGSM::commandesAtGsm.delockPIN);
-	mGSM::uart.sendString((char*)this->codePIN);
+	mGSM::uart.sendString(this->codePIN);
 	mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 	aIsOk = mCheckResponse("OK", "ERROR", kTimeOutResponse); //test la reponse
 
@@ -129,7 +118,7 @@ void mGSM::mOpen()
 	}
 
     // passe les SMS en mode texte (par défaut "Mode PDU" -> non-traitable)
-    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
+    mGSM::timeOut.startDelayMS(kWaitCommand); // attend avant commande
     while (!mGSM::timeOut.isDone())
 	;
 
@@ -145,7 +134,7 @@ void mGSM::mOpen()
 	}
 
     // enable Service Data, pour la lecture du credit
-    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
+    mGSM::timeOut.startDelayMS(kWaitCommand); // attend avant commande
     while (!mGSM::timeOut.isDone())
 	;
 
@@ -199,7 +188,7 @@ bool mGSM::getSMS(char* aSMS)
     mGSM::uart.clearInternalSerialBuffer(); //efface buffer
     mGSM::uart.clearReceptionBuffer();
 
-    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
+    mGSM::timeOut.startDelayMS(kWaitCommand); // attend avant commande
     while (!mGSM::timeOut.isDone())
 	;
 
@@ -208,7 +197,7 @@ bool mGSM::getSMS(char* aSMS)
     mGSM::uart.write((char) (indexSMS + 48));
     mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 
-    mGSM::timeOut.startDelay(kTimeOutResponse);
+    mGSM::timeOut.startDelayMS(kTimeOutResponse);
     while ((!mGSM::uart.readFrameToCRLF(aDataReceived)) && (!mGSM::timeOut.isDone()) && (!aIsError) && (!aIsOk))
 	{
 	aTemp = strcmp(aDataReceived, "OK");
@@ -246,7 +235,7 @@ bool mGSM::getSMS(char* aSMS)
 		if ('+' == aDataReceived[0] && 'C' == aDataReceived[1]
 			&& 'M' == aDataReceived[2] && ':' == aDataReceived[5]) //controle le debut de l'entete
 		    {
-		    mGSM::timeOut.startDelay(kTimeOutResponse);
+		    mGSM::timeOut.startDelayMS(kTimeOutResponse);
 		    while (!mGSM::uart.readFrameToCRLF(aDataReceived)
 			    && !mGSM::timeOut.isDone())
 			; //lit le message
@@ -282,7 +271,7 @@ bool mGSM::getSMS(char* aSMS)
 //aPhoneNumber : pointe la varialble contenant le numéro de telephone
 //retour : true si le SMS a ete envoye
 //----------------------------------------------------------------
-bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber)
+bool mGSM::sendSMS(UInt8* aSMS, UInt8* aPhoneNumber)
     {
     char aAnswer[kSciRecBufSize ];
     UInt16 aValue; //variable de recuperation de valeur dans trame
@@ -290,7 +279,7 @@ bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber)
     bool aIsOk = false;
     bool aIsError = false;
 
-    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
+    mGSM::timeOut.startDelayMS(kWaitCommand); // attend avant commande
     while (!mGSM::timeOut.isDone())
 	;
 
@@ -299,13 +288,13 @@ bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber)
 
 //sequence d'envoi
     mGSM::uart.sendString(mGSM::commandesAtGsm.sendSMS);
-    mGSM::uart.sendString(aPhoneNumber);
-    mGSM::uart.sendString("\"\r");
-    mGSM::mSenderSms(aSMS);
+    mGSM::uart.sendString((UInt8*)aPhoneNumber);
+    mGSM::uart.sendString((UInt8*)"\"\r");
+    mGSM::mSenderSms((UInt8*)aSMS);
     mGSM::uart.clearReceptionBuffer();
     mGSM::uart.write(0x1A); // "Ctrl + Z" pour envoyer
 
-    mGSM::timeOut.startDelay(kTimeOutSendSms);
+    mGSM::timeOut.startDelayMS(kTimeOutSendSms);
     while (!mGSM::timeOut.isDone() && !aIsOk && !aIsError)
 	{
 	if (mGSM::uart.readFrameToCRLF(aAnswer))
@@ -405,7 +394,7 @@ tDate mGSM::getDate()
     UInt16 i = 0;
     UInt8 j = 0;
 
-    if (mGSM::sendSMS("getDate", (char*) this->phoneNumber)) // on s'envoie un SMS
+    if (mGSM::sendSMS((UInt8*)"getDate", (UInt8*)this->phoneNumber)) // on s'envoie un SMS
 	{
 	while (aIsSms)
 	    {
@@ -415,7 +404,7 @@ tDate mGSM::getDate()
 	    mGSM::uart.write((char) (aIndex + 48));
 	    mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 
-	    mGSM::timeOut.startDelay(kTimeOutResponse);
+	    mGSM::timeOut.startDelayMS(kTimeOutResponse);
 	    while (!mGSM::uart.readFrameToCRLF(aDataReceived)
 		    && !mGSM::timeOut.isDone())
 		; //attend premiere partie (echo de la commande : non-interessant)
@@ -431,7 +420,7 @@ tDate mGSM::getDate()
 		aDataReceived[i] = 0;
 		}
 
-	    mGSM::timeOut.startDelay(kTimeOutResponse);
+	    mGSM::timeOut.startDelayMS(kTimeOutResponse);
 	    while (!mGSM::uart.readFrameToCRLF(aDataReceived)
 		    && !mGSM::timeOut.isDone())
 		; //attend deuxieme partie
@@ -494,14 +483,14 @@ UInt16 mGSM::getCredit()
     mGSM::uart.clearReceptionBuffer();
     mGSM::uart.clearInternalSerialBuffer();
 
-    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
+    mGSM::timeOut.startDelayMS(kWaitCommand); // attend avant commande
     while (!mGSM::timeOut.isDone())
 	;
 
     mGSM::uart.sendString(mGSM::commandesAtGsm.getCredit);
     mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 
-    mGSM::timeOut.startDelay(kTimeOutResponse);
+    mGSM::timeOut.startDelayMS(kTimeOutResponse);
     while (!aIsOk && !mGSM::timeOut.isDone()) // cherche la deuxieme partie
 	{
 	if (mGSM::uart.readFrameToCRLF(aDataReceived))
@@ -572,7 +561,7 @@ bool mGSM::mCheckResponse(char* aGoodResponse, char* aBadResponse,
     bool aIsOk = false;
     bool aIsError = false;
 
-    mGSM::timeOut.startDelay(aTimeOutMs);
+    mGSM::timeOut.startDelayMS(aTimeOutMs);
     while (!mGSM::timeOut.isDone() && !aIsOk && !aIsError) //lit le message
 	{
 	aTemp = false;
@@ -608,7 +597,7 @@ bool mGSM::mCheckResponse(char* aGoodResponse, char* aBadResponse,
 //
 //aSMS : le SMS à transmettre
 //----------------------------------------------------------------
-void mGSM::mSenderSms(char* aSMS)
+void mGSM::mSenderSms(UInt8* aSMS)
     {
     UInt16 i = 0;
     while (aSMS[i] != 0)
@@ -617,7 +606,7 @@ void mGSM::mSenderSms(char* aSMS)
 
 	if (0 == i % kSizeParseSms)
 	    {
-	    mGSM::timeOut.startDelay(kWaitSendSms);
+	    mGSM::timeOut.startDelayMS(kWaitSendSms);
 	    while (!mGSM::timeOut.isDone())
 		; // attend pour ne pas bourrer le FIFO du module GSM
 	    }

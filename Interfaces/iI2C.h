@@ -61,8 +61,8 @@ public:
 	void enable();
 	void disable();
 	void setSlaveAddr(char aSlaveAddr);
-	bool write(char aData);
-	char read();
+	bool write(UInt8 aData);
+	UInt8 read();
 	bool getStatusFlag(iI2CFlagEnum aFlag);
 
 };

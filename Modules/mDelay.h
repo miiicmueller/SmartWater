@@ -8,7 +8,6 @@
 #define __MDELAY__
 
 #include "../Interfaces/iRTI.h"
-#include "../Def/def.h"
 
 class mDelay
     {
@@ -25,7 +24,8 @@ public:
     static void mSetup();
 
     //méthodes
-    void startDelay(UInt32 aTimeMs);
+    void startDelayMS(UInt32 aTimeMs);
+    void startDelay100US(UInt32 aTime100Us);
     bool isDone();
 
     //destructeur
