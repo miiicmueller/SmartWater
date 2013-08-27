@@ -1,12 +1,12 @@
 package ch.hearc.SmartWater.app;
 
+import java.awt.SplashScreen;
 import java.util.ArrayList;
 
 import java.util.List;
 import java.util.Locale;
 
 import ch.hearc.SmartWater.gui.JFrameSmartWater;
-import ch.hearc.SmartWater.lang.JLanguages;
 import ch.hearc.SmartWater.lang.*;
 
 public class UseFrameSmartWater {
@@ -20,7 +20,10 @@ public class UseFrameSmartWater {
 	}
 
 	public static void main() {
-		new JFrameSmartWater();
+		SplashScreen splash;
+		JFrameSmartWater.setLookAndFeel();
+		JFrameSmartWater jFrameSmartWater = new JFrameSmartWater();
+
 	}
 
 	/*------------------------------------------------------------------*\

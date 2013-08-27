@@ -66,34 +66,44 @@ void main(void)
     // Important pour la basse consommation
     iDIO::InitAllPort();
 
+    iDIO Pgood((char*) kPort_6, BIT4);
+    Pgood.SetPortDirection(kInput);
+
+    //On attend que l'alim démarre
+    while (!(Pgood.read() == BIT4))
+	;
+
     mCpu::configFrequency();
 
     __bis_SR_register(GIE);
 
-    gInput theGInput;
-    gCompute theGCompute(&theGInput);
-    gOutput theGOutput(&theGCompute);
-
-    mDelay::mSetup();
-    mDelay::mOpen();
-
-    /*iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
-     UInt16 moduleAddress = 0x50;
-     mEEPROM aEEPROM(moduleAddress, &i2cBus);
-     mCompteur aCompteur(kMeterSimulation, &aEEPROM);*/
-
-    gTerminal theTerminalUSB(&theGInput);
-
-    mDelay aDelay;
+//    gInput theGInput;
+//    gCompute theGCompute(&theGInput);
+//    gOutput theGOutput(&theGCompute);
+//
+//    mDelay::mSetup();
+//    mDelay::mOpen();
+//
+//    /*iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
+//     UInt16 moduleAddress = 0x50;
+//     mEEPROM aEEPROM(moduleAddress, &i2cBus);
+//     mCompteur aCompteur(kMeterSimulation, &aEEPROM);*/
+//
+//    gTerminal theTerminalUSB(&theGInput);
+//
+//    mDelay aDelay;
 
     while (1)
 	{
-	if (aDelay.isDone())
-	    {
-	    aDelay.startDelayMS(5);
-	    theTerminalUSB.execute();
-	    }
+
 	}
+//	{
+//	if (aDelay.isDone())
+//	    {
+//	    aDelay.startDelayMS(5);
+//	    theTerminalUSB.execute();
+//	    }
+//	}
 
     /*mUSB commUsb(&bCDCDataReceived_event);
      iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
@@ -136,37 +146,34 @@ void main(void)
      valeurCompteur = 300;
      }*/
 
-    iDIO cptEnable((char*) kPort_6, BIT2);
-    cptEnable.SetPortDirection(kOutput);
-
-    iDIO cptSim((char*) kPort_6, BIT3);
-    cptSim.SetPortDirection(kOutput);
-
-    iDIO cptSel_1((char*) kPort_6, BIT0);
-    cptSel_1.SetPortDirection(kOutput);
-
-    iDIO cptSel_2((char*) kPort_6, BIT1);
-    cptSel_2.SetPortDirection(kOutput);
-
-    iDIO cptRxd((char*) kPort_4, BIT5);
-    cptRxd.SetPortDirection(kInput);
-
-    iDIO aLed_1((char*) kPort_7, BIT0);
-    aLed_1.SetPortDirection(kOutput);
-
-    iDIO aLed_2((char*) kPort_7, BIT1);
-    aLed_2.SetPortDirection(kOutput);
-
+//    iDIO cptEnable((char*) kPort_6, BIT2);
+//    cptEnable.SetPortDirection(kOutput);
+//
+//    iDIO cptSim((char*) kPort_6, BIT3);
+//    cptSim.SetPortDirection(kOutput);
+//
+//    iDIO cptSel_1((char*) kPort_6, BIT0);
+//    cptSel_1.SetPortDirection(kOutput);
+//
+//    iDIO cptSel_2((char*) kPort_6, BIT1);
+//    cptSel_2.SetPortDirection(kOutput);
+//
+//    iDIO cptRxd((char*) kPort_4, BIT5);
+//    cptRxd.SetPortDirection(kInput);
+//
+//    iDIO aLed_1((char*) kPort_7, BIT0);
+//    aLed_1.SetPortDirection(kOutput);
+//
+//    iDIO aLed_2((char*) kPort_7, BIT1);
+//    aLed_2.SetPortDirection(kOutput);
 //iUART uart(kUSCI_A1, kLSBFirst, k1StBits, kEven, k7bits, k300);
-
     /*mCompteur monCompteur(kMeter1);
      monCompteur.mOpen();
      valeurCompteur = monCompteur.mRead();*/
 
-    cptEnable.write(kHigh);
-    cptSel_1.write(kHigh);
-    cptSel_2.write(kLow);
-
+//    cptEnable.write(kHigh);
+//    cptSel_1.write(kHigh);
+//    cptSel_2.write(kLow);
 //    while (1)
 //	{
 //	cptEnable.write(kHigh);
@@ -176,40 +183,37 @@ void main(void)
 //	cptEnable.write(kHigh);
 //	cptEnable.write(kLow);
 //	}
-
-    mDelay aDelay_1;
-    i = 0xff;
-    aDelay_1.startDelayMS(1);
-
-    mDelay aDelay_2;
-    aDelay_2.startDelayMS(1);
-
-    while (1)
-	{
-
-	if (aDelay_1.isDone())
-	    {
-	    i = ~i;
-	    cptSim.write(i);
-	    aLed_1.write(i);
-	    aDelay_1.startDelayMS(20);
-	    }
-
-	if (aDelay_2.isDone())
-	    {
-	    if (cptRxd.read() != 0)
-		{
-		aLed_2.write(kHigh);
-		}
-	    else
-		{
-		aLed_2.write(kLow);
-		}
-	    aDelay_2.startDelayMS(1);
-	    }
-
-	// On endort le processeur en niveau 3 (voir datasheet page 20)
-
+//    mDelay aDelay_1;
+//    i = 0xff;
+//    aDelay_1.startDelayMS(1);
+//
+//    mDelay aDelay_2;
+//    aDelay_2.startDelayMS(1);
+//
+//    while (1)
+//	{
+//
+//	if (aDelay_1.isDone())
+//	    {
+//	    i = ~i;
+//	    cptSim.write(i);
+//	    aLed_1.write(i);
+//	    aDelay_1.startDelayMS(20);
+//	    }
+//
+//	if (aDelay_2.isDone())
+//	    {
+//	    if (cptRxd.read() != 0)
+//		{
+//		aLed_2.write(kHigh);
+//		}
+//	    else
+//		{
+//		aLed_2.write(kLow);
+//		}
+//	    aDelay_2.startDelayMS(1);
+//	    }
+// On endort le processeur en niveau 3 (voir datasheet page 20)
 //		//Check the USB state and directly main loop accordingly
 //		if (commUsb.isConnected()) {
 //			if (commUsb.getCommand(&cmd)) {
@@ -242,7 +246,6 @@ void main(void)
 //			}
 //
 //		}
-
-	}
+//}
     }
 

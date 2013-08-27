@@ -25,6 +25,7 @@ import ch.hearc.SmartWater.commUsb.ComConnexion;
 import ch.hearc.SmartWater.dataManager.DataManager;
 import ch.hearc.SmartWater.gui.JFrameSmartWater;
 import ch.hearc.SmartWater.gui.JPanelPrincipal;
+import ch.hearc.SmartWater.gui.login.Session;
 import ch.hearc.SmartWater.lang.JLanguages;
 
 public class JFramePortSel extends JFrame {
@@ -34,11 +35,11 @@ public class JFramePortSel extends JFrame {
 	\*------------------------------------------------------------------*/
 
 	public JFramePortSel(ResourceBundle resourceBundle,
-			ComConnexion comConnexion, JFrameSmartWater jFrameSmartWater) {
+			ComConnexion comConnexion, JFrameSmartWater jFrameSmartWater,
+			Session session) {
 
-		listPort = new ArrayList<String>();
 		this.comConnexion = comConnexion;
-		this.isConnected = false;
+		this.session = session;
 
 		geometrie();
 		control();
@@ -49,29 +50,9 @@ public class JFramePortSel extends JFrame {
 	/*------------------------------------------------------------------*\
 	|*							Methodes Public						*|
 	\*------------------------------------------------------------------*/
-
-	public void updatePort() {
-		// On vide la liste
-		listPort.clear();
-		listPort = ComConnexion.findAllSerialPort();
-		this.jPanelPortSelAff.refresh(listPort);
+	public void refreshPortAff() {
+		this.jPanelPortSelAff.refresh();
 	}
-
-	public String getSelectedPort() {
-		return this.jPanelPortSelAff.getComboValue();
-	}
-
-	public boolean isConnected() {
-		return this.isConnected;
-	}
-
-	public void setConnected(boolean aState) {
-		this.isConnected = aState;
-		if (aState) {
-			this.setVisible(false);
-		}
-	}
-
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
@@ -79,13 +60,28 @@ public class JFramePortSel extends JFrame {
 	private void control() {
 		setDefaultCloseOperation(HIDE_ON_CLOSE);
 
+		Thread threadOpen = new Thread(new Runnable() {
+
+			@Override
+			public void run() {
+				do {
+					try {
+						Thread.sleep(100);
+					} catch (InterruptedException e) {
+					}
+				} while (!JFramePortSel.this.session.isConnected());
+
+			}
+		});
+
+		threadOpen.start();
 	}
 	private void geometrie() {
 		this.setLayout(new BorderLayout());
 
+		this.jPanelPortSelAff = new JPanelPortSelAff(resourceLang, this.session);
 		this.jPanelPortSelControl = new JPanelPortSelControl(resourceLang,
-				this, comConnexion);
-		this.jPanelPortSelAff = new JPanelPortSelAff(resourceLang);
+				this.jPanelPortSelAff, this.session,this);
 
 		this.add(this.jPanelPortSelAff, BorderLayout.CENTER);
 		this.add(this.jPanelPortSelControl, BorderLayout.SOUTH);
@@ -106,16 +102,12 @@ public class JFramePortSel extends JFrame {
 
 	// Input
 	private ComConnexion comConnexion;
+	private Session session;
 
 	// Tools
-	private String user;
-	private String password;
-
 	private JPanelPortSelControl jPanelPortSelControl;
 	private JPanelPortSelAff jPanelPortSelAff;
 
 	private ResourceBundle resourceLang;
-	private boolean isConnected;
-	private List<String> listPort;
 
 }

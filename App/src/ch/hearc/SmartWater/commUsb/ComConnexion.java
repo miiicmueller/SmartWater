@@ -152,6 +152,18 @@ public class ComConnexion implements ComConnexions_I {
 		this.writer.write(tabByteToSend);
 	}
 
+	public boolean isAnswerAvailable(StringBuilder aAnswer) {
+		String aReponse;
+		try {
+			aReponse = this.reader.readLine();
+			aAnswer.append(aReponse);
+			return true;
+		} catch (IOException e) {
+			// Nothing to read
+			return false;
+		}
+	}
+
 	/*------------------------------*\
 	|*			  Static			*|
 	\*------------------------------*/

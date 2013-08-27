@@ -23,6 +23,7 @@ public class JFrameLogin extends JFrame implements ActionListener {
 	final JTextField text1, text2;
 
 	public JFrameLogin(Session session) {
+		this.session = session;
 		label1 = new JLabel();
 		label1.setText("Username:");
 		text1 = new JTextField(1);
@@ -31,7 +32,7 @@ public class JFrameLogin extends JFrame implements ActionListener {
 		label2.setText("Password:");
 		text2 = new JPasswordField(20);
 
-		SUBMIT = new JButton("SUBMIT");
+		SUBMIT = new JButton("Ok");
 
 		panel = new JPanel(new GridLayout(3, 1));
 		panel.add(label1);
@@ -52,13 +53,12 @@ public class JFrameLogin extends JFrame implements ActionListener {
 	public void actionPerformed(ActionEvent arg0) {
 		String value1 = text1.getText();
 		String value2 = text2.getText();
-		this.session.setUserName(value1);
-		this.session.setUserPassword(value2);
+		this.session.setLogData(value1, value2);
 
 		this.setVisible(false);
 
 	}
-	
+
 	private Session session;
 
 	// User + Password
