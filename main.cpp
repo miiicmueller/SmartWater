@@ -47,10 +47,6 @@ extern "C"
 //OBLIGATOIRE POUR L'USB
 //volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
 
-unsigned int temperature;
-float temp = 0.0;
-char tempToSend[MAX_BUFFERSIZE] = "";
-
 /*
  * ======== main ========
  */
@@ -67,6 +63,7 @@ void main(void)
     iDIO::InitAllPort();
 
     mCpu::configFrequency();
+    __bis_SR_register(GIE);
 
     //attente que l'alim soit stabilisee
     iDIO pGood((char*) kPort_6, BIT4);
@@ -222,6 +219,7 @@ void main(void)
 		}
 	    aDelay_2.startDelayMS(1);
 	    }
+	}
 
 	// On endort le processeur en niveau 3 (voir datasheet page 20)
 

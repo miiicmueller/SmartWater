@@ -18,7 +18,9 @@ public class LabelsBundle extends ListResourceBundle {
 			{"menuComm", new String("Communication")},
 			{"menuCommSel", new String("Select port")},
 			{"menuCommConnect", new String("Connect")},
-
+			{"menuLogin", new String("Login")},
+			{"menuLoginLog", new String("Connect")},
+			
 			// Paramètres
 			{"paramTel1", new String("Tel. Number 1")},
 			{"paramTel2", new String("Tel. Number 2")},

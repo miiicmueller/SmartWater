@@ -22,15 +22,15 @@ public class ComConnexion implements ComConnexions_I {
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 	public ComConnexion() {
-		this.comOption = null;
-		this.portName = "";
-		this.inputTrame = new StringBuilder();
+		this("", null);
 	}
 
 	public ComConnexion(String portName, ComOption comOption) {
 		this.comOption = comOption;
 		this.portName = portName;
 		this.inputTrame = new StringBuilder();
+
+		portOpened = false;
 
 	}
 
@@ -39,6 +39,10 @@ public class ComConnexion implements ComConnexions_I {
 	\*------------------------------------------------------------------*/
 	public void setPortName(String portName) {
 		this.portName = portName;
+	}
+
+	public boolean isPortOpened() {
+		return portOpened;
 	}
 
 	public void setComOption(ComOption comOption) {
@@ -97,6 +101,7 @@ public class ComConnexion implements ComConnexions_I {
 			this.serialPort = (SerialPort) portId.open("SmartWater Station",
 					1000);
 			System.out.println("[ComConnexion]Port successful opened");
+			portOpened = true;
 		} catch (Exception e) {
 			throw new Exception("[ComConnexion]Impossible d'ouvrir le port "
 					+ this.portName + " : " + e.getMessage(), e);
@@ -119,14 +124,19 @@ public class ComConnexion implements ComConnexions_I {
 			stop();
 			// On vide le buffer du port serie
 			// this.serialPort.getInputStream().reset();
-			this.writer.flush();
+			// this.writer.flush();
 
 			// fermeture des flux
-			this.writer.close();
+			// this.writer.close();
+			System.out.println("[ComConnexion]Stopped");
 
 			this.reader.close();
+			System.out.println("[ComConnexion]Reader closed");
 
 			this.serialPort.close();
+
+			System.out.println("[ComConnexion]Serial port closed");
+			portOpened = false;
 		} catch (Exception e) {
 			throw new Exception("[ComConnexion]Impossible de fermer le port "
 					+ this.portName + " : " + e.getMessage(), e);
@@ -140,6 +150,18 @@ public class ComConnexion implements ComConnexions_I {
 			tabByteToSend[i] = (byte) charTab[i];
 		}
 		this.writer.write(tabByteToSend);
+	}
+
+	public boolean isAnswerAvailable(StringBuilder aAnswer) {
+		String aReponse;
+		try {
+			aReponse = this.reader.readLine();
+			aAnswer.append(aReponse);
+			return true;
+		} catch (IOException e) {
+			// Nothing to read
+			return false;
+		}
 	}
 
 	/*------------------------------*\
@@ -214,6 +236,6 @@ public class ComConnexion implements ComConnexions_I {
 
 	private StringBuilder inputTrame; // Une seule instanciation
 
-	private static final double K_FACTOR = 0.5;
+	private boolean portOpened;
 
 }

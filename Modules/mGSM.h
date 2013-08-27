@@ -8,6 +8,7 @@
 #define __MGSM__
 
 #include <string>
+#include <stdio.h>
 #include <assert.h>
 
 #include "Module.h"
@@ -17,6 +18,11 @@
 #include "../Tools/tDate.h"
 #include "mDelay.h"
 
+
+#define kNbFiguresPhone 12
+#define kNbFiguresPin 4
+
+
 typedef enum // choix du compteur
     {
     kOk, //valeur  generale
@@ -25,7 +31,9 @@ typedef enum // choix du compteur
     kErrorEnterPin, // erreurs de parametrage
     kErrorSetModeSms,
     kErrorSetModeText,
+    kErrorEnableServiceData,
     kErrorDeleteAllSms, // erreurs de lecture
+    kErrorGetCredit,
     kErrorReadSms,
     kErrorModePDU, // erreurs d'envoi
     kErrorModeText,
@@ -54,25 +62,32 @@ private:
     static iUART uart;
 
     //tools
-    static tCommandesAT commandesAtGsm; //commandes pour contrï¿½ler le module GSM
+    static tCommandesAT commandesAtGsm; //commandes pour contrôler le module GSM
     UInt16 indexSMS; //index designant le prochaine SMS a devoir etre lu
     mGSMStateEnum state; // etat du module
     static mDelay timeOut;
 
 
     //----------------------------------------------------------------
-    //controle si une reponse recue du GSM et la compare avec deux possibilitï¿½s
+    //controle si une reponse recue du GSM et la compare avec deux possibilités
     //
     //aGoodResponse : bonne reponse, renvoie true
-    //aBadResponse : reponse lorsque la commande s'est mal deroulee, renvoie false
-    //aTimeOutMs : duree en milliseconde durant laquelle la mï¿½thode essaie de trouver correpondance
+    //aBadResponse : mauvaise reponse, renvoie false
+    //aTimeOutMs : duree en milliseconde durant laquelle la méthode essaie de trouver correpondance
     //----------------------------------------------------------------
-    bool mCheckResponse(UInt8* aGoodResponse, UInt16 aTimeOutMs);
+    bool mCheckResponse(char* aGoodResponse, char* aBadResponse, UInt16 aTimeOutMs);
+
+    //----------------------------------------------------------------
+    //envoie le texte SMS sur l'UART en le parsant pour ne pas bourrer le FIFO du module GSM
+    //
+    //aSMS : le SMS à transmettre
+    //----------------------------------------------------------------
+    void mSenderSms(UInt8* aSMS);
 
 public:
 
-    UInt8* phoneNumber; //numero de telephone de la carte SIM. Format : "+417********"
-    UInt8* codePIN;
+    UInt8 phoneNumber[kNbFiguresPhone+1]; //numero de telephone de la carte SIM. Format : "+417********"
+    UInt8 codePIN[kNbFiguresPin+1];
 
     //----------------------------------------------------------------
     //constructeur
@@ -105,13 +120,13 @@ public:
     //aSMS : pointe la variable dans laquelle on veut recuperer le SMS
     //retour : 	true si aSMS contient le SMS, false si tous les SMS ont ete lus
     //----------------------------------------------------------------
-    bool getSMS(UInt8* aSMS);
+    bool getSMS(char* aSMS);
 
     //----------------------------------------------------------------
     //envoi un SMS
     //
     //aSMS : pointe la variable contenant le SMS a envoyer
-    //aPhoneNumber : pointe la varialble contenant le numï¿½ro de telephone
+    //aPhoneNumber : pointe la varialble contenant le numéro de telephone
     //retour : 	true si le SMS a ete envoye
     //----------------------------------------------------------------
     bool sendSMS(UInt8* aSMS, UInt8* aPhoneNumber);
@@ -121,7 +136,7 @@ public:
     //
     //retour :  la date complete
     //----------------------------------------------------------------
-    tDate getHour();
+    tDate getDate();
 
     //----------------------------------------------------------------
     //obtenir le credit restant

@@ -12,6 +12,8 @@ import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+import javax.swing.UIManager;
+import javax.swing.UIManager.LookAndFeelInfo;
 
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
@@ -19,6 +21,8 @@ import javax.swing.JOptionPane;
 import ch.hearc.SmartWater.commUsb.ComConnexion;
 import ch.hearc.SmartWater.commUsb.dialogSel.JFramePortSel;
 import ch.hearc.SmartWater.dataManager.DataManager;
+import ch.hearc.SmartWater.gui.login.JFrameLogin;
+import ch.hearc.SmartWater.gui.login.Session;
 import ch.hearc.SmartWater.lang.JLanguages;
 
 public class JFrameSmartWater extends JFrame {
@@ -39,10 +43,25 @@ public class JFrameSmartWater extends JFrame {
 
 		this.comUSB = new ComConnexion();
 
+		this.session = new Session(this.comUSB);
+
 		geometrie();
 		control();
 		apparence();
 
+	}
+
+	public static void setLookAndFeel() {
+		try {
+			for (LookAndFeelInfo info : UIManager.getInstalledLookAndFeels()) {
+				if ("Nimbus".equals(info.getName())) {
+					UIManager.setLookAndFeel(info.getClassName());
+					break;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
 	}
 
 	/*------------------------------------------------------------------*\
@@ -57,11 +76,11 @@ public class JFrameSmartWater extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				if (JFrameSmartWater.this.jFramePortSel.isConnected()) {
+				if (JFrameSmartWater.this.session.isConnected()) {
 					try {
 						System.out
 								.println("Fermeture + Deconnection de la carte");
-						JFrameSmartWater.this.comUSB.disconnect();
+						JFrameSmartWater.this.session.disconnect();
 					} catch (Exception e1) {
 						e1.printStackTrace();
 						System.exit(-1);
@@ -113,8 +132,77 @@ public class JFrameSmartWater extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				JFrameSmartWater.this.jFramePortSel.updatePort();
+				JFrameSmartWater.this.jFramePortSel.refreshPortAff();
 				JFrameSmartWater.this.jFramePortSel.setVisible(true);
+
+			}
+		});
+
+		this.menuLoginLog.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				JFrameSmartWater.this.jFramLog.setVisible(true);
+			}
+		});
+
+		this.menuCommConnect.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				if (!JFrameSmartWater.this.session.isIdentified()) {
+					JOptionPane jOptionLogErr = new JOptionPane();
+					jOptionLogErr.showConfirmDialog(JFrameSmartWater.this,
+							"Veuillez-vous logger !", "Not Logged",
+							JOptionPane.DEFAULT_OPTION,
+							JOptionPane.ERROR_MESSAGE);
+					JFrameSmartWater.this.jFramLog.setVisible(true);
+				} else {
+					try {
+						switch (JFrameSmartWater.this.session.logIn()) {
+							case 0 :
+								break;
+							case 1 :
+								JOptionPane jOptionTimeoutErr = new JOptionPane();
+								jOptionTimeoutErr
+										.showConfirmDialog(
+												JFrameSmartWater.this,
+												"Vérifiez la connexion à la carte ou le port ",
+												"Timeout",
+												JOptionPane.DEFAULT_OPTION,
+												JOptionPane.ERROR_MESSAGE);
+								break;
+							case 2 :
+								JOptionPane jOptionUserPasswdErr = new JOptionPane();
+								jOptionUserPasswdErr.showConfirmDialog(
+										JFrameSmartWater.this,
+										"User or password incorrect ",
+										"Auth failed",
+										JOptionPane.DEFAULT_OPTION,
+										JOptionPane.ERROR_MESSAGE);
+								JFrameSmartWater.this.jFramLog.setVisible(true);
+								break;
+							case 3 :
+								JOptionPane jOptionConnErr = new JOptionPane();
+								jOptionConnErr.showConfirmDialog(
+										JFrameSmartWater.this,
+										"Aucun port selectionné", "Port error",
+										JOptionPane.DEFAULT_OPTION,
+										JOptionPane.ERROR_MESSAGE);
+								JFrameSmartWater.this.jFramePortSel
+										.refreshPortAff();
+								JFrameSmartWater.this.jFramePortSel
+										.setVisible(true);
+
+								break;
+							default :
+
+						}
+					} catch (Exception e) {
+
+						e.printStackTrace();
+					}
+				}
 			}
 		});
 
@@ -128,11 +216,11 @@ public class JFrameSmartWater extends JFrame {
 								"Confirmation", JOptionPane.YES_NO_OPTION,
 								JOptionPane.QUESTION_MESSAGE);
 				if (reponse == jOptionpane.YES_OPTION) {
-					if (JFrameSmartWater.this.jFramePortSel.isConnected()) {
+					if (JFrameSmartWater.this.session.isConnected()) {
 						try {
 							System.out
 									.println("Fermeture + Deconnection de la carte");
-							JFrameSmartWater.this.comUSB.disconnect();
+							JFrameSmartWater.this.session.disconnect();
 						} catch (Exception e1) {
 							e1.printStackTrace();
 							System.exit(-1);
@@ -143,13 +231,14 @@ public class JFrameSmartWater extends JFrame {
 			}
 		});
 	}
-
 	private void geometrie() {
 		this.setLayout(new BorderLayout());
 		this.menuBar = new MenuBar();
 
 		this.jFramePortSel = new JFramePortSel(this.language.getResBundle(),
-				this.comUSB);
+				this.comUSB, this, this.session);
+
+		this.jFramLog = new JFrameLogin(this.session);
 
 		// Construction du Menu
 		this.menuFichier = new Menu((String) this.language.getResBundle()
@@ -158,6 +247,8 @@ public class JFrameSmartWater extends JFrame {
 				.getObject("menuAbout"));
 		this.menuComm = new Menu((String) this.language.getResBundle()
 				.getObject("menuComm"));
+		this.menuLogin = new Menu((String) this.language.getResBundle()
+				.getObject("menuLogin"));
 
 		// Menu Fichier
 		{
@@ -185,6 +276,14 @@ public class JFrameSmartWater extends JFrame {
 			this.menuComm.add(menuCommConnect);
 
 			this.menuBar.add(menuComm);
+		}
+
+		// Menu login
+		{
+			this.menuLoginLog = new MenuItem((String) this.language
+					.getResBundle().getObject("menuLoginLog"));
+			this.menuLogin.add(menuLoginLog);
+			this.menuBar.add(menuLogin);
 		}
 
 		// Menu About
@@ -217,12 +316,18 @@ public class JFrameSmartWater extends JFrame {
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
+	// User + Password
+	private Session session;
+
 	// Tools
 	private static final String SOFT_VERSION = "v0.1";
 	private JLanguages language;
 
 	private ComConnexion comUSB;
 	private JFramePortSel jFramePortSel;
+
+	// Login
+	private JFrameLogin jFramLog;
 
 	private String userLang;
 	private String userCountry;
@@ -237,6 +342,7 @@ public class JFrameSmartWater extends JFrame {
 	private Menu menuFichier;
 	private Menu menuAbout;
 	private Menu menuComm;
+	private Menu menuLogin;
 
 	// Menu Fichier
 	private MenuItem menuFichierOpen;
@@ -244,6 +350,7 @@ public class JFrameSmartWater extends JFrame {
 	private MenuItem menuFichierExit;
 	private MenuItem menuCommSel;
 	private MenuItem menuCommConnect;
+	private MenuItem menuLoginLog;
 
 	// Menu About
 	private MenuItem menuAboutApropos;

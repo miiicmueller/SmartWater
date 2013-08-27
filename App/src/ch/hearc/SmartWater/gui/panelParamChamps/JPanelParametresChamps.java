@@ -63,16 +63,21 @@ public class JPanelParametresChamps extends JPanel {
 	public void saveParameters() {
 		System.out.println("[JPanelParametresChamps] Sauvegarde en cours");
 		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
-			if (this.jChampsParam[i].getName().equals("paramMode")) {
-				try {
-					this.comConnection.getNamePort();
-					this.comConnection.write("_A_PassAdmin_mode_"
-							+ this.jChampsParam[i].getText() + "_\r\n");
-				} catch (Exception e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+			if (this.jCheckBox[i].isSelected()) {
+				switch (this.jChampsParam[i].getName()) {
+					case "paramMode" :
+						try {
+							this.comConnection.getNamePort();
+							this.comConnection.write("_A_PassAdmin_mode_"
+									+ this.jChampsParam[i].getText() + "_\r\n");
+						} catch (Exception e) {
+							// TODO Auto-generated catch block
+							e.printStackTrace();
+						}
+						break;
 				}
 			}
+
 		}
 	}
 
@@ -148,7 +153,7 @@ public class JPanelParametresChamps extends JPanel {
 	private JCheckBox jCheckBox[];
 	private ComConnexion comConnection;
 
-	private static int DEFAULT_PAR_NUM = 13;
+	private static int DEFAULT_PAR_NUM = 9;
 
 	private Map<String, String> parameters;
 
@@ -156,6 +161,5 @@ public class JPanelParametresChamps extends JPanel {
 
 	private static String[] tableParamName = {"paramTel1", "paramTel2",
 			"paramMode", "paramInter", "paramDispo", "paramMdpU", "paramMdpA",
-			"paramOffsetTemp", "paramUnitName", "paramCompt1", "paramCompt2",
-			"paramMonthLim", "paramMeasureStat"};
+			"paramOffsetTemp", "paramUnitName"};
 }

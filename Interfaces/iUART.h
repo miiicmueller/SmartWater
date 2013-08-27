@@ -75,6 +75,7 @@ private:
 	UInt8 uartBuffer[kSciRecBufReceptionSize];
 	bool isEnabled;
 	bool dataReceived;
+
 	iUARTRecBufStruct USCIRingBuffer;
 
 	//Variable global pour gï¿½rer l'affectations des
@@ -111,6 +112,14 @@ public:
 	bool readFrame(UInt8* string);
 	UInt16 availableCharToRead();
 	bool readFullFrame(UInt8* stringReceived);
+
+	/**
+	 * Fonction permettant d'obtenir les bytes reçus jusqu'au \r\n
+	 *
+	 * aString : chaine resortant la prochaine chaîne de byte reçus en mémoire, jusqu'à un CRLF
+	 * retour : true si une nouvelle chaîne a ete trouvee
+	 */
+	bool readFrameToCRLF(char* string);
 
 };
 #endif
