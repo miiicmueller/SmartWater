@@ -3,9 +3,10 @@
 
 #include "gInput.h"
 
-gInput::gInput()
+gInput::gInput(mGSM* theGSM)
     {
     this->smsTab = NULL;
+    this->theGSM = theGSM;
     }
 
 void gInput::setup()
@@ -45,3 +46,4 @@ tDate gInput::getCurrentTime()
     {
     return this->currentTime;
     }
+

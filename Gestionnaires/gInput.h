@@ -6,6 +6,7 @@
 
 #include "Gestionnaire.h"
 #include "../Tools/tDate.h"
+#include "mGSM.h"
 
 class gInput: public Gestionnaire
     {
@@ -22,11 +23,13 @@ private:
 
     tDate currentTime;
 
+    mGSM* theGSM;
+
 public:
     //----------------------------------------------------------------
     //constructeur
     //----------------------------------------------------------------
-    gInput();
+    gInput(mGSM* theGSM);
 
     int getCounterValue(char counterNb);
 

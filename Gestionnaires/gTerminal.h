@@ -7,6 +7,7 @@
 #include "Gestionnaire.h"
 #include "gInput.h"
 #include "Modules/mUSB.h"
+#include "Tools/tToolsCluster.h"
 
 #define sizeMaxMode		2
 #define sizeMaxMdp		21
@@ -30,13 +31,6 @@ typedef enum
     kTerminalSessionOpen
     } gTerminalStateEnum;
 
-typedef enum
-    {
-    kTerminalClose,
-    kTerminalAdmin,
-    kTerminalUser
-    } gTerminalSessionEnum;
-
 using namespace std;
 
 class gTerminal: public Gestionnaire
@@ -51,15 +45,15 @@ private:
 
     gInput* theGInput;
 
+    tToolsCluster* theTools;
+
     gTerminalCommand aCommand;
 
     gTerminalStateEnum aTerminalState;
 
-    gTerminalSessionEnum aSessionType;
-
     void commandsReceiver();
 
-    void commandsSender(char* aReply);
+    char aReply[100];
 
 public:
     //----------------------------------------------------------------
@@ -67,7 +61,7 @@ public:
     //
     //gInput : le gestionnaire qui contient les entrees
     //----------------------------------------------------------------
-    gTerminal(gInput* theGInput);
+    gTerminal(gInput* theGInput, tToolsCluster* theTools);
 
     void setup();
 

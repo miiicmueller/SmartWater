@@ -1,8 +1,10 @@
+#include "gTerminal.h"
+
 #include <string>
 #include <assert.h>
-
-#include "gTerminal.h"
 #include <stdio.h>
+
+#include "tCommandsAnalyzer.h"
 
 //OBLIGATOIRE POUR L'USB
 volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
@@ -12,10 +14,11 @@ volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received
 //
 //gInput : le gestionnaire qui contient les entrees
 //----------------------------------------------------------------
-gTerminal::gTerminal(gInput* theGInput)
+gTerminal::gTerminal(gInput* theGInput, tToolsCluster* theTools)
     {
     this->theUSB = new mUSB(&bCDCDataReceived_event);
     this->theGInput = theGInput;
+    this->theTools = theTools;
     this->sessionOpen = false;
     this->aCommand.hasCommand = false;
 
@@ -33,7 +36,7 @@ gTerminal::gTerminal(gInput* theGInput)
 void gTerminal::setup()
     {
     this->aTerminalState = kTerminalDisconnected;
-    this->aSessionType = kTerminalClose;
+    this->aReply[0] = '\0';
     }
 
 //----------------------------------------------------------------
@@ -48,7 +51,6 @@ void gTerminal::execute()
     if (!this->theUSB->isConnected())
 	{
 	this->aTerminalState = kTerminalDisconnected;
-	this->aSessionType = kTerminalClose;
 	}
 
     switch (this->aTerminalState)
@@ -60,16 +62,80 @@ void gTerminal::execute()
 	    }
 	break;
     case kTerminalConnected:
-
+	if (this->aCommand.hasCommand)
+	    {
+	    switch (tCommandsAnalyzer::tCommandAnalysis(this->aCommand.theMode,
+		    this->aCommand.theMdp, this->aCommand.theCommand,
+		    this->theTools))
+		{
+	    case kCommandConnect:
+		this->aTerminalState = kTerminalSessionOpen;
+		sprintf(this->aReply, "_OK_\r\n");
+		break;
+	    case kCommandError:
+		sprintf(this->aReply, "_ERROR_\r\n");
+		break;
+	    default:
+		break;
+		}
+	    }
 	break;
     case kTerminalSessionOpen:
+	if (this->aCommand.hasCommand)
+	    {
+	    switch (tCommandsAnalyzer::tCommandAnalysis(this->aCommand.theMode,
+		    this->aCommand.theMdp, this->aCommand.theCommand,
+		    this->theTools))
+		{
+	    case kCommandConnect:
+		sprintf(this->aReply, "_OK_\r\n");
+		break;
+	    case kCommandMah:
+		break;
+	    case kCommandDispo:
+		break;
+	    case kCommandMode:
+		break;
+	    case kCommandOffset:
+		break;
+	    case kCommandAlarme:
+		break;
+	    case kCommandLimites:
+		break;
+	    case kCommandEtat:
+		break;
+	    case kCommandPassu:
+		break;
+	    case kCommandPassa:
+		break;
+	    case kCommandSimulate:
+		break;
+	    case kCommandReset:
+		break;
+	    case kCommandMonths:
+		break;
+	    case kCommandDays:
+		break;
+	    case kCommandErrors:
+		break;
+	    case kCommandError:
+		sprintf(this->aReply, "_ERROR_\r\n");
+		break;
+	    default:
+		break;
+		}
+	    }
 	break;
     default:
 	this->aTerminalState = kTerminalDisconnected;
-	this->aSessionType = kTerminalClose;
 	break;
 	}
 
+    if (this->aReply[0] != '\0')
+	{
+	this->theUSB->sendReply(aReply);
+	this->aReply[0] = '\0';
+	}
     }
 
 //----------------------------------------------------------------
@@ -131,21 +197,13 @@ void gTerminal::commandsReceiver()
 			this->aCommand.theParameters[10],
 			this->aCommand.theParameters[11]);
 
-		if (this->aCommand.parametersNumber >= 2)
+		if (this->aCommand.parametersNumber >= 3)
 		    {
 		    this->aCommand.hasCommand = true;
-		    this->aCommand.parametersNumber -= 2;
+		    this->aCommand.parametersNumber -= 3;
 		    }
 		}
 	    }
 	}
     }
 
-//----------------------------------------------------------------
-//commandsSender()
-//
-//envoie une chaine de caracteres sur l'usb
-//----------------------------------------------------------------
-void gTerminal::commandsSender(char* aReply)
-    {
-    }

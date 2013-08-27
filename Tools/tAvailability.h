@@ -9,8 +9,8 @@
 class tAvailability : public tParameters
 {
 public:
-	UInt16 aInterval;
-	UInt16 aTime;
+	UInt16 aIntervalMn;
+	UInt16 aTimeMn;
 
 	tAvailability(mEEPROM *mEeprom,UInt16 aModeNum);
 	void save();

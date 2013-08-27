@@ -68,21 +68,36 @@ void main(void)
 
     mCpu::configFrequency();
 
-    __bis_SR_register(GIE);
+    //attente que l'alim soit stabilisee
+    iDIO pGood((char*) kPort_6, BIT4);
+    pGood.SetPortDirection(kInput);
 
-    gInput theGInput;
-    gCompute theGCompute(&theGInput);
-    gOutput theGOutput(&theGCompute);
+    while (pGood.read() == 0)
+	{
+	}
+
+    __bis_SR_register(GIE);
 
     mDelay::mSetup();
     mDelay::mOpen();
 
-    /*iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
-     UInt16 moduleAddress = 0x50;
-     mEEPROM aEEPROM(moduleAddress, &i2cBus);
-     mCompteur aCompteur(kMeterSimulation, &aEEPROM);*/
+    mGSM theGSM;
+    theGSM.mSetup();
+    theGSM.mOpen();
 
-    gTerminal theTerminalUSB(&theGInput);
+    gInput theGInput(&theGSM);
+    gCompute theGCompute(&theGInput);
+    gOutput theGOutput(&theGCompute);
+
+    iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
+    UInt16 moduleAddress = 0x50;
+    mEEPROM aEEPROM(moduleAddress, &i2cBus);
+    aEEPROM.mOpen();
+    // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
+
+    tToolsCluster theTools(&aEEPROM);
+
+    gTerminal theTerminalUSB(&theGInput, &theTools);
 
     mDelay aDelay;
 
