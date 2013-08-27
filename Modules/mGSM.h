@@ -63,7 +63,7 @@ private:
 
     //tools
     static tCommandesAT commandesAtGsm; //commandes pour contrôler le module GSM
-    int indexSMS; //index designant le prochaine SMS a devoir etre lu
+    UInt16 indexSMS; //index designant le prochaine SMS a devoir etre lu
     mGSMStateEnum state; // etat du module
     static mDelay timeOut;
 

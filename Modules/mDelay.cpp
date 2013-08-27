@@ -36,7 +36,7 @@ void mDelay::mSetup()
     }
 
 //méthodes
-void mDelay::startDelay(int aTimeMs)
+void mDelay::startDelay(UInt32 aTimeMs)
     {
     if (this->disponibility == true)
 	{

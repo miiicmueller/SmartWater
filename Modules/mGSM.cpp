@@ -5,12 +5,12 @@
 //*****************************************************************************
 
 #define kTimeToEnableIo 2000
-#define kTimeOutResponse 10000
+#define kTimeOutResponse 3000 //TODO mettre a 10sec
 #define kTimeOutSendSms 30000 //TODO a changer en 70000
 #define kWaitCommand 4000
 #define kWaitSendSms 200
 #define kSizeStringDate 17
-#define kSizeParseSms 40
+#define kSizeParseSms 50
 
 #include "mGSM.h"
 #include "Def/def.h"
@@ -69,6 +69,18 @@ void mGSM::mOpen()
     mGSM::uart.clearInternalSerialBuffer(); //efface le buffer
     mGSM::uart.clearReceptionBuffer();
 
+//    //ralentit al vitesse de communication
+//    mGSM::uart.sendString(mGSM::commandesAtGsm.configBaud9600);
+//    mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
+//    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
+//    while (!mGSM::timeOut.isDone())
+//	;
+//    mGSM::uart.config(kLSBFirst, k1StBits, kNone, k8bits, k9600);
+//    mGSM::uart.enable();
+//    mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
+//    while (!mGSM::timeOut.isDone())
+//	;
+
     //enable mode sms
     mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
     while (!mGSM::timeOut.isDone())
@@ -85,7 +97,7 @@ void mGSM::mOpen()
 	this->state = kErrorSetModeSms;
 	}
 
-    mGSM::uart.clearInternalSerialBuffer();
+    mGSM::uart.clearReceptionBuffer();
     mGSM::timeOut.startDelay(kWaitCommand); // attend avant commande
     while (!mGSM::timeOut.isDone())
 	;
@@ -93,10 +105,6 @@ void mGSM::mOpen()
     //controle si la carte SIM est deja delockee
     mGSM::uart.sendString(mGSM::commandesAtGsm.questStatePIN);
     mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
-
-    mGSM::timeOut.startDelay(5000); // attend avant commande
-    while (!mGSM::timeOut.isDone())
-	;
 
     aIsOk = mCheckResponse("+CPIN: READY", "+CPIN: SIM PIN", kTimeOutResponse); //test la reponse
 
@@ -107,14 +115,9 @@ void mGSM::mOpen()
 	while (!mGSM::timeOut.isDone())
 	    ;
 
-	mGSM::uart.clearInternalSerialBuffer();
+	mGSM::uart.clearReceptionBuffer();
 	mGSM::uart.sendString(mGSM::commandesAtGsm.delockPIN);
-
-	for (i = 0; i < 4; i++) // TODO a changer
-	    {
-	    mGSM::uart.write(this->codePIN[i]);
-	    }
-
+	mGSM::uart.sendString((char*)this->codePIN);
 	mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 	aIsOk = mCheckResponse("OK", "ERROR", kTimeOutResponse); //test la reponse
 
@@ -130,7 +133,7 @@ void mGSM::mOpen()
     while (!mGSM::timeOut.isDone())
 	;
 
-    mGSM::uart.clearInternalSerialBuffer();
+    mGSM::uart.clearReceptionBuffer();
     mGSM::uart.sendString(mGSM::commandesAtGsm.setModeText);
     mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
     aIsOk = mCheckResponse("OK", "ERROR", kTimeOutResponse); //test la reponse
@@ -146,7 +149,7 @@ void mGSM::mOpen()
     while (!mGSM::timeOut.isDone())
 	;
 
-    mGSM::uart.clearInternalSerialBuffer();
+    mGSM::uart.clearReceptionBuffer();
     mGSM::uart.sendString(mGSM::commandesAtGsm.enableServiceData);
     mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 
@@ -186,9 +189,11 @@ void mGSM::mClose()
 bool mGSM::getSMS(char* aSMS)
     {
     char aDataReceived[kSciRecBufReceptionSize ] = ""; // data recues du buffer
-    bool aIsOk = false;
     UInt8 aTemp; //variable intermediaire de retour du sscanf
-    bool aRet; //variable de retour
+    bool aIsOk=false; //variable de retour
+    bool aIsError=false; //variable de retour
+    bool aRet=false; //variable de retour
+
 
     // demande le prochain SMS
     mGSM::uart.clearInternalSerialBuffer(); //efface buffer
@@ -198,35 +203,13 @@ bool mGSM::getSMS(char* aSMS)
     while (!mGSM::timeOut.isDone())
 	;
 
+    //sequence de commande
     mGSM::uart.sendString(mGSM::commandesAtGsm.getSMS);
     mGSM::uart.write((char) (indexSMS + 48));
     mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 
     mGSM::timeOut.startDelay(kTimeOutResponse);
-    while (!mGSM::uart.readFrameToCRLF(aDataReceived) && !mGSM::timeOut.isDone())
-	; //attend premiere partie (echo de la commande : non-interessant)
-
-    if (mGSM::timeOut.isDone()) //erreur
-	{
-	this->state = kErrorReadSms;
-	aRet = false;
-	}
-
-    for (int i = 0; 0 != aDataReceived[i] && i < kSciRecBufReceptionSize ; i++)
-	{
-	aDataReceived[i] = 0; //efface la premiere partie
-	}
-
-    mGSM::timeOut.startDelay(kTimeOutResponse);
-    while (!mGSM::uart.readFrameToCRLF(aDataReceived) && !mGSM::timeOut.isDone())
-	; //attend deuxieme partie
-
-    if (mGSM::timeOut.isDone())
-	{
-	this->state = kErrorReadSms;
-	aRet = false;
-	}
-    else
+    while ((!mGSM::uart.readFrameToCRLF(aDataReceived)) && (!mGSM::timeOut.isDone()) && (!aIsError) && (!aIsOk))
 	{
 	aTemp = strcmp(aDataReceived, "OK");
 	if (0 == aTemp) //pas de SMS a lire
@@ -236,7 +219,6 @@ bool mGSM::getSMS(char* aSMS)
 	    //ne pas tout effacer durant les tests
 	    //ne pas tout effacer durant les tests
 
-	    //mGSM::uart.clearInternalSerialBuffer(); //efface le buffer
 	    //uartGSM->sendString(commandesATGSM->deleteSMSAll); // efface tous SMS
 	    //uartGSM->sendString(commandesATGSM->endAT);
 	    //aIsOk=mCheckResponse("OK", "ERROR", kTimeOutResponse); //test la reponse
@@ -247,7 +229,7 @@ bool mGSM::getSMS(char* aSMS)
 		this->state = kErrorDeleteAllSms;
 		}
 
-	    aRet = false;
+	    aIsError = true;
 	    }
 
 	else
@@ -257,25 +239,37 @@ bool mGSM::getSMS(char* aSMS)
 		{
 		this->state = kErrorReadSms;
 
-		aRet = false;
+		aIsError = true; //ici TODO
 		}
 	    else //message present
 		{
-		while (!mGSM::uart.readFrameToCRLF(aDataReceived))
-		    ; //lit le message
-
-		for (int i = 0;
-			aDataReceived[i] != 0 && i < kSciRecBufReceptionSize ;
-			i++)
+		if ('+' == aDataReceived[0] && 'C' == aDataReceived[1]
+			&& 'M' == aDataReceived[2] && ':' == aDataReceived[5]) //controle le debut de l'entete
 		    {
-		    aSMS[i] = aDataReceived[i]; // copie le SMS
+		    mGSM::timeOut.startDelay(kTimeOutResponse);
+		    while (!mGSM::uart.readFrameToCRLF(aDataReceived)
+			    && !mGSM::timeOut.isDone())
+			; //lit le message
+
+		    if (mGSM::timeOut.isDone())
+			{
+			this->state = kErrorReadSms;
+			aRet = false;
+			}
+		    else
+			{
+			strcpy(aSMS, aDataReceived); // copie du SMS (il ne peut y avoir qu'une seule ligne)
+			this->indexSMS++;
+			aRet = true;
+			}
 		    }
-
-		this->indexSMS++;
-
-		aRet = true;
 		}
 	    }
+	}
+    if (mGSM::timeOut.isDone())
+	{
+	this->state = kErrorReadSms;
+	aRet = false;
 	}
 
     return aRet;
@@ -383,7 +377,7 @@ bool mGSM::sendSMS(char* aSMS, char* aPhoneNumber)
 	mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 	mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 	this->state = kErrorSendSmsTimeOut;
-	aIsOk=false;
+	aIsOk = false;
 	}
 
     return aIsOk;
@@ -507,35 +501,56 @@ UInt16 mGSM::getCredit()
     mGSM::uart.sendString(mGSM::commandesAtGsm.getCredit);
     mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 
-    aIsOk = mCheckResponse("ATD \*130#", "ERROR", kTimeOutResponse); //test la reponse
-
-    if (!aIsOk)
+    mGSM::timeOut.startDelay(kTimeOutResponse);
+    while (!aIsOk && !mGSM::timeOut.isDone()) // cherche la deuxieme partie
 	{
-	this->state = kErrorGetCredit;
+	if (mGSM::uart.readFrameToCRLF(aDataReceived))
+	    {
+	    if ('+' == aDataReceived[0] && 'C' == aDataReceived[1]
+		    && 'U' == aDataReceived[2] && 'S' == aDataReceived[3]
+		    && 'D' == aDataReceived[4])
+		{
+		aIsOk = true;
+		}
+	    }
 	}
 
-    mGSM::timeOut.startDelay(kTimeOutResponse);
-    while (!mGSM::uart.readFrameToCRLF(aDataReceived) && !mGSM::timeOut.isDone())
-	; //attend deuxieme partie
-
-    if (!mGSM::timeOut.isDone())
+    if (aIsOk)
 	{
-	mGSM::timeOut.startDelay(kTimeOutResponse);
-	while (!(aDataReceived[i] <= 57 && aDataReceived[i] >= 48
-		&& (aDataReceived[i + 1] == '.' || aDataReceived[i + 1] == ',')
-		&& aDataReceived[i + 2] <= 57 && aDataReceived[i + 2] >= 48)
-		&& i < kSciRecBufSize - 2 && !mGSM::timeOut.isDone()) //cherche le montant dans la chaine de la forme x.x ou x,x
+	aIsOk = false;
+	while (!aIsOk && i < kSciRecBufSize - 2)
 	    {
-	    i++;
+	    if (aDataReceived[i] <= 57 && aDataReceived[i] >= 48
+		    && (aDataReceived[i + 1] == '.'
+			    || aDataReceived[i + 1] == ',')
+		    && aDataReceived[i + 2] <= 57 && aDataReceived[i + 2] >= 48) //cherche le montant dans la chaine de la forme x.x ou x,x
+		{
+		aIsOk = true;
+		}
+	    else
+		{
+		i++;
+		}
 	    }
 
-	if (aDataReceived[i - 1] <= 57 && aDataReceived[i - 1] >= 48)
+	if (aIsOk)
 	    {
-	    aCredit = (aDataReceived[i - 1] - 48) * 1000; // ajoute les dizaines de franc
+	    if (aDataReceived[i - 1] <= 57 && aDataReceived[i - 1] >= 48)
+		{
+		aCredit = (aDataReceived[i - 1] - 48) * 1000; // ajoute les dizaines de franc
+		}
+	    aCredit += (aDataReceived[i] - 48) * 100
+		    + (aDataReceived[i + 2] - 48) * 10
+		    + (aDataReceived[i + 3] - 48) * 1; // ajoute le reste
 	    }
-	aCredit += (aDataReceived[i] - 48) * 100
-		+ (aDataReceived[i + 2] - 48) * 10
-		+ (aDataReceived[i + 3] - 48) * 1; // ajoute le reste
+	else
+	    {
+	    this->state = kErrorGetCredit;
+	    }
+	}
+    else
+	{
+	this->state = kErrorGetCredit;
 	}
 
     return aCredit;
@@ -553,14 +568,14 @@ bool mGSM::mCheckResponse(char* aGoodResponse, char* aBadResponse,
     {
     char aAnswer[kSciRecBufReceptionSize ] = "";
     bool aTemp; // variable temporaire de recuperation de retour de fonction
-    UInt16 aTemp2;
-    bool aIsOk=false;
-    bool aIsError=false;
+    int aTemp2 = 1;
+    bool aIsOk = false;
+    bool aIsError = false;
 
     mGSM::timeOut.startDelay(aTimeOutMs);
-
     while (!mGSM::timeOut.isDone() && !aIsOk && !aIsError) //lit le message
 	{
+	aTemp = false;
 	aTemp = mGSM::uart.readFrameToCRLF(aAnswer);
 	if (true == aTemp)
 	    {

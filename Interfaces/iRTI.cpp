@@ -92,6 +92,6 @@ __interrupt void INT_TIMER_A_1(void)
 	i++;
 	}
 
-    i=(TA0IV);//reset du flag d'interruption en lisant TA0IV
+    i = (TA0IV); //reset du flag d'interruption en lisant TA0IV
     }
 
