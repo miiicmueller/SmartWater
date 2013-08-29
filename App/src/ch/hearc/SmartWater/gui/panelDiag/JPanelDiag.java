@@ -1,16 +1,15 @@
-package ch.hearc.SmartWater.gui.panelGraphJour;
+package ch.hearc.SmartWater.gui.panelDiag;
 
-import java.awt.BorderLayout;
 import java.util.ResourceBundle;
 
 import javax.swing.JPanel;
 
-public class JPanelComsomJour extends JPanel {
+public class JPanelDiag  extends JPanel {
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelComsomJour(ResourceBundle resourceLang) {
+	public JPanelDiag(ResourceBundle resourceLang) {
 		this.resourceLang = resourceLang;
 
 		geometrie();
@@ -35,26 +34,15 @@ public class JPanelComsomJour extends JPanel {
 	}
 
 	private void geometrie() {
-
-		this.setLayout(new BorderLayout());
-
-		this.jPanelChartJour = new JPanelChartJour(resourceLang);
-		this.jPanelChartJourControl = new JPanelChartJourControl(resourceLang);
-
-		this.add(this.jPanelChartJour, BorderLayout.CENTER);
-		this.add(this.jPanelChartJourControl, BorderLayout.SOUTH);
-
+	
 	}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
-
-	// Input
+	
+	// Tools
 	private ResourceBundle resourceLang;
 
-	// Tools
-	private JPanelChartJour jPanelChartJour;
-	private JPanelChartJourControl jPanelChartJourControl;
 
 }

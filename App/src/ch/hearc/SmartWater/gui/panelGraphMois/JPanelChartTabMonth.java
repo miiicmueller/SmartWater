@@ -79,27 +79,20 @@ public class JPanelChartTabMonth extends JPanel {
 	|*				Set				*|
 	\*------------------------------*/
 
-	/*------------------------------------------------------------------*\
-	|*							Methodes Private						*|
-	\*------------------------------------------------------------------*/
-
-	private void apparence() {
+	public void updateGraph(int[] MonthConsum, int[] MonthLim) {
+		this.monthConsom = MonthConsum;
+		updateGraphLim(MonthLim);
 
 	}
 
-	private void controle() {
-		// Rien
-	}
-
-	private void geometrie() {
-		BorderLayout bl = new BorderLayout();
-		this.setLayout(bl);
-
-		this.jPanelControlChart = new JPanelControlChart(resourceLang);
+	public void updateGraphLim(int[] MonthLim) {
 
 		CategoryDataset donneeGraph = getGraphDataSet(this.monthConsom,
-				this.monthLim);
+				MonthLim);
+		this.chartConsommation.getCategoryPlot().setDataset(donneeGraph);
+	}
 
+	public void createGraph(CategoryDataset donneeGraph) {
 		// Construction du graph
 		this.chartConsommation = ChartFactory.createBarChart(
 				(String) this.resourceLang.getObject("graphConsTit"), // chart
@@ -122,13 +115,13 @@ public class JPanelChartTabMonth extends JPanel {
 		plot.setBackgroundPaint(new Color(0xEE, 0xEE, 0xFF));
 		plot.setDomainAxisLocation(AxisLocation.BOTTOM_OR_RIGHT);
 		ValueAxis yAxis = plot.getRangeAxis();
-		yAxis.setRange(0, 50);
+		yAxis.setRange(0, MAX_CONSOM_SIZE);
 		yAxis.setAutoRange(false);
 		yAxis.setMinorTickCount(100);
 		yAxis.setAutoRangeMinimumSize(100, true);
 
 		// add the chart to a panel...
-		final ChartPanel chartPanel = new ChartPanel(chartConsommation);
+		this.chartPanel = new ChartPanel(chartConsommation);
 		chartPanel.setPreferredSize(new java.awt.Dimension(MIN_HEIGHT,
 				MIN_WIDTH));
 
@@ -140,7 +133,30 @@ public class JPanelChartTabMonth extends JPanel {
 
 		this.add(chartPanel, BorderLayout.CENTER);
 		this.add(jPanelControlChart, BorderLayout.SOUTH);
+	}
 
+	/*------------------------------------------------------------------*\
+	|*							Methodes Private						*|
+	\*------------------------------------------------------------------*/
+
+	private void apparence() {
+
+	}
+
+	private void controle() {
+		// Rien
+	}
+
+	private void geometrie() {
+		BorderLayout bl = new BorderLayout();
+		this.setLayout(bl);
+
+		this.jPanelControlChart = new JPanelControlChart(resourceLang);
+
+		CategoryDataset donneeGraph = getGraphDataSet(this.monthConsom,
+				this.monthLim);
+
+		this.createGraph(donneeGraph);
 	}
 
 	private void initDataGraph() {
@@ -154,6 +170,10 @@ public class JPanelChartTabMonth extends JPanel {
 
 		final DefaultCategoryDataset setData = new DefaultCategoryDataset();
 
+		for (int i = 0; i < MonthConsum.length; i++) {
+			this.monthLim[i] = MonthLim[i];
+			this.monthConsom[i] = MonthConsum[i];
+		}
 		// Limites du mois
 		setData.addValue(this.monthLim[0], this.limiteMois, this.graphMoisJanv);
 		setData.addValue(this.monthLim[1], this.limiteMois, this.graphMoisFev);
@@ -208,6 +228,7 @@ public class JPanelChartTabMonth extends JPanel {
 	// Panel de contrôle
 	private JPanelControlChart jPanelControlChart;
 	private JFreeChart chartConsommation;
+	private ChartPanel chartPanel;
 
 	// Séries
 	private String consomMois;
@@ -233,5 +254,6 @@ public class JPanelChartTabMonth extends JPanel {
 
 	private final int MIN_HEIGHT = 600;
 	private final int MIN_WIDTH = 600;
+	private final int MAX_CONSOM_SIZE = 5000;
 
 }

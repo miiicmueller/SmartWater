@@ -12,8 +12,11 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import ch.hearc.SmartWater.commUsb.ComConnexion;
+import ch.hearc.SmartWater.gui.login.Session;
 import ch.hearc.SmartWater.gui.panelCompteur.JPanelCompteurs;
+import ch.hearc.SmartWater.gui.panelDiag.JPanelDiag;
 import ch.hearc.SmartWater.gui.panelGraphJour.JPanelComsomJour;
+import ch.hearc.SmartWater.gui.panelGraphMois.JPanelChartTabMonthParam;
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelConsomMois;
 import ch.hearc.SmartWater.gui.panelParamChamps.JPanelParametres;
 
@@ -23,11 +26,11 @@ public class JPanelPrincipal extends JPanel {
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 	public JPanelPrincipal(Map<String, String> parameters,
-			ResourceBundle resourceLang, ComConnexion comConnection) {
+			ResourceBundle resourceLang, Session session) {
 
 		this.parameters = parameters;
 		this.resourceLang = resourceLang;
-		this.comConnection = comConnection;
+		this.session = session;
 
 		this.tabPAram = (String) this.resourceLang.getObject("tabPAram");
 		this.tabSimu = (String) this.resourceLang.getObject("tabSimu");
@@ -51,6 +54,11 @@ public class JPanelPrincipal extends JPanel {
 
 	public JPanelParametres getJPanelParam() {
 		return this.jPanelParametres;
+	}
+	
+	public JPanelChartTabMonthParam getJPanelChartTabMonthParam()
+	{
+		return this.jPanelConsomMois.getJPanelChartTabMonthParam();
 	}
 
 	/*------------------------------------------------------------------*\
@@ -86,10 +94,12 @@ public class JPanelPrincipal extends JPanel {
 
 		// Construction des panels
 		this.jPanelParametres = new JPanelParametres(this.parameters,
-				this.resourceLang,this.comConnection);
-		this.jPanelConsomMois = new JPanelConsomMois(resourceLang);
+				this.resourceLang, this.session);
+		this.jPanelConsomMois = new JPanelConsomMois(resourceLang,
+				this.parameters);
 		this.jPanelComsomJour = new JPanelComsomJour(resourceLang);
 		this.jPanelCompteurs = new JPanelCompteurs(resourceLang);
+		this.jPanelDiag = new JPanelDiag(resourceLang);
 
 		this.add(ongletPrincipaux, BorderLayout.CENTER);
 
@@ -101,6 +111,7 @@ public class JPanelPrincipal extends JPanel {
 		this.ongletPrincipaux.addTab(this.tabConsoMois, this.jPanelConsomMois);
 		this.ongletPrincipaux.addTab(this.tabConsoJour, this.jPanelComsomJour);
 		this.ongletPrincipaux.addTab(this.tabCompt, this.jPanelCompteurs);
+		this.ongletPrincipaux.addTab("Diagnostic", this.jPanelDiag);
 
 	}
 
@@ -109,13 +120,14 @@ public class JPanelPrincipal extends JPanel {
 	\*------------------------------------------------------------------*/
 
 	// Input
-	private ComConnexion comConnection;
+	private Session session;
 	// Tools
 	private JTabbedPane ongletPrincipaux;
 	private JPanelParametres jPanelParametres;
 	private JPanelConsomMois jPanelConsomMois;
 	private JPanelComsomJour jPanelComsomJour;
 	private JPanelCompteurs jPanelCompteurs;
+	private JPanelDiag jPanelDiag;
 
 	private Map<String, String> parameters;
 	private ResourceBundle resourceLang;

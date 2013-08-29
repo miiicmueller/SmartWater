@@ -1,17 +1,16 @@
 package ch.hearc.SmartWater.gui.panelGraphJour;
 
-import java.awt.BorderLayout;
+import java.awt.FlowLayout;
 import java.util.ResourceBundle;
 
+import javax.swing.JButton;
 import javax.swing.JPanel;
 
-public class JPanelComsomJour extends JPanel {
+public class JPanelChartJourControl extends JPanel {
 
-	/*------------------------------------------------------------------*\
-	|*							Constructeurs							*|
-	\*------------------------------------------------------------------*/
-	public JPanelComsomJour(ResourceBundle resourceLang) {
+	public JPanelChartJourControl(ResourceBundle resourceLang) {
 		this.resourceLang = resourceLang;
+		
 
 		geometrie();
 		controle();
@@ -36,14 +35,12 @@ public class JPanelComsomJour extends JPanel {
 
 	private void geometrie() {
 
-		this.setLayout(new BorderLayout());
+		this.setLayout(new FlowLayout(FlowLayout.CENTER));
 
-		this.jPanelChartJour = new JPanelChartJour(resourceLang);
-		this.jPanelChartJourControl = new JPanelChartJourControl(resourceLang);
+		this.buttonGetConsomm = new JButton(
+				(String) resourceLang.getObject("buttonGetConsomm"));
 
-		this.add(this.jPanelChartJour, BorderLayout.CENTER);
-		this.add(this.jPanelChartJourControl, BorderLayout.SOUTH);
-
+		this.add(buttonGetConsomm);
 	}
 
 	/*------------------------------------------------------------------*\
@@ -54,7 +51,6 @@ public class JPanelComsomJour extends JPanel {
 	private ResourceBundle resourceLang;
 
 	// Tools
-	private JPanelChartJour jPanelChartJour;
-	private JPanelChartJourControl jPanelChartJourControl;
+	private JButton buttonGetConsomm;
 
 }

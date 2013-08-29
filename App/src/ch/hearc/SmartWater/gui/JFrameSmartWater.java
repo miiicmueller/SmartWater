@@ -1,6 +1,7 @@
 package ch.hearc.SmartWater.gui;
 
 import java.awt.BorderLayout;
+import java.awt.Color;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
@@ -37,7 +38,7 @@ public class JFrameSmartWater extends JFrame {
 		this.parametres = new TreeMap<String, String>();
 
 		this.userCountry = System.getProperty("user.country");
-		this.userLang = "de";// System.getProperty("user.language");
+		this.userLang = System.getProperty("user.language");
 
 		this.language = new JLanguages(new Locale(this.userLang));
 
@@ -76,17 +77,9 @@ public class JFrameSmartWater extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				if (JFrameSmartWater.this.session.isConnected()) {
-					try {
-						System.out
-								.println("Fermeture + Deconnection de la carte");
-						JFrameSmartWater.this.session.disconnect();
-					} catch (Exception e1) {
-						e1.printStackTrace();
-						System.exit(-1);
-					}
-				}
+				exitSoftware();
 				JFrameSmartWater.this.dispose();
+				System.exit(0);
 			}
 		});
 
@@ -97,12 +90,10 @@ public class JFrameSmartWater extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 				// Appel de la classes enregistrement des
 				// paramètres
-				parametres.put("NumAlarme", "+417981838565");
-				parametres.put("Mode", "4");
-				parametres.put("PasswdRoot", "toto");
-				parametres.put("PasswdUser", "tata");
-
 				try {
+					// Sauvegarde des limites
+					JFrameSmartWater.this.jPanelPrincipal
+							.getJPanelChartTabMonthParam().saveLimits();
 					JFrameSmartWater.this.dataManager.saveFile(parametres);
 				} catch (IOException e) {
 				}
@@ -116,12 +107,16 @@ public class JFrameSmartWater extends JFrame {
 			public void actionPerformed(ActionEvent event) {
 				// Appel de la classes enregistrement des
 				// paramètres
-				Map<String, String> parametres = null;
+				// Map<String, String> parametres = null;
 
 				try {
-					JFrameSmartWater.this.dataManager.openFile(parametres);
+					JFrameSmartWater.this.dataManager
+							.openFile(JFrameSmartWater.this.parametres);
 					JFrameSmartWater.this.jPanelPrincipal.getJPanelParam()
 							.updateParams();
+					// Ouverture des limites des limites
+					JFrameSmartWater.this.jPanelPrincipal
+							.getJPanelChartTabMonthParam().updateLimits();
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -150,6 +145,7 @@ public class JFrameSmartWater extends JFrame {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
+				// Si on n'a pas entré de nom d'utilisateur
 				if (!JFrameSmartWater.this.session.isIdentified()) {
 					JOptionPane jOptionLogErr = new JOptionPane();
 					jOptionLogErr.showConfirmDialog(JFrameSmartWater.this,
@@ -157,10 +153,33 @@ public class JFrameSmartWater extends JFrame {
 							JOptionPane.DEFAULT_OPTION,
 							JOptionPane.ERROR_MESSAGE);
 					JFrameSmartWater.this.jFramLog.setVisible(true);
+					// Si on n'est déja connecté c'est que l'on veut se
+					// déconnecter
+				} else if (JFrameSmartWater.this.session.isLogged()) {
+					JOptionPane jOptionLogErr = new JOptionPane();
+					jOptionLogErr.showConfirmDialog(JFrameSmartWater.this,
+							"Vous êtes déja loggé !", " Déja Loggé",
+							JOptionPane.DEFAULT_OPTION,
+							JOptionPane.ERROR_MESSAGE);
+					JFrameSmartWater.this.menuCommConnect
+							.setLabel("Disconnect");
 				} else {
 					try {
 						switch (JFrameSmartWater.this.session.logIn()) {
 							case 0 :
+								JOptionPane jOptionLogOk = new JOptionPane();
+								jOptionLogOk.showConfirmDialog(
+										JFrameSmartWater.this,
+										"Connexion successful !",
+										"Log success",
+										JOptionPane.DEFAULT_OPTION,
+										JOptionPane.INFORMATION_MESSAGE);
+								JFrameSmartWater.this.session.logOut();
+								// Changement en bouton de déconnexion
+								JFrameSmartWater.this.menuCommConnect
+										.setLabel((String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"menuCommConnect"));
 								break;
 							case 1 :
 								JOptionPane jOptionTimeoutErr = new JOptionPane();
@@ -195,6 +214,18 @@ public class JFrameSmartWater extends JFrame {
 										.setVisible(true);
 
 								break;
+							case 4 :
+								JOptionPane jOptionUnkErr = new JOptionPane();
+								jOptionUnkErr.showConfirmDialog(
+										JFrameSmartWater.this, "Unknow Error",
+										"Error", JOptionPane.DEFAULT_OPTION,
+										JOptionPane.ERROR_MESSAGE);
+								JFrameSmartWater.this.jFramePortSel
+										.refreshPortAff();
+								JFrameSmartWater.this.jFramePortSel
+										.setVisible(true);
+
+								break;
 							default :
 
 						}
@@ -216,16 +247,7 @@ public class JFrameSmartWater extends JFrame {
 								"Confirmation", JOptionPane.YES_NO_OPTION,
 								JOptionPane.QUESTION_MESSAGE);
 				if (reponse == jOptionpane.YES_OPTION) {
-					if (JFrameSmartWater.this.session.isConnected()) {
-						try {
-							System.out
-									.println("Fermeture + Deconnection de la carte");
-							JFrameSmartWater.this.session.disconnect();
-						} catch (Exception e1) {
-							e1.printStackTrace();
-							System.exit(-1);
-						}
-					}
+					JFrameSmartWater.this.exitSoftware();
 					JFrameSmartWater.this.dispose();
 				}
 			}
@@ -296,7 +318,7 @@ public class JFrameSmartWater extends JFrame {
 		}
 
 		this.jPanelPrincipal = new JPanelPrincipal(this.parametres,
-				this.language.getResBundle(), this.comUSB);
+				this.language.getResBundle(), this.session);
 
 		this.setMenuBar(menuBar);
 		this.add(jPanelPrincipal, BorderLayout.CENTER);
@@ -307,6 +329,7 @@ public class JFrameSmartWater extends JFrame {
 		setTitle("SmartWater " + SOFT_VERSION);
 		setLocation(30, 30);
 		setResizable(true);
+		this.setBackground(Color.GRAY);
 
 		// Display the window.
 		this.setVisible(true);
@@ -315,6 +338,20 @@ public class JFrameSmartWater extends JFrame {
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
+
+	private void exitSoftware() {
+		if (JFrameSmartWater.this.session.isConnected()) {
+			try {
+				if (JFrameSmartWater.this.session.isLogged()) {
+					JFrameSmartWater.this.session.logOut();
+				}
+				JFrameSmartWater.this.session.disconnect();
+			} catch (Exception e1) {
+				e1.printStackTrace();
+				System.exit(-1);
+			}
+		}
+	}
 
 	// User + Password
 	private Session session;

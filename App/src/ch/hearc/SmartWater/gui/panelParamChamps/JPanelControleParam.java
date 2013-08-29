@@ -8,6 +8,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
+import javax.swing.JCheckBox;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
@@ -21,10 +22,11 @@ public class JPanelControleParam extends JPanel {
 	/*------------------------------------------------------------------*\
 	 |*							Constructeurs							*|
 	 \*------------------------------------------------------------------*/
-	public JPanelControleParam(ResourceBundle resourceLang, JPanelParametres jPanelParametres) {
+	public JPanelControleParam(ResourceBundle resourceLang,
+			JPanelParametresChamps JPanelParametresChamps) {
 
 		this.resourceLang = resourceLang;
-		this.jPanelParametres = jPanelParametres;
+		this.JPanelParametresChamps = JPanelParametresChamps;
 
 		geometrie();
 		controle();
@@ -40,32 +42,53 @@ public class JPanelControleParam extends JPanel {
 	 \*------------------------------------------------------------------*/
 
 	private void apparence() {
-		
-		this.buttonSave.addActionListener(new ActionListener() {
-			
-			@Override
-			public void actionPerformed(ActionEvent event) {
-				System.out.println("[JPanelControleParam] Btn save pressé");
-				JPanelControleParam.this.jPanelParametres.saveParams();
-			}
-		});
 
 	}
 
 	private void controle() {
+		this.buttonSave.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				JPanelControleParam.this.JPanelParametresChamps
+						.saveParameters();
+			}
+		});
+
+		this.buttonRead.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				JPanelControleParam.this.JPanelParametresChamps
+						.readParameters();
+			}
+		});
+
+		this.chBtnAll.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				JPanelControleParam.this.JPanelParametresChamps
+						.controlCheckBox(JPanelControleParam.this.chBtnAll
+								.isSelected());
+
+			}
+		});
 
 	}
-
 	private void geometrie() {
-		
+
 		this.setLayout(new FlowLayout(FlowLayout.CENTER));
-		
-		this.buttonRead = new JButton((String)resourceLang.getObject("buttonRead"));
-		this.buttonSave = new JButton((String)resourceLang.getObject("buttonSave"));
-		
+
+		this.buttonRead = new JButton(
+				(String) resourceLang.getObject("buttonRead"));
+		this.buttonSave = new JButton(
+				(String) resourceLang.getObject("buttonSave"));
+		this.chBtnAll = new JCheckBox("All");
+
 		this.add(buttonRead);
 		this.add(buttonSave);
-		
+		this.add(chBtnAll);
 
 	}
 
@@ -75,9 +98,10 @@ public class JPanelControleParam extends JPanel {
 
 	// Tools
 	private ResourceBundle resourceLang;
-	private JPanelParametres jPanelParametres;
-	
-	private JButton buttonRead ;
-	private JButton buttonSave ;
-	
+	private JPanelParametresChamps JPanelParametresChamps;
+
+	private JButton buttonRead;
+	private JButton buttonSave;
+	private JCheckBox chBtnAll;
+
 }
