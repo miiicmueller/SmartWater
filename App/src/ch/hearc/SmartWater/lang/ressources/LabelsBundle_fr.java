@@ -25,8 +25,10 @@ public class LabelsBundle_fr extends ListResourceBundle
 				{"menuLoginLog", new String("s'identifier")},
 				
 				//Paramètres
-				{ "paramTel1", new String("Numéro tel. 1") },
-				{ "paramTel2", new String("Numéro tel. 2") },
+				{"paramTelCarte", new String("Numéro tel. station")},
+				{"paramTelAlarm1", new String("Numéro tel. alarme 1")},
+				{"paramTelAlarm2", new String("Numéro tel. alarme 2")},
+				{"paramPinNum", new String("Code pin")},
 				{ "paramMode", new String("Mode[0-1]:") },
 				{ "paramInter", new String("Intervalle [min] :") },
 				{ "paramDispo", new String("Disponibilité") },
@@ -49,6 +51,9 @@ public class LabelsBundle_fr extends ListResourceBundle
 				{"graphConsTit", new String("Consommations mensuelle")},
 				{"graphMois", new String("Mois")},
 				{"graphVol", new String("Volume[m3]")},
+				
+				{"graphConsTitJour", new String("Consommations journalière")},
+				{"graphJour", new String("Jours")},
 				
 				{"graphMoisJanv", new String("Janvier")},
 				{"graphMoisFev", new String("Février")},
