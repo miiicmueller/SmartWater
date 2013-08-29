@@ -3,14 +3,14 @@
 
 #include <string>
 #include <assert.h>
-#include "Def/def.h"
+#include <../Def/def.h>
 
 class tDate
 {
 public:
 	UInt16 year;
 	UInt8 month;
-	UInt8 date;
+	UInt8 day;
 	UInt8 dayOfWeek;
 	UInt8 hour;
 	UInt8 minute;

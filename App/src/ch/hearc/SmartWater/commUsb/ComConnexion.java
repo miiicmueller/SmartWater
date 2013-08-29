@@ -60,10 +60,9 @@ public class ComConnexion implements ComConnexions_I {
 
 		// Ouverture du flux de ecriture
 		this.writer = this.serialPort.getOutputStream();
-		//Nettoyage
-		this.writer.flush();
-		
+
 		this.serialPort.addEventListener(new SerialPortEventListener() {
+
 			@Override
 			public void serialEvent(SerialPortEvent event) {
 				switch (event.getEventType()) {
@@ -160,6 +159,7 @@ public class ComConnexion implements ComConnexions_I {
 			aAnswer.append(aReponse);
 			return true;
 		} catch (IOException e) {
+			// Nothing to read
 			return false;
 		}
 	}

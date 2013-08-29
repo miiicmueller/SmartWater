@@ -28,8 +28,8 @@ iUART* iUART::USCI_1 = NULL;
  * aPort : Port de communication
  * aSendMode : LSB ou MSB en premier
  * aStopBits : nbr de stop bits
- * aParity : Parit� de la communication
- * aDataCfg : format de donn�e sur 8 ou 7 bits
+ * aParity : Paritï¿½ de la communication
+ * aDataCfg : format de donnï¿½e sur 8 ou 7 bits
  * aBaudrate : vitesse de transmission
  *
  */
@@ -58,7 +58,7 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 			USCI_0 = this;
 
 		} else {
-			// Impossible de cr�er l'objet voulu
+			// Impossible de creer l'objet voulu
 		}
 		break;
 	case kUSCI_A1:
@@ -67,7 +67,7 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 		if (this->USCI_1 == NULL) {
 			USCI_1 = this;
 		} else {
-			// Impossible de cr�er l'objet voulu
+			// Impossible de creer l'objet voulu
 		}
 		break;
 	default:
@@ -81,282 +81,318 @@ iUART::iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
 /**
  * Destructeur de la classe iUart
  */
-iUART::~iUART() {
-	//Lib�ration de la pile d'interruption
-	switch (this->serialPort) {
-	case kUSCI_A0:
-		if (this->USCI_0 == this) {
-			USCI_0 = NULL;
-		}
-		break;
-	case kUSCI_A1:
-		if (this->USCI_1 == this) {
-			USCI_1 = NULL;
-		}
-		break;
-	default:
-		;
+iUART::~iUART()
+    {
+    //Liberation de la pile d'interruption
+    switch (this->serialPort)
+	{
+    case kUSCI_A0:
+	if (this->USCI_0 == this)
+	    {
+	    USCI_0 = NULL;
+	    }
+	break;
+    case kUSCI_A1:
+	if (this->USCI_1 == this)
+	    {
+	    USCI_1 = NULL;
+	    }
+	break;
+    default:
+	;
 	}
-}
+    }
 
 /**
- * Fonction de configuration du port assign� dans le constructeur
+ * Fonction de configuration du port assigne dans le constructeur
  * On peut tout modifier sauf le port
  *
  * aSendMode : LSB ou MSB en premier
  * aStopBits : nbr de stop bits
- * aParity : Parit� de la communication
- * aDataCfg : format de donn�e sur 8 ou 7 bits
+ * aParity : Parite de la communication
+ * aDataCfg : format de donnee sur 8 ou 7 bits
  * aBaudrate : vitesse de transmission
  *
  */
 void iUART::config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
-		iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg,
-		iUARTBaudrateEnum aBaudrate) {
+	iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg,
+	iUARTBaudrateEnum aBaudrate)
+    {
 
-	//Initialisation du port USCI
-	switch (this->serialPort) {
+    //Initialisation du port USCI
+    switch (this->serialPort)
+	{
 
-	case kUSCI_A0:
-		//Obligation de mettre le bit UCSWRST � 1
-		// pour permettre de configurer
-		UCA0CTL1 |= UCSWRST;
+    case kUSCI_A0:
+	//Obligation de mettre le bit UCSWRST ï¿½ 1
+	// pour permettre de configurer
+	UCA0CTL1 |= UCSWRST;
 
-		//Test du mode | LSB ou MSB first
-		if (kMSBFirst == aSendMode) {
-			UCA0CTL0 |= UCMSB;
-		} else {
-			UCA0CTL0 &= ~UCMSB;
-		}
+	//Test du mode | LSB ou MSB first
+	if (kMSBFirst == aSendMode)
+	    {
+	    UCA0CTL0 |= UCMSB;
+	    }
+	else
+	    {
+	    UCA0CTL0 &= ~UCMSB;
+	    }
 
-		// Configuration des bits de stop
-		if (k1StBits == aStopBits) {
-			UCA0CTL0 &= UCSPB;
-		} else {
-			UCA0CTL0 |= UCSPB;
-		}
+	// Configuration des bits de stop
+	if (k1StBits == aStopBits)
+	    {
+	    UCA0CTL0 &= UCSPB;
+	    }
+	else
+	    {
+	    UCA0CTL0 |= UCSPB;
+	    }
 
-		//Configuration de la parit�e
-		switch (aParity) {
-		case kNone: //Pas de parit�e
-			UCA0CTL0 &= ~UCPEN;
-			break;
-		case kOdd: // Parity impair
-			UCA0CTL0 |= UCPEN;
-			UCA0CTL0 &= ~UCPAR;
-			break;
-		case kEven: // parity paire
-			UCA0CTL0 |= UCPEN;
-			UCA0CTL0 |= UCPAR;
-			break;
-		default:
-			;
-		}
-
-		// Configuration en mode UART => sans bit d'adresse
-		UCA0CTL0 &= ~(UCMODE0 | UCMODE1);
-
-		//Configuration de transmission asynchrone
-		UCA0CTL0 &= ~(UCSYNC);
-
-		// Configuration de la longeur de don�es � tranmettre
-		if (k7bits == aDataCfg) {
-			UCA0CTL0 |= UC7BIT;
-		} else {
-			UCA0CTL0 &= ~UC7BIT;
-		}
-
-		//Configuration du baudrate avec over sampling
-
-		//Configuration du clock
-		UCA0CTL1 |= UCSSEL__SMCLK;
-
-		switch (aBaudrate) {
-		case k300:
-			//Modulation
-			UCA0MCTL = 0x00;
-			UCA0MCTL |= UCOS16;
-			UCA0MCTL |= UCBRS_0 + UCBRF_1;
-			//Configuration du baudrate
-			UCA0BRW = 832;
-			break;
-		case k4800:
-			break;
-		case k9600:
-			//Modulation
-			UCA0MCTL = 0x00;
-			UCA0MCTL |= UCOS16;
-			UCA0MCTL |= ((0xB6) << 8);      // Modulation UCBRSx=6, UCBRFx=0
-			UCA0MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
-			//Configuration du baudrate
-			UCA0BRW = 26;
-			break;
-		case k19200:
-			//Modulation
-			UCA0MCTL = 0x00;
-			UCA0MCTL |= UCOS16;
-			UCA0MCTL |= ((0x84) << 8);      // Modulation UCBRSx=6, UCBRFx=0
-			UCA0MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
-			//Configuration du baudrate
-			UCA0BRW = 13;
-			break;
-		case k57600:
-			//Modulation
-			UCA0MCTL = 0x00;
-			UCA0MCTL |= UCOS16;
-			UCA0MCTL |= ((0x55) << 8);      // Modulation UCBRSx=6, UCBRFx=0
-			UCA0MCTL |= (UCBRF0 | UCBRF2);
-			//Configuration du baudrate
-			UCA0BRW = 4;
-			break;
-		case k115200:
-			//Modulation
-			UCA0MCTL = 0x00;
-			UCA0MCTL &= ~UCOS16;
-			UCA0MCTL |= UCBRS_6 + UCBRF_0;
-			//Configuration du baudrate
-			UCA0BRW = 34;
-			break;
-		}
-
-		//Configuration des port I/O
-		P3SEL |= 0x18;	// Selection de RX et TX
-
-		break;
-
-	case kUSCI_A1:
-		//Obligation de mettre le bit UCSWRST � 1
-		// pour permettre de configurer
-		UCA1CTL1 |= UCSWRST;
-
-		//Test du mode | LSB ou MSB first
-		if (kMSBFirst == aSendMode) {
-			UCA1CTL0 |= UCMSB;
-		} else {
-			UCA1CTL0 &= ~UCMSB;
-		}
-
-		// Configuration des bits de stop
-		if (k1StBits == aStopBits) {
-			UCA1CTL0 &= UCSPB;
-		} else {
-			UCA1CTL0 |= UCSPB;
-		}
-
-		//Configuration de la parit�e
-		switch (aParity) {
-		case kNone: //Pas de parit�e
-			UCA1CTL0 &= ~UCPEN;
-			break;
-		case kOdd: // Parity impair
-			UCA1CTL0 |= UCPEN;
-			UCA1CTL0 &= ~UCPAR;
-			break;
-		case kEven: // parity paire
-			UCA1CTL0 |= UCPEN;
-			UCA1CTL0 |= UCPAR;
-			break;
-		default:
-			;
-		}
-
-		// Configuration en mode UART => sans bit d'adresse
-		UCA1CTL1 &= ~(UCMODE0 | UCMODE1);
-
-		//Configuration de transmission asynchrone
-		UCA1CTL1 &= ~(UCSYNC);
-
-		// Configuration de la longeur de don�es � tranmettre
-		if (k7bits == aDataCfg) {
-			UCA1CTL0 |= UC7BIT;
-		} else {
-			UCA1CTL0 &= ~UC7BIT;
-		}
-
-		//Configuration du clock
-		UCA1CTL1 |= UCSSEL__SMCLK;
-
-		switch (aBaudrate) {
-		case k300:
-			//Modulation
-			UCA1MCTL = 0x00;
-			UCA1MCTL |= UCOS16;
-			UCA1MCTL |= ((0xB6) << 8);      // Modulation UCBRSx=6, UCBRFx=0
-			UCA1MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
-			//Configuration du baudrate
-			UCA1BRW = 832;
-			break;
-		case k4800:
-			break;
-		case k9600:
-			//Modulation
-			UCA1MCTL = 0x00;
-			UCA1MCTL |= UCOS16;
-			UCA1MCTL |= ((0xB6) << 8);      // Modulation UCBRSx=6, UCBRFx=0
-			UCA1MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
-			//Configuration du baudrate
-			UCA1BRW = 26;
-			break;
-		case k19200:
-			//Modulation
-			UCA1MCTL = 0x00;
-			UCA1MCTL |= UCOS16;
-			UCA1MCTL |= ((0x84) << 8);      // Modulation UCBRSx=6, UCBRFx=0
-			UCA1MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
-			//Configuration du baudrate
-			UCA1BRW = 13;
-			break;
-		case k57600:
-			//Modulation
-			UCA1MCTL = 0x00;
-			UCA1MCTL |= UCOS16;
-			UCA1MCTL |= ((0x55) << 8);      // Modulation UCBRSx=6, UCBRFx=0
-			UCA1MCTL |= (UCBRF0 | UCBRF2);
-			//Configuration du baudrate
-			UCA1BRW = 4;
-			break;
-		case k115200:
-			//Modulation
-			UCA1MCTL = 0x00;
-			UCA1MCTL &= ~UCOS16;
-			UCA1MCTL |= UCBRS_6 + UCBRF_0;
-			//Configuration du baudrate
-			UCA1BRW = 34;
-			break;
-		}
-
-		//Configuration des port I/O
-		P4SEL |= (BIT4 + BIT5);	// Selection de RX et TX
-
-		break;
+	//Configuration de la paritï¿½e
+	switch (aParity)
+	    {
+	case kNone: //Pas de paritï¿½e
+	    UCA0CTL0 &= ~UCPEN;
+	    break;
+	case kOdd: // Parity impair
+	    UCA0CTL0 |= UCPEN;
+	    UCA0CTL0 &= ~UCPAR;
+	    break;
+	case kEven: // parity paire
+	    UCA0CTL0 |= UCPEN;
+	    UCA0CTL0 |= UCPAR;
+	    break;
 	default:
-		;
+	    ;
+	    }
+
+	// Configuration en mode UART => sans bit d'adresse
+	UCA0CTL0 &= ~(UCMODE0 | UCMODE1);
+
+	//Configuration de transmission asynchrone
+	UCA0CTL0 &= ~(UCSYNC);
+
+	// Configuration de la longeur de donï¿½es ï¿½ tranmettre
+	if (k7bits == aDataCfg)
+	    {
+	    UCA0CTL0 |= UC7BIT;
+	    }
+	else
+	    {
+	    UCA0CTL0 &= ~UC7BIT;
+	    }
+
+	//Configuration du baudrate avec over sampling
+
+	//Configuration du clock
+	UCA0CTL1 |= UCSSEL__SMCLK;
+
+	switch (aBaudrate)
+	    {
+	case k300:
+	    //Modulation
+	    UCA0MCTL = 0x00;
+	    UCA0MCTL |= UCOS16;
+	    UCA0MCTL |= UCBRS_0 + UCBRF_1;
+	    //Configuration du baudrate
+	    UCA0BRW = 832;
+	    break;
+	case k4800:
+	    break;
+	case k9600:
+	    //Modulation
+	    UCA0MCTL = 0x00;
+	    UCA0MCTL |= UCOS16;
+	    UCA0MCTL |= ((0xB6) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+	    UCA0MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+	    //Configuration du baudrate
+	    UCA0BRW = 26;
+	    break;
+	case k19200:
+	    //Modulation
+	    UCA0MCTL = 0x00;
+	    UCA0MCTL |= UCOS16;
+	    UCA0MCTL |= ((0x84) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+	    UCA0MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+	    //Configuration du baudrate
+	    UCA0BRW = 13;
+	    break;
+	case k57600:
+	    //Modulation
+	    UCA0MCTL = 0x00;
+	    UCA0MCTL |= UCOS16;
+	    UCA0MCTL |= ((0x55) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+	    UCA0MCTL |= (UCBRF0 | UCBRF2);
+	    //Configuration du baudrate
+	    UCA0BRW = 4;
+	    break;
+	case k115200:
+	    //Modulation
+	    UCA0MCTL = 0x00;
+	    UCA0MCTL &= ~UCOS16;
+	    UCA0MCTL |= UCBRS_6 + UCBRF_0;
+	    //Configuration du baudrate
+	    UCA0BRW = 34;
+	    break;
+	    }
+
+	//Configuration des port I/O
+	P3SEL |= 0x18;	// Selection de RX et TX
+
+	break;
+
+    case kUSCI_A1:
+	//Obligation de mettre le bit UCSWRST ï¿½ 1
+	// pour permettre de configurer
+	UCA1CTL1 |= UCSWRST;
+
+	//Test du mode | LSB ou MSB first
+	if (kMSBFirst == aSendMode)
+	    {
+	    UCA1CTL0 |= UCMSB;
+	    }
+	else
+	    {
+	    UCA1CTL0 &= ~UCMSB;
+	    }
+
+	// Configuration des bits de stop
+	if (k1StBits == aStopBits)
+	    {
+	    UCA1CTL0 &= UCSPB;
+	    }
+	else
+	    {
+	    UCA1CTL0 |= UCSPB;
+	    }
+
+	//Configuration de la paritï¿½e
+	switch (aParity)
+	    {
+	case kNone: //Pas de paritï¿½e
+	    UCA1CTL0 &= ~UCPEN;
+	    break;
+	case kOdd: // Parity impair
+	    UCA1CTL0 |= UCPEN;
+	    UCA1CTL0 &= ~UCPAR;
+	    break;
+	case kEven: // parity paire
+	    UCA1CTL0 |= UCPEN;
+	    UCA1CTL0 |= UCPAR;
+	    break;
+	default:
+	    ;
+	    }
+
+	// Configuration en mode UART => sans bit d'adresse
+	UCA1CTL1 &= ~(UCMODE0 | UCMODE1);
+
+	//Configuration de transmission asynchrone
+	UCA1CTL1 &= ~(UCSYNC);
+
+	// Configuration de la longeur de donï¿½es ï¿½ tranmettre
+	if (k7bits == aDataCfg)
+	    {
+	    UCA1CTL0 |= UC7BIT;
+	    }
+	else
+	    {
+	    UCA1CTL0 &= ~UC7BIT;
+	    }
+
+	//Configuration du clock
+	UCA1CTL1 |= UCSSEL__SMCLK;
+
+	switch (aBaudrate)
+	    {
+	case k300:
+	    //Modulation
+	    UCA1MCTL = 0x00;
+	    UCA1MCTL |= UCOS16;
+	    UCA1MCTL |= ((0xB6) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+	    UCA1MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+	    //Configuration du baudrate
+	    UCA1BRW = 832;
+	    break;
+	case k4800:
+	    break;
+	case k9600:
+	    //Modulation
+	    UCA1MCTL = 0x00;
+	    UCA1MCTL |= UCOS16;
+	    UCA1MCTL |= ((0xB6) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+	    UCA1MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+	    //Configuration du baudrate
+	    UCA1BRW = 26;
+	    break;
+	case k19200:
+	    //Modulation
+	    UCA1MCTL = 0x00;
+	    UCA1MCTL |= UCOS16;
+	    UCA1MCTL |= ((0x84) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+	    UCA1MCTL &= ~(UCBRF0 | UCBRF1 | UCBRF2 | UCBRF3);
+	    //Configuration du baudrate
+	    UCA1BRW = 13;
+	    break;
+	case k57600:
+	    //Modulation
+	    UCA1MCTL = 0x00;
+	    UCA1MCTL |= UCOS16;
+	    UCA1MCTL |= ((0x55) << 8);      // Modulation UCBRSx=6, UCBRFx=0
+	    UCA1MCTL |= (UCBRF0 | UCBRF2);
+	    //Configuration du baudrate
+	    UCA1BRW = 4;
+	    break;
+	case k115200:
+	    //Modulation
+	    UCA1MCTL = 0x00;
+	    UCA1MCTL &= ~UCOS16;
+	    UCA1MCTL |= UCBRS_6 + UCBRF_0;
+	    //Configuration du baudrate
+	    UCA1BRW = 34;
+	    break;
+	    }
+
+	//Configuration des port I/O
+	P4SEL |= (BIT4 + BIT5);	// Selection de RX et TX
+
+	break;
+    default:
+	;
 
 	}
-}
+
+    for (int i = 0; i < kSciRecBufReceptionSize ; i++) // initialise le buffer uart
+	{
+	this->uartBuffer[i] = 0;
+	}
+    }
 
 /**
  * Fonction pour lire "1" byte recus dans le buffer tourant
  *
  */
-UInt8 iUART::read() {
-	if (isEnabled) {
-		UInt8 aByteToRead = 0;
+UInt8 iUART::read()
+    {
+    if (isEnabled)
+	{
+	UInt8 aByteToRead = 0;
 
-		aByteToRead =
-				this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.OutIndex];
+	aByteToRead =
+		this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.OutIndex];
 
-		// On incr�mente seulement apr�s avoir lu .
-		this->USCIRingBuffer.OutIndex++;
+	// On incrï¿½mente seulement aprï¿½s avoir lu .
+	this->USCIRingBuffer.OutIndex++;
 
-		// Si on a atteint la derni�re case on revient � 0
-		if (kSciRecBufSize <= this->USCIRingBuffer.OutIndex) {
-			this->USCIRingBuffer.OutIndex = 0;
-		}
+	// Si on a atteint la derniï¿½re case on revient ï¿½ 0
+	if (kSciRecBufSize <= this->USCIRingBuffer.OutIndex)
+	    {
+	    this->USCIRingBuffer.OutIndex = 0;
+	    }
 
-		this->USCIRingBuffer.ByteCount--;
+	this->USCIRingBuffer.ByteCount--;
 
-		return aByteToRead;
+	return aByteToRead;
 
 	} else {
 		return 0;
@@ -365,133 +401,148 @@ UInt8 iUART::read() {
 
 /**
  * Fonction pour transmettre "1" byte sur la ligne
- * !! La m�thode enable doit avoir �t� pr�alablement appel�e
+ * !! La mï¿½thode enable doit avoir ï¿½tï¿½ prï¿½alablement appelï¿½e
  *
  */
-bool iUART::write(UInt8 aData) {
-	//test si l'interface est activ�
-	if (isEnabled) {
-		//Selection du port
-		switch (this->serialPort) {
+bool iUART::write(UInt8 aData)
+    {
+    //test si l'interface est activï¿½
+    if (isEnabled)
+	{
+	//Selection du port
+	switch (this->serialPort)
+	    {
 
-		case kUSCI_A0: // Sur le port 0
-			while (!((UCA0IFG & UCTXIFG)== UCTXIFG))
-				;
-			UCA0TXBUF = aData;
-			break;
+	case kUSCI_A0: // Sur le port 0
+	    while (!((UCA0IFG & UCTXIFG)== UCTXIFG))
+		;
+	    UCA0TXBUF = aData;
+	    break;
 
-		case kUSCI_A1: // Sur le port 1
-			while (!((UCA0IFG & UCTXIFG)== UCTXIFG))
-				;
-			UCA1TXBUF = aData;
-			break;
+	case kUSCI_A1: // Sur le port 1
+	    while (!((UCA0IFG & UCTXIFG)== UCTXIFG))
+		;
+	    UCA1TXBUF = aData;
+	    break;
 
-		default:
-			;
-		}
-		return true;
-	} else {
-		return false;
+	default:
+	    ;
+	    }
+	return true;
 	}
-}
+    else
+	{
+	return false;
+	}
+    }
 
 /**
  * Fonction qui permet de lire 1 flag de status du port
- * !! La m�thode enable doit avoir �t� pr�alablement appel�e
+ * !! La mï¿½thode enable doit avoir ï¿½tï¿½ prï¿½alablement appelï¿½e
  *
- * aFlag : nom du flag � lire
+ * aFlag : nom du flag ï¿½ lire
  *
  */
-bool iUART::getStatusFlag(iUARTStatusFlagEnum aFlag) {
-	switch (this->serialPort) {
-	case kUSCI_A0:
-		return ((UCA0STAT & aFlag) == aFlag) ? true : false;
+bool iUART::getStatusFlag(iUARTStatusFlagEnum aFlag)
+    {
+    switch (this->serialPort)
+	{
+    case kUSCI_A0:
+	return ((UCA0STAT & aFlag) == aFlag) ? true : false;
 
-	case kUSCI_A1:
-		return ((UCA1STAT & aFlag) == aFlag) ? true : false;
-	default:
-		return false;
+    case kUSCI_A1:
+	return ((UCA1STAT & aFlag) == aFlag) ? true : false;
+    default:
+	return false;
 	}
-}
+    }
 
 /**
  * Fonction qui permet d'activer la communcation serielle
  *
  */
-void iUART::enable() {
-	switch (this->serialPort) {
+void iUART::enable()
+    {
+    switch (this->serialPort)
+	{
 
-	case kUSCI_A0:
-		UCA0CTL1 &= ~(UCSWRST);
+    case kUSCI_A0:
+	UCA0CTL1 &= ~(UCSWRST);
 
-		//Configuration de l'interruption � la reception
-		UCA0IE |= UCRXIE;
-		break;
-	case kUSCI_A1:
-		UCA1CTL1 &= ~(UCSWRST);
+	//Configuration de l'interruption ï¿½ la reception
+	UCA0IE |= UCRXIE;
+	break;
+    case kUSCI_A1:
+	UCA1CTL1 &= ~(UCSWRST);
 
-		//Configuration de l'interruption � la reception
-		UCA1IE |= UCRXIE;
-		break;
-	default:
-		;
+	//Configuration de l'interruption ï¿½ la reception
+	UCA1IE |= UCRXIE;
+	break;
+    default:
+	;
 
 	}
-	this->isEnabled = true;
-}
+    this->isEnabled = true;
+    }
 
 /**
  * Fonction qui permet desactiver la communcation serielle
  *
  */
-void iUART::disable() {
-	switch (this->serialPort) {
+void iUART::disable()
+    {
+    switch (this->serialPort)
+	{
 
-	case kUSCI_A0:
-		UCA0CTL1 |= UCSWRST;
-		break;
-	case kUSCI_A1:
-		UCA1CTL1 |= UCSWRST;
-		break;
-	default:
-		;
+    case kUSCI_A0:
+	UCA0CTL1 |= UCSWRST;
+	break;
+    case kUSCI_A1:
+	UCA1CTL1 |= UCSWRST;
+	break;
+    default:
+	;
 
 	}
-	this->isEnabled = false;
-}
+    this->isEnabled = false;
+    }
 
 /**
  * Fonction qui permet de tester si le buffer tourant est vide
  *
  */
-bool iUART::isBufferEmpty() {
-	return (this->USCIRingBuffer.ByteCount > 0);
-}
+bool iUART::isBufferEmpty()
+    {
+    return (this->USCIRingBuffer.ByteCount > 0);
+    }
 
 /**
- * Handler d'interruption propre � chaque objets
+ * Handler d'interruption propre ï¿½ chaque objets
  *
  */
-void iUART::interruptHandler() {
+void iUART::interruptHandler()
+    {
 
-	UInt8 aReceivedChar = 0;
+    UInt8 aReceivedChar = 0;
 
-	this->dataReceived = true;
+    this->dataReceived = true;
 
-	if (this->serialPort == kUSCI_A0) {
-		//Lecture du byte recu et ceci clear l'interruption
-		aReceivedChar = UCA0RXBUF;
+    if (this->serialPort == kUSCI_A0)
+	{
+	//Lecture du byte recu et ceci clear l'interruption
+	aReceivedChar = UCA0RXBUF;
 
-		// Test que le buffer ne soit pas plein
-		if (false == this->USCIRingBuffer.BufferIsFull) {
-			//Alors on �crit le byte recus dans le buffer
-			this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
-					aReceivedChar;
+	// Test que le buffer ne soit pas plein
+	if (false == this->USCIRingBuffer.BufferIsFull)
+	    {
+	    //Alors on ï¿½crit le byte recus dans le buffer
+	    this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
+		    aReceivedChar;
 
-			//On incr�ment l'index et le nombre de byte recus
-			this->USCIRingBuffer.InIndex++;
+	    //On incrï¿½ment l'index et le nombre de byte recus
+	    this->USCIRingBuffer.InIndex++;
 
-			// Si on a atteint la derni�re case on revient � 0
+	    // Si on a atteint la derni�re case on revient � 0
 			if (kSciRecBufSize <= this->USCIRingBuffer.InIndex) {
 				this->USCIRingBuffer.InIndex = 0;
 			}
@@ -499,83 +550,157 @@ void iUART::interruptHandler() {
 			this->USCIRingBuffer.ByteCount++;
 		}
 
-		//Test si on a rempli le buffer Si on a recu n char
-		if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount) {
-			this->USCIRingBuffer.BufferIsFull = true;
-		} else {
-			this->USCIRingBuffer.BufferIsFull = false;
-		}
+	//Test si on a rempli le buffer Si on a recu n char
+	if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount)
+	    {
+	    this->USCIRingBuffer.BufferIsFull = true;
+	    }
+	else
+	    {
+	    this->USCIRingBuffer.BufferIsFull = false;
+	    }
 
-	} else if (this->serialPort == kUSCI_A1) {
-		//Lecture du byte recu et ceci clear l'interruption
-		aReceivedChar = UCA1RXBUF;
-
-		// Test que le buffer ne soit pas plein
-		if (false == this->USCIRingBuffer.BufferIsFull) {
-			//Alors on �crit le byte recus dans le buffer
-			this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
-					aReceivedChar;
-
-			//On incr�ment l'index et le nombre de byte recus
-			this->USCIRingBuffer.InIndex++;
-
-			// Si on a atteint la derni�re case on revient � 0
-			if (kSciRecBufSize <= this->USCIRingBuffer.InIndex) {
-				this->USCIRingBuffer.InIndex = 0;
-			}
-
-			this->USCIRingBuffer.ByteCount++;
-		}
-
-		//Test si on a rempli le buffer Si on a recu n char
-		if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount) {
-			this->USCIRingBuffer.BufferIsFull = true;
-		} else {
-			this->USCIRingBuffer.BufferIsFull = false;
-		}
 	}
-}
+    else if (this->serialPort == kUSCI_A1)
+	{
+	//Lecture du byte recu et ceci clear l'interruption
+	aReceivedChar = UCA1RXBUF;
+
+	// Test que le buffer ne soit pas plein
+	if (false == this->USCIRingBuffer.BufferIsFull)
+	    {
+	    //Alors on ï¿½crit le byte recus dans le buffer
+	    this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
+		    aReceivedChar;
+
+	    //On incrï¿½ment l'index et le nombre de byte recus
+	    this->USCIRingBuffer.InIndex++;
+
+	    // Si on a atteint la derniï¿½re case on revient ï¿½ 0
+	    if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
+		{
+		this->USCIRingBuffer.InIndex = 0;
+		}
+
+	    this->USCIRingBuffer.ByteCount++;
+	    }
+
+	//Test si on a rempli le buffer Si on a recu n char
+	if (kSciRecBufSize <= this->USCIRingBuffer.ByteCount)
+	    {
+	    this->USCIRingBuffer.BufferIsFull = true;
+	    }
+	else
+	    {
+	    this->USCIRingBuffer.BufferIsFull = false;
+	    }
+	}
+    }
 
 /**
  * Fonction qui permet d'obtenir l'ensemble des bytes recus
- * en m�moire s�par� d'un CR+LF
+ * en mï¿½moire sï¿½parï¿½ d'un CR+LF
  *
- * aBuffer : Buffer d'entr�e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
- * retour  : -1 si on a rien trouv� sinon la taille de la cha�ne
+ * aBuffer : Buffer d'entrï¿½e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+ * retour  : -1 si on a rien trouvï¿½ sinon la taille de la chaï¿½ne
  */
 bool iUART::readFrame(UInt8* string) {
 	UInt8 i = 0;
 	UInt8 nDataReceived = 0;
 
-	nDataReceived = this->USCIRingBuffer.ByteCount;
+    nDataReceived = this->USCIRingBuffer.ByteCount;
 
 	//Tester si l'on a recu qqch
 	if ((this->dataReceived == true) || (nDataReceived != 0)) {
 		UInt8 pieceOfString[kSciRecBufSize ] = ""; //Holds the new addition to the string
 
-		//Recuperation des bytes recus
-		for (i = 0; i < nDataReceived; i++) {
-			pieceOfString[i] = this->read();
-		}
+	//Recuperation des bytes recus
+	for (i = 0; i < nDataReceived; i++)
+	    {
+	    pieceOfString[i] = this->read();
+	    }
 
-		strcat((char*)this->uartBuffer, (char*)pieceOfString);
+	strcat((char*)this->uartBuffer,(char*) pieceOfString);
 
-		// Test \r
-		if (retInString(this->uartBuffer)) {
-			strcpy((char*)string, (char*)this->uartBuffer);
-			this->clearInternalSerialBuffer();
-			this->dataReceived = false;
-			return true;
-		} else {
-			this->dataReceived = false;
-			return false;
-		}
+	// Test \r
+	if (retInString(this->uartBuffer))
+	    {
+	    strcpy((char*)string, (char*)this->uartBuffer);
+	    this->clearInternalSerialBuffer();
+	    this->dataReceived = false;
+	    return true;
+	    }
+	else
+	    {
+	    this->dataReceived = false;
+	    return false;
+	    }
 
-	} else {
-		return false;
 	}
-}
+    else
+	{
+	return false;
+	}
+    }
 
+/**
+ * Fonction permettant d'obtenir les bytes reçus jusqu'au \r\n
+ *
+ * aString : chaine resortant la prochaine chaîne de byte reçus en mémoire, jusqu'à un CRLF
+ * retour : true si une nouvelle chaine a ete trouvee
+ */
+bool iUART::readFrameToCRLF(char* aString)
+    {
+    UInt16 aNDataReceived = 0;
+    bool aEndString = false;
+    bool aIsOk;
+    UInt16 i = 0;
+    char pieceOfString[kSciRecBufSize ] = ""; //contient les nouveaux bytes
+
+    aNDataReceived = this->USCIRingBuffer.ByteCount;
+
+    if ((true == this->dataReceived) || (aNDataReceived != 0)) // teste si on a recu de nouveaux bytes
+	{
+	//Recuperation des bytes recus
+	for (i = 0; (i < aNDataReceived) && (i < kSciRecBufSize) && (false == aEndString); i++)
+	    {
+	    pieceOfString[i] = this->read(); //prend les nouveaux bytes
+
+	    if ('\r' == pieceOfString[i] || '\n' == pieceOfString[i]) // trouve LF ou CR
+		{
+		pieceOfString[i] = 0;
+		aEndString = true;
+		}
+	    }
+
+	if (0 == i) // ne prend pas en compte si la chaine etait vide //TODO changer en 1
+	    {
+	    aIsOk = false;
+	    }
+	else
+	    {
+	    strcat((char*)this->uartBuffer, (char*)pieceOfString); // ajoute les nouveaux bytes
+
+	    if (aEndString) // on a la fin d'une ligne
+		{
+		strcpy((char*)aString, (char*)this->uartBuffer);
+		this->clearInternalSerialBuffer();
+		aIsOk = true;
+		}
+	    else
+		{
+		aIsOk = false;
+		}
+
+	    }
+	}
+    else
+	{
+	aIsOk = false;
+	}
+
+    return aIsOk;
+    }
 
 /**
  * Fonction qui permet d'obtenir l'ensemble des bytes recus
@@ -606,27 +731,28 @@ bool iUART::readFullFrame(UInt8* stringReceived) {
 // TODO - Tester les performances des fonctions send string
 
 /**
- * Fonction qui permet d'obtenir le nombre de caractère contenu
+ * Fonction qui permet d'obtenir le nombre de caractÃ¨re contenu
  * dans le buffer
  *
- * retour  : nombre de caractère contenu dans le buffer
+ * retour  : nombre de caractÃ¨re contenu dans le buffer
  */
-UInt16 iUART::availableCharToRead() {
-	return this->USCIRingBuffer.ByteCount;
-}
+UInt16 iUART::availableCharToRead()
+    {
+    return this->USCIRingBuffer.ByteCount;
+    }
 
 ///**
 // * Fonction qui permet d'obtenir l'ensemble des bytes recus
-// * en m�moire s�par� d'un CR+LF
+// * en mï¿½moire sï¿½parï¿½ d'un CR+LF
 // *
-// * aBuffer : Buffer d'entr�e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
-// * retour  : -1 si on a rien trouv� sinon la taille de la cha�ne
+// * aBuffer : Buffer d'entrï¿½e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+// * retour  : -1 si on a rien trouvï¿½ sinon la taille de la chaï¿½ne
 // */
 //int iUART::readLine(char* aBuffer) {
 //	int i = 0;
 //	int aByteCount = this->USCIRingBuffer.ByteCount;
 //
-//	//On enl�ve les premier \r\n
+//	//On enlï¿½ve les premier \r\n
 //	this->read();
 //	this->read();
 //
@@ -634,7 +760,7 @@ UInt16 iUART::availableCharToRead() {
 //	for (i = 0; (i < (aByteCount - 2)) && (aBuffer[i - 1] != 0x0D); i++) {
 //		aBuffer[i] = this->read();
 //	}
-//	if (i < (aByteCount - 2)) //CR detect�
+//	if (i < (aByteCount - 2)) //CR detectï¿½
 //			{
 //		//lecture du LF
 //		aBuffer[i] = this->read();
@@ -648,10 +774,10 @@ UInt16 iUART::availableCharToRead() {
 //}
 
 /**
- * Fonction pour envoyer une chaîne de caractère de type char*
+ * Fonction pour envoyer une chaÃ®ne de caractÃ¨re de type char*
  *
- * aString : Chaîne à envoyeriUart
- * retour  : 1 si la chaîne à bien été transmise
+ * aString : ChaÃ®ne Ã  envoyeriUart
+ * retour  : 1 si la chaÃ®ne Ã  bien Ã©tÃ© transmise
  */
 bool iUART::sendString(UInt8* aString) {
 	UInt16 i = 0;
@@ -687,7 +813,8 @@ void iUART::clearInternalSerialBuffer() {
 	for (i = 0; i < kSciRecBufSize ; i++) {
 		this->uartBuffer[i] = 0x00;
 	}
-}
+    }
+
 
 //This function returns TRUE if there's an 0x0D character in the string; and if so,
 //it trims the 0x0D and anything that had followed it.
@@ -727,33 +854,39 @@ bool iUART::retInString(UInt8* string) {
 		return true; //...and tell the calling function that we did so
 	}
 
-	return false;                                 //Otherwise, it wasn't found
-}
+    return false;                                 //Otherwise, it wasn't found
+    }
 
 //-------------- INTERRUPT HANDLER | FRIEND OF iUart ------------
 
 // USCIA0 Interrupt handler
 #pragma vector=USCI_A0_VECTOR
-__interrupt void USCI_A0(void) {
-//V�rifiation que c'est bien un interruption en reception
-	if ((UCA0IFG & UCRXIFG)== UCRXIFG) {
-		// On teste si le pointeur iUART_0 a �t�  affect�
-		if (iUART::USCI_0 != NULL) {
-			iUART::USCI_0->interruptHandler();
-		}
+__interrupt void USCI_A0(void)
+    {
+//Vï¿½rifiation que c'est bien un interruption en reception
+    if ((UCA0IFG & UCRXIFG)== UCRXIFG)
+	{
+	// On teste si le pointeur iUART_0 a ï¿½tï¿½  affectï¿½
+	if (iUART::USCI_0 != NULL)
+	    {
+	    iUART::USCI_0->interruptHandler();
+	    }
 	}
 
-}
+    }
 
 // USCIA1 Interrupt handler
 #pragma vector=USCI_A1_VECTOR
-__interrupt void USCI_A1(void) {
-//V�rifiation que c'est bien un interruption en reception
-	if ((UCA1IFG & UCRXIFG)== UCRXIFG) {
-		// On teste si le pointeur iUART_1 a �t�  affect�
-		if (iUART::USCI_1 != NULL) {
-			iUART::USCI_1->interruptHandler();
-		}
+__interrupt void USCI_A1(void)
+    {
+//Vï¿½rifiation que c'est bien un interruption en reception
+    if ((UCA1IFG & UCRXIFG)== UCRXIFG)
+	{
+	// On teste si le pointeur iUART_1 a ï¿½tï¿½  affectï¿½
+	if (iUART::USCI_1 != NULL)
+	    {
+	    iUART::USCI_1->interruptHandler();
+	    }
 	}
-}
+    }
 
