@@ -41,6 +41,7 @@ typedef enum // choix du compteur
     kErrorSimRequired,
     kErrorSimFailure,
     kErrorAntenna,
+    kErrorDecodeDate,
     kErrorSimBusy,
     kErrorSimWrong,
     kErrorSimPukRequired,

@@ -83,36 +83,36 @@ void main(void)
     //ne pas oublier le fil !
     // il faudra de temps en temps vider la memoire peut etre
 
+
 //    salut =
-//     monGsm.sendSMS(
-//     (UInt8*) " Unite\"Nom du site\":\r\nDate et heure 18/09/12/16:53:00\r\nDisponibilite 01:00/00:15\r\nMode S\r\nIndex 03046\r\nDebit jour 10,7\r\nDebit jour mens 8,7\r\nLimite jour mens 25,0\r\nTemperature 10,2\r\nOffset temperature 0,2\r\nCredit 29,29\r\nAlarme 0041765572263",
-//     (UInt8*) "+41787526983");
-    //salut=monGsm.sendSMS("Unite\"Nom du site\":\r\nDate et heure 18/09/12/16:53:00\r\n","+41787526983"); //ok
-    if (salut)
-	{
-	cestOk[0] = 1;
-	}
-    else
-	{
- 	cestOk[0] = 0;
-	}
+//    monGsm.sendSMS(
+//	    (UInt8*) "Unite\"Nom du site\":\r\nDate et heure 18/09/12/16:53:00\r\nDisponibilite 01:00/00:15\r\nMode S\r\nIndex 03046\r\nDebit jour 10,7\r\nDebit jour mens 8,7\r\nLimite jour mens 25,0\r\nTemperature 10,2\r\nOffset temperature 0,2\r\nCredit 29,29\r\nAlarme 0041765572263",
+//	    (UInt8*) "+41787526983");
+//    if (salut)
+//	{
+//	cestOk[0] = 1;
+//	}
+//    else
+//	{
+//	cestOk[0] = 0;
+//	}
 //reessayer maintenant que le timeout est augmenté
-   // while (1)
-	//{
-	//monCCredit.year = monGsm.getCredit(); // ok
-	maDate = monGsm.getDate();
+    // while (1)
+    //{
+   // monCCredit.year = monGsm.getCredit(); // ok
+    maDate = monGsm.getDate();
 //	}
     while (1)
 	{
-//	salut = monGsm.getSMS(messageRecu);
-//	if (salut)
-//	    {
-//	    cestOk[0] = 1;
-//	    }
-//	else
-//	    {
-//	    cestOk[0] = 0;
-//	    }
+	salut = monGsm.getSMS(messageRecu);
+	if (salut)
+	    {
+	    cestOk[0] = 1;
+	    }
+	else
+	    {
+	    cestOk[0] = 0;
+	    }
 	}
 
     }
