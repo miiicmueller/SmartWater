@@ -44,7 +44,7 @@ public class JFrameSmartWater extends JFrame {
 
 		this.comUSB = new ComConnexion();
 
-		this.session = new Session(this.comUSB);
+		this.session = new Session(this.comUSB, this.language.getResBundle());
 
 		geometrie();
 		control();
@@ -117,6 +117,9 @@ public class JFrameSmartWater extends JFrame {
 					// Ouverture des limites des limites
 					JFrameSmartWater.this.jPanelPrincipal
 							.getJPanelChartTabMonthParam().updateLimits();
+					JFrameSmartWater.this.jPanelPrincipal.getJPanelAdmin()
+							.updateParams();
+
 				} catch (IOException e) {
 					e.printStackTrace();
 				}
@@ -149,20 +152,87 @@ public class JFrameSmartWater extends JFrame {
 				if (!JFrameSmartWater.this.session.isIdentified()) {
 					JOptionPane jOptionLogErr = new JOptionPane();
 					jOptionLogErr.showConfirmDialog(JFrameSmartWater.this,
-							"Veuillez-vous logger !", "Not Logged",
+							(String) JFrameSmartWater.this.language
+									.getResBundle().getObject("notLogged"),
+							(String) JFrameSmartWater.this.language
+									.getResBundle().getObject("notLoggedTit"),
 							JOptionPane.DEFAULT_OPTION,
 							JOptionPane.ERROR_MESSAGE);
 					JFrameSmartWater.this.jFramLog.setVisible(true);
 					// Si on n'est déja connecté c'est que l'on veut se
 					// déconnecter
 				} else if (JFrameSmartWater.this.session.isLogged()) {
-					JOptionPane jOptionLogErr = new JOptionPane();
-					jOptionLogErr.showConfirmDialog(JFrameSmartWater.this,
-							"Vous êtes déja loggé !", " Déja Loggé",
-							JOptionPane.DEFAULT_OPTION,
-							JOptionPane.ERROR_MESSAGE);
+					try {
+						switch (JFrameSmartWater.this.session.logOut()) {
+							case 0 :
+								JOptionPane jOptionLogOk = new JOptionPane();
+								jOptionLogOk.showConfirmDialog(
+										JFrameSmartWater.this,
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"decSucc"),
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"decSuccTit"),
+										JOptionPane.DEFAULT_OPTION,
+										JOptionPane.INFORMATION_MESSAGE);
+								// Changement en bouton de déconnexion
+								JFrameSmartWater.this.menuCommConnect
+										.setLabel("Disconnect");
+								break;
+							case 1 :
+								JOptionPane jOptionTimeoutErr = new JOptionPane();
+								jOptionTimeoutErr.showConfirmDialog(
+										JFrameSmartWater.this,
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"timeOut"),
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"timeOutTit"),
+										JOptionPane.DEFAULT_OPTION,
+										JOptionPane.ERROR_MESSAGE);
+								break;
+							case 2 :
+								JOptionPane jOptionUserPasswdErr = new JOptionPane();
+								jOptionUserPasswdErr.showConfirmDialog(
+										JFrameSmartWater.this,
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"decFail"),
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"decFailTit"),
+										JOptionPane.DEFAULT_OPTION,
+										JOptionPane.ERROR_MESSAGE);
+								break;
+							case 4 :
+								JOptionPane jOptionUnkErr = new JOptionPane();
+								jOptionUnkErr.showConfirmDialog(
+										JFrameSmartWater.this,
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"unkErr"),
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"unkErrTit"),
+										JOptionPane.DEFAULT_OPTION,
+										JOptionPane.ERROR_MESSAGE);
+								JFrameSmartWater.this.jFramePortSel
+										.refreshPortAff();
+								JFrameSmartWater.this.jFramePortSel
+										.setVisible(true);
+
+								break;
+							default :
+
+						}
+					} catch (Exception e) {
+					}
 					JFrameSmartWater.this.menuCommConnect
-							.setLabel("Disconnect");
+							.setLabel((String) JFrameSmartWater.this.language
+									.getResBundle()
+									.getObject("menuCommConnect"));
 				} else {
 					try {
 						switch (JFrameSmartWater.this.session.logIn()) {
@@ -170,33 +240,41 @@ public class JFrameSmartWater extends JFrame {
 								JOptionPane jOptionLogOk = new JOptionPane();
 								jOptionLogOk.showConfirmDialog(
 										JFrameSmartWater.this,
-										"Connexion successful !",
-										"Log success",
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"conSucc"),
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"conSuccTit"),
 										JOptionPane.DEFAULT_OPTION,
 										JOptionPane.INFORMATION_MESSAGE);
-								JFrameSmartWater.this.session.logOut();
 								// Changement en bouton de déconnexion
 								JFrameSmartWater.this.menuCommConnect
-										.setLabel((String) JFrameSmartWater.this.language
-												.getResBundle().getObject(
-														"menuCommConnect"));
+										.setLabel("Disconnect");
 								break;
 							case 1 :
 								JOptionPane jOptionTimeoutErr = new JOptionPane();
-								jOptionTimeoutErr
-										.showConfirmDialog(
-												JFrameSmartWater.this,
-												"Vérifiez la connexion à la carte ou le port ",
-												"Timeout",
-												JOptionPane.DEFAULT_OPTION,
-												JOptionPane.ERROR_MESSAGE);
+								jOptionTimeoutErr.showConfirmDialog(
+										JFrameSmartWater.this,
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"timeOut"),
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"timeOutTit"),
+										JOptionPane.DEFAULT_OPTION,
+										JOptionPane.ERROR_MESSAGE);
 								break;
 							case 2 :
 								JOptionPane jOptionUserPasswdErr = new JOptionPane();
 								jOptionUserPasswdErr.showConfirmDialog(
 										JFrameSmartWater.this,
-										"User or password incorrect ",
-										"Auth failed",
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"userPassErr"),
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"userPassErrTit"),
 										JOptionPane.DEFAULT_OPTION,
 										JOptionPane.ERROR_MESSAGE);
 								JFrameSmartWater.this.jFramLog.setVisible(true);
@@ -205,7 +283,12 @@ public class JFrameSmartWater extends JFrame {
 								JOptionPane jOptionConnErr = new JOptionPane();
 								jOptionConnErr.showConfirmDialog(
 										JFrameSmartWater.this,
-										"Aucun port selectionné", "Port error",
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"noPortSel"),
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"noPortSelTit"),
 										JOptionPane.DEFAULT_OPTION,
 										JOptionPane.ERROR_MESSAGE);
 								JFrameSmartWater.this.jFramePortSel
@@ -217,8 +300,14 @@ public class JFrameSmartWater extends JFrame {
 							case 4 :
 								JOptionPane jOptionUnkErr = new JOptionPane();
 								jOptionUnkErr.showConfirmDialog(
-										JFrameSmartWater.this, "Unknow Error",
-										"Error", JOptionPane.DEFAULT_OPTION,
+										JFrameSmartWater.this,
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"unkErr"),
+										(String) JFrameSmartWater.this.language
+												.getResBundle().getObject(
+														"unkErrTit"),
+										JOptionPane.DEFAULT_OPTION,
 										JOptionPane.ERROR_MESSAGE);
 								JFrameSmartWater.this.jFramePortSel
 										.refreshPortAff();
@@ -242,9 +331,14 @@ public class JFrameSmartWater extends JFrame {
 			public void windowClosing(WindowEvent e) {
 				JOptionPane jOptionpane = new JOptionPane();
 				int reponse = jOptionpane
-						.showConfirmDialog(JFrameSmartWater.this,
-								"Voulez-vous quitter l'application",
-								"Confirmation", JOptionPane.YES_NO_OPTION,
+						.showConfirmDialog(
+								JFrameSmartWater.this,
+								(String) JFrameSmartWater.this.language
+										.getResBundle().getObject("exitFrame"),
+								(String) JFrameSmartWater.this.language
+										.getResBundle().getObject(
+												"exitFrameTit"),
+								JOptionPane.YES_NO_OPTION,
 								JOptionPane.QUESTION_MESSAGE);
 				if (reponse == jOptionpane.YES_OPTION) {
 					JFrameSmartWater.this.exitSoftware();

@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ResourceBundle;
 
 import javax.swing.JOptionPane;
 import javax.swing.Timer;
@@ -16,8 +17,9 @@ import ch.hearc.SmartWater.gui.JFrameSmartWater;
 
 public class Session extends Component {
 
-	public Session(ComConnexion connexion) {
+	public Session(ComConnexion connexion, ResourceBundle resourceLang) {
 		this.logged = false;
+		this.resourceLang = resourceLang;
 		this.connected = false;
 		this.comConnection = connexion;
 		this.identified = false;
@@ -78,7 +80,8 @@ public class Session extends Component {
 
 	/**
 	 * Permet de se délogger de la carte
-	 * @return : 0 = ok , 1 = deja connecté
+	 * 
+	 * @return : 0 = ok, 1 = timeout, 2 = Error , 4 = unknow error
 	 * @throws Exception
 	 */
 	public int logOut() throws Exception {
@@ -90,10 +93,39 @@ public class Session extends Component {
 		}
 		// Initialise l'ouverture d'une session
 		this.comConnection.write(new String("_" + this.userName + "_"
-				+ this.userPassword + "_disconnect_\r\n"));
+				+ this.userPassword + "_" + this.CMD_DISCONNECT + "_\r"));
 
-		this.logged = false;
-		return 0;
+		// Démmarage du timeout
+		this.timeOut = false;
+		startTimeout(DELAY_TIMEOUT);
+		do {
+			// On attend une trame complète ou un timeout
+		} while (!this.comConnection.isAnswerAvailable(aAnswer)
+				&& this.timeOut == false);
+
+		// Si on a été en timeout
+		if (this.timeOut) {
+			this.logged = false;
+			System.out.println("Timeout !!");
+			return 1;
+		} else {
+			// analyse de la réponse
+			String aStrAnalyse = aAnswer.toString();
+			String[] aStrTab = aStrAnalyse.split("_");
+
+			switch (aStrTab[1]) {
+				case "OK" :
+					this.logged = false;
+					// On démmare le timer auto
+					return 0;
+				case "ERROR" :
+					this.logged = false;
+					return 2;
+				default :
+					this.logged = false;
+					return 4;
+			}
+		}
 	}
 
 	/**
@@ -129,9 +161,16 @@ public class Session extends Component {
 	 * @param password
 	 */
 	public void setLogData(String name, String password) {
-		this.userName = name;
-		this.userPassword = password;
-		this.identified = true;
+		// Test si l'utilisateur entre qqch vide
+		if (!name.equals("") && !password.equals("")) {
+			this.userName = name;
+			this.userPassword = password;
+			this.identified = true;
+		}
+	}
+
+	public String getUserName() {
+		return this.userName;
 	}
 
 	/**
@@ -147,14 +186,19 @@ public class Session extends Component {
 				this.comConnection.write(strToSend);
 			} catch (Exception e) {
 				JOptionPane jOptionWriteErr = new JOptionPane();
-				jOptionWriteErr.showConfirmDialog(Session.this, "Write Error ",
-						"Fatal Error", JOptionPane.DEFAULT_OPTION,
-						JOptionPane.ERROR_MESSAGE);
+				jOptionWriteErr.showConfirmDialog(Session.this,
+						(String) Session.this.resourceLang
+								.getObject("writeErr"),
+						(String) Session.this.resourceLang
+								.getObject("writeErrTit"),
+						JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
 			JOptionPane jOptionLogErr = new JOptionPane();
 			jOptionLogErr.showConfirmDialog(Session.this,
-					"Veuillez-vous logger !", "Not Logged",
+					(String) Session.this.resourceLang.getObject("notLogged"),
+					(String) Session.this.resourceLang
+							.getObject("notLoggedTit"),
 					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -171,21 +215,44 @@ public class Session extends Component {
 			try {
 				this.comConnection.write(new String("_" + this.userName + "_"
 						+ this.userPassword + "_" + aCommand + "_" + aParam
-						+ "_\r\n"));
+						+ "_\r"));
 			} catch (Exception e) {
 				JOptionPane jOptionWriteErr = new JOptionPane();
-				jOptionWriteErr.showConfirmDialog(Session.this, "Write Error ",
-						"Fatal Error", JOptionPane.DEFAULT_OPTION,
-						JOptionPane.ERROR_MESSAGE);
+				jOptionWriteErr.showConfirmDialog(Session.this,
+						(String) Session.this.resourceLang
+								.getObject("writeErr"),
+						(String) Session.this.resourceLang
+								.getObject("writeErrTit"),
+						JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 			}
 		} else {
 			JOptionPane jOptionLogErr = new JOptionPane();
 			jOptionLogErr.showConfirmDialog(Session.this,
-					"Veuillez-vous logger !", "Not Logged",
+					(String) Session.this.resourceLang.getObject("notLogged"),
+					(String) Session.this.resourceLang
+							.getObject("notLoggedTit"),
 					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 		}
 	}
 
+	public int getReponse(StringBuilder aReponse) {
+		// Démmarage du timeout
+		this.timeOut = false;
+		startTimeout(DELAY_TIMEOUT);
+		do {
+			// On attend une trame complète ou un timeout
+		} while (!this.comConnection.isAnswerAvailable(aReponse)
+				&& this.timeOut == false);
+
+		// Si on a été en timeout
+		if (this.timeOut) {
+			this.logged = false;
+			System.out.println("Timeout !!");
+			return 1;
+		} else {
+			return 0;
+		}
+	}
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
@@ -199,7 +266,7 @@ public class Session extends Component {
 		}
 		// Initialise l'ouverture d'une session
 		this.comConnection.write(new String("_" + this.userName + "_"
-				+ this.userPassword + "_connect_\r\n"));
+				+ this.userPassword + "_" + this.CMD_CONNECT + "_\r"));
 
 		// Démmarage du timeout
 		this.timeOut = false;
@@ -255,6 +322,8 @@ public class Session extends Component {
 
 	// Inputs
 	private ComConnexion comConnection;
+	private ResourceBundle resourceLang;
+
 	// Tools
 	private boolean logged;
 	private boolean connected;
@@ -264,6 +333,27 @@ public class Session extends Component {
 	private String userPassword;
 	private List<String> listPort;
 
-	private final long DELAY_TIMEOUT = 2000;
+	public final long DELAY_TIMEOUT = 2000;
+
+	// Nom des commandes
+	public final String CMD_MODE = "mode";
+	public final String CMD_MISEAHEURE = "mah";
+	public final String CMD_DISPO = "dispo";
+	public final String CMD_OFF_TEMP = "offset";
+	public final String CMD_MDP_ADMIN = "passa";
+	public final String CMD_MEM_RESET = "reset";
+	public final String CMD_PIN_CODE = "pin";
+	public final String CMD_SIMCRD_NUM = "own";
+	public final String CMD_SIMUL = "simulate";
+	public final String CMD_DIAG_UNIT = "dysfuntion";
+	public final String CMD_ALARM_NUM = "alarm";
+	public final String CMD_LIMITES = "limites";
+	public final String CMD_STATE = "etat";
+	public final String CMD_MDP_USER = "passu";
+	public final String CMD_MONTH_CONS = "monthlyConsumption";
+	public final String CMD_DAY_CONS = "dailyConsumption";
+	public final String CMD_CONNECT = "connect";
+	public final String CMD_DISCONNECT = "disconnect";
+	public final String CMD_UNIT_NAME = "unitname";
 
 }

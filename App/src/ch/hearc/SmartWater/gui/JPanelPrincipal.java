@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTabbedPane;
 import javax.swing.SwingConstants;
@@ -13,6 +14,8 @@ import javax.swing.event.ChangeListener;
 
 import ch.hearc.SmartWater.commUsb.ComConnexion;
 import ch.hearc.SmartWater.gui.login.Session;
+import ch.hearc.SmartWater.gui.panelAdmin.JPanelAdminParam;
+import ch.hearc.SmartWater.gui.panelAdmin.JPanelAdministrator;
 import ch.hearc.SmartWater.gui.panelCompteur.JPanelCompteurs;
 import ch.hearc.SmartWater.gui.panelDiag.JPanelDiag;
 import ch.hearc.SmartWater.gui.panelGraphJour.JPanelComsomJour;
@@ -39,6 +42,8 @@ public class JPanelPrincipal extends JPanel {
 		this.tabConsoJour = (String) this.resourceLang
 				.getObject("tabConsoJour");
 		this.tabCompt = (String) this.resourceLang.getObject("tabCompt");
+		this.tabAdmin = (String) this.resourceLang.getObject("tabAdmin");
+		this.tabDiag = (String) this.resourceLang.getObject("tabDiag");
 
 		geometrie();
 		controle();
@@ -55,9 +60,12 @@ public class JPanelPrincipal extends JPanel {
 	public JPanelParametres getJPanelParam() {
 		return this.jPanelParametres;
 	}
-	
-	public JPanelChartTabMonthParam getJPanelChartTabMonthParam()
-	{
+
+	public JPanelAdministrator getJPanelAdmin() {
+		return this.jPanelAdministrator;
+	}
+
+	public JPanelChartTabMonthParam getJPanelChartTabMonthParam() {
 		return this.jPanelConsomMois.getJPanelChartTabMonthParam();
 	}
 
@@ -76,9 +84,25 @@ public class JPanelPrincipal extends JPanel {
 			public void stateChanged(ChangeEvent arg0) {
 				if (ongletPrincipaux.getTitleAt(
 						ongletPrincipaux.getSelectedIndex()).equals(
-						"Paramètres")) {
+						JPanelPrincipal.this.tabAdmin)) {
 
-					System.out.println("Tab paramètre selectionné");
+					// Test si on est loggé en admin sur la carte
+					if (JPanelPrincipal.this.session.isLogged()
+							&& JPanelPrincipal.this.session.getUserName()
+									.equals(ADMIN_USERNAME)) {
+
+					} else {
+						JOptionPane jOptionWriteErr = new JOptionPane();
+						jOptionWriteErr.showConfirmDialog(JPanelPrincipal.this,
+								(String) JPanelPrincipal.this.resourceLang
+										.getObject("adminLogErr"),
+								(String) JPanelPrincipal.this.resourceLang
+										.getObject("adminLogErrTit"),
+								JOptionPane.DEFAULT_OPTION,
+								JOptionPane.ERROR_MESSAGE);
+
+						ongletPrincipaux.setSelectedIndex(0);
+					}
 				}
 			}
 		});
@@ -95,6 +119,8 @@ public class JPanelPrincipal extends JPanel {
 		// Construction des panels
 		this.jPanelParametres = new JPanelParametres(this.parameters,
 				this.resourceLang, this.session);
+		this.jPanelAdministrator = new JPanelAdministrator(parameters,
+				resourceLang, session);
 		this.jPanelConsomMois = new JPanelConsomMois(resourceLang,
 				this.parameters);
 		this.jPanelComsomJour = new JPanelComsomJour(resourceLang);
@@ -111,8 +137,8 @@ public class JPanelPrincipal extends JPanel {
 		this.ongletPrincipaux.addTab(this.tabConsoMois, this.jPanelConsomMois);
 		this.ongletPrincipaux.addTab(this.tabConsoJour, this.jPanelComsomJour);
 		this.ongletPrincipaux.addTab(this.tabCompt, this.jPanelCompteurs);
-		this.ongletPrincipaux.addTab("Diagnostic", this.jPanelDiag);
-
+		this.ongletPrincipaux.addTab(this.tabDiag, this.jPanelDiag);
+		this.ongletPrincipaux.addTab(this.tabAdmin, this.jPanelAdministrator);
 	}
 
 	/*------------------------------------------------------------------*\
@@ -128,6 +154,7 @@ public class JPanelPrincipal extends JPanel {
 	private JPanelComsomJour jPanelComsomJour;
 	private JPanelCompteurs jPanelCompteurs;
 	private JPanelDiag jPanelDiag;
+	private JPanelAdministrator jPanelAdministrator;
 
 	private Map<String, String> parameters;
 	private ResourceBundle resourceLang;
@@ -137,5 +164,9 @@ public class JPanelPrincipal extends JPanel {
 	private String tabConsoMois;
 	private String tabConsoJour;
 	private String tabCompt;
+	private String tabAdmin;
+	private String tabDiag;
+
+	private final String ADMIN_USERNAME = "A";
 
 }

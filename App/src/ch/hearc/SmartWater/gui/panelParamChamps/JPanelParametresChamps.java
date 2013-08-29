@@ -27,6 +27,7 @@ import javax.swing.event.CaretListener;
 
 import ch.hearc.SmartWater.commUsb.ComConnexion;
 import ch.hearc.SmartWater.gui.login.Session;
+import ch.hearc.SmartWater.gui.panelAdmin.JPanelAdminParam;
 
 public class JPanelParametresChamps extends JPanel {
 
@@ -68,58 +69,65 @@ public class JPanelParametresChamps extends JPanel {
 	 * Sauve tout les paramètres checkés par le checkbox
 	 */
 	public void saveParameters() {
+		StringBuilder aReply = new StringBuilder();
 		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
 			if (!this.session.isLogged()) {
 				JOptionPane jOptionLogErr = new JOptionPane();
 				jOptionLogErr.showConfirmDialog(this.session,
-						"Veuillez-vous connecter !", "Not Logged",
+						(String) this.resourceLang.getObject("notLogged"),
+						(String) this.resourceLang.getObject("notLoggedTit"),
 						JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 				return;
 			}
 
 			if (this.jCheckBox[i].isSelected()) {
 				switch (this.jChampsParam[i].getName()) {
-					case "paramMode" :
-						this.session.writeCmd("mode",
+					case "paramTelAlarm" :
+						this.session.writeCmd(this.session.CMD_ALARM_NUM,
 								this.jChampsParam[i].getText());
-						break;
-					case "paramTelCarte" :
-						this.session.writeCmd("unum",
-								this.jChampsParam[i].getText());
-						break;
-					case "paramTelAlarm1" :
-						this.session.writeCmd("alarm1",
-								this.jChampsParam[i].getText());
-						break;
-					case "paramTelAlarm2" :
-						this.session.writeCmd("alarm2",
-								this.jChampsParam[i].getText());
-						break;
-					case "paramInter" :
-						// this.session.write();
-						break;
-					case "paramDispo" :
-						// this.session.write();
 						break;
 					case "paramMdpU" :
-						this.session.writeCmd("passu",
+						this.session.writeCmd(this.session.CMD_MDP_USER,
 								this.jChampsParam[i].getText());
 						break;
-					case "paramMdpA" :
-						this.session.writeCmd("passa",
-								this.jChampsParam[i].getText());
-						break;
-					case "paramOffsetTemp" :
-						this.session.writeCmd("offset",
-								this.jChampsParam[i].getText());
-						break;
-					case "paramUnitName" :
-						this.session.writeCmd("uname",
-								this.jChampsParam[i].getText());
-						break;
+				}
+
+				if (this.session.getReponse(aReply) == 0) {
+					System.out.println(aReply.toString());
+					// analyse de la réponse
+					String aStrAnalyse = aReply.toString();
+					String[] aStrTab = aStrAnalyse.split("_");
+
+					switch (aStrTab[1]) {
+						case "OK" :
+							aReply.delete(0, aReply.length());
+							break;
+						case "ERROR" :
+							JOptionPane jOptionLogOk = new JOptionPane();
+							jOptionLogOk.showConfirmDialog(this,
+									"Error write param : "
+											+ this.jChampsParam[i].getText(),
+									"Error", JOptionPane.DEFAULT_OPTION,
+									JOptionPane.ERROR_MESSAGE);
+							return;
+						default :
+							return;
+					}
+				} else {
+					JOptionPane jOptionTimeoutErr = new JOptionPane();
+					jOptionTimeoutErr.showConfirmDialog(this,
+							(String) this.resourceLang.getObject("timeOut"),
+							(String) this.resourceLang.getObject("timeOutTit"),
+							JOptionPane.DEFAULT_OPTION,
+							JOptionPane.ERROR_MESSAGE);
+					return;
 
 				}
 			}
+			JOptionPane jOptionLogOk = new JOptionPane();
+			jOptionLogOk.showConfirmDialog(this, "ParamWrite Succes",
+					"Success", JOptionPane.DEFAULT_OPTION,
+					JOptionPane.INFORMATION_MESSAGE);
 
 		}
 	}
@@ -132,7 +140,8 @@ public class JPanelParametresChamps extends JPanel {
 			if (!this.session.isLogged()) {
 				JOptionPane jOptionLogErr = new JOptionPane();
 				jOptionLogErr.showConfirmDialog(this.session,
-						"Veuillez-vous connecter !", "Not Logged",
+						(String) this.resourceLang.getObject("notLogged"),
+						(String) this.resourceLang.getObject("notLoggedTit"),
 						JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 				return;
 			}
@@ -148,7 +157,8 @@ public class JPanelParametresChamps extends JPanel {
 	 */
 	public void controlCheckBox(boolean aState) {
 		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
-			this.jCheckBox[i].setSelected(aState);
+			// this.jCheckBox[i].setSelected(aState);
+			this.jCheckBox[i].doClick();
 		}
 	}
 
@@ -169,37 +179,59 @@ public class JPanelParametresChamps extends JPanel {
 
 		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
 			final int j = i;
-			this.jChampsParam[i].addActionListener(new ActionListener() {
+
+			this.jCheckBox[i].addActionListener(new ActionListener() {
 
 				@Override
 				public void actionPerformed(ActionEvent event) {
-					JPanelParametresChamps.this.parameters.put(
-							JPanelParametresChamps.this.jChampsParam[j]
-									.getName(),
-							JPanelParametresChamps.this.jChampsParam[j]
-									.getText());
-					System.out
-							.println("[JPanelParametresChamps] : Paramètre AL "
-									+ JPanelParametresChamps.this.jChampsParam[j]
-											.getName());
-				}
+					if (JPanelParametresChamps.this.jCheckBox[j].isSelected()) {
+						switch (JPanelParametresChamps.this.jCheckBox[j]
+								.getName()) {
+							case "paramTelAlarm" :
+								if (!JPanelParametresChamps.this.jChampsParam[j]
+										.getText()
+										.matches(
+												JPanelParametresChamps.REGEX_TEL_NUM_ALARM)) {
+									JOptionPane jOptionLogErr = new JOptionPane();
+									jOptionLogErr
+											.showConfirmDialog(
+													JPanelParametresChamps.this,
+													(String) JPanelParametresChamps.this.resourceLang
+															.getObject("formatError")
+															+ "+41798184833",
+													(String) JPanelParametresChamps.this.resourceLang
+															.getObject("formatErrorTit"),
+													JOptionPane.DEFAULT_OPTION,
+													JOptionPane.ERROR_MESSAGE);
+									JPanelParametresChamps.this.jCheckBox[j]
+											.setSelected(false);
+								}
+								break;
 
-			});
+							case "paramMdpU" :
+								if (!JPanelParametresChamps.this.jChampsParam[j]
+										.getText()
+										.matches(
+												JPanelParametresChamps.REGEX_MDP_USER)) {
+									JOptionPane jOptionLogErr = new JOptionPane();
+									jOptionLogErr
+											.showConfirmDialog(
+													JPanelParametresChamps.this,
+													(String) JPanelParametresChamps.this.resourceLang
+															.getObject("formatError")
+															+ "aZ6Hg4GD.... (20 max.)",
+													(String) JPanelParametresChamps.this.resourceLang
+															.getObject("formatErrorTit"),
+													JOptionPane.DEFAULT_OPTION,
+													JOptionPane.ERROR_MESSAGE);
+									JPanelParametresChamps.this.jCheckBox[j]
+											.setSelected(false);
+								}
+								break;
 
-			this.jChampsParam[i].addFocusListener(new FocusListener() {
-
-				@Override
-				public void focusLost(FocusEvent event) {
-					JPanelParametresChamps.this.parameters.put(
-							JPanelParametresChamps.this.jChampsParam[j]
-									.getName(),
-							JPanelParametresChamps.this.jChampsParam[j]
-									.getText());
-				}
-
-				@Override
-				public void focusGained(FocusEvent event) {
-					// TODO Auto-generated method stub
+							default :
+						}
+					}
 
 				}
 			});
@@ -208,7 +240,24 @@ public class JPanelParametresChamps extends JPanel {
 
 				@Override
 				public void caretUpdate(CaretEvent event) {
-					System.out.println("Param sauvegardé");
+					// On désactive si on modifie
+					if (JPanelParametresChamps.this.jCheckBox[j].isSelected()) {
+						JPanelParametresChamps.this.jCheckBox[j]
+								.setSelected(false);
+					}
+					if (JPanelParametresChamps.this.jChampsParam[j].getText()
+							.equals("")) {
+						JPanelParametresChamps.this.parameters
+								.remove(JPanelParametresChamps.this.jChampsParam[j]
+										.getName());
+						System.out.println("Objet eff");
+					} else {
+						JPanelParametresChamps.this.parameters.put(
+								JPanelParametresChamps.this.jChampsParam[j]
+										.getName(),
+								JPanelParametresChamps.this.jChampsParam[j]
+										.getText());
+					}
 
 				}
 			});
@@ -236,6 +285,7 @@ public class JPanelParametresChamps extends JPanel {
 		this.jCheckBox = new JCheckBox[DEFAULT_PAR_NUM];
 		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
 			this.jCheckBox[i] = new JCheckBox();
+			this.jCheckBox[i].setName(tableParamName[i]);
 		}
 
 		// Constructions des paramètres
@@ -269,15 +319,15 @@ public class JPanelParametresChamps extends JPanel {
 	private JCheckBox jCheckBox[];
 	private Session session;
 
-	private static int DEFAULT_PAR_NUM = 11;
-
 	private Map<String, String> parameters;
 
 	private ResourceBundle resourceLang;
 
-	private static String[] tableParamName = {"paramTelCarte",
-			"paramTelAlarm1", "paramTelAlarm2", "paramPinNum", "paramMode",
-			"paramInter", "paramDispo", "paramMdpU", "paramMdpA",
-			"paramOffsetTemp", "paramUnitName"};
+	private static String[] tableParamName = {"paramTelAlarm", "paramMdpU"};
+
+	private static int DEFAULT_PAR_NUM = tableParamName.length;
+
+	private static String REGEX_TEL_NUM_ALARM = "\\+41[0-9]{9}";
+	private static String REGEX_MDP_USER = "[0-9a-zA-Z]{4,19}";
 
 }

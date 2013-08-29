@@ -1,10 +1,14 @@
 package ch.hearc.SmartWater.gui.login;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.GridLayout;
+import java.awt.Panel;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 
+import javax.swing.Box;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,19 +38,38 @@ public class JFrameLogin extends JFrame implements ActionListener {
 
 		SUBMIT = new JButton("Ok");
 
-		panel = new JPanel(new GridLayout(3, 1));
+		Box boxPanel = Box.createVerticalBox();
+		Box boxBtn = Box.createVerticalBox();
+		Box box = Box.createVerticalBox();
+
+		SUBMIT.setPreferredSize(new Dimension(60, 30));
+		SUBMIT.setMaximumSize(new Dimension(60, 30));
+
+		panel = new JPanel(new GridLayout(2, 1));
 		panel.add(label1);
 		panel.add(text1);
 		panel.add(label2);
 		panel.add(text2);
-		panel.add(SUBMIT);
-		add(panel, BorderLayout.CENTER);
+		JPanel panel2 = new JPanel(new FlowLayout(FlowLayout.CENTER));
+		panel2.add(SUBMIT);
+
+		panel.setMaximumSize(new Dimension(350, 100));
+		panel.setPreferredSize(new Dimension(350, 100));
+
+		boxPanel.add(panel);
+		boxBtn.add(panel2);
+		box.add(boxPanel);
+		box.add(boxBtn);
+
+		add(box, BorderLayout.CENTER);
 		SUBMIT.addActionListener(this);
 		this.setTitle("Login");
-		this.setSize(400, 200);
+		this.setSize(250, 170);
 
 		// Display the window.
 		this.setVisible(false);
+		this.setResizable(true);
+		this.setMaximumSize(new Dimension(350, 170));
 	}
 
 	@Override

@@ -26,11 +26,11 @@ public class LabelsBundle_fr extends ListResourceBundle
 				
 				//Paramètres
 				{"paramTelCarte", new String("Numéro tel. station")},
-				{"paramTelAlarm1", new String("Numéro tel. alarme 1")},
-				{"paramTelAlarm2", new String("Numéro tel. alarme 2")},
+				{"paramTelAlarm", new String("Numéro tel. alarme 1")},
+				//{"paramTelAlarm2", new String("Numéro tel. alarme 2")},
 				{"paramPinNum", new String("Code pin")},
 				{ "paramMode", new String("Mode[0-1]:") },
-				{ "paramInter", new String("Intervalle [min] :") },
+				//{ "paramInter", new String("Intervalle [min] :") },
 				{ "paramDispo", new String("Disponibilité") },
 				{ "paramMdpU", new String("Mot de passe utilisateur") },
 				{ "paramMdpA", new String("Mot de passe administrateur") },

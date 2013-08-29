@@ -51,14 +51,11 @@ public class JPanelChartTabMonthParam extends JPanel
 		this.monthLim = new int[12];
 		this.tableMois = new String[12];
 
-		
-		
 		this.tabHeaderMois = (String) this.resourceLang
 				.getObject("tabHeaderMois");
 		this.tabHeaderLimit = (String) this.resourceLang
 				.getObject("tabHeaderLimit");
 
-		
 		this.tableEntete = new String[2];
 		this.tableEntete[0] = this.tabHeaderMois;
 		this.tableEntete[1] = this.tabHeaderLimit;
@@ -111,13 +108,11 @@ public class JPanelChartTabMonthParam extends JPanel
 	public void saveLimits() {
 
 		for (int i = 0; i < 12; i++) {
-			this.monthLim[i] = Integer.valueOf((String) this.jTable.getValueAt(
-					i, 1));
+			this.monthLim[i] = (int) this.jTable.getValueAt(i, 1);
 			this.parameters.put(PARAM_KEY_BASE + String.valueOf(i),
 					String.valueOf(this.monthLim[i]));
 		}
 	}
-
 	public void updateLimits() {
 		Set<Entry<String, String>> entry = this.parameters.entrySet();
 		for (Entry<String, String> ligne : entry) {
