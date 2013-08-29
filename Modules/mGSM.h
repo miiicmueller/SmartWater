@@ -45,6 +45,7 @@ typedef enum // choix du compteur
     kErrorSimBusy,
     kErrorSimWrong,
     kErrorSimPukRequired,
+    kErrorGetStateMemory,
     kErrorSimPin2Required,
     kErrorSimPuk2Required,
     kErrorMemoryFailure,
@@ -147,6 +148,12 @@ public:
     //----------------------------------------------------------------
     UInt16 getCredit();
 
+    //----------------------------------------------------------------
+    //fonction pour connaitre combien de SMS sont dans la memoire SIM
+    //
+    //retour : le nombre de SMS present dans la memoire
+    //----------------------------------------------------------------
+    UInt8 getNbSms();
 
 
 

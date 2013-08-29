@@ -18,4 +18,5 @@ UInt8 tCommandesAT::deleteSMSPos[22] = "AT+CMGD="; //effacer un SMS a une positi
 UInt8 tCommandesAT::sendSMS[22] = "AT+CMGS=\"";
 UInt8 tCommandesAT::endAT[22] = "\r";
 UInt8 tCommandesAT::configBaud9600[22] = "AT+IPR=9600";
+UInt8 tCommandesAT::getStateMemory[22] = "AT+CPMS?";
 

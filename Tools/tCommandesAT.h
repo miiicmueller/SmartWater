@@ -23,7 +23,7 @@ public:
 	static  UInt8 deleteSMSAll[];
 	static  UInt8 deleteSMSPos[];
 	static  UInt8 sendSMS[];
-	static  UInt8 goSendSMS[];
+	static  UInt8 getStateMemory[];
 	static  UInt8 endAT[];
 };
 #endif
