@@ -118,13 +118,17 @@ public class JPanelChartTabMonthParam extends JPanel
 	/**
 	 * Sauve les limites dans la map
 	 */
-	public void saveLimits() {
+	public void saveLimitEtConso() {
 
 		for (int i = 0; i < 12; i++) {
-			this.monthLim[i] = Integer.valueOf((String) this.jTable.getValueAt(
-					i, 1));
-			this.parameters.put(PARAM_KEY_BASE + String.valueOf(i),
+			this.monthLim[i] = Integer.valueOf(this.jTable.getValueAt(i, 1)
+					.toString());
+			this.monthConsom[i] = Integer.valueOf(this.jTable.getValueAt(i, 2)
+					.toString());
+			this.parameters.put(PARAM_KEY_BASE_LIM + String.valueOf(i),
 					String.valueOf(this.monthLim[i]));
+			this.parameters.put(PARAM_KEY_BASE_CONS + String.valueOf(i),
+					String.valueOf(this.monthConsom[i]));
 		}
 	}
 
@@ -136,7 +140,7 @@ public class JPanelChartTabMonthParam extends JPanel
 		for (Entry<String, String> ligne : entry) {
 			String key = ligne.getKey();
 			String valeur = ligne.getValue();
-			String[] strI = key.split(PARAM_KEY_BASE);
+			String[] strI = key.split(PARAM_KEY_BASE_LIM);
 			// Tester si c'est bien la clé d'un mois
 			if (strI.length > 1) {
 				this.monthLim[Integer.valueOf(strI[1])] = Integer
@@ -146,6 +150,27 @@ public class JPanelChartTabMonthParam extends JPanel
 
 		for (int i = 0; i < 12; i++) {
 			this.jTable.setValueAt(String.valueOf(this.monthLim[i]), i, 1);
+		}
+
+		// On recharge le graph
+		updateGraphTable();
+	}
+
+	public void updateMonthCons() {
+		Set<Entry<String, String>> entry = this.parameters.entrySet();
+		for (Entry<String, String> ligne : entry) {
+			String key = ligne.getKey();
+			String valeur = ligne.getValue();
+			String[] strI = key.split(PARAM_KEY_BASE_CONS);
+			// Tester si c'est bien la clé d'un mois
+			if (strI.length > 1) {
+				this.monthConsom[Integer.valueOf(strI[1])] = Integer
+						.valueOf(valeur);
+			}
+		}
+
+		for (int i = 0; i < 12; i++) {
+			this.jTable.setValueAt(String.valueOf(this.monthConsom[i]), i, 2);
 		}
 
 		// On recharge le graph
@@ -175,14 +200,14 @@ public class JPanelChartTabMonthParam extends JPanel
 		// A cell has started/stopped editing
 
 		if ("tableCellEditor".equals(e.getPropertyName())) {
-			if (this.jTable.isEditing())
+			if (this.jTable.isEditing()) {
 				processEditingStarted();
-			else
+			} else {
 				processEditingStopped();
+			}
 		}
 
 	}
-
 	/**
 	 * Save information of the cell about to be edited
 	 */
@@ -191,7 +216,6 @@ public class JPanelChartTabMonthParam extends JPanel
 		// column of the table have not been set when the "tableCellEditor"
 		// PropertyChangeEvent is fired.
 		// This results in the "run" method being invoked
-
 		SwingUtilities.invokeLater(this);
 	}
 
@@ -206,7 +230,12 @@ public class JPanelChartTabMonthParam extends JPanel
 		if (!this.newValue.equals(this.oldValue)) {
 			// Make a copy of the data in case another cell starts editing
 			// while processing this change
-			this.monthLim[rowA] = Integer.valueOf((String) this.newValue);
+			if (columnA == 1) {
+				this.monthLim[rowA] = Integer.valueOf((String) this.newValue);
+			} else if (columnA == 2) {
+				this.monthConsom[rowA] = Integer
+						.valueOf((String) this.newValue);
+			}
 			this.updateGraphTable();
 
 		}
@@ -231,11 +260,11 @@ public class JPanelChartTabMonthParam extends JPanel
 		Object[][] donnees = new Object[12][];
 
 		for (int row = 0; row < 12; row++) { // For each element of that array,
-			donnees[row] = new Object[2]; // allocate an array of int.
+			donnees[row] = new Object[3]; // allocate an array of int.
 			donnees[row][0] = this.tableMois[row]; // initialize it to the
 													// product.
 			donnees[row][1] = this.monthLim[row]; // initialize it to the
-			donnees[row][1] = this.monthConsom[row]; // initialize it to the
+			donnees[row][2] = this.monthConsom[row]; // initialize it to the
 		}
 
 		this.jPanelChartTabMonthParamControl = new JPanelChartTabMonthParamControl(
@@ -318,6 +347,7 @@ public class JPanelChartTabMonthParam extends JPanel
 
 	private final int MIN_HEIGHT = 100;
 	private final int MAX_WIDTH = 100000;
-	private final String PARAM_KEY_BASE = "LimMonth";
+	private final String PARAM_KEY_BASE_LIM = "LimMonth";
+	private final String PARAM_KEY_BASE_CONS = "ConsMonth";
 
 }

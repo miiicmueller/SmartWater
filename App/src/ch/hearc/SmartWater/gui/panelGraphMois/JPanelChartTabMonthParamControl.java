@@ -49,13 +49,13 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 			}
 		});
 
-		this.buttonSaveXls.addActionListener(new ActionListener() {
-
-			@Override
-			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("[Sauver limite]");
-			}
-		});
+		// this.buttonSaveXls.addActionListener(new ActionListener() {
+		//
+		// @Override
+		// public void actionPerformed(ActionEvent arg0) {
+		// System.out.println("[Sauver limite]");
+		// }
+		// });
 
 	}
 
@@ -65,11 +65,11 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 
 		this.buttonWrLimits = new JButton(
 				(String) resourceLang.getObject("buttonWrLimits"));
-		this.buttonSaveXls = new JButton(
-				(String) resourceLang.getObject("buttonSaveXls"));
+//		this.buttonSaveXls = new JButton(
+//				(String) resourceLang.getObject("buttonSaveXls"));
 
 		this.add(buttonWrLimits);
-		this.add(buttonSaveXls);
+		//this.add(buttonSaveXls);
 
 	}
 	/*------------------------------------------------------------------*\

@@ -18,6 +18,7 @@ import ch.hearc.SmartWater.gui.panelAdmin.JPanelAdminParam;
 import ch.hearc.SmartWater.gui.panelAdmin.JPanelAdministrator;
 import ch.hearc.SmartWater.gui.panelCompteur.JPanelCompteurs;
 import ch.hearc.SmartWater.gui.panelDiag.JPanelDiag;
+import ch.hearc.SmartWater.gui.panelGraphJour.JPanelChartJourPanParam;
 import ch.hearc.SmartWater.gui.panelGraphJour.JPanelComsomJour;
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelChartTabMonthParam;
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelConsomMois;
@@ -67,6 +68,10 @@ public class JPanelPrincipal extends JPanel {
 
 	public JPanelChartTabMonthParam getJPanelChartTabMonthParam() {
 		return this.jPanelConsomMois.getJPanelChartTabMonthParam();
+	}
+
+	public JPanelChartJourPanParam getJPanelChartJourPanParam() {
+		return this.jPanelComsomJour.getJPanelChartJourPanParam();
 	}
 
 	/*------------------------------------------------------------------*\
@@ -123,7 +128,7 @@ public class JPanelPrincipal extends JPanel {
 				resourceLang, session);
 		this.jPanelConsomMois = new JPanelConsomMois(resourceLang,
 				this.parameters);
-		this.jPanelComsomJour = new JPanelComsomJour(resourceLang);
+		this.jPanelComsomJour = new JPanelComsomJour(resourceLang, parameters);
 		this.jPanelCompteurs = new JPanelCompteurs(resourceLang);
 		this.jPanelDiag = new JPanelDiag(resourceLang);
 

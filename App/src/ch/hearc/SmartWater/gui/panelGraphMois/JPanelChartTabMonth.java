@@ -161,8 +161,8 @@ public class JPanelChartTabMonth extends JPanel {
 
 	private void initDataGraph() {
 		for (int i = 0; i < 12; i++) {
-			this.monthConsom[i] = 0 + i;
-			this.monthLim[i] = 0 + i;
+			this.monthConsom[i] = 0;
+			this.monthLim[i] = 0;
 		}
 	}
 

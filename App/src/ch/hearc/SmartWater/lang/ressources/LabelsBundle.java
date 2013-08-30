@@ -107,6 +107,7 @@ public class LabelsBundle extends ListResourceBundle {
 			{"tabHeaderMois", new String("Months")},
 			{"tabHeaderLimit", new String("Limit")},
 			{"tabHeaderConsom", new String("Consumption")},
+			{"tabHeaderJours", new String("Jours")},
 
 			// Tabs
 			{"tabPAram", new String("Parameters")},

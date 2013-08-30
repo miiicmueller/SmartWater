@@ -1,24 +1,24 @@
 package ch.hearc.SmartWater.gui.panelGraphJour;
 
 import java.awt.BorderLayout;
-import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import org.jfree.data.category.CategoryDataset;
+
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelChartTabMonth;
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelChartTabMonthParam;
 
-public class JPanelComsomJour extends JPanel {
+public class JPanelChartJourPanGraph extends JPanel {
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelComsomJour(ResourceBundle resourceLang,
-			Map<String, String> parameters) {
+	public JPanelChartJourPanGraph(ResourceBundle resourceLang) {
 		this.resourceLang = resourceLang;
-		this.parameters = parameters;
+
 		geometrie();
 		controle();
 		apparence();
@@ -28,12 +28,10 @@ public class JPanelComsomJour extends JPanel {
 	|*				Set				*|
 	\*------------------------------*/
 
-
-	public JPanelChartJourPanParam getJPanelChartJourPanParam() {
-		return this.jPanelChartJourPanParam;
+	public void updateGraph(int[] dayConsom) {
+		this.jPanelChartJour.updateGraph(dayConsom);
 	}
 
-	
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
@@ -47,22 +45,13 @@ public class JPanelComsomJour extends JPanel {
 	}
 
 	private void geometrie() {
-
 		this.setLayout(new BorderLayout());
 
-		this.jPanelChartJourPanGraph = new JPanelChartJourPanGraph(resourceLang);
-		this.jPanelChartJourPanParam = new JPanelChartJourPanParam(
-				resourceLang, this.parameters, this.jPanelChartJourPanGraph);
+		this.jPanelChartJour = new JPanelChartJour(resourceLang);
+		this.jPanelChartJourControl = new JPanelChartJourControl(resourceLang);
 
-		this.jSplitTabChart = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-
-		jSplitTabChart.add(jPanelChartJourPanGraph, JSplitPane.LEFT);
-		jSplitTabChart.add(jPanelChartJourPanParam, JSplitPane.RIGHT);
-
-		jSplitTabChart.setDividerLocation(500);
-
-		this.add(jSplitTabChart, BorderLayout.CENTER);
-
+		this.add(this.jPanelChartJour, BorderLayout.CENTER);
+		this.add(this.jPanelChartJourControl, BorderLayout.SOUTH);
 	}
 
 	/*------------------------------------------------------------------*\
@@ -71,13 +60,9 @@ public class JPanelComsomJour extends JPanel {
 
 	// Input
 	private ResourceBundle resourceLang;
-	private Map<String, String> parameters;
 
-	// Panel de contrôle
-	private JPanelChartJourPanParam jPanelChartJourPanParam;
-	private JPanelChartJourPanGraph jPanelChartJourPanGraph;
-
-	// Séparation
-	private JSplitPane jSplitTabChart;
+	// Tools
+	private JPanelChartJour jPanelChartJour;
+	private JPanelChartJourControl jPanelChartJourControl;
 
 }
