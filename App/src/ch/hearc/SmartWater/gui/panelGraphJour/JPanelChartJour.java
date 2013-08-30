@@ -38,7 +38,13 @@ public class JPanelChartJour extends JPanel {
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
-
+	
+	public void updateGraph(int[] dayConsom) {
+		CategoryDataset donneeGraph = getGraphDataSet(dayConsom);
+		this.chartConsommation.getCategoryPlot().setDataset(donneeGraph);
+	}
+	
+	
 	private void initDataGraph() {
 		for (int i = 0; i < 31; i++) {
 			this.dayConsom[i] = i;

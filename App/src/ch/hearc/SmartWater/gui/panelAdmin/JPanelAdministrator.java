@@ -1,26 +1,33 @@
-package ch.hearc.SmartWater.gui.panelParamChamps;
+package ch.hearc.SmartWater.gui.panelAdmin;
 
 import java.awt.BorderLayout;
 import java.awt.GridLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.Map;
-import java.util.Map.Entry;
 import java.util.ResourceBundle;
 import java.util.Set;
+import java.util.Map.Entry;
 
 import javax.swing.Box;
+import javax.swing.JCheckBox;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JTextField;
+import javax.swing.event.CaretEvent;
+import javax.swing.event.CaretListener;
 
-import ch.hearc.SmartWater.commUsb.ComConnexion;
 import ch.hearc.SmartWater.gui.login.Session;
 
-public class JPanelParametres extends JPanel {
+public class JPanelAdministrator extends JPanel {
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelParametres(Map<String, String> parameters,
+	public JPanelAdministrator(Map<String, String> parameters,
 			ResourceBundle resourceLang, Session session) {
 		this.parameters = parameters;
 		this.resourceLang = resourceLang;
@@ -36,12 +43,12 @@ public class JPanelParametres extends JPanel {
 	\*------------------------------*/
 
 	public void updateParams() {
-		this.jPanelParametresChamps.updateParams();
-	}
-	public void saveToFile() {
-		this.jPanelParametresChamps.saveToFile();
+		this.jPanelAdminParam.updateParams();
 	}
 
+	public void saveToFile() {
+		this.jPanelAdminParam.saveToFile();
+	}
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
@@ -58,18 +65,18 @@ public class JPanelParametres extends JPanel {
 		BorderLayout bl = new BorderLayout();
 		this.setLayout(bl);
 
-		this.jPanelParametresChamps = new JPanelParametresChamps(
-				this.parameters, this.resourceLang, this.session);
-		this.jPanelControleParam = new JPanelControleParam(this.resourceLang,
-				this.jPanelParametresChamps);
+		this.jPanelAdminParam = new JPanelAdminParam(this.parameters,
+				this.resourceLang, this.session);
+		this.jPanelAdminCtrl = new JPanelAdminControl(this.resourceLang,
+				this.jPanelAdminParam);
 
-		this.add(jPanelParametresChamps, BorderLayout.CENTER);
-		this.add(jPanelControleParam, BorderLayout.SOUTH);
+		this.add(jPanelAdminParam, BorderLayout.CENTER);
+		this.add(jPanelAdminCtrl, BorderLayout.SOUTH);
 
 	}
 
 	public void saveParams() {
-		this.jPanelParametresChamps.saveParameters();
+		this.jPanelAdminParam.saveParameters();
 	}
 
 	/*------------------------------------------------------------------*\
@@ -84,7 +91,7 @@ public class JPanelParametres extends JPanel {
 	private ResourceBundle resourceLang;
 
 	// Panel de contrôle
-	private JPanelControleParam jPanelControleParam;
-	private JPanelParametresChamps jPanelParametresChamps;
+	private JPanelAdminControl jPanelAdminCtrl;
+	private JPanelAdminParam jPanelAdminParam;
 
 }

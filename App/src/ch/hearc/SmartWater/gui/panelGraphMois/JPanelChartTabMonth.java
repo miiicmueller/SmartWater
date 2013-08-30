@@ -127,8 +127,8 @@ public class JPanelChartTabMonth extends JPanel {
 
 		chartPanel.setDomainZoomable(false);
 		chartPanel.setRangeZoomable(false);
-		chartPanel.setDisplayToolTips(false);
-		chartPanel.setPopupMenu(null);
+		// chartPanel.setDisplayToolTips(false);
+		// chartPanel.setPopupMenu(null);
 		chartPanel.setMinimumSize(new Dimension(MIN_HEIGHT, MIN_WIDTH));
 
 		this.add(chartPanel, BorderLayout.CENTER);
@@ -161,8 +161,8 @@ public class JPanelChartTabMonth extends JPanel {
 
 	private void initDataGraph() {
 		for (int i = 0; i < 12; i++) {
-			this.monthConsom[i] = 0 + i;
-			this.monthLim[i] = 0 + i;
+			this.monthConsom[i] = 0;
+			this.monthLim[i] = 0;
 		}
 	}
 

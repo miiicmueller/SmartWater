@@ -1,4 +1,4 @@
-package ch.hearc.SmartWater.gui.panelParamChamps;
+package ch.hearc.SmartWater.gui.panelAdmin;
 
 import java.awt.BorderLayout;
 import java.awt.FlowLayout;
@@ -10,23 +10,21 @@ import java.util.ResourceBundle;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JPanel;
-import javax.swing.JTabbedPane;
-import javax.swing.SwingConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
-import ch.hearc.SmartWater.commUsb.ComConnexion;
+import ch.hearc.SmartWater.gui.login.Session;
+import ch.hearc.SmartWater.gui.panelParamChamps.JPanelControleParam;
+import ch.hearc.SmartWater.gui.panelParamChamps.JPanelParametresChamps;
 
-public class JPanelControleParam extends JPanel {
+public class JPanelAdminControl extends JPanel {
 
 	/*------------------------------------------------------------------*\
 	 |*							Constructeurs							*|
 	 \*------------------------------------------------------------------*/
-	public JPanelControleParam(ResourceBundle resourceLang,
-			JPanelParametresChamps JPanelParametresChamps) {
+	public JPanelAdminControl(ResourceBundle resourceLang,
+			JPanelAdminParam jPanelAdminParam) {
 
 		this.resourceLang = resourceLang;
-		this.JPanelParametresChamps = JPanelParametresChamps;
+		this.jPanelAdminParam = jPanelAdminParam;
 
 		geometrie();
 		controle();
@@ -50,7 +48,7 @@ public class JPanelControleParam extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				JPanelControleParam.this.JPanelParametresChamps
+				JPanelAdminControl.this.jPanelAdminParam
 						.saveParameters();
 			}
 		});
@@ -59,7 +57,7 @@ public class JPanelControleParam extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				JPanelControleParam.this.JPanelParametresChamps
+				JPanelAdminControl.this.jPanelAdminParam
 						.readParameters();
 			}
 		});
@@ -68,8 +66,8 @@ public class JPanelControleParam extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent event) {
-				JPanelControleParam.this.JPanelParametresChamps
-						.controlCheckBox(JPanelControleParam.this.chBtnAll
+				JPanelAdminControl.this.jPanelAdminParam
+						.controlCheckBox(JPanelAdminControl.this.chBtnAll
 								.isSelected());
 
 			}
@@ -98,7 +96,7 @@ public class JPanelControleParam extends JPanel {
 
 	// Tools
 	private ResourceBundle resourceLang;
-	private JPanelParametresChamps JPanelParametresChamps;
+	private JPanelAdminParam jPanelAdminParam;
 
 	private JButton buttonRead;
 	private JButton buttonSave;

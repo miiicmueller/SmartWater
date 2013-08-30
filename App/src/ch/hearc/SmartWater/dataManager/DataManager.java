@@ -132,7 +132,7 @@ public class DataManager {
 		BufferedReader br = new BufferedReader(fr);
 
 		String ligne;
-		// Map<String, String> parameters = new HashMap<String, String>();
+		//parameters.clear();
 
 		// Lecture première ligne
 		ligne = br.readLine();
