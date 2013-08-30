@@ -46,6 +46,9 @@ public class JPanelAdministrator extends JPanel {
 		this.jPanelAdminParam.updateParams();
 	}
 
+	public void saveToFile() {
+		this.jPanelAdminParam.saveToFile();
+	}
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/

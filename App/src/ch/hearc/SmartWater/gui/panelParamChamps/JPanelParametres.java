@@ -38,6 +38,9 @@ public class JPanelParametres extends JPanel {
 	public void updateParams() {
 		this.jPanelParametresChamps.updateParams();
 	}
+	public void saveToFile() {
+		this.jPanelParametresChamps.saveToFile();
+	}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|

@@ -62,6 +62,19 @@ public class JPanelAdminParam extends JPanel {
 			}
 		}
 	}
+
+	public void saveToFile() {
+		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
+			if (JPanelAdminParam.this.jChampsParam[i].getText().equals("")) {
+			} else {
+				JPanelAdminParam.this.parameters.put(
+						JPanelAdminParam.this.jChampsParam[i].getName(),
+						JPanelAdminParam.this.jChampsParam[i].getText());
+			}
+
+		}
+	}
+
 	/**
 	 * Sauve tout les paramètres checkés par le checkbox
 	 */
@@ -353,17 +366,6 @@ public class JPanelAdminParam extends JPanel {
 					// On désactive si on modifie
 					if (JPanelAdminParam.this.jCheckBox[j].isSelected()) {
 						JPanelAdminParam.this.jCheckBox[j].setSelected(false);
-					}
-					if (JPanelAdminParam.this.jChampsParam[j].getText().equals(
-							"")) {
-						JPanelAdminParam.this.parameters
-								.remove(JPanelAdminParam.this.jChampsParam[j]
-										.getName());
-						System.out.println("Objet eff");
-					} else {
-						JPanelAdminParam.this.parameters.put(
-								JPanelAdminParam.this.jChampsParam[j].getName(),
-								JPanelAdminParam.this.jChampsParam[j].getText());
 					}
 
 				}

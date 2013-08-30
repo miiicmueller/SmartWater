@@ -113,7 +113,7 @@ public class LabelsBundle extends ListResourceBundle {
 			{"tabConsoJour", new String("Daily consumption")},
 			{"tabCompt", new String("Counters")},
 			{"tabAdmin", new String("Administration")},
-			{"tabDiag", new String("Diagnostic")},
+			{"tabDiag", new String("State")},
 					
 	};
 }

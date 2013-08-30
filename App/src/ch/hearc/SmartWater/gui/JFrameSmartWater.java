@@ -38,7 +38,7 @@ public class JFrameSmartWater extends JFrame {
 		this.parametres = new TreeMap<String, String>();
 
 		this.userCountry = System.getProperty("user.country");
-		this.userLang = System.getProperty("user.language");
+		this.userLang = "de";//System.getProperty("user.language");
 
 		this.language = new JLanguages(new Locale(this.userLang));
 
@@ -94,6 +94,10 @@ public class JFrameSmartWater extends JFrame {
 					// Sauvegarde des limites
 					JFrameSmartWater.this.jPanelPrincipal
 							.getJPanelChartTabMonthParam().saveLimits();
+					JFrameSmartWater.this.jPanelPrincipal.getJPanelAdmin()
+							.saveToFile();
+					JFrameSmartWater.this.jPanelPrincipal.getJPanelParam()
+							.saveToFile();
 					JFrameSmartWater.this.dataManager.saveFile(parametres);
 				} catch (IOException e) {
 				}
@@ -490,4 +494,6 @@ public class JFrameSmartWater extends JFrame {
 	private DataManager dataManager;
 
 	Map<String, String> parametres;
+	
+	
 }

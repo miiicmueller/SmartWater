@@ -108,7 +108,8 @@ public class JPanelChartTabMonthParam extends JPanel
 	public void saveLimits() {
 
 		for (int i = 0; i < 12; i++) {
-			this.monthLim[i] = (int) this.jTable.getValueAt(i, 1);
+			this.monthLim[i] = Integer.valueOf((String) this.jTable.getValueAt(
+					i, 1));
 			this.parameters.put(PARAM_KEY_BASE + String.valueOf(i),
 					String.valueOf(this.monthLim[i]));
 		}

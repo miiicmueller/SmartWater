@@ -65,6 +65,19 @@ public class JPanelParametresChamps extends JPanel {
 			}
 		}
 	}
+
+	public void saveToFile() {
+		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
+			if (JPanelParametresChamps.this.jChampsParam[i].getText()
+					.equals("")) {
+			} else {
+				JPanelParametresChamps.this.parameters.put(
+						JPanelParametresChamps.this.jChampsParam[i].getName(),
+						JPanelParametresChamps.this.jChampsParam[i].getText());
+			}
+
+		}
+	}
 	/**
 	 * Sauve tout les paramètres checkés par le checkbox
 	 */
@@ -136,6 +149,7 @@ public class JPanelParametresChamps extends JPanel {
 	 * Lit tout les paramètres checkés
 	 */
 	public void readParameters() {
+		StringBuilder aReply = new StringBuilder();
 		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
 			if (!this.session.isLogged()) {
 				JOptionPane jOptionLogErr = new JOptionPane();
@@ -145,7 +159,41 @@ public class JPanelParametresChamps extends JPanel {
 						JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 				return;
 			}
+
+			if (this.jCheckBox[i].isSelected()) {
+				switch (this.jChampsParam[i].getName()) {
+					case "paramTelAlarm" :
+						this.session.writeCmd(this.session.CMD_ALARM_NUM, "");
+						break;
+					case "paramMdpU" :
+						this.session.writeCmd(this.session.CMD_MDP_USER, "");
+						break;
+				}
+
+				// On attend la réponse
+				if (this.session.getReponse(aReply) == 0) {
+					System.out.println(aReply.toString());
+					// analyse de la réponse
+					String aStrAnalyse = aReply.toString();
+					// On test avec une expression regulière
+					aStrAnalyse.matches(this.REGEX_TEST_FRAME);
+					String[] aStrTab = aStrAnalyse.split("_");
+
+				} else {
+					JOptionPane jOptionTimeoutErr = new JOptionPane();
+					jOptionTimeoutErr.showConfirmDialog(this,
+							(String) this.resourceLang.getObject("timeOut"),
+							(String) this.resourceLang.getObject("timeOutTit"),
+							JOptionPane.DEFAULT_OPTION,
+							JOptionPane.ERROR_MESSAGE);
+					return;
+
+				}
+			}
 		}
+		JOptionPane jOptionLogOk = new JOptionPane();
+		jOptionLogOk.showConfirmDialog(this, "ParamWrite Succes", "Success",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
 	}
 
@@ -157,7 +205,6 @@ public class JPanelParametresChamps extends JPanel {
 	 */
 	public void controlCheckBox(boolean aState) {
 		for (int i = 0; i < DEFAULT_PAR_NUM; i++) {
-			// this.jCheckBox[i].setSelected(aState);
 			this.jCheckBox[i].doClick();
 		}
 	}
@@ -245,20 +292,6 @@ public class JPanelParametresChamps extends JPanel {
 						JPanelParametresChamps.this.jCheckBox[j]
 								.setSelected(false);
 					}
-					if (JPanelParametresChamps.this.jChampsParam[j].getText()
-							.equals("")) {
-						JPanelParametresChamps.this.parameters
-								.remove(JPanelParametresChamps.this.jChampsParam[j]
-										.getName());
-						System.out.println("Objet eff");
-					} else {
-						JPanelParametresChamps.this.parameters.put(
-								JPanelParametresChamps.this.jChampsParam[j]
-										.getName(),
-								JPanelParametresChamps.this.jChampsParam[j]
-										.getText());
-					}
-
 				}
 			});
 		}
@@ -330,4 +363,5 @@ public class JPanelParametresChamps extends JPanel {
 	private static String REGEX_TEL_NUM_ALARM = "\\+41[0-9]{9}";
 	private static String REGEX_MDP_USER = "[0-9a-zA-Z]{4,19}";
 
+	private static String REGEX_TEST_FRAME = "(_[a-zA-Z0-9]{1,10}){1,}_";
 }
