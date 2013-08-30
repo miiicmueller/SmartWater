@@ -14,18 +14,17 @@ tMdPAdmin::tMdPAdmin(mEEPROM *mEeprom, UInt16 aModeNum)
 
     //Allocation de la memoire
     this->mPeriphSauv->malloc(this->aId, this->aNbBytes);
-
     }
 
 void tMdPAdmin::save()
     {
     //Enregistrement dans l'EEPROM
-    this->mPeriphSauv->store(this->aId, this->mdPAdmin);
-
+    this->mPeriphSauv->store(this->aId, (UInt8*) this->mdPAdmin);
     }
+
 void tMdPAdmin::load()
     {
     //Recuperation des donnees
-    this->mPeriphSauv->load(this->aId, this->mdPAdmin);
+    this->mPeriphSauv->load(this->aId, (UInt8*) this->mdPAdmin);
     }
 
