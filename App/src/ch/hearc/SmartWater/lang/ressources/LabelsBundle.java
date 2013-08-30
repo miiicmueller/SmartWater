@@ -76,6 +76,7 @@ public class LabelsBundle extends ListResourceBundle {
 			{"buttonSave", new String("Save")},
 			{"buttonGetConsomm", new String("Read")},
 			{"buttonWrLimits", new String("Save limits")},
+			{"buttonSaveXls", new String("XLS export")},
 
 			// Graphiques
 			{"graphConsTit", new String("Monthly consumption")},
@@ -105,6 +106,7 @@ public class LabelsBundle extends ListResourceBundle {
 			// Tableau
 			{"tabHeaderMois", new String("Months")},
 			{"tabHeaderLimit", new String("Limit")},
+			{"tabHeaderConsom", new String("Consumption")},
 
 			// Tabs
 			{"tabPAram", new String("Parameters")},

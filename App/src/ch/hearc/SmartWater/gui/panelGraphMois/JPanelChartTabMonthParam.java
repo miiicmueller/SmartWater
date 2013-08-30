@@ -44,22 +44,31 @@ public class JPanelChartTabMonthParam extends JPanel
 	public JPanelChartTabMonthParam(ResourceBundle resourceLang,
 			Map<String, String> parameters,
 			JPanelChartTabMonth jPanelChartTabMonth) {
+
+		// Aquisition des entrées
 		this.resourceLang = resourceLang;
 		this.parameters = parameters;
 		this.jPanelChartTabMonth = jPanelChartTabMonth;
 
+		// Tableaux de données
 		this.monthLim = new int[12];
+		this.monthConsom = new int[12];
 		this.tableMois = new String[12];
 
+		// Entetes de table
 		this.tabHeaderMois = (String) this.resourceLang
 				.getObject("tabHeaderMois");
 		this.tabHeaderLimit = (String) this.resourceLang
 				.getObject("tabHeaderLimit");
+		this.tabHeaderConsom = (String) this.resourceLang
+				.getObject("tabHeaderConsom");
 
-		this.tableEntete = new String[2];
+		this.tableEntete = new String[3];
 		this.tableEntete[0] = this.tabHeaderMois;
 		this.tableEntete[1] = this.tabHeaderLimit;
+		this.tableEntete[2] = this.tabHeaderConsom;
 
+		// Récupération des textes
 		this.graphMoisJanv = (String) this.resourceLang
 				.getObject("graphMoisJanv");
 		this.graphMoisFev = (String) this.resourceLang
@@ -105,6 +114,10 @@ public class JPanelChartTabMonthParam extends JPanel
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
+
+	/**
+	 * Sauve les limites dans la map
+	 */
 	public void saveLimits() {
 
 		for (int i = 0; i < 12; i++) {
@@ -114,6 +127,10 @@ public class JPanelChartTabMonthParam extends JPanel
 					String.valueOf(this.monthLim[i]));
 		}
 	}
+
+	/**
+	 * Recharge les champs depuis la map
+	 */
 	public void updateLimits() {
 		Set<Entry<String, String>> entry = this.parameters.entrySet();
 		for (Entry<String, String> ligne : entry) {
@@ -135,8 +152,11 @@ public class JPanelChartTabMonthParam extends JPanel
 		updateGraphTable();
 	}
 
+	/**
+	 * Rafraichit le graphique
+	 */
 	public void updateGraphTable() {
-		this.jPanelChartTabMonth.updateGraphLim(this.monthLim);
+		this.jPanelChartTabMonth.updateGraph(monthConsom, monthLim);
 	}
 
 	@Override
@@ -163,7 +183,7 @@ public class JPanelChartTabMonthParam extends JPanel
 
 	}
 
-	/*
+	/**
 	 * Save information of the cell about to be edited
 	 */
 	private void processEditingStarted() {
@@ -175,7 +195,7 @@ public class JPanelChartTabMonthParam extends JPanel
 		SwingUtilities.invokeLater(this);
 	}
 
-	/*
+	/**
 	 * Update the Cell history when necessary
 	 */
 	private void processEditingStopped() {
@@ -215,7 +235,7 @@ public class JPanelChartTabMonthParam extends JPanel
 			donnees[row][0] = this.tableMois[row]; // initialize it to the
 													// product.
 			donnees[row][1] = this.monthLim[row]; // initialize it to the
-													// product.
+			donnees[row][1] = this.monthConsom[row]; // initialize it to the
 		}
 
 		this.jPanelChartTabMonthParamControl = new JPanelChartTabMonthParamControl(
@@ -271,6 +291,7 @@ public class JPanelChartTabMonthParam extends JPanel
 	// Header
 	private String tabHeaderMois;
 	private String tabHeaderLimit;
+	private String tabHeaderConsom;
 
 	// Colonnes
 	private String graphMoisJanv;
@@ -293,6 +314,7 @@ public class JPanelChartTabMonthParam extends JPanel
 
 	// Valeurs des séries
 	private int[] monthLim;
+	private int[] monthConsom;
 
 	private final int MIN_HEIGHT = 100;
 	private final int MAX_WIDTH = 100000;

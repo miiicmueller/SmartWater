@@ -127,8 +127,8 @@ public class JPanelChartTabMonth extends JPanel {
 
 		chartPanel.setDomainZoomable(false);
 		chartPanel.setRangeZoomable(false);
-		chartPanel.setDisplayToolTips(false);
-		chartPanel.setPopupMenu(null);
+		// chartPanel.setDisplayToolTips(false);
+		// chartPanel.setPopupMenu(null);
 		chartPanel.setMinimumSize(new Dimension(MIN_HEIGHT, MIN_WIDTH));
 
 		this.add(chartPanel, BorderLayout.CENTER);

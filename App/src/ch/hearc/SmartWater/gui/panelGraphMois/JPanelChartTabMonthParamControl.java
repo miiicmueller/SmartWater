@@ -49,6 +49,14 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 			}
 		});
 
+		this.buttonSaveXls.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				System.out.println("[Sauver limite]");
+			}
+		});
+
 	}
 
 	private void geometrie() {
@@ -57,11 +65,13 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 
 		this.buttonWrLimits = new JButton(
 				(String) resourceLang.getObject("buttonWrLimits"));
+		this.buttonSaveXls = new JButton(
+				(String) resourceLang.getObject("buttonSaveXls"));
 
 		this.add(buttonWrLimits);
+		this.add(buttonSaveXls);
 
 	}
-
 	/*------------------------------------------------------------------*\
 	 |*							Attributs Private						*|
 	 \*------------------------------------------------------------------*/
@@ -69,4 +79,5 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 	// Tools
 	private ResourceBundle resourceLang;
 	private JButton buttonWrLimits;
+	private JButton buttonSaveXls;
 }
