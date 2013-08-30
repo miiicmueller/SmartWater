@@ -13,6 +13,7 @@ import javax.swing.JPanel;
 import javax.swing.JTextField;
 
 import ch.hearc.SmartWater.commUsb.ComConnexion;
+import ch.hearc.SmartWater.gui.login.Session;
 
 public class JPanelParametres extends JPanel {
 
@@ -20,10 +21,10 @@ public class JPanelParametres extends JPanel {
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 	public JPanelParametres(Map<String, String> parameters,
-			ResourceBundle resourceLang, ComConnexion comConnection) {
+			ResourceBundle resourceLang, Session session) {
 		this.parameters = parameters;
 		this.resourceLang = resourceLang;
-		this.comConnection = comConnection ;
+		this.session = session;
 
 		geometrie();
 		controle();
@@ -54,28 +55,26 @@ public class JPanelParametres extends JPanel {
 		BorderLayout bl = new BorderLayout();
 		this.setLayout(bl);
 
-		this.jPanelControleParam = new JPanelControleParam(this.resourceLang,this);
 		this.jPanelParametresChamps = new JPanelParametresChamps(
-				this.parameters, this.resourceLang,comConnection);
-		
+				this.parameters, this.resourceLang, this.session);
+		this.jPanelControleParam = new JPanelControleParam(this.resourceLang,
+				this.jPanelParametresChamps);
+
 		this.add(jPanelParametresChamps, BorderLayout.CENTER);
 		this.add(jPanelControleParam, BorderLayout.SOUTH);
 
 	}
 
-	
-	
-	public void saveParams()
-	{
+	public void saveParams() {
 		this.jPanelParametresChamps.saveParameters();
 	}
-	
+
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
-	private ComConnexion comConnection;
-	
+	private Session session;
+
 	// Tools
 	private Map<String, String> parameters;
 

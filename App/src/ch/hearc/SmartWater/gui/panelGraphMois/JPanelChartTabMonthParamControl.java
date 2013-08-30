@@ -68,6 +68,5 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 
 	// Tools
 	private ResourceBundle resourceLang;
-
 	private JButton buttonWrLimits;
 }

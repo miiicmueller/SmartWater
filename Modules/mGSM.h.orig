@@ -1,0 +1,168 @@
+//*****************************************************************************
+//Nom du fichier : mGSM.h
+//Auteurs et Date : SAVY Cyrille 24.04.2013
+//But : couche module permettant d'utiliser le module GSM de Telit : GL865
+//*****************************************************************************
+
+#ifndef __MGSM__
+#define __MGSM__
+
+#include <string>
+#include <stdio.h>
+#include <assert.h>
+
+#include "Module.h"
+#include "../Interfaces/iUART.h"
+#include "../Interfaces/iDIO.h"
+#include "../Tools/tCommandesAT.h"
+#include "../Tools/tDate.h"
+#include "mDelay.h"
+
+
+#define kNbFiguresPhone 12
+#define kNbFiguresPin 4
+
+
+typedef enum // choix du compteur
+    {
+    kOk, //valeur  generale
+    kDisconnected,
+    kErrorGeneral,
+    kErrorEnterPin, // erreurs de parametrage
+    kErrorSetModeSms,
+    kErrorSetModeText,
+    kErrorEnableServiceData,
+    kErrorDeleteAllSms, // erreurs de lecture
+    kErrorGetCredit,
+    kErrorReadSms,
+    kErrorModePDU, // erreurs d'envoi
+    kErrorModeText,
+    kErrorSimNotInserted,
+    kErrorSimRequired,
+    kErrorSimFailure,
+    kErrorSimBusy,
+    kErrorSimWrong,
+    kErrorSimPukRequired,
+    kErrorSimPin2Required,
+    kErrorSimPuk2Required,
+    kErrorMemoryFailure,
+    kErrorMemoryFull,
+    kErrorSendSmsTimeOut
+    } mGSMStateEnum;
+
+
+using namespace std;
+
+class mGSM: public Module
+    {
+private:
+    //input
+    static iDIO enable;
+    static iDIO reset;
+    static iUART uart;
+
+    //tools
+<<<<<<< HEAD
+    static tCommandesAT commandesAtGsm; //commandes pour contrôler le module GSM
+=======
+    static tCommandesAT commandesAtGsm; //commandes pour contrï¿½ler le module GSM
+>>>>>>> origin/master
+    UInt16 indexSMS; //index designant le prochaine SMS a devoir etre lu
+    mGSMStateEnum state; // etat du module
+    static mDelay timeOut;
+
+
+    //----------------------------------------------------------------
+    //controle si une reponse recue du GSM et la compare avec deux possibilitï¿½s
+    //
+    //aGoodResponse : bonne reponse, renvoie true
+<<<<<<< HEAD
+    //aBadResponse : mauvaise reponse, renvoie false
+    //aTimeOutMs : duree en milliseconde durant laquelle la méthode essaie de trouver correpondance
+    //----------------------------------------------------------------
+    bool mCheckResponse(char* aGoodResponse, char* aBadResponse, UInt16 aTimeOutMs);
+
+    //----------------------------------------------------------------
+    //envoie le texte SMS sur l'UART en le parsant pour ne pas bourrer le FIFO du module GSM
+    //
+    //aSMS : le SMS à transmettre
+    //----------------------------------------------------------------
+    void mSenderSms(char* aSMS);
+
+public:
+
+    UInt8 phoneNumber[kNbFiguresPhone+1]; //numero de telephone de la carte SIM. Format : "+417********"
+    UInt8 codePIN[kNbFiguresPin+1];
+=======
+    //aBadResponse : reponse lorsque la commande s'est mal deroulee, renvoie false
+    //aTimeOutMs : duree en milliseconde durant laquelle la mï¿½thode essaie de trouver correpondance
+    //----------------------------------------------------------------
+    bool mCheckResponse(UInt8* aGoodResponse, UInt16 aTimeOutMs);
+
+public:
+
+    UInt8* phoneNumber; //numero de telephone de la carte SIM. Format : "+417********"
+    UInt8* codePIN;
+>>>>>>> origin/master
+
+    //----------------------------------------------------------------
+    //constructeur
+    //--------------------------------------------------------------
+    mGSM();
+
+    //----------------------------------------------------------------
+    //destructeur
+    //--------------------------------------------------------------
+    ~mGSM();
+
+    //----------------------------------------------------------------
+    //parametrage du module du compteur
+    //----------------------------------------------------------------
+    void mSetup();
+
+    //----------------------------------------------------------------
+    //ouverture du module du compteur
+    //----------------------------------------------------------------
+    void mOpen();
+
+    //----------------------------------------------------------------
+    //fermeture du module du compteur
+    //----------------------------------------------------------------
+    void mClose();
+
+    //----------------------------------------------------------------
+    //donne le prochain SMS a etre lu
+    //
+    //aSMS : pointe la variable dans laquelle on veut recuperer le SMS
+    //retour : 	true si aSMS contient le SMS, false si tous les SMS ont ete lus
+    //----------------------------------------------------------------
+    bool getSMS(UInt8* aSMS);
+
+    //----------------------------------------------------------------
+    //envoi un SMS
+    //
+    //aSMS : pointe la variable contenant le SMS a envoyer
+    //aPhoneNumber : pointe la varialble contenant le numï¿½ro de telephone
+    //retour : 	true si le SMS a ete envoye
+    //----------------------------------------------------------------
+    bool sendSMS(UInt8* aSMS, UInt8* aPhoneNumber);
+
+    //----------------------------------------------------------------
+    //obtenir l'heure
+    //
+    //retour :  la date complete
+    //----------------------------------------------------------------
+    tDate getDate();
+
+    //----------------------------------------------------------------
+    //obtenir le credit restant
+    //
+    //retour : 	le credit en centimes de franc
+    //----------------------------------------------------------------
+    UInt16 getCredit();
+
+
+
+
+    };
+#endif

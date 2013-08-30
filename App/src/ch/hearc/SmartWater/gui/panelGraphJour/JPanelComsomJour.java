@@ -5,7 +5,6 @@ import java.util.ResourceBundle;
 
 import javax.swing.JPanel;
 
-
 public class JPanelComsomJour extends JPanel {
 
 	/*------------------------------------------------------------------*\
@@ -36,15 +35,26 @@ public class JPanelComsomJour extends JPanel {
 	}
 
 	private void geometrie() {
-	
+
+		this.setLayout(new BorderLayout());
+
+		this.jPanelChartJour = new JPanelChartJour(resourceLang);
+		this.jPanelChartJourControl = new JPanelChartJourControl(resourceLang);
+
+		this.add(this.jPanelChartJour, BorderLayout.CENTER);
+		this.add(this.jPanelChartJourControl, BorderLayout.SOUTH);
+
 	}
 
 	/*------------------------------------------------------------------*\
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
-	
-	// Tools
+
+	// Input
 	private ResourceBundle resourceLang;
 
+	// Tools
+	private JPanelChartJour jPanelChartJour;
+	private JPanelChartJourControl jPanelChartJourControl;
 
 }

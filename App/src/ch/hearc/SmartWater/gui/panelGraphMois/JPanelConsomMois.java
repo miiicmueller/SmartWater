@@ -3,6 +3,7 @@ package ch.hearc.SmartWater.gui.panelGraphMois;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.FlowLayout;
+import java.util.Map;
 import java.util.ResourceBundle;
 
 import javax.swing.Box;
@@ -25,8 +26,10 @@ public class JPanelConsomMois extends JPanel {
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelConsomMois(ResourceBundle resourceLang) {
+	public JPanelConsomMois(ResourceBundle resourceLang,
+			Map<String, String> parameters) {
 		this.resourceLang = resourceLang;
+		this.parameters = parameters;
 
 		geometrie();
 		controle();
@@ -36,6 +39,10 @@ public class JPanelConsomMois extends JPanel {
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
+
+	public JPanelChartTabMonthParam getJPanelChartTabMonthParam() {
+		return this.jPanelChartTabMonthParam;
+	}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
@@ -54,7 +61,7 @@ public class JPanelConsomMois extends JPanel {
 
 		this.jPanelChartTabMonth = new JPanelChartTabMonth(resourceLang);
 		this.jPanelChartTabMonthParam = new JPanelChartTabMonthParam(
-				resourceLang);
+				resourceLang, this.parameters, this.jPanelChartTabMonth);
 
 		this.jSplitTabChart = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
@@ -72,6 +79,7 @@ public class JPanelConsomMois extends JPanel {
 
 	// Tools
 	private ResourceBundle resourceLang;
+	private Map<String, String> parameters;
 
 	// Panel de contrôle
 	private JPanelChartTabMonth jPanelChartTabMonth;

@@ -78,6 +78,8 @@ public class JPanelPortSelControl extends JPanel {
 
 				} else {
 					JPanelPortSelControl.this.session.connect(comPort);
+					JPanelPortSelControl.this.jFramePortSel
+					.setVisible(false);
 				}
 			}
 

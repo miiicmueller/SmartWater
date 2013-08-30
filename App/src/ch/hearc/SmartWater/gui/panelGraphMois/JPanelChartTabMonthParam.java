@@ -3,23 +3,50 @@ package ch.hearc.SmartWater.gui.panelGraphMois;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.event.ContainerEvent;
+import java.awt.event.ContainerListener;
+import java.awt.event.HierarchyEvent;
+import java.awt.event.HierarchyListener;
+import java.awt.event.InputMethodEvent;
+import java.awt.event.InputMethodListener;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+import java.util.Map;
 import java.util.ResourceBundle;
+import java.util.Set;
+import java.util.Map.Entry;
 
+import javax.swing.Action;
+import javax.swing.Box;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
+import javax.swing.SwingUtilities;
+import javax.swing.event.CellEditorListener;
+import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
-public class JPanelChartTabMonthParam extends JPanel {
+public class JPanelChartTabMonthParam extends JPanel
+		implements
+			PropertyChangeListener,
+			Runnable {
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelChartTabMonthParam(ResourceBundle resourceLang) {
+	public JPanelChartTabMonthParam(ResourceBundle resourceLang,
+			Map<String, String> parameters,
+			JPanelChartTabMonth jPanelChartTabMonth) {
 		this.resourceLang = resourceLang;
+		this.parameters = parameters;
+		this.jPanelChartTabMonth = jPanelChartTabMonth;
 
 		this.monthLim = new int[12];
 		this.tableMois = new String[12];
@@ -81,6 +108,93 @@ public class JPanelChartTabMonthParam extends JPanel {
 	/*------------------------------*\
 	|*				Set				*|
 	\*------------------------------*/
+	public void saveLimits() {
+
+		for (int i = 0; i < 12; i++) {
+			this.monthLim[i] = Integer.valueOf((String) this.jTable.getValueAt(
+					i, 1));
+			this.parameters.put(PARAM_KEY_BASE + String.valueOf(i),
+					String.valueOf(this.monthLim[i]));
+		}
+	}
+
+	public void updateLimits() {
+		Set<Entry<String, String>> entry = this.parameters.entrySet();
+		for (Entry<String, String> ligne : entry) {
+			String key = ligne.getKey();
+			String valeur = ligne.getValue();
+			String[] strI = key.split(PARAM_KEY_BASE);
+			// Tester si c'est bien la clé d'un mois
+			if (strI.length > 1) {
+				this.monthLim[Integer.valueOf(strI[1])] = Integer
+						.valueOf(valeur);
+			}
+		}
+
+		for (int i = 0; i < 12; i++) {
+			this.jTable.setValueAt(String.valueOf(this.monthLim[i]), i, 1);
+		}
+
+		// On recharge le graph
+		updateGraphTable();
+	}
+
+	public void updateGraphTable() {
+		this.jPanelChartTabMonth.updateGraphLim(this.monthLim);
+	}
+
+	@Override
+	public void run() {
+		this.rowA = this.jTable.convertRowIndexToModel(this.jTable
+				.getEditingRow());
+		this.columnA = this.jTable.convertColumnIndexToModel(this.jTable
+				.getEditingColumn());
+		this.oldValue = this.jTable.getModel().getValueAt(this.rowA,
+				this.columnA);
+		this.newValue = null;
+
+	}
+	@Override
+	public void propertyChange(PropertyChangeEvent e) {
+		// A cell has started/stopped editing
+
+		if ("tableCellEditor".equals(e.getPropertyName())) {
+			if (this.jTable.isEditing())
+				processEditingStarted();
+			else
+				processEditingStopped();
+		}
+
+	}
+
+	/*
+	 * Save information of the cell about to be edited
+	 */
+	private void processEditingStarted() {
+		// The invokeLater is necessary because the editing row and editing
+		// column of the table have not been set when the "tableCellEditor"
+		// PropertyChangeEvent is fired.
+		// This results in the "run" method being invoked
+
+		SwingUtilities.invokeLater(this);
+	}
+
+	/*
+	 * Update the Cell history when necessary
+	 */
+	private void processEditingStopped() {
+		newValue = this.jTable.getModel().getValueAt(rowA, columnA);
+
+		// The data has changed, invoke the supplied Action
+
+		if (!this.newValue.equals(this.oldValue)) {
+			// Make a copy of the data in case another cell starts editing
+			// while processing this change
+			this.monthLim[rowA] = Integer.valueOf((String) this.newValue);
+			this.updateGraphTable();
+
+		}
+	}
 
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
@@ -91,7 +205,7 @@ public class JPanelChartTabMonthParam extends JPanel {
 	}
 
 	private void controle() {
-		// Rien
+
 	}
 
 	private void geometrie() {
@@ -121,13 +235,21 @@ public class JPanelChartTabMonthParam extends JPanel {
 			}
 		};
 
-		this.jTable.setMinimumSize(new Dimension(MIN_HEIGHT, MIN_WIDTH));
+		this.jTable.addPropertyChangeListener(this);
+		this.jTable.setMaximumSize(new Dimension(MAX_WIDTH, this.jTable
+				.getRowCount() * this.jTable.getRowHeight()));
+		this.jTable.setPreferredSize(new Dimension(MAX_WIDTH, this.jTable
+				.getRowCount() * this.jTable.getRowHeight()));
 
 		jTable.setAutoResizeMode(JTable.AUTO_RESIZE_ALL_COLUMNS);
 
+		Box boxTableBtn = Box.createVerticalBox();
+
+		boxTableBtn.add(jTable, BorderLayout.CENTER);
+		boxTableBtn.add(jPanelChartTabMonthParamControl);
+
 		this.add(jTable.getTableHeader(), BorderLayout.NORTH);
-		this.add(new JScrollPane(jTable), BorderLayout.CENTER);
-		this.add(jPanelChartTabMonthParamControl, BorderLayout.SOUTH);
+		this.add(boxTableBtn, BorderLayout.CENTER);
 
 	}
 	/*------------------------------------------------------------------*\
@@ -136,6 +258,10 @@ public class JPanelChartTabMonthParam extends JPanel {
 
 	// Tools
 	private ResourceBundle resourceLang;
+	private Map<String, String> parameters;
+	private JPanelChartTabMonth jPanelChartTabMonth;
+
+	private Action action;
 
 	// Tableau
 	private JTable jTable;
@@ -164,10 +290,16 @@ public class JPanelChartTabMonthParam extends JPanel {
 	private String graphMoisNov;
 	private String graphMoisDec;
 
+	private int rowA;
+	private int columnA;
+	private Object oldValue;
+	private Object newValue;
+
 	// Valeurs des séries
 	private int[] monthLim;
 
 	private final int MIN_HEIGHT = 100;
-	private final int MIN_WIDTH = 100;
+	private final int MAX_WIDTH = 100000;
+	private final String PARAM_KEY_BASE = "LimMonth";
 
 }
