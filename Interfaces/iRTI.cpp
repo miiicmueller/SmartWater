@@ -42,7 +42,7 @@ iRTI::~iRTI()
     }
 
 //méthodes publiques
-void iRTI::startDelay100US(int aTime100Us)
+void iRTI::startDelay100US(UInt32 aTime100Us)
     {
     this->delaysTab[this->delayNumber].counter = aTime100Us;
     this->delaysTab[this->delayNumber].isDone = false;

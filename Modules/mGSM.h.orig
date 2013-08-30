@@ -40,12 +40,9 @@ typedef enum // choix du compteur
     kErrorSimNotInserted,
     kErrorSimRequired,
     kErrorSimFailure,
-    kErrorAntenna,
-    kErrorDecodeDate,
     kErrorSimBusy,
     kErrorSimWrong,
     kErrorSimPukRequired,
-    kErrorGetStateMemory,
     kErrorSimPin2Required,
     kErrorSimPuk2Required,
     kErrorMemoryFailure,
@@ -65,16 +62,21 @@ private:
     static iUART uart;
 
     //tools
+<<<<<<< HEAD
     static tCommandesAT commandesAtGsm; //commandes pour contrôler le module GSM
+=======
+    static tCommandesAT commandesAtGsm; //commandes pour contrï¿½ler le module GSM
+>>>>>>> origin/master
     UInt16 indexSMS; //index designant le prochaine SMS a devoir etre lu
     mGSMStateEnum state; // etat du module
     static mDelay timeOut;
 
 
     //----------------------------------------------------------------
-    //controle si une reponse recue du GSM et la compare avec deux possibilités
+    //controle si une reponse recue du GSM et la compare avec deux possibilitï¿½s
     //
     //aGoodResponse : bonne reponse, renvoie true
+<<<<<<< HEAD
     //aBadResponse : mauvaise reponse, renvoie false
     //aTimeOutMs : duree en milliseconde durant laquelle la méthode essaie de trouver correpondance
     //----------------------------------------------------------------
@@ -85,12 +87,23 @@ private:
     //
     //aSMS : le SMS à transmettre
     //----------------------------------------------------------------
-    void mSenderSms(UInt8* aSMS);
+    void mSenderSms(char* aSMS);
 
 public:
 
     UInt8 phoneNumber[kNbFiguresPhone+1]; //numero de telephone de la carte SIM. Format : "+417********"
     UInt8 codePIN[kNbFiguresPin+1];
+=======
+    //aBadResponse : reponse lorsque la commande s'est mal deroulee, renvoie false
+    //aTimeOutMs : duree en milliseconde durant laquelle la mï¿½thode essaie de trouver correpondance
+    //----------------------------------------------------------------
+    bool mCheckResponse(UInt8* aGoodResponse, UInt16 aTimeOutMs);
+
+public:
+
+    UInt8* phoneNumber; //numero de telephone de la carte SIM. Format : "+417********"
+    UInt8* codePIN;
+>>>>>>> origin/master
 
     //----------------------------------------------------------------
     //constructeur
@@ -123,13 +136,13 @@ public:
     //aSMS : pointe la variable dans laquelle on veut recuperer le SMS
     //retour : 	true si aSMS contient le SMS, false si tous les SMS ont ete lus
     //----------------------------------------------------------------
-    bool getSMS(char* aSMS);
+    bool getSMS(UInt8* aSMS);
 
     //----------------------------------------------------------------
     //envoi un SMS
     //
     //aSMS : pointe la variable contenant le SMS a envoyer
-    //aPhoneNumber : pointe la varialble contenant le numéro de telephone
+    //aPhoneNumber : pointe la varialble contenant le numï¿½ro de telephone
     //retour : 	true si le SMS a ete envoye
     //----------------------------------------------------------------
     bool sendSMS(UInt8* aSMS, UInt8* aPhoneNumber);
@@ -148,12 +161,6 @@ public:
     //----------------------------------------------------------------
     UInt16 getCredit();
 
-    //----------------------------------------------------------------
-    //fonction pour connaitre combien de SMS sont dans la memoire SIM
-    //
-    //retour : le nombre de SMS present dans la memoire
-    //----------------------------------------------------------------
-    UInt8 getNbSms();
 
 
 

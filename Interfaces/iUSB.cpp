@@ -110,9 +110,7 @@ bool iUSB::getFullFrame(char* FrameBuffer) {
 				CDC0_INTFNUM);        //Get the next piece of the string
 
 		strcat(this->usbSerialBuffer, pieceOfString);
-		cdcSendDataInBackground((BYTE*) pieceOfString, strlen(pieceOfString),
-				CDC0_INTFNUM, 0); //Echoes back the characters received (needed
-								  //for Hyperterm)
+
 		// Test \r
 		if (retInString(this->usbSerialBuffer)) {
 			strcpy(FrameBuffer, this->usbSerialBuffer);

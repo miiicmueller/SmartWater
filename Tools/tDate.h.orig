@@ -1,0 +1,30 @@
+#ifndef T_DATE_H
+#define T_DATE_H
+
+#include <string>
+#include <assert.h>
+<<<<<<< HEAD
+#include <../Def/def.h>
+=======
+#include "Def/def.h"
+>>>>>>> origin/master
+
+class tDate
+{
+public:
+	UInt16 year;
+	UInt8 month;
+<<<<<<< HEAD
+	UInt8 day;
+=======
+	UInt8 date;
+>>>>>>> origin/master
+	UInt8 dayOfWeek;
+	UInt8 hour;
+	UInt8 minute;
+	UInt8 second;
+
+	tDate();
+
+};
+#endif

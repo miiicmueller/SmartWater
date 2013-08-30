@@ -7,22 +7,10 @@
 #include "Gestionnaire.h"
 #include "gInput.h"
 #include "Modules/mUSB.h"
+#include "Tools/tToolsCluster.h"
+#include "tCommandsAnalyzer.h"
 
-#define sizeMaxMode		2
-#define sizeMaxMdp		21
-#define sizeMaxCommand		9
-#define sizeMaxParameter	21
-
-typedef struct
-    {
-    bool hasCommand;
-    char theMode[sizeMaxMode];
-    char theMdp[sizeMaxMdp];
-    char theCommand[sizeMaxCommand];
-    int parametersNumber;
-    char theParameters[12][sizeMaxParameter];
-    } gTerminalCommand;
-
+//pour la machine d'etat du gTerminal
 typedef enum
     {
     kTerminalDisconnected,
@@ -30,12 +18,14 @@ typedef enum
     kTerminalSessionOpen
     } gTerminalStateEnum;
 
-typedef enum
+typedef struct
     {
-    kTerminalClose,
-    kTerminalAdmin,
-    kTerminalUser
-    } gTerminalSessionEnum;
+    tCommandsEnum* aAction;
+    char* theParameters[12];
+    int* theParametersNumber;
+    char* aReply;
+    gTerminalStateEnum* aTerminalState;
+    } gTerminalMailBox;
 
 using namespace std;
 
@@ -43,23 +33,19 @@ class gTerminal: public Gestionnaire
     {
 private:
 
-    int maxSizesCommands[4];
-
     mUSB* theUSB;
 
     bool sessionOpen;
 
     gInput* theGInput;
 
-    gTerminalCommand aCommand;
+    tToolsCluster* theTools;
 
     gTerminalStateEnum aTerminalState;
 
-    gTerminalSessionEnum aSessionType;
+    tCommandsAnalyzer theAnalyzer;
 
-    void commandsReceiver();
-
-    void commandsSender(char* aReply);
+    char aReply[100];
 
 public:
     //----------------------------------------------------------------
@@ -67,11 +53,13 @@ public:
     //
     //gInput : le gestionnaire qui contient les entrees
     //----------------------------------------------------------------
-    gTerminal(gInput* theGInput);
+    gTerminal(tToolsCluster* theTools);
 
     void setup();
 
     void execute();
+
+    gTerminalMailBox theTerminalMailBox;
 
     };
 #endif

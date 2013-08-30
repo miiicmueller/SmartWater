@@ -7,14 +7,15 @@
 #include "tParameters.h"
 #include "Modules/mEEPROM.h"
 
-class tMode: public tParameters {
+class tMode: public tParameters
+    {
 
 public:
-	UInt8 mode;
+    UInt8 mode;
 
-	tMode(mEEPROM *mEeprom,UInt16 aModeNum);
-	void save();
-	void load();
+    tMode(mEEPROM *mEeprom, UInt16 aModeNum);
+    void save();
+    void load();
 
-};
+    };
 #endif

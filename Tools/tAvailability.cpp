@@ -20,10 +20,10 @@ void tAvailability::save() {
 	UInt8 aDataTab[4] = { 0 };
 
 	//Sérialisation
-	aDataTab[0] = (UInt8) this->aInterval;
-	aDataTab[1] = (UInt8) (this->aInterval >> 8);
-	aDataTab[2] = (UInt8) this->aTime;
-	aDataTab[3] = (UInt8) (this->aTime >> 8);
+	aDataTab[0] = (UInt8) this->aIntervalMn;
+	aDataTab[1] = (UInt8) (this->aIntervalMn >> 8);
+	aDataTab[2] = (UInt8) this->aTimeMn;
+	aDataTab[3] = (UInt8) (this->aTimeMn >> 8);
 
 	//Enregistrement dans l'EEPROM
 	this->mPeriphSauv->store(this->aId, aDataTab);
@@ -36,10 +36,10 @@ void tAvailability::load() {
 	this->mPeriphSauv->load(this->aId, aDataTab);
 
 	//Desérialisation
-	this->aInterval = (UInt8) aDataTab[0];
-	this->aInterval |= (UInt8) aDataTab[1];
-	this->aTime = (UInt8) aDataTab[2];
-	this->aTime |= (UInt8) aDataTab[3];
+	this->aIntervalMn = (UInt8) aDataTab[0];
+	this->aIntervalMn |= (UInt8) aDataTab[1];
+	this->aTimeMn = (UInt8) aDataTab[2];
+	this->aTimeMn |= (UInt8) aDataTab[3];
 
 }
 

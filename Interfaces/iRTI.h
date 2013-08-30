@@ -9,6 +9,7 @@
 
 #include "../Tools/tDelay.h"
 #include <msp430f5519.h>
+#include "def.h"
 
 class iRTI
     {
@@ -19,7 +20,7 @@ public:
     iRTI();
     ~iRTI();
 
-    void startDelay100US(int aTime100Us);
+    void startDelay100US(UInt32 aTime100Us);
     bool isDone();
 
     //méthodes statiques, qui agissent sur toutes les instances de la classe
