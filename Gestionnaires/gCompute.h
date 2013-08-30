@@ -7,6 +7,7 @@
 #include "Gestionnaire.h"
 #include "../Tools/tDate.h"
 #include "gInput.h"
+#include "gTerminal.h"
 
 class gCompute: public Gestionnaire
     {
@@ -19,13 +20,22 @@ private:
 
     gInput* theGInput;
 
+    gTerminal* theGTerminal;
+
+    void computeTerminal();
+
+    void computeSMS();
+
+    void computeConsumption();
+
 public:
     //----------------------------------------------------------------
     //constructeur
     //
     //gInput : le gestionnaire qui contient les entrées
     //----------------------------------------------------------------
-    gCompute(gInput* theGInput);
+    gCompute(gInput* theGInput, gTerminal* theGTerminal,
+	    tToolsCluster* theTools);
 
     void setup();
 

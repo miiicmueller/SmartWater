@@ -31,6 +31,8 @@ public:
     //----------------------------------------------------------------
     gInput(mGSM* theGSM);
 
+    ~gInput();
+
     int getCounterValue(char counterNb);
 
     int getBatteryValue();

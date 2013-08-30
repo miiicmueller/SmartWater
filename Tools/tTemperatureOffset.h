@@ -5,14 +5,16 @@
 #include <assert.h>
 
 #include "tParameters.h"
+#include "def.h"
 
-class tTemperatureOffset: public tParameters {
+class tTemperatureOffset: public tParameters
+    {
 public:
-	Float32 aOffset;
+    Float32 aOffset;
 
-	tTemperatureOffset(mEEPROM *mEeprom, UInt16 aModeNum);
-	void save();
-	void load();
+    tTemperatureOffset(mEEPROM *mEeprom, UInt16 aModeNum);
+    void save();
+    void load();
 
-};
+    };
 #endif

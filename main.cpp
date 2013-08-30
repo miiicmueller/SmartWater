@@ -80,11 +80,7 @@ void main(void)
 
     mGSM theGSM;
     theGSM.mSetup();
-    theGSM.mOpen();
-
-    gInput theGInput(&theGSM);
-    gCompute theGCompute(&theGInput);
-    gOutput theGOutput(&theGCompute);
+    //theGSM.mOpen();
 
     iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
     UInt16 moduleAddress = 0x50;
@@ -94,7 +90,15 @@ void main(void)
 
     tToolsCluster theTools(&aEEPROM);
 
-    gTerminal theTerminalUSB(&theGInput, &theTools);
+    gInput theGInput(&theGSM);
+    gTerminal theTerminalUSB(&theTools);
+    gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools);
+    gOutput theGOutput(&theGCompute);
+
+    theGInput.setup();
+    theTerminalUSB.setup();
+    theGCompute.setup();
+    theGOutput.setup();
 
     mDelay aDelay;
 
@@ -102,8 +106,9 @@ void main(void)
 	{
 	if (aDelay.isDone())
 	    {
-	    aDelay.startDelayMS(5);
+	    aDelay.startDelayMS(2);
 	    theTerminalUSB.execute();
+	    theGCompute.execute();
 	    }
 	}
 
@@ -221,7 +226,7 @@ void main(void)
 	    }
 	}
 
-	// On endort le processeur en niveau 3 (voir datasheet page 20)
+    // On endort le processeur en niveau 3 (voir datasheet page 20)
 
 //		//Check the USB state and directly main loop accordingly
 //		if (commUsb.isConnected()) {
@@ -255,7 +260,7 @@ void main(void)
 //			}
 //
 //		}
-
-	}
+//
+//	}
     }
 
