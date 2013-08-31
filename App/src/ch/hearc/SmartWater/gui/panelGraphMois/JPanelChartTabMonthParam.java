@@ -22,6 +22,7 @@ import java.util.Map.Entry;
 
 import javax.swing.Action;
 import javax.swing.Box;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -121,11 +122,53 @@ public class JPanelChartTabMonthParam extends JPanel
 	public void sendLimits() {
 		StringBuilder strToSend = new StringBuilder();
 
+		if (!this.session.isLogged()) {
+			JOptionPane jOptionLogErr = new JOptionPane();
+			jOptionLogErr.showConfirmDialog(this.session,
+					(String) this.resourceLang.getObject("notLogged"),
+					(String) this.resourceLang.getObject("notLoggedTit"),
+					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
 		for (int i = 0; i < monthLim.length; i++) {
 			strToSend.append(String.valueOf(i) + ":"
 					+ String.valueOf(this.monthLim[i]) + "_");
 		}
+
 		this.session.writeCmd(this.session.CMD_LIMITES, strToSend.toString());
+
+		if (this.session.getReponse(strToSend) == 0) {
+			System.out.println(strToSend.toString());
+			// analyse de la réponse
+			String aStrAnalyse = strToSend.toString();
+			String[] aStrTab = aStrAnalyse.split("_");
+
+			switch (aStrTab[1]) {
+				case "OK" :
+					strToSend.delete(0, strToSend.length());
+					break;
+				case "ERROR" :
+					JOptionPane jOptionLogOk = new JOptionPane();
+					jOptionLogOk.showConfirmDialog(this, "Error write Limits",
+							"Error", JOptionPane.DEFAULT_OPTION,
+							JOptionPane.ERROR_MESSAGE);
+					return;
+				default :
+					return;
+			}
+		} else {
+			JOptionPane jOptionTimeoutErr = new JOptionPane();
+			jOptionTimeoutErr.showConfirmDialog(this,
+					(String) this.resourceLang.getObject("timeOut"),
+					(String) this.resourceLang.getObject("timeOutTit"),
+					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+			return;
+
+		}
+		JOptionPane jOptionLogOk = new JOptionPane();
+		jOptionLogOk.showConfirmDialog(this, "ParamWrite Succes", "Success",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 	}
 	/**
 	 * Sauve les limites dans la map

@@ -465,7 +465,7 @@ public class JFrameSmartWater extends JFrame {
 	private Session session;
 
 	// Tools
-	private static final String SOFT_VERSION = "v0.1";
+	private static final String SOFT_VERSION = "v0.9";
 	private JLanguages language;
 
 	private ComConnexion comUSB;
