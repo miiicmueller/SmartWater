@@ -28,27 +28,27 @@ void tCompteur::save()
     //Serialisation
     for (i = 0; i < 4; i++)
 	{
-	aDataTab[i] = this->aManufacturer[i];
+	aDataTab[i] = (UInt8) this->aManufacturer[i];
 	}
     for (i = 4; i < 14; i++)
 	{
-	aDataTab[i] = this->aFluide[i];
+	aDataTab[i] = (UInt8) this->aFluide[i];
 	}
     for (i = 14; i < 19; i++)
 	{
-	aDataTab[i] = this->aVersNum[i];
+	aDataTab[i] = (UInt8) this->aVersNum[i];
 	}
     for (i = 19; i < 28; i++)
 	{
-	aDataTab[i] = this->aFabDate[i];
+	aDataTab[i] = (UInt8) this->aFabDate[i];
 	}
     for (i = 28; i < 36; i++)
 	{
-	aDataTab[i] = this->aSerialNum[i];
+	aDataTab[i] = (UInt8) this->aSerialNum[i];
 	}
     for (i = 36; i < 46; i++)
 	{
-	aDataTab[i] = this->aNominalSize[i];
+	aDataTab[i] = (UInt8) this->aNominalSize[i];
 	}
 
     //Enregistrement dans l'EEPROM
@@ -69,27 +69,27 @@ void tCompteur::load()
     //Deserialisation
     for (i = 0; i < 4; i++)
 	{
-	this->aManufacturer[i] = aDataTab[i];
+	this->aManufacturer[i] = (char) aDataTab[i];
 	}
     for (i = 4; i < 14; i++)
 	{
-	this->aFluide[i] = aDataTab[i];
+	this->aFluide[i] = (char) aDataTab[i];
 	}
     for (i = 14; i < 19; i++)
 	{
-	this->aVersNum[i] = aDataTab[i];
+	this->aVersNum[i] = (char) aDataTab[i];
 	}
     for (i = 19; i < 28; i++)
 	{
-	this->aFabDate[i] = aDataTab[i];
+	this->aFabDate[i] = (char) aDataTab[i];
 	}
     for (i = 28; i < 36; i++)
 	{
-	this->aSerialNum[i] = aDataTab[i];
+	this->aSerialNum[i] = (char) aDataTab[i];
 	}
     for (i = 36; i < 46; i++)
 	{
-	this->aNominalSize[i] = aDataTab[i];
+	this->aNominalSize[i] = (char) aDataTab[i];
 	}
     }
 

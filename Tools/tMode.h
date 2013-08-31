@@ -11,7 +11,7 @@ class tMode: public tParameters
     {
 
 public:
-    UInt8 mode;
+    char mode;
 
     tMode(mEEPROM *mEeprom, UInt16 aModeNum);
     void save();

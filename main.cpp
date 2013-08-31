@@ -52,6 +52,7 @@ extern "C"
  */
 void main(void)
     {
+    int i;
 
     // Important pour la basse consommation
     iDIO::InitAllPort();
@@ -257,5 +258,4 @@ void main(void)
 //
 //	}
     }
-
 

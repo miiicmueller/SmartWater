@@ -64,7 +64,7 @@ void gTerminal::execute()
 	{
 	nop();
 	}
-    this->theAnalyzer.tCommandAnalysis(aMessage, this->theTools);
+    this->theAnalyzer.tCommandsAnalysis(aMessage, this->theTools);
 
     if (!this->theUSB->isConnected())
 	{
@@ -80,7 +80,7 @@ void gTerminal::execute()
 	    }
 	break;
     case kTerminalConnected:
-	if ((this->theAnalyzer.aState == kComplete)
+	if ((this->theAnalyzer.aStateEnum == kComplete)
 		&& (this->theAnalyzer.aCommandResult.aCommandEnum
 			== kCommandConnect))
 	    {
@@ -88,7 +88,7 @@ void gTerminal::execute()
 	    }
 	break;
     case kTerminalSessionOpen:
-	if ((this->theAnalyzer.aState == kComplete)
+	if ((this->theAnalyzer.aStateEnum == kComplete)
 		&& (this->theAnalyzer.aCommandResult.aCommandEnum
 			== kCommandDisconnect))
 	    {
