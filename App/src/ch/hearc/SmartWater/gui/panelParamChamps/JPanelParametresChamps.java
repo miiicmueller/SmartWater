@@ -137,12 +137,10 @@ public class JPanelParametresChamps extends JPanel {
 
 				}
 			}
-			JOptionPane jOptionLogOk = new JOptionPane();
-			jOptionLogOk.showConfirmDialog(this, "ParamWrite Succes",
-					"Success", JOptionPane.DEFAULT_OPTION,
-					JOptionPane.INFORMATION_MESSAGE);
-
 		}
+		JOptionPane jOptionLogOk = new JOptionPane();
+		jOptionLogOk.showConfirmDialog(this, "ParamWrite Succes", "Success",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 	}
 
 	/**

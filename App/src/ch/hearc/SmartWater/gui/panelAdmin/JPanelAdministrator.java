@@ -12,15 +12,23 @@ import java.util.Set;
 import java.util.Map.Entry;
 
 import javax.swing.Box;
+import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+import javax.swing.JTabbedPane;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.event.CaretEvent;
 import javax.swing.event.CaretListener;
 
 import ch.hearc.SmartWater.gui.login.Session;
+import ch.hearc.SmartWater.gui.panelCompteur.JPanelCompteurs;
+import ch.hearc.SmartWater.gui.panelDiag.JPanelDiag;
+import ch.hearc.SmartWater.gui.panelGraphJour.JPanelComsomJour;
+import ch.hearc.SmartWater.gui.panelGraphMois.JPanelConsomMois;
+import ch.hearc.SmartWater.gui.panelParamChamps.JPanelParametres;
 
 public class JPanelAdministrator extends JPanel {
 
@@ -65,16 +73,28 @@ public class JPanelAdministrator extends JPanel {
 		BorderLayout bl = new BorderLayout();
 		this.setLayout(bl);
 
+		this.ongletAdmin = new JTabbedPane(SwingConstants.BOTTOM);
+
+		this.add(this.ongletAdmin, BorderLayout.CENTER);
+
+		// The following line enables to use scrolling tabs.
+		this.ongletAdmin.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
+
 		this.jPanelAdminParam = new JPanelAdminParam(this.parameters,
 				this.resourceLang, this.session);
 		this.jPanelAdminCtrl = new JPanelAdminControl(this.resourceLang,
 				this.jPanelAdminParam);
+		this.jPanelAdminState = new JPanelAdminState(parameters, resourceLang,
+				session);
 
-		this.add(jPanelAdminParam, BorderLayout.CENTER);
-		this.add(jPanelAdminCtrl, BorderLayout.SOUTH);
+		JPanel jPanelAdminParamPlusCtrl = new JPanel(new BorderLayout());
+		jPanelAdminParamPlusCtrl.add(jPanelAdminParam, BorderLayout.CENTER);
+		jPanelAdminParamPlusCtrl.add(jPanelAdminCtrl, BorderLayout.SOUTH);
+
+		this.ongletAdmin.addTab("Paramètres", jPanelAdminParamPlusCtrl);
+		this.ongletAdmin.addTab("Etats Carte", this.jPanelAdminState);
 
 	}
-
 	public void saveParams() {
 		this.jPanelAdminParam.saveParameters();
 	}
@@ -83,15 +103,17 @@ public class JPanelAdministrator extends JPanel {
 	|*							Attributs Private						*|
 	\*------------------------------------------------------------------*/
 
+	// Input
 	private Session session;
+	private Map<String, String> parameters;
+	private ResourceBundle resourceLang;
 
 	// Tools
-	private Map<String, String> parameters;
-
-	private ResourceBundle resourceLang;
+	private JTabbedPane ongletAdmin;
 
 	// Panel de contrôle
 	private JPanelAdminControl jPanelAdminCtrl;
 	private JPanelAdminParam jPanelAdminParam;
+	private JPanelAdminState jPanelAdminState;
 
 }

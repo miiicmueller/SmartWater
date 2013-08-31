@@ -214,8 +214,7 @@ public class Session extends Component {
 
 			try {
 				this.comConnection.write(new String("_" + this.userName + "_"
-						+ this.userPassword + "_" + aCommand + "_" + aParam
-						+ "_\r"));
+						+ this.userPassword + "_" + aCommand + aParam + "_\r"));
 			} catch (Exception e) {
 				JOptionPane jOptionWriteErr = new JOptionPane();
 				jOptionWriteErr.showConfirmDialog(Session.this,
@@ -336,24 +335,24 @@ public class Session extends Component {
 	public final long DELAY_TIMEOUT = 2000;
 
 	// Nom des commandes
-	public final String CMD_MODE = "mode";
-	public final String CMD_MISEAHEURE = "mah";
-	public final String CMD_DISPO = "dispo";
-	public final String CMD_OFF_TEMP = "offset";
-	public final String CMD_MDP_ADMIN = "passa";
-	public final String CMD_MEM_RESET = "reset";
-	public final String CMD_PIN_CODE = "pin";
-	public final String CMD_SIMCRD_NUM = "own";
-	public final String CMD_SIMUL = "simulate";
-	public final String CMD_DIAG_UNIT = "dysfuntion";
-	public final String CMD_ALARM_NUM = "alarm";
-	public final String CMD_LIMITES = "limites";
-	public final String CMD_STATE = "etat";
-	public final String CMD_MDP_USER = "passu";
-	public final String CMD_MONTH_CONS = "monthlyConsumption";
-	public final String CMD_DAY_CONS = "dailyConsumption";
-	public final String CMD_CONNECT = "connect";
-	public final String CMD_DISCONNECT = "disconnect";
-	public final String CMD_UNIT_NAME = "unitname";
+	public final String CMD_MODE = "mode_";
+	public final String CMD_MISEAHEURE = "mah_";
+	public final String CMD_DISPO = "dispo_";
+	public final String CMD_OFF_TEMP = "offset_";
+	public final String CMD_MDP_ADMIN = "passa_";
+	public final String CMD_MEM_RESET = "reset_";
+	public final String CMD_PIN_CODE = "pin_";
+	public final String CMD_SIMCRD_NUM = "own_";
+	public final String CMD_SIMUL = "simulate_";
+	public final String CMD_DIAG_UNIT = "dysfuntion_";
+	public final String CMD_ALARM_NUM = "alarm_";
+	public final String CMD_LIMITES = "limits_";
+	public final String CMD_STATE = "etat_";
+	public final String CMD_MDP_USER = "passu_";
+	public final String CMD_MONTH_CONS = "monthlyConsumption_";
+	public final String CMD_DAY_CONS = "dailyConsumption_";
+	public final String CMD_CONNECT = "connect_";
+	public final String CMD_DISCONNECT = "disconnect_";
+	public final String CMD_UNIT_NAME = "unitname_";
 
 }

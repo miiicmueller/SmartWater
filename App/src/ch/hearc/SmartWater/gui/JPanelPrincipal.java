@@ -97,16 +97,16 @@ public class JPanelPrincipal extends JPanel {
 									.equals(ADMIN_USERNAME)) {
 
 					} else {
-						JOptionPane jOptionWriteErr = new JOptionPane();
-						jOptionWriteErr.showConfirmDialog(JPanelPrincipal.this,
-								(String) JPanelPrincipal.this.resourceLang
-										.getObject("adminLogErr"),
-								(String) JPanelPrincipal.this.resourceLang
-										.getObject("adminLogErrTit"),
-								JOptionPane.DEFAULT_OPTION,
-								JOptionPane.ERROR_MESSAGE);
-
-						ongletPrincipaux.setSelectedIndex(0);
+						// JOptionPane jOptionWriteErr = new JOptionPane();
+						// jOptionWriteErr.showConfirmDialog(JPanelPrincipal.this,
+						// (String) JPanelPrincipal.this.resourceLang
+						// .getObject("adminLogErr"),
+						// (String) JPanelPrincipal.this.resourceLang
+						// .getObject("adminLogErrTit"),
+						// JOptionPane.DEFAULT_OPTION,
+						// JOptionPane.ERROR_MESSAGE);
+						//
+						// ongletPrincipaux.setSelectedIndex(0);
 					}
 				}
 			}

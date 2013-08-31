@@ -68,7 +68,7 @@ public class JPanelChartJourPanParam extends JPanel
 	 */
 	public void saveConso() {
 
-		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < this.dayConsom.length; i++) {
 			this.dayConsom[i] = Integer.valueOf(this.jTable.getValueAt(i, 1)
 					.toString());
 			this.parameters.put(PARAM_KEY_BASE_CONS + String.valueOf(i),
@@ -89,7 +89,7 @@ public class JPanelChartJourPanParam extends JPanel
 			}
 		}
 
-		for (int i = 0; i < 12; i++) {
+		for (int i = 0; i < this.dayConsom.length; i++) {
 			this.jTable.setValueAt(String.valueOf(this.dayConsom[i]), i, 1);
 		}
 
