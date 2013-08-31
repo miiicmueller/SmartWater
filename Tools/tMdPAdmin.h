@@ -6,14 +6,14 @@
 
 #include "tParameters.h"
 
-class tMdPAdmin: public tParameters
-    {
+class tMdPAdmin : public tParameters
+{
 public:
-    char mdPAdmin[20];
+	UInt8 mdPAdmin[20];
 
-    tMdPAdmin(mEEPROM *mEeprom, UInt16 aModeNum);
-    void save();
-    void load();
+	tMdPAdmin(mEEPROM *mEeprom,UInt16 aModeNum);
+	void save();
+	void load();
 
-    };
+};
 #endif

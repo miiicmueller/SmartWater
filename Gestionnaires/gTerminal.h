@@ -7,8 +7,8 @@
 #include "Gestionnaire.h"
 #include "gInput.h"
 #include "Modules/mUSB.h"
-#include "Tools/tToolsCluster.h"
-#include "tCommandsAnalyzer.h"
+//#include "Tools/tToolsCluster.h"
+//#include "tCommandsAnalyzer.h"
 
 //pour la machine d'etat du gTerminal
 typedef enum
@@ -20,7 +20,7 @@ typedef enum
 
 typedef struct
     {
-    tCommandsEnum* aAction;
+   // tCommandsEnum* aAction;
     char* theParameters[12];
     int* theParametersNumber;
     char* aReply;
@@ -39,11 +39,11 @@ private:
 
     gInput* theGInput;
 
-    tToolsCluster* theTools;
+    //tToolsCluster* theTools;
 
     gTerminalStateEnum aTerminalState;
 
-    tCommandsAnalyzer theAnalyzer;
+    //tCommandsAnalyzer theAnalyzer;
 
     char aReply[100];
 
@@ -53,7 +53,7 @@ public:
     //
     //gInput : le gestionnaire qui contient les entrees
     //----------------------------------------------------------------
-    gTerminal(tToolsCluster* theTools);
+   // gTerminal(tToolsCluster* theTools);
 
     void setup();
 

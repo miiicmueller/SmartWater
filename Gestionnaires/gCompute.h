@@ -32,10 +32,10 @@ public:
     //----------------------------------------------------------------
     //constructeur
     //
-    //gInput : le gestionnaire qui contient les entrées
+    //gInput : le gestionnaire qui contient les entrï¿½es
     //----------------------------------------------------------------
-    gCompute(gInput* theGInput, gTerminal* theGTerminal,
-	    tToolsCluster* theTools);
+//    gCompute(gInput* theGInput, gTerminal* theGTerminal,
+//	    tToolsCluster* theTools);
 
     void setup();
 

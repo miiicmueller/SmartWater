@@ -7,13 +7,12 @@
 #include "tParameters.h"
 #include "Modules/mEEPROM.h"
 
-class tMdPUser: public tParameters
-    {
+class tMdPUser: public tParameters {
 public:
-    char mdPUser[20];
+	UInt8 mdPUser[20];
 
-    tMdPUser(mEEPROM *mEeprom, UInt16 aModeNum);
-    void save();
-    void load();
-    };
+	tMdPUser(mEEPROM *mEeprom,UInt16 aModeNum);
+	void save();
+	void load();
+};
 #endif

@@ -20,12 +20,12 @@ tAlarmNumber::tAlarmNumber(mEEPROM *mEeprom, UInt16 aModeNum)
 void tAlarmNumber::save()
     {
     //Enregistrement dans l'EEPROM
-    this->mPeriphSauv->store(this->aId, (UInt8*) this->aTelNumber);
+    this->mPeriphSauv->store(this->aId, this->aTelNumber);
 
     }
 void tAlarmNumber::load()
     {
     //Recuperation des donnees
-    this->mPeriphSauv->load(this->aId, (UInt8*) this->aTelNumber);
+    this->mPeriphSauv->load(this->aId, this->aTelNumber);
     }
 
