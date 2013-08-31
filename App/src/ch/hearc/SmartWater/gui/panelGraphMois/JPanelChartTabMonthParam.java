@@ -33,6 +33,8 @@ import javax.swing.table.DefaultTableModel;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableColumn;
 
+import ch.hearc.SmartWater.gui.login.Session;
+
 public class JPanelChartTabMonthParam extends JPanel
 		implements
 			PropertyChangeListener,
@@ -43,12 +45,13 @@ public class JPanelChartTabMonthParam extends JPanel
 	\*------------------------------------------------------------------*/
 	public JPanelChartTabMonthParam(ResourceBundle resourceLang,
 			Map<String, String> parameters,
-			JPanelChartTabMonth jPanelChartTabMonth) {
+			JPanelChartTabMonth jPanelChartTabMonth, Session session) {
 
 		// Aquisition des entrées
 		this.resourceLang = resourceLang;
 		this.parameters = parameters;
 		this.jPanelChartTabMonth = jPanelChartTabMonth;
+		this.session = session;
 
 		// Tableaux de données
 		this.monthLim = new int[12];
@@ -115,6 +118,15 @@ public class JPanelChartTabMonthParam extends JPanel
 	|*				Set				*|
 	\*------------------------------*/
 
+	public void sendLimits() {
+		StringBuilder strToSend = new StringBuilder();
+
+		for (int i = 0; i < monthLim.length; i++) {
+			strToSend.append(String.valueOf(i) + ":"
+					+ String.valueOf(this.monthLim[i]) + "_");
+		}
+		this.session.writeCmd(this.session.CMD_LIMITES, strToSend.toString());
+	}
 	/**
 	 * Sauve les limites dans la map
 	 */
@@ -268,7 +280,7 @@ public class JPanelChartTabMonthParam extends JPanel
 		}
 
 		this.jPanelChartTabMonthParamControl = new JPanelChartTabMonthParamControl(
-				resourceLang);
+				resourceLang, this);
 		this.jTable = new JTable(donnees, this.tableEntete) {
 			public boolean isCellEditable(int rowIndex, int columnIndex) {
 				// ici la cellule (1, 2) est non-editable
@@ -305,6 +317,7 @@ public class JPanelChartTabMonthParam extends JPanel
 	private ResourceBundle resourceLang;
 	private Map<String, String> parameters;
 	private JPanelChartTabMonth jPanelChartTabMonth;
+	private Session session;
 
 	private Action action;
 

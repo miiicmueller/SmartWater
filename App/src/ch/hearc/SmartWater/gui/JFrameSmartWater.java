@@ -70,7 +70,7 @@ public class JFrameSmartWater extends JFrame {
 	\*------------------------------------------------------------------*/
 
 	private void control() {
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
 		// Si on appuie sur Quitter
 		this.menuFichierExit.addActionListener(new ActionListener() {
@@ -353,6 +353,10 @@ public class JFrameSmartWater extends JFrame {
 				if (reponse == jOptionpane.YES_OPTION) {
 					JFrameSmartWater.this.exitSoftware();
 					JFrameSmartWater.this.dispose();
+				}
+				else
+				{
+					
 				}
 			}
 		});
