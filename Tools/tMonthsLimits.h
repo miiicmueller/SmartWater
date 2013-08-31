@@ -7,13 +7,13 @@
 #include "tParameters.h"
 #include "Modules/mEEPROM.h"
 
-class tMonthsLimits : public tParameters
-{
+class tMonthsLimits: public tParameters
+    {
 public:
-	UInt16 limits[12];
-	tMonthsLimits(mEEPROM *mEeprom,UInt16 aModeNum);
-	void save();
-	void load();
+    UInt16 limits[12];
+    tMonthsLimits(mEEPROM *mEeprom, UInt16 aModeNum);
+    void save();
+    void load();
 
-};
+    };
 #endif

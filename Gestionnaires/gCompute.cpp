@@ -73,14 +73,14 @@ void gCompute::computeTerminal()
 	    sprintf(this->theGTerminal->theTerminalMailBox.aReply, "_OK_\r\n");
 	    }
 	break;
-    case kCommandAlarme:
+    case kCommandAlarm:
 	if (*(this->theGTerminal->theTerminalMailBox.aTerminalState)
 		== kTerminalSessionOpen)
 	    {
 	    sprintf(this->theGTerminal->theTerminalMailBox.aReply, "_OK_\r\n");
 	    }
 	break;
-    case kCommandLimites:
+    case kCommandLimits:
 	if (*(this->theGTerminal->theTerminalMailBox.aTerminalState)
 		== kTerminalSessionOpen)
 	    {
@@ -122,14 +122,14 @@ void gCompute::computeTerminal()
 	    sprintf(this->theGTerminal->theTerminalMailBox.aReply, "_OK_\r\n");
 	    }
 	break;
-    case kCommandMonths:
+    case kCommandMonthlyconsumption:
 	if (*(this->theGTerminal->theTerminalMailBox.aTerminalState)
 		== kTerminalSessionOpen)
 	    {
 	    sprintf(this->theGTerminal->theTerminalMailBox.aReply, "_OK_\r\n");
 	    }
 	break;
-    case kCommandDays:
+    case kCommandDailyconsumption:
 	if (*(this->theGTerminal->theTerminalMailBox.aTerminalState)
 		== kTerminalSessionOpen)
 	    {

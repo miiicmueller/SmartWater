@@ -6,13 +6,13 @@
 
 #include "tParameters.h"
 
-class tUnitName : public tParameters
-{
+class tUnitName: public tParameters
+    {
 public:
-	UInt8 aName[20];
+    char aName[20];
 
-	tUnitName(mEEPROM *mEeprom,UInt16 aModeNum);
-	void save();
-	void load();
-};
+    tUnitName(mEEPROM *mEeprom, UInt16 aModeNum);
+    void save();
+    void load();
+    };
 #endif

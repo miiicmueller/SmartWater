@@ -6,14 +6,14 @@
 
 #include "tParameters.h"
 
-class tAlarmNumber : public tParameters
-{
+class tAlarmNumber: public tParameters
+    {
 public:
-	UInt8 aTelNumber[15];
+    char aTelNumber[15];
 
-	tAlarmNumber(mEEPROM *mEeprom,UInt16 aModeNum);
-	void save();
-	void load();
+    tAlarmNumber(mEEPROM *mEeprom, UInt16 aModeNum);
+    void save();
+    void load();
 
-};
+    };
 #endif
