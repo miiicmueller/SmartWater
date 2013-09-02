@@ -22,9 +22,10 @@ typedef struct
     {
     tCommandsEnum* aAction;
     char* theParameters[12];
-    int* theParametersNumber;
+    UInt8* theParametersNumber;
     char* aReply;
     gTerminalStateEnum* aTerminalState;
+    tCommandsUserNbEnum* aUserNb;
     } gTerminalMailBox;
 
 using namespace std;

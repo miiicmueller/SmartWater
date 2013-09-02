@@ -34,6 +34,8 @@ void gTerminal::setup()
     //assignation du contenu de la mailbox
     this->theTerminalMailBox.aReply = this->aReply;
     this->theTerminalMailBox.aTerminalState = &(this->aTerminalState);
+    this->theTerminalMailBox.aUserNb =
+	    &(this->theAnalyzer.aCommandResult.aUserNb);
     this->theTerminalMailBox.aAction =
 	    &(this->theAnalyzer.aCommandResult.aCommandEnum);
     this->theTerminalMailBox.theParametersNumber =
@@ -59,11 +61,6 @@ void gTerminal::execute()
 
     this->theUSB->getCommand(aMessage);
 
-    //TODO pour le debuggage, a enlever
-    if (aMessage[0] != '\0')
-	{
-	nop();
-	}
     this->theAnalyzer.tCommandsAnalysis(aMessage, this->theTools);
 
     if (!this->theUSB->isConnected())
@@ -102,6 +99,7 @@ void gTerminal::execute()
 
     if (this->aReply[0] != '\0')
 	{
+	strcat(this->aReply, "\r\n");
 	this->theUSB->sendReply(aReply);
 	}
     }

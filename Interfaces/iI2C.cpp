@@ -3,7 +3,7 @@
 
 #include "iI2C.h"
 
-//FIXME Le code marche bien pour USCI_B1 mais à plein de lacune pour le B0.
+//FIXME Le code marche bien pour USCI_B1 mais a�plein de lacune pour le B0.
 //Donc a ajouter pour la prochaine utilisation
 
 //Initalisation des attributs UART_x statiques
@@ -13,14 +13,13 @@ iI2C* iI2C::USCI_B1 = NULL;
 /**
  * Constructeur de base
  * i2cSpeed : Vitesse de transmission
- * i2cPort : Port de l'i2c à utiliser
+ * i2cPort : Port de l'i2c a� utiliser
  * i2cMode : Mode master ou slave
- * i2cAddress : Adresse i2c du maître
+ * i2cAddress : Adresse i2c du maitre
  */
 iI2C::iI2C(iI2CSpeedEnum i2cSpeed, iI2CPortEnum i2cPort, iI2CModesEnum i2cMode,
 	char i2cAddress)
     {
-
     //attribution du port I2C
     this->i2cPort = i2cPort;
     this->isEnabled = false;
@@ -31,7 +30,7 @@ iI2C::iI2C(iI2CSpeedEnum i2cSpeed, iI2CPortEnum i2cPort, iI2CModesEnum i2cMode,
     switch (this->i2cPort)
 	{
     case kUSCI_B0:
-	// On doit tester si le pointeur n'est pas utilisé
+	// On doit tester si le pointeur n'est pas utilise
 	// par un autre objet
 	if (this->USCI_B0 == NULL)
 	    {
@@ -40,11 +39,11 @@ iI2C::iI2C(iI2CSpeedEnum i2cSpeed, iI2CPortEnum i2cPort, iI2CModesEnum i2cMode,
 	    }
 	else
 	    {
-	    // Impossible de créer l'objet voulu
+	    // Impossible de creer l'objet voulu
 	    }
 	break;
     case kUSCI_B1:
-	// On doit tester si le pointeur n'est pas utilisé
+	// On doit tester si le pointeur n'est pas utilise
 	// par un autre objet
 	if (this->USCI_B1 == NULL)
 	    {
@@ -52,20 +51,20 @@ iI2C::iI2C(iI2CSpeedEnum i2cSpeed, iI2CPortEnum i2cPort, iI2CModesEnum i2cMode,
 	    }
 	else
 	    {
-	    // Impossible de cr�eer l'objet voulu
+	    // Impossible de creer l'objet voulu
 	    }
 	break;
     default:
-	;
+	break;
 	}
     }
 
 /**
- * Libère les pointeurs de port
+ * Libere les pointeurs de port
  */
 iI2C::~iI2C()
     {
-    //Lib�ration de la pile d'interruption
+    //Liberation de la pile d'interruption
     switch (this->i2cPort)
 	{
     case kUSCI_B0:
@@ -175,18 +174,18 @@ void iI2C::enable()
 	break;
     case kUSCI_B1:
 	UCB1CTL1 &= ~(UCSWRST);
-	if (UCB1STAT & UCBBUSY)                   // test if bus to be free
+	if (UCB1STAT & UCBBUSY)                // test if bus to be free
 	    {                                  // otherwise a manual Clock on is
 					       // generated
-	    I2C_PORT_SEL_B1 &= ~SCL_PIN_B1;      // Select Port function for SCL
-	    I2C_PORT_OUT_B1 &= ~SCL_PIN_B1;               //
-	    I2C_PORT_DIR_B1 |= SCL_PIN_B1;                // drive SCL low
+	    I2C_PORT_SEL_B1 &= ~SCL_PIN_B1;    // Select Port function for SCL
+	    I2C_PORT_OUT_B1 &= ~SCL_PIN_B1;             //
+	    I2C_PORT_DIR_B1 |= SCL_PIN_B1;              // drive SCL low
 	    I2C_PORT_SEL_B1 |= SDA_PIN_B1 + SCL_PIN_B1; // select module function for the
 	    // used I2C pins
 	    }
 	break;
     default:
-	;
+	break;
 	}
     this->isEnabled = true;
     }
@@ -216,7 +215,7 @@ void iI2C::disable()
  */
 bool iI2C::write(UInt8 aData)
     {
-    //Ecrire la donnée
+    //Ecrire la donnee
     UCB1TXBUF = aData;
     return true;
     }
@@ -253,7 +252,7 @@ void iI2C::start()
 
 /**
  * Lecture d'un flag de l'i2c
- * aFlag : Flag i2c à lire
+ * aFlag : Flag i2c a lire
  */
 bool iI2C::getStatusFlag(iI2CFlagEnum aFlag)
     {
@@ -285,7 +284,7 @@ void iI2C::stop()
     }
 
 /**
- * Toggle en mode d'écriture . (Address slave avec RW = 0)
+ * Toggle en mode d'ecriture . (Address slave avec RW = 0)
  */
 void iI2C::setWriteMode()
     {
@@ -322,7 +321,7 @@ __interrupt void USCI_B1_ISR(void)
 	break;                           // Vector  8: STPIFG
     case 10:
 	break;                           // Vector 10: RXIFG
-    case 12:                                  // Vector 12: TXIFG
+    case 12:                             // Vector 12: TXIFG
 	break;
     default:
 	break;
@@ -346,7 +345,7 @@ __interrupt void USCI_B0_ISR(void)
 	break;                           // Vector  8: STPIFG
     case 10:
 	break;                           // Vector 10: RXIFG
-    case 12:                                  // Vector 12: TXIFG
+    case 12:                             // Vector 12: TXIFG
 	break;
     default:
 	break;

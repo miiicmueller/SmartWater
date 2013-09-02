@@ -18,6 +18,8 @@ private:
 
     tDate nextAlarm;
 
+    tToolsCluster* theTools;
+
     gInput* theGInput;
 
     gTerminal* theGTerminal;

@@ -20,6 +20,11 @@
 #include "tSIMCard.h"
 #include "tCompteur.h"
 
+#define MaxPeriode 1440
+#define MinPeriode 30
+#define MaxDuree 30
+#define MinDuree 0
+
 class tToolsCluster
     {
 public:
@@ -37,6 +42,34 @@ public:
     tTemperatureOffset* theTemperatureOffset;
     tUnitName* theUnitName;
     tSIMCard* theSIMCard;
+
+    bool setAvailability(char* aPeriode, char* aDuree);
+
+    bool setMdPAdmin(char* aMdP1, char* aMdP2);
+
+    bool setMode(char* aMode);
+
+    bool setTemperatureOffset(char* aTemperatureOffset);
+
+    bool setUnitName(char* aUnitName);
+
+    bool setPINCode(char* aPINCode);
+
+    bool setOwnNumber(char* aOwnNumber);
+
+    bool setAlarmNumber(char* aAlarmNumber, UInt8 aUserNb);
+
+    bool setMdPUser(char* aMdP1, char* aMdP2, UInt8 aUserNb);
+
+    bool setMonthsLimits(char** aMonthLimits, UInt8 aNbOfLimits, UInt8 aUserNb);
+
+    void getMonthsLimits(char* aMessage, UInt8 aUserNb);
+
+    void getMonthlyConsumption(char* aMessage, UInt8 aUserNb);
+
+    void getDailyConsumption(char* aMessage, UInt8 aUserNb);
+
+    void getEtat(char* aMessage, UInt8 aUserNb);
 
     tToolsCluster(mEEPROM* aEEPROM);
     virtual ~tToolsCluster();

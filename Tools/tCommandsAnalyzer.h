@@ -44,6 +44,10 @@ typedef enum
     {
     kEmpty,
     kPending,
+    kModeOk,
+    kPassWordOk,
+    kCommandOk,
+    kParametersOk,
     kComplete
     } tCommandsAnalyzerStateEnum;
 
@@ -56,9 +60,14 @@ typedef enum
     kAdmin2
     } tCommandsModeTypeEnum;
 
+typedef enum
+    {
+    kDataUser1 = 1,
+    kDataUser2 = 2
+    } tCommandsUserNbEnum;
+
 typedef struct
     {
-    bool hasCommand;
     char theMode[sizeMaxMode];
     char theMdp[sizeMaxMdp];
     char theCommand[sizeMaxCommand];
@@ -69,7 +78,8 @@ typedef struct
     {
     tCommandsEnum aCommandEnum;
     tCommandsModeTypeEnum aModeTypeEnum;
-    int parametersNumber;
+    tCommandsUserNbEnum aUserNb;
+    UInt8 parametersNumber;
     } tCommandResult;
 
 class tCommandsAnalyzer
@@ -88,7 +98,15 @@ public:
 private:
     int maxSizesCommands[4];
 
-    int tCommandsParser(char* aMessage);
+    void tCommandsParser(char* aMessage);
+
+    void tModeAnalyzer();
+
+    void tPasswordAnalyzer(tToolsCluster* theTools);
+
+    void tCommandAnalyzer();
+
+    void tParametersAnalyzer();
     };
 
 #endif /* TCOMMANDSANALYZER_H_ */
