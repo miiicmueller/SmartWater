@@ -251,76 +251,76 @@ bool gCompute::computeConsumption(iMeterChannel aChannel)
     bool aOverrunConsumption = false; // variable de retour
 
     //TODO adapter au tableaude compteur
-    if (0 == aPreviousDay) // la premiere fois
-	{
-	aDay = theGInput->valueMeters->date.day;
-	aPreviousDay = aDay;
-	aPreviousValue = theGInput->valueMeters->value;
-	}
-    else
-	{
-	aDay = theGInput->valueMeters->date.day; // prend la nouvelle date
-
-	if (aDay != aPreviousDay) // un nouveau jour est passe
-	    {
-	    aMonth = theGInput->valueMeters->date.month;
-	    aValue = theGInput->valueMeters->value;
-
-	    if (1 == aDay) //met a jour pour le premier jour du mois
-		{
-		aValueBeginMonth = aValue;
-		}
-
-	    //calcul de la limite du jour
-	    if (4 == aMonth || 6 == aMonth || 9 == aMonth || 11 == aMonth) //mois à 30 jours
-		{
-		aLimitDay =
-			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
-				- (aValue - aValueBeginMonth))
-				/ (float) (31 - aDay)) + 0.5);
-		}
-	    else if (2 == aMonth && 29 == aDay) //mois à 29 jours
-		{
-		aLimitDay = (UInt16) ((float) (tMonthsLimits::limits[aMonth - 1]
-			- (aValue - aValueBeginMonth)) + 0.5);
-		}
-	    else if (2 == aMonth) //mois à 28 jours
-		{
-		aLimitDay =
-			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
-				- (aValue - aValueBeginMonth))
-				/ (float) (29 - aDay)) + 0.5);
-		}
-	    else //mois à 31 jours
-		{
-		aLimitDay =
-			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
-				- (aValue - aValueBeginMonth))
-				/ (float) (32 - aDay)) + 0.5);
-
-		}
-
-	    if (aLimitDay < (aValue - aPreviousValue)) //calcul si depasse la limite quotidienne
-		{
-		if (aWarningConsumption)
-		    {
-		    aOverrunConsumption = true;
-		    }
-		else // premier jour de depassement de la limite
-		    {
-		    aWarningConsumption = true;
-		    }
-		}
-	    else // pas de depassement
-		{
-		aWarningConsumption = false;
-		}
-
-	    aPreviousValue = aValue;
-	    aPreviousDay = aDay;
-	    }
-
-	}
+//    if (0 == aPreviousDay) // la premiere fois
+//	{
+//	aDay = theGInput->valueMeters->date.day;
+//	aPreviousDay = aDay;
+//	aPreviousValue = theGInput->valueMeters->value;
+//	}
+//    else
+//	{
+//	aDay = theGInput->valueMeters->date.day; // prend la nouvelle date
+//
+//	if (aDay != aPreviousDay) // un nouveau jour est passe
+//	    {
+//	    aMonth = theGInput->valueMeters->date.month;
+//	    aValue = theGInput->valueMeters->value;
+//
+//	    if (1 == aDay) //met a jour pour le premier jour du mois
+//		{
+//		aValueBeginMonth = aValue;
+//		}
+//
+//	    //calcul de la limite du jour
+//	    if (4 == aMonth || 6 == aMonth || 9 == aMonth || 11 == aMonth) //mois à 30 jours
+//		{
+//		aLimitDay =
+//			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
+//				- (aValue - aValueBeginMonth))
+//				/ (float) (31 - aDay)) + 0.5);
+//		}
+//	    else if (2 == aMonth && 29 == aDay) //mois à 29 jours
+//		{
+//		aLimitDay = (UInt16) ((float) (tMonthsLimits::limits[aMonth - 1]
+//			- (aValue - aValueBeginMonth)) + 0.5);
+//		}
+//	    else if (2 == aMonth) //mois à 28 jours
+//		{
+//		aLimitDay =
+//			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
+//				- (aValue - aValueBeginMonth))
+//				/ (float) (29 - aDay)) + 0.5);
+//		}
+//	    else //mois à 31 jours
+//		{
+//		aLimitDay =
+//			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
+//				- (aValue - aValueBeginMonth))
+//				/ (float) (32 - aDay)) + 0.5);
+//
+//		}
+//
+//	    if (aLimitDay < (aValue - aPreviousValue)) //calcul si depasse la limite quotidienne
+//		{
+//		if (aWarningConsumption)
+//		    {
+//		    aOverrunConsumption = true;
+//		    }
+//		else // premier jour de depassement de la limite
+//		    {
+//		    aWarningConsumption = true;
+//		    }
+//		}
+//	    else // pas de depassement
+//		{
+//		aWarningConsumption = false;
+//		}
+//
+//	    aPreviousValue = aValue;
+//	    aPreviousDay = aDay;
+//	    }
+//
+//	}
     return aOverrunConsumption;
     }
 
