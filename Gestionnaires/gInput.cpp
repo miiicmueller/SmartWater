@@ -19,17 +19,17 @@ void gInput::execute()
 
 int gInput::getCounterValue(char counterNb)
     {
-    return this->counterValues;
+    //return this->counterValues;
     }
 
 int gInput::getBatteryValue()
     {
-    return this->tempSensValues;
+    //return this->tempSensValues;
     }
 
 int gInput::getTempSensValue(char tempSensNb)
     {
-    return this->tempSensValues;
+    //return this->tempSensValues;
     }
 
 char* gInput::getSms(int nSms)
