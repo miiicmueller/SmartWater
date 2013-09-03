@@ -65,29 +65,29 @@ void main(void)
     maled1.SetPortDriveStrength(kFullStrength);
     maled2.SetPortDriveStrength(kFullStrength);
     maled3.SetPortDriveStrength(kFullStrength);
-
-    mGSM theGSM;
-    theGSM.mSetup();
-    theGSM.mOpen();
-
-    gInput theGInput(&theGSM);
-    gCompute theGCompute(&theGInput);
-    gOutput theGOutput(&theGCompute);
-
-    iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
-    UInt16 moduleAddress = 0x50;
-    mEEPROM aEEPROM(moduleAddress, &i2cBus);
-    aEEPROM.mOpen();
-    // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
-
-    tToolsCluster theTools(&aEEPROM);
+//
+//    mGSM theGSM;
+//    theGSM.mSetup();
+//    theGSM.mOpen();
+//
+//    gInput theGInput(&theGSM);
+//    gCompute theGCompute(&theGInput);
+//    gOutput theGOutput(&theGCompute);
+//
+//    iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
+//    UInt16 moduleAddress = 0x50;
+//    mEEPROM aEEPROM(moduleAddress, &i2cBus);
+//    aEEPROM.mOpen();
+//    // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
+//
+//    tToolsCluster theTools(&aEEPROM);
 
     char messageRecu[kSciRecBufSize ] = "";
-    char cestOk[1];
-    bool salut;
-    UInt16 monCredit;
+    bool COCO[20];
+    bool aMessRecu;
     tDate maDate;
     tDate monCCredit;
+    UInt16 creddit;
 
     mDelay::mSetup();
     mDelay::mOpen();
@@ -100,53 +100,49 @@ void main(void)
 
     maled1.write(~BIT0);
 
+    for (int i = 0; i < 20; i++)
+	{
+	COCO[i] = false;
+	}
+
     mGSM monGsm;
     strcpy((char*) monGsm.codePIN, "1405"); //1405 5906
-    strcpy((char*) monGsm.phoneNumber, "+41774874473");
+    strcpy((char*) monGsm.phoneNumber, "+41774874478");
 
     monGsm.mSetup();
 
     maled2.write(BIT1);
     monGsm.mOpen();
 
+    if(kOk!=monGsm.state)
+	{
+	maled3.write(BIT2); //erreur gsm
+	}
+
     maled2.write(~BIT1);
 
     maled1.write(BIT0);
-    //ne pas oublier le fil !
-    // il faudra de temps en temps vider la memoire peut etre
 
-    salut =
-	    monGsm.sendSMS(
-		    (UInt8*) "Unite\"Nom du site\":\r\nDate et heure 18/09/12/16:53:00\r\nDisponibilite 01:00/00:15\r\nMode S\r\nIndex 03046\r\nDebit jour 10,7\r\nDebit jour mens 8,7\r\nLimite jour mens 25,0\r\nTemperature 10,2\r\nOffset temperature 0,2\r\nCredit 29,29\r\nAlarme 0041765572263",
-		    (UInt8*) "+41787526983");
-    if (salut)
+    COCO[0] = monGsm.sendSMS((UInt8*) "Coucou cocoa", (UInt8*) "+41787526983");
+    if (COCO[0])
 	{
-	cestOk[0] = 1;
+	maled3.write(~BIT2);
 	maled2.write(BIT1);
 	}
     else
 	{
-	cestOk[0] = 0;
 	maled3.write(BIT2);
 	maled2.write(BIT1);
 	}
-//reessayer maintenant que le timeout est augmenté
-    // while (1)
-    //{
-    monCCredit.year = monGsm.getCredit(); // ok
-    //   maDate = monGsm.getDate();
-//	}
+
+//    COCO[1] = monGsm.getCredit(&creddit);
+//    monCCredit.year = creddit;
+
+   // COCO[2] = monGsm.getDate(&maDate);
+
     while (1)
 	{
-	salut = monGsm.getSMS(messageRecu);
-	if (salut)
-	    {
-	    cestOk[0] = 1;
-	    }
-	else
-	    {
-	    cestOk[0] = 0;
-	    }
+	COCO[3] = monGsm.getSMS(messageRecu, &aMessRecu);
+	COCO[4] = aMessRecu;
 	}
-
     }
