@@ -4,17 +4,14 @@
 #include <assert.h>
 #include <stdio.h>
 
-//OBLIGATOIRE POUR L'USB
-volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
-
 //----------------------------------------------------------------
 //constructeur
 //
 //gInput : le gestionnaire qui contient les entrees
 //----------------------------------------------------------------
-gTerminal::gTerminal(tToolsCluster* theTools)
+gTerminal::gTerminal(tToolsCluster* theTools, mUSB* theUSB)
     {
-    this->theUSB = new mUSB(&bCDCDataReceived_event);
+    this->theUSB = theUSB;
     this->theGInput = theGInput;
     this->theTools = theTools;
     this->sessionOpen = false;
@@ -29,11 +26,11 @@ void gTerminal::setup()
     {
     //initialisation des attributs
     this->aTerminalState = kTerminalDisconnected;
-    this->aReply[0] = '\0';
 
     //assignation du contenu de la mailbox
-    this->theTerminalMailBox.aReply = this->aReply;
     this->theTerminalMailBox.aTerminalState = &(this->aTerminalState);
+    this->theTerminalMailBox.aUserNb =
+	    &(this->theAnalyzer.aCommandResult.aUserNb);
     this->theTerminalMailBox.aAction =
 	    &(this->theAnalyzer.aCommandResult.aCommandEnum);
     this->theTerminalMailBox.theParametersNumber =
@@ -59,11 +56,6 @@ void gTerminal::execute()
 
     this->theUSB->getCommand(aMessage);
 
-    //TODO pour le debuggage, a enlever
-    if (aMessage[0] != '\0')
-	{
-	nop();
-	}
     this->theAnalyzer.tCommandsAnalysis(aMessage, this->theTools);
 
     if (!this->theUSB->isConnected())
@@ -98,11 +90,6 @@ void gTerminal::execute()
     default:
 	this->aTerminalState = kTerminalDisconnected;
 	break;
-	}
-
-    if (this->aReply[0] != '\0')
-	{
-	this->theUSB->sendReply(aReply);
 	}
     }
 

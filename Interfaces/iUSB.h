@@ -18,40 +18,41 @@
 
 #define MAX_BUFFERSIZE  100
 
-typedef enum {	kStateDisconnected,
-	kStateConnNoEnum,
-	kStateActive,
-	kStateEnumSuspended,
-	kStateInProgress,
-	kStateNoEnumSuspended,
-	kStateError
-} iUsbStateEnum;
+typedef enum
+    {
+    kStateDisconnected,
+    kStateConnNoEnum,
+    kStateActive,
+    kStateEnumSuspended,
+    kStateInProgress,
+    kStateNoEnumSuspended,
+    kStateError
+    } iUsbStateEnum;
 
-
-
-class iUSB: public Interface {
+class iUSB: public Interface
+    {
 private:
-	char* usbSerialBuffer;
-	int bufferSize;
-	static char usbBuffer[MAX_BUFFERSIZE];
-	iUsbStateEnum usbState;
-	volatile BYTE *dataReceived ;
+    char* usbSerialBuffer;
+    int bufferSize;
+    static char usbBuffer[MAX_BUFFERSIZE];
+    iUsbStateEnum usbState;
+    volatile BYTE *dataReceived;
 
-	void config();
-	BYTE retInString(char* string);
-	bool write(UInt8 aData);
-	UInt8 read();
+    void config();
+    BYTE retInString(char* string);
+    bool write(UInt8 aData);
+    UInt8 read();
 public:
-	iUSB(volatile BYTE *bCDCDataReceived_event);
-	~iUSB();
-	bool getFullFrame(char* FrameBuffer);
-	void sendFullFrame(char* FrameBuffer);
-	void initUSB();
-	bool isDataAvailable();
-	void clearSerialBuffer();
-	int getBufferSize();
+    iUSB(volatile BYTE *bCDCDataReceived_event);
+    ~iUSB();
+    bool getFullFrame(char* FrameBuffer);
+    void sendFullFrame(char* FrameBuffer);
+    void initUSB();
+    bool isDataAvailable();
+    void clearSerialBuffer();
+    int getBufferSize();
 
-	iUsbStateEnum getConnectionState();
+    iUsbStateEnum getConnectionState();
 
-};
+    };
 #endif

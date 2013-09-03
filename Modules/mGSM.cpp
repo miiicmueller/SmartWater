@@ -386,13 +386,13 @@ mGSM::~mGSM()
 //----------------------------------------------------------------
 //obtenir l'heure
 //
-//retour :  la date complete
+//aDate : pointeur sur la date complete
+//retour : true si il n'y a a pas d'erreur
 //remarque : ce service coute un SMS
 //----------------------------------------------------------------
-tDate mGSM::getDate()
+bool mGSM::getDate(tDate* aDate)
     {
     mDelay maDateDebug;
-    tDate aDate;
     char aDataReceived[kSciRecBufReceptionSize ] = ""; // data recues du buffer
     char aNumberPhoneString[kNbFiguresPhone + 1] = "";
     bool aIsOk = false;
@@ -403,6 +403,7 @@ tDate mGSM::getDate()
     UInt8 aNbSms = 0;
     UInt16 i = 0;
     UInt8 j = 0;
+    mDelay aDelayGetNewSms;
 
     aIndex = getNbSms() + 1; //prend le nombre de SMS
     if (kOk == this->state) // si la recuperation du nombre de SMS est ok
@@ -411,9 +412,9 @@ tDate mGSM::getDate()
 
 	if (mGSM::sendSMS((UInt8*) "getDate\0", (UInt8*) this->phoneNumber)) // on s'envoie un SMS
 	    {
-
-	    mGSM::timeOut.startDelayMS(kTimeReceiveSms); // TODO mettre le bon temps
-	    while (!mGSM::timeOut.isDone() && !(aNbSms >= aIndex)) // attend qu'on ait recu un ou plusieurs SMS
+	    this->state = kErrorGeneral;
+	    aDelayGetNewSms.startDelayMS(kTimeReceiveSms); // TODO mettre le bon temps
+	    while (!aDelayGetNewSms.isDone() && !(aNbSms >= aIndex)) // attend qu'on ait recu un ou plusieurs SMS
 		{
 		aNbSms = getNbSms();
 		}
@@ -496,25 +497,25 @@ tDate mGSM::getDate()
 						&& ',' == aDataReceived[i + 6]
 						&& ':' == aDataReceived[i + 12]) //position retrouvee
 					    {
-					    aDate.year = (aDataReceived[i - 2]
+					    aDate->year = (aDataReceived[i - 2]
 						    - 48) * 10
 						    + aDataReceived[i - 1] - 48
 						    + 2000;
-					    aDate.month = (aDataReceived[i + 1]
+					    aDate->month = (aDataReceived[i + 1]
 						    - 48) * 10
 						    + aDataReceived[i + 2] - 48;
-					    aDate.day = (aDataReceived[i + 4]
+					    aDate->day = (aDataReceived[i + 4]
 						    - 48) * 10
 						    + aDataReceived[i + 5] - 48;
-					    aDate.hour = (aDataReceived[i + 7]
+					    aDate->hour = (aDataReceived[i + 7]
 						    - 48) * 10
 						    + aDataReceived[i + 8] - 48;
-					    aDate.minute =
+					    aDate->minute =
 						    (aDataReceived[i + 10] - 48)
 							    * 10
 							    + aDataReceived[i
 								    + 11] - 48;
-					    aDate.second =
+					    aDate->second =
 						    (aDataReceived[i + 13] - 48)
 							    * 10
 							    + aDataReceived[i
@@ -541,7 +542,15 @@ tDate mGSM::getDate()
 		}
 	    }
 	}
-    return aDate;
+
+    if(kOk==this->state)
+	{
+	return true;
+	}
+    else
+	{
+	return false;
+	}
     }
 
 //----------------------------------------------------------------
