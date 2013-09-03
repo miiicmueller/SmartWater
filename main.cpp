@@ -45,7 +45,7 @@ extern "C"
 #endif
 
 //OBLIGATOIRE POUR L'USB
-//volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
+volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
 
 /*
  * ======== main ========
@@ -84,11 +84,18 @@ void main(void)
     // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
 
     tToolsCluster theTools(&aEEPROM);
+    theTools.reset();
+    theTools.saveAll();
+
+    mUSB theUSB(&bCDCDataReceived_event);
+
+    mRTC theRTC;
+    theRTC.mOpen();
 
     gInput theGInput(&theGSM);
-    gTerminal theTerminalUSB(&theTools);
-    gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools);
-    gOutput theGOutput(&theGCompute);
+    gTerminal theTerminalUSB(&theTools, &theUSB);
+    gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools, &theRTC);
+    gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB);
 
     theGInput.setup();
     theTerminalUSB.setup();
@@ -104,6 +111,7 @@ void main(void)
 	    aDelay.startDelayMS(2);
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
+	    theGOutput.execute();
 	    }
 	}
 

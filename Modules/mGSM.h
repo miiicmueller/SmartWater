@@ -18,10 +18,8 @@
 #include "../Tools/tDate.h"
 #include "mDelay.h"
 
-
 #define kNbFiguresPhone 12
 #define kNbFiguresPin 4
-
 
 typedef enum // choix du compteur
     {
@@ -53,7 +51,6 @@ typedef enum // choix du compteur
     kErrorSendSmsTimeOut
     } mGSMStateEnum;
 
-
 using namespace std;
 
 class mGSM: public Module
@@ -67,9 +64,7 @@ private:
     //tools
     static tCommandesAT commandesAtGsm; //commandes pour contrôler le module GSM
     UInt16 indexSMS; //index designant le prochaine SMS a devoir etre lu
-    mGSMStateEnum state; // etat du module
     static mDelay timeOut;
-
 
     //----------------------------------------------------------------
     //controle si une reponse recue du GSM et la compare avec deux possibilités
@@ -78,7 +73,8 @@ private:
     //aBadResponse : mauvaise reponse, renvoie false
     //aTimeOutMs : duree en milliseconde durant laquelle la méthode essaie de trouver correpondance
     //----------------------------------------------------------------
-    bool mCheckResponse(char* aGoodResponse, char* aBadResponse, UInt16 aTimeOutMs);
+    bool mCheckResponse(char* aGoodResponse, char* aBadResponse,
+	    UInt16 aTimeOutMs);
 
     //----------------------------------------------------------------
     //envoie le texte SMS sur l'UART en le parsant pour ne pas bourrer le FIFO du module GSM
@@ -89,8 +85,9 @@ private:
 
 public:
 
-    UInt8 phoneNumber[kNbFiguresPhone+1]; //numero de telephone de la carte SIM. Format : "+417********"
-    UInt8 codePIN[kNbFiguresPin+1];
+    UInt8 phoneNumber[kNbFiguresPhone + 1]; //numero de telephone de la carte SIM. Format : "+417********"
+    UInt8 codePIN[kNbFiguresPin + 1];
+    mGSMStateEnum state; // etat du module
 
     //----------------------------------------------------------------
     //constructeur
@@ -154,8 +151,6 @@ public:
     //retour : le nombre de SMS present dans la memoire
     //----------------------------------------------------------------
     UInt8 getNbSms();
-
-
 
     };
 #endif

@@ -43,6 +43,14 @@ public:
     tUnitName* theUnitName;
     tSIMCard* theSIMCard;
 
+    //methodes
+    void reset();
+
+    void loadAll();
+
+    void saveAll();
+
+    //setters
     bool setAvailability(char* aPeriode, char* aDuree);
 
     bool setMdPAdmin(char* aMdP1, char* aMdP2);
@@ -63,6 +71,7 @@ public:
 
     bool setMonthsLimits(char** aMonthLimits, UInt8 aNbOfLimits, UInt8 aUserNb);
 
+    //getters
     void getMonthsLimits(char* aMessage, UInt8 aUserNb);
 
     void getMonthlyConsumption(char* aMessage, UInt8 aUserNb);

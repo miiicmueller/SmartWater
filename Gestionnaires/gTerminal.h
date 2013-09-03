@@ -23,7 +23,6 @@ typedef struct
     tCommandsEnum* aAction;
     char* theParameters[12];
     UInt8* theParametersNumber;
-    char* aReply;
     gTerminalStateEnum* aTerminalState;
     tCommandsUserNbEnum* aUserNb;
     } gTerminalMailBox;
@@ -46,15 +45,13 @@ private:
 
     tCommandsAnalyzer theAnalyzer;
 
-    char aReply[100];
-
 public:
     //----------------------------------------------------------------
     //constructeur
     //
     //gInput : le gestionnaire qui contient les entrees
     //----------------------------------------------------------------
-    gTerminal(tToolsCluster* theTools);
+    gTerminal(tToolsCluster* theTools, mUSB* theUSB);
 
     void setup();
 

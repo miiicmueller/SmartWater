@@ -2,8 +2,6 @@
 #include <assert.h>
 
 #include "gCompute.h"
-#include "gTerminal.h"
-#include "tCommandsAnalyzer.h"
 
 //----------------------------------------------------------------
 //constructeur
@@ -11,11 +9,12 @@
 //gInput : le gestionnaire qui contient les entrées
 //----------------------------------------------------------------
 gCompute::gCompute(gInput* theGInput, gTerminal* theGTerminal,
-	tToolsCluster* theTools)
+	tToolsCluster* theTools, mRTC* theRTC)
     {
     this->theGInput = theGInput;
     this->theGTerminal = theGTerminal;
     this->theTools = theTools;
+    this->theRTC = theRTC;
     }
 
 void gCompute::setup()
@@ -29,6 +28,8 @@ void gCompute::execute()
     this->computeSMS();
 
     this->computeConsumption();
+
+    this->computeIsFinished();
     }
 
 void gCompute::computeTerminal()
@@ -44,11 +45,12 @@ void gCompute::computeTerminal()
 	case kCommandMah:
 	    if (this->theGTerminal->theTerminalMailBox.theParametersNumber == 0)
 		{
-		// TODO : mise a l'heure automatique
+		this->theComputeMailBox.mahAuto = true;
 		}
 	    else
 		{
-		UInt8 aHour, aMinute, aDate, aMonth, aYear;
+		char aHour, aMinute, aDate, aMonth;
+		int aYear;
 		if ((sscanf(
 			this->theGTerminal->theTerminalMailBox.theParameters[0],
 			"%d:%d", &aHour, &aMinute) == 2)
@@ -56,7 +58,8 @@ void gCompute::computeTerminal()
 				this->theGTerminal->theTerminalMailBox.theParameters[1],
 				"%d:%d:%d", &aDate, &aMonth, &aYear) == 3))
 		    {
-		    // TODO : mise a l'heure avec les parametres lus
+		    this->theRTC->setDate(aYear, aMonth, aDate, NULL);
+		    this->theRTC->setHour(aHour, aMinute, 0);
 		    }
 		else
 		    {
@@ -112,13 +115,11 @@ void gCompute::computeTerminal()
 			    kCommandError;
 		    }
 		}
-	    this->theTools->getMonthsLimits(
-		    this->theGTerminal->theTerminalMailBox.aReply,
+	    this->theTools->getMonthsLimits(this->theComputeMailBox.aReplyUSB,
 		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb)));
 	    break;
 	case kCommandEtat:
-	    this->theTools->getEtat(
-		    this->theGTerminal->theTerminalMailBox.aReply,
+	    this->theTools->getEtat(this->theComputeMailBox.aReplyUSB,
 		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb)));
 	    break;
 	case kCommandPassu:
@@ -141,23 +142,27 @@ void gCompute::computeTerminal()
 		}
 	    break;
 	case kCommandSimulate:
-	    // TODO : mettre en mode simulate
+	    this->theComputeMailBox.simulation = true;
+	    this->theComputeMailBox.aUserSimulation =
+		    *(this->theGTerminal->theTerminalMailBox.aUserNb);
 	    break;
 	case kCommandReset:
-	    // TODO : reset des parametres
+	    this->theTools->reset();
+	    this->theTools->saveAll();
 	    break;
 	case kCommandMonthlyconsumption:
 	    this->theTools->getMonthlyConsumption(
-		    this->theGTerminal->theTerminalMailBox.aReply,
+		    this->theComputeMailBox.aReplyUSB,
 		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb)));
 	    break;
 	case kCommandDailyconsumption:
 	    this->theTools->getDailyConsumption(
-		    this->theGTerminal->theTerminalMailBox.aReply,
+		    this->theComputeMailBox.aReplyUSB,
 		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb)));
 	    break;
 	case kCommandDysfunction:
-	    // TODO : read ERRORS
+	    // TODO : read ERRORS, envlever _OK_
+	    sprintf(this->theComputeMailBox.aReplyUSB, "_OK_");
 	    break;
 	case kCommandUnitName:
 	    this->theTools->setUnitName(
@@ -202,11 +207,11 @@ void gCompute::computeTerminal()
     case kCommandPassa:
     case kCommandSimulate:
     case kCommandReset:
-	sprintf(this->theGTerminal->theTerminalMailBox.aReply, "_OK_");
+	sprintf(this->theComputeMailBox.aReplyUSB, "_OK_");
 	break;
 	// reponse error
     case kCommandError:
-	sprintf(this->theGTerminal->theTerminalMailBox.aReply, "_ERROR_");
+	sprintf(this->theComputeMailBox.aReplyUSB, "_ERROR_");
 	break;
 	// reponse speciale deja ecrite dans le switch precedent
     case kCommandLimits:
@@ -218,7 +223,7 @@ void gCompute::computeTerminal()
 	// pas de reponse
     case kCommandNoCommand:
     default:
-	this->theGTerminal->theTerminalMailBox.aReply[0] = '\0';
+	this->theComputeMailBox.aReplyUSB[0] = '\0';
 	break;
 	}
     }
@@ -229,4 +234,18 @@ void gCompute::computeSMS()
 
 void gCompute::computeConsumption()
     {
+    }
+
+void gCompute::computeIsFinished()
+    {
+    // TODO : enlever les conditions en commentaire
+    if ((!this->theComputeMailBox.mahAuto)
+	    && (!this->theComputeMailBox.simulation)/*&&(!this->theGInput->gInputMailBox.hasSMS)&&(!this->theGTerminal->gTerminalMailBox.aTerminalState==kTerminalDisconnected)*/)
+	{
+	this->theComputeMailBox.isWorkFinished = true;
+	}
+    else
+	{
+	this->theComputeMailBox.isWorkFinished = false;
+	}
     }
