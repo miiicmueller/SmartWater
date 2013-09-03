@@ -20,7 +20,7 @@ private:
 public:
 	iRTC();
 	~iRTC();
-	void setAlarm(char aMinute);
+	void setAlarm(char aHour,char aMinute);
 	void resetAlarm();
 	void readDate(int *aYear, char *aMonth, char *aDay, char *aDayOfWeek);
 	void readTime(char *aHour, char *aMinute, char *aSecond);

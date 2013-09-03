@@ -18,11 +18,12 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 	/*------------------------------------------------------------------*\
 	 |*							Constructeurs							*|
 	 \*------------------------------------------------------------------*/
-	public JPanelChartTabMonthParamControl(ResourceBundle resourceLang,JPanelChartTabMonthParam jPanelChartTabMonthParam) {
+	public JPanelChartTabMonthParamControl(ResourceBundle resourceLang,
+			JPanelChartTabMonthParam jPanelChartTabMonthParam) {
 
 		this.resourceLang = resourceLang;
 		this.jPanelChartTabMonthParam = jPanelChartTabMonthParam;
-		
+
 		geometrie();
 		controle();
 		apparence();
@@ -50,6 +51,14 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 			}
 		});
 
+		this.buttonGetConsomm.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent arg0) {
+				jPanelChartTabMonthParam.readLimits();
+			}
+		});
+
 	}
 
 	private void geometrie() {
@@ -58,8 +67,11 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 
 		this.buttonWrLimits = new JButton(
 				(String) resourceLang.getObject("buttonWrLimits"));
+		this.buttonGetConsomm = new JButton(
+				(String) resourceLang.getObject("buttonGetConsomm"));
 
 		this.add(buttonWrLimits);
+		this.add(buttonGetConsomm);
 
 	}
 	/*------------------------------------------------------------------*\
@@ -70,4 +82,5 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 	private ResourceBundle resourceLang;
 	private JButton buttonWrLimits;
 	private JPanelChartTabMonthParam jPanelChartTabMonthParam;
+	private JButton buttonGetConsomm;
 }

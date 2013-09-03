@@ -233,6 +233,31 @@ public class Session extends Component {
 					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 		}
 	}
+	
+	public void readCmd(String aCommand) {
+		if (this.isLogged()) {
+
+			try {
+				this.comConnection.write(new String("_" + this.userName + "_"
+						+ this.userPassword + "_" + aCommand + "\r"));
+			} catch (Exception e) {
+				JOptionPane jOptionWriteErr = new JOptionPane();
+				jOptionWriteErr.showConfirmDialog(Session.this,
+						(String) Session.this.resourceLang
+								.getObject("writeErr"),
+						(String) Session.this.resourceLang
+								.getObject("writeErrTit"),
+						JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+			}
+		} else {
+			JOptionPane jOptionLogErr = new JOptionPane();
+			jOptionLogErr.showConfirmDialog(Session.this,
+					(String) Session.this.resourceLang.getObject("notLogged"),
+					(String) Session.this.resourceLang
+							.getObject("notLoggedTit"),
+					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+		}
+	}
 
 	public int getReponse(StringBuilder aReponse) {
 		// Démmarage du timeout
@@ -245,7 +270,7 @@ public class Session extends Component {
 
 		// Si on a été en timeout
 		if (this.timeOut) {
-			this.logged = false;
+//			this.logged = false;
 			System.out.println("Timeout !!");
 			return 1;
 		} else {

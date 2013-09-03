@@ -748,10 +748,10 @@ bool iUART::readFullFrame(UInt8* stringReceived)
 // TODO - Tester les performances des fonctions send string
 
 /**
- * Fonction qui permet d'obtenir le nombre de caractÃ¨re contenu
+ * Fonction qui permet d'obtenir le nombre de caractere contenu
  * dans le buffer
  *
- * retour  : nombre de caractÃ¨re contenu dans le buffer
+ * retour  : nombre de caractere contenu dans le buffer
  */
 UInt16 iUART::availableCharToRead()
     {
@@ -760,16 +760,16 @@ UInt16 iUART::availableCharToRead()
 
 ///**
 // * Fonction qui permet d'obtenir l'ensemble des bytes recus
-// * en mï¿½moire sï¿½parï¿½ d'un CR+LF
+// * en memoire separes d'un CR+LF
 // *
-// * aBuffer : Buffer d'entrï¿½e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
-// * retour  : -1 si on a rien trouvï¿½ sinon la taille de la chaï¿½ne
+// * aBuffer : Buffer d'entree qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+// * retour  : -1 si on a rien trouve sinon la taille de la chaine
 // */
 //int iUART::readLine(char* aBuffer) {
 //	int i = 0;
 //	int aByteCount = this->USCIRingBuffer.ByteCount;
 //
-//	//On enlï¿½ve les premier \r\n
+//	//On enleve les premier \r\n
 //	this->read();
 //	this->read();
 //
@@ -777,7 +777,7 @@ UInt16 iUART::availableCharToRead()
 //	for (i = 0; (i < (aByteCount - 2)) && (aBuffer[i - 1] != 0x0D); i++) {
 //		aBuffer[i] = this->read();
 //	}
-//	if (i < (aByteCount - 2)) //CR detectï¿½
+//	if (i < (aByteCount - 2)) //CR detecte
 //			{
 //		//lecture du LF
 //		aBuffer[i] = this->read();

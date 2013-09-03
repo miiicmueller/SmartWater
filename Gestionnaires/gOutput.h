@@ -6,22 +6,29 @@
 
 #include "Gestionnaire.h"
 #include "gCompute.h"
+#include "mGSM.h"
+#include "mRTC.h"
+#include "mUSB.h"
+#include "tDate.h"
 
 class gOutput: public Gestionnaire
     {
-private:
-    gCompute* theGCompute;
 public:
     //----------------------------------------------------------------
     //constructeur
     //
     //gCompute : le gestionnaire qui contient les donnees qui devront etre sorties
     //----------------------------------------------------------------
-    gOutput(gCompute* theGCompute);
+    gOutput(gCompute* theGCompute, mGSM* theGSM, mRTC* theRTC, mUSB* theUSB);
 
     void setup();
 
     void execute();
 
+private:
+    gCompute* theGCompute;
+    mGSM* theGSM;
+    mRTC* theRTC;
+    mUSB* theUSB;
     };
 #endif

@@ -90,10 +90,9 @@ void mRTC::setHour(char aHour, char aMinute, char aSecond)
  * Activation du reveil du micro tout les xx minutes
  * aMin : heure (min) de l'alarme
  */
-void mRTC::setAlarm(char aMinute)
-    {
-    this->iRtc->setAlarm(aMinute);
-    }
+void mRTC::setAlarm(char aHour,char aMinute) {
+	this->iRtc->setAlarm(aHour,aMinute);
+}
 
 /**
  * Calibration de la RTC.

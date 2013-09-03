@@ -67,47 +67,42 @@ public class JPanelDiag extends JPanel {
 				JPanelDiag.this.session.writeCmd(
 						JPanelDiag.this.session.CMD_STATE, "");
 
-				if (JPanelDiag.this.session.getReponse(aReply) == 0) {
-					System.out.println(aReply.toString());
-					// analyse de la réponse
-					String aStrAnalyse = aReply.toString();
-					if (aStrAnalyse.matches(REGEX_TEST_FRAME)) {
+				for (int i = 0; i < LINE_NUM; i++) {
+					if (JPanelDiag.this.session.getReponse(aReply) == 0) {
+						System.out.println(aReply.toString());
+						String aStrAnalyse = aReply.toString();
 						String[] aStrTab = aStrAnalyse.split("_");
-						// Mise à jour de l'affichage de l'etat
-						JPanelDiag.this.setTextEtat(aStrAnalyse.replaceAll("_",
-								"\r\n"));
+
+						if (aStrTab[1].equals("ERROR")) {
+
+							JOptionPane jOptionLogOk = new JOptionPane();
+							jOptionLogOk.showConfirmDialog(JPanelDiag.this,
+									"Cannot reset memory", "Error",
+									JOptionPane.DEFAULT_OPTION,
+									JOptionPane.ERROR_MESSAGE);
+							return;
+
+						} else {
+							JPanelDiag.this.jEtat.append(aStrAnalyse + "\r\n");
+						}
 
 					} else {
-						String[] aStrTab = aStrAnalyse.split("_");
-						switch (aStrTab[1]) {
-							case "ERROR" :
-								JOptionPane jOptionLogOk = new JOptionPane();
-								jOptionLogOk.showConfirmDialog(JPanelDiag.this,
-										"Cannot reset memory", "Error",
-										JOptionPane.DEFAULT_OPTION,
-										JOptionPane.ERROR_MESSAGE);
-								return;
-							default :
-								return;
-						}
+						JOptionPane jOptionTimeoutErr = new JOptionPane();
+						jOptionTimeoutErr.showConfirmDialog(JPanelDiag.this,
+								(String) JPanelDiag.this.resourceLang
+										.getObject("timeOut"),
+								(String) JPanelDiag.this.resourceLang
+										.getObject("timeOutTit"),
+								JOptionPane.DEFAULT_OPTION,
+								JOptionPane.ERROR_MESSAGE);
+						return;
+
 					}
-				} else {
-					JOptionPane jOptionTimeoutErr = new JOptionPane();
-					jOptionTimeoutErr.showConfirmDialog(JPanelDiag.this,
-							(String) JPanelDiag.this.resourceLang
-									.getObject("timeOut"),
-							(String) JPanelDiag.this.resourceLang
-									.getObject("timeOutTit"),
-							JOptionPane.DEFAULT_OPTION,
-							JOptionPane.ERROR_MESSAGE);
-					return;
-
 				}
-
 			}
+
 		});
 	}
-
 	private void geometrie() {
 
 		this.setLayout(new BorderLayout());
@@ -138,4 +133,5 @@ public class JPanelDiag extends JPanel {
 	private JTextArea jEtat;
 	private JButton btnRead;
 	private static String REGEX_TEST_FRAME = "^Unite";
+	private static int LINE_NUM = 10;
 }

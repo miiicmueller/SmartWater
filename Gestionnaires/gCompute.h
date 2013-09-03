@@ -9,16 +9,35 @@
 #include "../Def/def.h"
 #include "gInput.h"
 #include "gTerminal.h"
-#include "mCompteur.h"
+#include "mRTC.h"
+#include "tCommandsAnalyzer.h"
+
+typedef struct
+    {
+    //pour les reponses SMS
+    char aReplySMS[100];
+
+    //pour la reponse USB
+    char aReplyUSB[100];
+
+    //pour la mise a l'heure automatique
+    bool mahAuto;
+
+    //pour la simulation
+    bool simulation;
+    tCommandsUserNbEnum aUserSimulation;
+
+    //pour savoir si le travail est termine
+    bool isWorkFinished;
+    } gComputeMailBox;
 
 class gCompute: public Gestionnaire
     {
 private:
-    char* smsToSend;
 
-    int smsNb;
+    tToolsCluster* theTools;
 
-    tDate nextAlarm;
+    mRTC* theRTC;
 
     gInput* theGInput;
 
@@ -30,13 +49,19 @@ private:
 
     bool computeConsumption(iMeterChannel aChannel);
 
+    void computeIsFinished();
+
 public:
+    //mis a disposition des autres gestionnaires
+    gComputeMailBox theComputeMailBox;
+
     //----------------------------------------------------------------
     //constructeur
     //
     //gInput : le gestionnaire qui contient les entrées
     //----------------------------------------------------------------
-    gCompute(gInput* theGInput);
+    gCompute(gInput* theGInput, gTerminal* theGTerminal,
+	    tToolsCluster* theTools, mRTC* theRTC);
 
     void setup();
 

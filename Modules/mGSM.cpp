@@ -117,7 +117,7 @@ void mGSM::mOpen()
 	    }
 	}
 
-    // passe les SMS en mode texte (par défaut "Mode PDU" -> non-traitable)
+    // passe les SMS en mode texte (par dï¿½faut "Mode PDU" -> non-traitable)
     mGSM::timeOut.startDelayMS(kWaitCommand); // attend avant commande
     while (!mGSM::timeOut.isDone())
 	;
@@ -163,7 +163,7 @@ void mGSM::mClose()
     mGSM::uart.disable();
 
     //desactivation des io
-    mGSM::enable.write(~BIT0);
+    mGSM::enable.write(~BIT4);
     mGSM::reset.write(~BIT3);
 
     this->state = kDisconnected;
@@ -277,7 +277,7 @@ bool mGSM::getSMS(char* aSMS, bool* aHasSms)
 //envoi un SMS
 //
 //aSMS : pointe la variable contenant le SMS a envoyer
-//aPhoneNumber : pointe la varialble contenant le numéro de telephone
+//aPhoneNumber : pointe la varialble contenant le numï¿½ro de telephone
 //retour : true si le SMS a ete envoye
 //----------------------------------------------------------------
 bool mGSM::sendSMS(UInt8* aSMS, UInt8* aPhoneNumber)
@@ -696,11 +696,11 @@ bool mGSM::getNbSms(UInt8* aNbSms)
     }
 
 //----------------------------------------------------------------
-//controle si une reponse recue du GSM et la compare avec deux possibilités
+//controle si une reponse recue du GSM et la compare avec deux possibilitï¿½s
 //
 //aGoodResponse : bonne reponse, renvoie true
 //aBadResponse : mauvaise reponse, renvoie false
-//aTimeOutMs : duree en milliseconde durant laquelle la méthode essaie de trouver correpondance
+//aTimeOutMs : duree en milliseconde durant laquelle la mï¿½thode essaie de trouver correpondance
 //----------------------------------------------------------------
 bool mGSM::mCheckResponse(char* aGoodResponse, char* aBadResponse,
 	UInt16 aTimeOutMs)
@@ -745,7 +745,7 @@ bool mGSM::mCheckResponse(char* aGoodResponse, char* aBadResponse,
 //----------------------------------------------------------------
 //envoie le texte SMS sur l'UART en le parsant pour ne pas bourrer le FIFO du module GSM
 //
-//aSMS : le SMS à transmettre
+//aSMS : le SMS ï¿½ transmettre
 //----------------------------------------------------------------
 void mGSM::mSenderSms(UInt8* aSMS)
     {
