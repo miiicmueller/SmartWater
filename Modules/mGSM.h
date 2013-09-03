@@ -72,9 +72,9 @@ private:
     //aGoodResponse : bonne reponse, renvoie true
     //aBadResponse : mauvaise reponse, renvoie false
     //aTimeOutMs : duree en milliseconde durant laquelle la méthode essaie de trouver correpondance
+    //retour : true si bonne reponse, false si mauvaise reponse ou si reponse differente
     //----------------------------------------------------------------
-    bool mCheckResponse(char* aGoodResponse, char* aBadResponse,
-	    UInt16 aTimeOutMs);
+    bool mCheckResponse(char* aGoodResponse, char* aBadResponse, UInt16 aTimeOutMs);
 
     //----------------------------------------------------------------
     //envoie le texte SMS sur l'UART en le parsant pour ne pas bourrer le FIFO du module GSM
@@ -134,9 +134,11 @@ public:
     //----------------------------------------------------------------
     //obtenir l'heure
     //
-    //retour :  la date complete
+    //aDate : pointeur sur la date complete
+    //retour : true si il n'y a a pas d'erreur
+    //remarque : ce service coute un SMS
     //----------------------------------------------------------------
-    tDate getDate();
+    bool getDate(tDate* aDate);
 
     //----------------------------------------------------------------
     //obtenir le credit restant

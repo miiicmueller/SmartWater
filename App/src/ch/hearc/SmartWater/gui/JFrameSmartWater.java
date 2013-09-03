@@ -70,7 +70,7 @@ public class JFrameSmartWater extends JFrame {
 	\*------------------------------------------------------------------*/
 
 	private void control() {
-		setDefaultCloseOperation(EXIT_ON_CLOSE);
+		setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
 
 		// Si on appuie sur Quitter
 		this.menuFichierExit.addActionListener(new ActionListener() {
@@ -354,6 +354,10 @@ public class JFrameSmartWater extends JFrame {
 					JFrameSmartWater.this.exitSoftware();
 					JFrameSmartWater.this.dispose();
 				}
+				else
+				{
+					
+				}
 			}
 		});
 	}
@@ -461,7 +465,7 @@ public class JFrameSmartWater extends JFrame {
 	private Session session;
 
 	// Tools
-	private static final String SOFT_VERSION = "v0.1";
+	private static final String SOFT_VERSION = "v0.9";
 	private JLanguages language;
 
 	private ComConnexion comUSB;

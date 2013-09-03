@@ -21,15 +21,18 @@ import org.jfree.chart.plot.PlotOrientation;
 import org.jfree.data.category.CategoryDataset;
 import org.jfree.data.category.DefaultCategoryDataset;
 
+import ch.hearc.SmartWater.gui.login.Session;
+
 public class JPanelConsomMois extends JPanel {
 
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 	public JPanelConsomMois(ResourceBundle resourceLang,
-			Map<String, String> parameters) {
+			Map<String, String> parameters, Session session) {
 		this.resourceLang = resourceLang;
 		this.parameters = parameters;
+		this.session = session;
 
 		geometrie();
 		controle();
@@ -61,7 +64,8 @@ public class JPanelConsomMois extends JPanel {
 
 		this.jPanelChartTabMonth = new JPanelChartTabMonth(resourceLang);
 		this.jPanelChartTabMonthParam = new JPanelChartTabMonthParam(
-				resourceLang, this.parameters, this.jPanelChartTabMonth);
+				resourceLang, this.parameters, this.jPanelChartTabMonth,
+				this.session);
 
 		this.jSplitTabChart = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
@@ -80,6 +84,7 @@ public class JPanelConsomMois extends JPanel {
 	// Tools
 	private ResourceBundle resourceLang;
 	private Map<String, String> parameters;
+	private Session session;
 
 	// Panel de contrôle
 	private JPanelChartTabMonth jPanelChartTabMonth;

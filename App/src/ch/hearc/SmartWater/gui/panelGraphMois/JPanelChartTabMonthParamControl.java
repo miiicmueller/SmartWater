@@ -18,10 +18,11 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 	/*------------------------------------------------------------------*\
 	 |*							Constructeurs							*|
 	 \*------------------------------------------------------------------*/
-	public JPanelChartTabMonthParamControl(ResourceBundle resourceLang) {
+	public JPanelChartTabMonthParamControl(ResourceBundle resourceLang,JPanelChartTabMonthParam jPanelChartTabMonthParam) {
 
 		this.resourceLang = resourceLang;
-
+		this.jPanelChartTabMonthParam = jPanelChartTabMonthParam;
+		
 		geometrie();
 		controle();
 		apparence();
@@ -45,17 +46,9 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 
 			@Override
 			public void actionPerformed(ActionEvent arg0) {
-				System.out.println("[Sauver limite]");
+				jPanelChartTabMonthParam.sendLimits();
 			}
 		});
-
-		// this.buttonSaveXls.addActionListener(new ActionListener() {
-		//
-		// @Override
-		// public void actionPerformed(ActionEvent arg0) {
-		// System.out.println("[Sauver limite]");
-		// }
-		// });
 
 	}
 
@@ -65,11 +58,8 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 
 		this.buttonWrLimits = new JButton(
 				(String) resourceLang.getObject("buttonWrLimits"));
-//		this.buttonSaveXls = new JButton(
-//				(String) resourceLang.getObject("buttonSaveXls"));
 
 		this.add(buttonWrLimits);
-		//this.add(buttonSaveXls);
 
 	}
 	/*------------------------------------------------------------------*\
@@ -79,5 +69,5 @@ public class JPanelChartTabMonthParamControl extends JPanel {
 	// Tools
 	private ResourceBundle resourceLang;
 	private JButton buttonWrLimits;
-	private JButton buttonSaveXls;
+	private JPanelChartTabMonthParam jPanelChartTabMonthParam;
 }

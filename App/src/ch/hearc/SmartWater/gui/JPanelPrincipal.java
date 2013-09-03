@@ -97,16 +97,16 @@ public class JPanelPrincipal extends JPanel {
 									.equals(ADMIN_USERNAME)) {
 
 					} else {
-						JOptionPane jOptionWriteErr = new JOptionPane();
-						jOptionWriteErr.showConfirmDialog(JPanelPrincipal.this,
-								(String) JPanelPrincipal.this.resourceLang
-										.getObject("adminLogErr"),
-								(String) JPanelPrincipal.this.resourceLang
-										.getObject("adminLogErrTit"),
-								JOptionPane.DEFAULT_OPTION,
-								JOptionPane.ERROR_MESSAGE);
-
-						ongletPrincipaux.setSelectedIndex(0);
+						// JOptionPane jOptionWriteErr = new JOptionPane();
+						// jOptionWriteErr.showConfirmDialog(JPanelPrincipal.this,
+						// (String) JPanelPrincipal.this.resourceLang
+						// .getObject("adminLogErr"),
+						// (String) JPanelPrincipal.this.resourceLang
+						// .getObject("adminLogErrTit"),
+						// JOptionPane.DEFAULT_OPTION,
+						// JOptionPane.ERROR_MESSAGE);
+						//
+						// ongletPrincipaux.setSelectedIndex(0);
 					}
 				}
 			}
@@ -127,10 +127,10 @@ public class JPanelPrincipal extends JPanel {
 		this.jPanelAdministrator = new JPanelAdministrator(parameters,
 				resourceLang, session);
 		this.jPanelConsomMois = new JPanelConsomMois(resourceLang,
-				this.parameters);
+				this.parameters, session);
 		this.jPanelComsomJour = new JPanelComsomJour(resourceLang, parameters);
 		this.jPanelCompteurs = new JPanelCompteurs(resourceLang);
-		this.jPanelDiag = new JPanelDiag(resourceLang);
+		this.jPanelDiag = new JPanelDiag(resourceLang, this.session);
 
 		this.add(ongletPrincipaux, BorderLayout.CENTER);
 

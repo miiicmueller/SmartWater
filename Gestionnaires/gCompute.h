@@ -6,6 +6,7 @@
 
 #include "Gestionnaire.h"
 #include "../Tools/tDate.h"
+#include "../Def/def.h"
 #include "gInput.h"
 #include "gTerminal.h"
 #include "mRTC.h"
@@ -46,7 +47,7 @@ private:
 
     void computeSMS();
 
-    void computeConsumption();
+    bool computeConsumption(iMeterChannel aChannel);
 
     void computeIsFinished();
 
