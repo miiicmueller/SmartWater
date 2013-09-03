@@ -7,6 +7,7 @@
 #include "Gestionnaire.h"
 #include "../Tools/tDate.h"
 #include "../Def/def.h"
+#include "../Modules/mCompteur.h"
 #include "gInput.h"
 #include "gTerminal.h"
 #include "mRTC.h"
