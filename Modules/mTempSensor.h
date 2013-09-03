@@ -14,6 +14,8 @@ typedef enum {
 	kTempHigh = 0x03
 } mTempSensorRegEnum;
 
+
+
 class mTempSensor: public Module {
 private:
 	UInt8 sensorAddress;

@@ -33,12 +33,12 @@ extern "C"
 #endif
 
     int _system_pre_init(void)
-{
+	{
 // turn watchdog off
-WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
-_DINT();
-return (1);
-}
+	WDTCTL = WDTPW | WDTHOLD;	// Stop watchdog timer
+	_DINT();
+	return (1);
+	}
 
 #ifdef __cplusplus
     }
@@ -48,214 +48,66 @@ return (1);
 //volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received without an open rcv operation
 
 /*
-* ======== main ========
-*/
+ * ======== main ========
+ */
 void main(void)
     {
-    int i;
+    int salut, ok;
 
     // Important pour la basse consommation
     iDIO::InitAllPort();
 
     mCpu::configFrequency();
-    __bis_SR_register(GIE);
 
     //attente que l'alim soit stabilisee
     iDIO pGood((char*) kPort_6, BIT4);
     pGood.SetPortDirection(kInput);
 
     while (pGood.read() == 0)
-{
-}
+	{
+	}
+
+    //On endort le porcesseur
+//    mCpu::setPowerMode(kLPM3);
 
     __bis_SR_register(GIE);
-
-    mDelay::mSetup();
-    mDelay::mOpen();
-
-    mGSM theGSM;
-    theGSM.mSetup();
-    //theGSM.mOpen();
 
     iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
     UInt16 moduleAddress = 0x50;
     mEEPROM aEEPROM(moduleAddress, &i2cBus);
+
+    mDelay::mSetup();
+    mDelay::mOpen();
     aEEPROM.mOpen();
-    // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
+
+    mGSM theGSM;
+    mCompteur aCompteur(kMeterSimulation, &aEEPROM);
+    mTempSensor theTempSens(0x48, &i2cBus);
+    mRTC theRTC;
+
+    theRTC.mOpen();
+
+    strcpy((char*) theGSM.codePIN, "5906");
+
+    theGSM.mSetup();
+    theTempSens.mSetup();
+    aCompteur.mSetup();
+
+    theGSM.mOpen();
+    theTempSens.mOpen();
+    aCompteur.mOpen();
 
     tToolsCluster theTools(&aEEPROM);
 
-    gInput theGInput(&theGSM);
-    gTerminal theTerminalUSB(&theTools);
-    gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools);
-    gOutput theGOutput(&theGCompute);
+    theTools.theAvailability->aIntervalMn = 10;
+    theTools.theAvailability->aTimeMn = 1;
 
-    theGInput.setup();
-    theTerminalUSB.setup();
-    theGCompute.setup();
-    theGOutput.setup();
-
-    mDelay aDelay;
+    gSleep theGslp(&theTools, &theRTC, &theGSM, &aCompteur, &theTempSens);
+    theGslp.setup();
 
     while (1)
-{
-if (aDelay.isDone())
-{
-aDelay.startDelayMS(2);
-theTerminalUSB.execute();
-theGCompute.execute();
-}
-}
-
-    /*mUSB commUsb(&bCDCDataReceived_event);
-iI2C iI2C_1(k100kHz, kUSCI_B1, kMaster, 0x01A5);
-mRTC RTC;
-
-mGSM mGsm;
-
-valeurCompteur++;
-
-iDIO enableGSM((char*) kPort_7, BIT4);
-enableGSM.SetPortDirection(kOutput);
-enableGSM.SetPortDriveStrength(kFullStrength);
-enableGSM.write(~BIT4);
-
-iDIO resetGSM((char*) kPort_7, BIT3);
-resetGSM.SetPortDirection(kOutput);
-resetGSM.SetPortDriveStrength(kFullStrength);
-resetGSM.write(~BIT3);*/
-
-//
-// iDIO CTSel2((char*) kPort_6, BIT1);
-// enableCT.SetPortDirection(kOutput);
-// enableCT.SetPortDriveStrength(kFullStrength);
-// enableCT.write(~BIT1);
-// iDIO resetGSM((char*) kPort_7, BIT3);
-// iUART uart(kUSCI_A0, kLSBFirst, k1StBits, kNone, k8bits,
-// k9600);
-// mEEPROM DataBase(0x50, &iI2C_1);
-// mTempSensor CaptCarte(0x48, &iI2C_1);
-// DataBase.mOpen();
-// CaptCarte.mOpen();
-// RTC.mOpen();
-// mGsm.mOpen();
-//CaptCarte.configSensor(kConfiguration, 0x60);
-//RTC.setHour(17, 0, 0);
-//RTC.setAlarm(1);
-//mGsm.sendSMS("Coucou", "+41798183833");
-    /*if (valeurCompteur < 300)
-{
-valeurCompteur = 300;
-}*/
-
-    iDIO cptEnable((char*) kPort_6, BIT2);
-    cptEnable.SetPortDirection(kOutput);
-
-    iDIO cptSim((char*) kPort_6, BIT3);
-    cptSim.SetPortDirection(kOutput);
-
-    iDIO cptSel_1((char*) kPort_6, BIT0);
-    cptSel_1.SetPortDirection(kOutput);
-
-    iDIO cptSel_2((char*) kPort_6, BIT1);
-    cptSel_2.SetPortDirection(kOutput);
-
-    iDIO cptRxd((char*) kPort_4, BIT5);
-    cptRxd.SetPortDirection(kInput);
-
-    iDIO aLed_1((char*) kPort_7, BIT0);
-    aLed_1.SetPortDirection(kOutput);
-
-    iDIO aLed_2((char*) kPort_7, BIT1);
-    aLed_2.SetPortDirection(kOutput);
-
-//iUART uart(kUSCI_A1, kLSBFirst, k1StBits, kEven, k7bits, k300);
-
-    /*mCompteur monCompteur(kMeter1);
-monCompteur.mOpen();
-valeurCompteur = monCompteur.mRead();*/
-
-    cptEnable.write(kHigh);
-    cptSel_1.write(kHigh);
-    cptSel_2.write(kLow);
-
-// while (1)
-// {
-// cptEnable.write(kHigh);
-// cptEnable.write(kLow);
-// cptEnable.write(kHigh);
-// cptEnable.write(kLow);
-// cptEnable.write(kHigh);
-// cptEnable.write(kLow);
-// }
-
-    mDelay aDelay_1;
-    i = 0xff;
-    aDelay_1.startDelayMS(1);
-
-    mDelay aDelay_2;
-    aDelay_2.startDelayMS(1);
-
-    while (1)
-{
-
-if (aDelay_1.isDone())
-{
-i = ~i;
-cptSim.write(i);
-aLed_1.write(i);
-aDelay_1.startDelayMS(20);
-}
-
-if (aDelay_2.isDone())
-{
-if (cptRxd.read() != 0)
-{
-aLed_2.write(kHigh);
-}
-else
-{
-aLed_2.write(kLow);
-}
-aDelay_2.startDelayMS(1);
-}
-}
-
-    // On endort le processeur en niveau 3 (voir datasheet page 20)
-
-// //Check the USB state and directly main loop accordingly
-// if (commUsb.isConnected()) {
-// if (commUsb.getCommand(&cmd)) {
-// switch (cmd) {
-// case 1:
-// temperature = CaptCarte.readTemp();
-// DataBase.write(0x0000, (char) temperature);
-// DataBase.ackPolling();
-// DataBase.write(0x0001, (char) (temperature >> 8));
-// DataBase.ackPolling();
-// sprintf(tempToSend, "Tempe.:%d\r\n", temperature >> 4);
-// commUsb.sendReply(tempToSend);
-// break;
-// case 2:
-// int eepromVal = 0;
-// eepromVal = (int) DataBase.read(0x0000);
-// eepromVal += (int) (DataBase.read(0x0001) << 8);
-//
-// sprintf(tempToSend, "EEPROM:%d\r\n", eepromVal >> 4);
-// commUsb.sendReply(tempToSend);
-// break;
-// case 3:
-// RTC.readTime(&hr, &min, &sec);
-// sprintf(tempToSend, "%d:%d:%d\r\n", hr, min, sec);
-// commUsb.sendReply(tempToSend);
-// break;
-// default:
-// commUsb.sendReply("Cmd invalide\r\n");
-// }
-// }
-//
-// }
-//
-// }
+	{
+	theGslp.execute();
+	}
     }
 
