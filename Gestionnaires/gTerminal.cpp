@@ -54,13 +54,15 @@ void gTerminal::execute()
     char aMessage[100];
     aMessage[0] = '\0';
 
-    this->theUSB->getCommand(aMessage);
-
-    this->theAnalyzer.tCommandsAnalysis(aMessage, this->theTools);
-
     if (!this->theUSB->isConnected())
 	{
 	this->aTerminalState = kTerminalDisconnected;
+	}
+
+    if (this->aTerminalState != kTerminalDisconnected)
+	{
+	this->theUSB->getCommand(aMessage);
+	this->theAnalyzer.tCommandsAnalysis(aMessage, this->theTools);
 	}
 
     switch (this->aTerminalState)

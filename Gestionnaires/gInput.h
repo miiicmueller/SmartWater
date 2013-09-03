@@ -7,6 +7,9 @@
 #include "Gestionnaire.h"
 #include "../Tools/tDate.h"
 #include "mGSM.h"
+#include "mTempSensor.h"
+#include "mRTC.h"
+#include "mCompteur.h"
 
 //Structure de valeur des compteurs
 typedef struct
@@ -15,38 +18,40 @@ typedef struct
     tDate date;
     } gInputMeterValueStruct;
 
+typedef struct
+    {
+    //SMS
+    bool hasSMS;
+    char theSMS[200];
+
+    //compteurs
+    gInputMeterValueStruct valueMeters[2];
+
+    //capteurs de temperature
+    UInt16 temperature;
+    } gInputMailBox;
+
 class gInput: public Gestionnaire
     {
 private:
-    gInputMeterValueStruct valueMeters[2];
+    mTempSensor* theTempSensor;
 
-    char* smsTab;
+    mCompteur* theCompteurs[2];
 
-    UInt8 smsNb;
-
-    tDate currentTime;
+    mRTC* theRTC;
 
     mGSM* theGSM;
 
 public:
+    gInputMailBox theInputMailBox;
+
     //----------------------------------------------------------------
     //constructeur
     //----------------------------------------------------------------
-    gInput(mGSM* theGSM);
+    gInput(mGSM* theGSM, mCompteur* theCompteurs[2], mRTC* theRTC,
+	    mTempSensor* theTempSensor);
 
     ~gInput();
-
-    int getCounterValue(char counterNb);
-
-    int getBatteryValue();
-
-    int getTempSensValue(char tempSensNb);
-
-    char* getSms(int nSms);
-
-    int getSmsNb();
-
-    tDate getCurrentTime();
 
     void setup();
 

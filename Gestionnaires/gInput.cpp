@@ -3,10 +3,14 @@
 
 #include "gInput.h"
 
-gInput::gInput(mGSM* theGSM)
+gInput::gInput(mGSM* theGSM, mCompteur* theCompteurs[2], mRTC* theRTC,
+	mTempSensor* theTempSensor)
     {
-    this->smsTab = NULL;
     this->theGSM = theGSM;
+    this->theRTC = theRTC;
+    this->theTempSensor = theTempSensor;
+    this->theCompteurs[0] = theCompteurs[0];
+    this->theCompteurs[1] = theCompteurs[1];
     }
 
 void gInput::setup()
@@ -17,33 +21,6 @@ void gInput::execute()
     {
     }
 
-int gInput::getCounterValue(char counterNb)
+gInput::~gInput()
     {
-    //return this->counterValues;
     }
-
-int gInput::getBatteryValue()
-    {
-    //return this->tempSensValues;
-    }
-
-int gInput::getTempSensValue(char tempSensNb)
-    {
-    //return this->tempSensValues;
-    }
-
-char* gInput::getSms(int nSms)
-    {
-    return this->smsTab;
-    }
-
-int gInput::getSmsNb()
-    {
-    return this->smsNb;
-    }
-
-tDate gInput::getCurrentTime()
-    {
-    return this->currentTime;
-    }
-

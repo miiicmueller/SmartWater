@@ -58,7 +58,6 @@ void main(void)
     iDIO::InitAllPort();
 
     mCpu::configFrequency();
-    __bis_SR_register(GIE);
 
     //attente que l'alim soit stabilisee
     iDIO pGood((char*) kPort_6, BIT4);
@@ -81,6 +80,11 @@ void main(void)
     UInt16 moduleAddress = 0x50;
     mEEPROM aEEPROM(moduleAddress, &i2cBus);
     aEEPROM.mOpen();
+
+    mTempSensor theTempSensor(0x48, &i2cBus);
+    theTempSensor.mSetup();
+    theTempSensor.mOpen();
+
     // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
 
     tToolsCluster theTools(&aEEPROM);
@@ -92,7 +96,11 @@ void main(void)
     mRTC theRTC;
     theRTC.mOpen();
 
-    gInput theGInput(&theGSM);
+    mCompteur* monCompteur[2];
+    monCompteur[0] = new mCompteur(kMeter1, &aEEPROM);
+    monCompteur[1] = new mCompteur(kMeter2, &aEEPROM);
+
+    gInput theGInput(&theGSM, monCompteur, &theRTC, &theTempSensor);
     gTerminal theTerminalUSB(&theTools, &theUSB);
     gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools, &theRTC);
     gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB);
@@ -109,6 +117,7 @@ void main(void)
 	if (aDelay.isDone())
 	    {
 	    aDelay.startDelayMS(2);
+	    theGInput.execute();
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
 	    theGOutput.execute();

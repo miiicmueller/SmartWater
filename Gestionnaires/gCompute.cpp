@@ -306,7 +306,10 @@ void gCompute::computeIsFinished()
     {
     // TODO : enlever les conditions en commentaire
     if ((!this->theComputeMailBox.mahAuto)
-	    && (!this->theComputeMailBox.simulation)/*&&(!this->theGInput->gInputMailBox.hasSMS)&&(!this->theGTerminal->gTerminalMailBox.aTerminalState==kTerminalDisconnected)*/)
+	    && (!this->theComputeMailBox.simulation)
+	    /*&&(!this->theGInput->gInputMailBox.hasSMS)*/
+	    && (*(this->theGTerminal->theTerminalMailBox.aTerminalState)
+		    != kTerminalDisconnected))
 	{
 	this->theComputeMailBox.isWorkFinished = true;
 	}
