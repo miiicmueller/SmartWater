@@ -11,12 +11,14 @@ import java.util.Map.Entry;
 
 import javax.swing.Action;
 import javax.swing.Box;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
 import javax.swing.SwingUtilities;
 import javax.swing.table.DefaultTableModel;
 
+import ch.hearc.SmartWater.gui.login.Session;
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelChartTabMonth;
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelChartTabMonthParamControl;
 
@@ -30,12 +32,13 @@ public class JPanelChartJourPanParam extends JPanel
 	 \*------------------------------------------------------------------*/
 	public JPanelChartJourPanParam(ResourceBundle resourceLang,
 			Map<String, String> parameters,
-			JPanelChartJourPanGraph jPanelChartJourPanGraph) {
+			JPanelChartJourPanGraph jPanelChartJourPanGraph, Session session) {
 
 		// Aquisition des entrées
 		this.resourceLang = resourceLang;
 		this.parameters = parameters;
 		this.jPanelChartJourPanGraph = jPanelChartJourPanGraph;
+		this.session = session;
 
 		// Tableaux de données
 		this.dayConsom = new int[31];
@@ -62,6 +65,62 @@ public class JPanelChartJourPanParam extends JPanel
 	/*------------------------------*\
 	 |*				Set				*|
 	 \*------------------------------*/
+
+	public void readConso() {
+		StringBuilder strToSend = new StringBuilder();
+
+		if (!this.session.isLogged()) {
+			JOptionPane jOptionLogErr = new JOptionPane();
+			jOptionLogErr.showConfirmDialog(this.session,
+					(String) this.resourceLang.getObject("notLogged"),
+					(String) this.resourceLang.getObject("notLoggedTit"),
+					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		// Amorce de la lecture
+		this.session.readCmd(this.session.CMD_DAY_CONS);
+
+		if (this.session.getReponse(strToSend) == 0) {
+			System.out.println(strToSend.toString());
+			// analyse de la réponse
+			String aStrAnalyse = strToSend.toString();
+			String[] aStrTab = aStrAnalyse.split("_");
+
+			if (aStrTab[1].equals("ERROR")) {
+				JOptionPane jOptionLogOk = new JOptionPane();
+				jOptionLogOk.showConfirmDialog(this, "Error Read Daily Consom",
+						"Error", JOptionPane.DEFAULT_OPTION,
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			} else {
+				for (int i = 0; i < (this.dayConsom.length); i++) {
+					String[] tabReponse = aStrTab[i + 1].split(":");
+					this.dayConsom[Integer.valueOf(tabReponse[0]) - 1] = Integer
+							.valueOf(tabReponse[1]);
+				}
+
+			}
+		} else {
+			JOptionPane jOptionTimeoutErr = new JOptionPane();
+			jOptionTimeoutErr.showConfirmDialog(this,
+					(String) this.resourceLang.getObject("timeOut"),
+					(String) this.resourceLang.getObject("timeOutTit"),
+					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+			return;
+
+		}
+		for (int i = 0; i < this.dayConsom.length; i++) {
+			this.jTable.setValueAt(String.valueOf(this.dayConsom[i]), i, 1);
+		}
+
+		// On recharge le graph
+		updateGraphTable();
+
+		JOptionPane jOptionLogOk = new JOptionPane();
+		jOptionLogOk.showConfirmDialog(this, "ParamWrite Succes", "Success",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
+	}
 
 	/**
 	 * Sauve les limites dans la map
@@ -223,6 +282,7 @@ public class JPanelChartJourPanParam extends JPanel
 	private ResourceBundle resourceLang;
 	private Map<String, String> parameters;
 	private JPanelChartJourPanGraph jPanelChartJourPanGraph;
+	private Session session;
 
 	private Action action;
 

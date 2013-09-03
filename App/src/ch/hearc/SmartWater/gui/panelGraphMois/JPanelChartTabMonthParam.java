@@ -187,15 +187,19 @@ public class JPanelChartTabMonthParam extends JPanel
 			return;
 		}
 
-		for (int i = 0; i < monthLim.length; i++) {
-			strToSend.append(String.valueOf(i) + ":"
+		for (int i = 0; i < (monthLim.length - 1); i++) {
+			strToSend.append(String.valueOf(i + 1) + ":"
 					+ String.valueOf(this.monthLim[i]) + "_");
 		}
+		strToSend.append(String.valueOf(monthLim.length) + ":"
+				+ String.valueOf(this.monthLim[monthLim.length - 1]));
+		System.out.println("J'envoie : " + strToSend.toString());
 
 		this.session.writeCmd(this.session.CMD_LIMITES, strToSend.toString());
+		strToSend.delete(0, strToSend.length());
 
 		if (this.session.getReponse(strToSend) == 0) {
-			System.out.println(strToSend.toString());
+			System.out.println("Reponse : " + strToSend.toString());
 			// analyse de la réponse
 			String aStrAnalyse = strToSend.toString();
 			String[] aStrTab = aStrAnalyse.split("_");
@@ -227,6 +231,63 @@ public class JPanelChartTabMonthParam extends JPanel
 				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
 	}
+
+	public void readConso() {
+		StringBuilder strToSend = new StringBuilder();
+
+		if (!this.session.isLogged()) {
+			JOptionPane jOptionLogErr = new JOptionPane();
+			jOptionLogErr.showConfirmDialog(this.session,
+					(String) this.resourceLang.getObject("notLogged"),
+					(String) this.resourceLang.getObject("notLoggedTit"),
+					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+			return;
+		}
+
+		// Amorce de la lecture
+		this.session.readCmd(this.session.CMD_MONTH_CONS);
+
+		if (this.session.getReponse(strToSend) == 0) {
+			System.out.println(strToSend.toString());
+			// analyse de la réponse
+			String aStrAnalyse = strToSend.toString();
+			String[] aStrTab = aStrAnalyse.split("_");
+
+			if (aStrTab[1].equals("ERROR")) {
+				JOptionPane jOptionLogOk = new JOptionPane();
+				jOptionLogOk.showConfirmDialog(this, "Error write Limits",
+						"Error", JOptionPane.DEFAULT_OPTION,
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			} else {
+				for (int i = 0; i < (this.monthConsom.length); i++) {
+					String[] tabReponse = aStrTab[i + 1].split(":");
+					this.monthConsom[Integer.valueOf(tabReponse[0]) - 1] = Integer
+							.valueOf(tabReponse[1]);
+				}
+
+			}
+		} else {
+			JOptionPane jOptionTimeoutErr = new JOptionPane();
+			jOptionTimeoutErr.showConfirmDialog(this,
+					(String) this.resourceLang.getObject("timeOut"),
+					(String) this.resourceLang.getObject("timeOutTit"),
+					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
+			return;
+
+		}
+		for (int i = 0; i < 12; i++) {
+			this.jTable.setValueAt(String.valueOf(this.monthConsom[i]), i, 2);
+		}
+
+		// On recharge le graph
+		updateGraphTable();
+
+		JOptionPane jOptionLogOk = new JOptionPane();
+		jOptionLogOk.showConfirmDialog(this, "ParamWrite Succes", "Success",
+				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
+	}
+
 	/**
 	 * Sauve les limites dans la map
 	 */

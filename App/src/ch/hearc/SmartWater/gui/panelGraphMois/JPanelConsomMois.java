@@ -67,6 +67,8 @@ public class JPanelConsomMois extends JPanel {
 				resourceLang, this.parameters, this.jPanelChartTabMonth,
 				this.session);
 
+		this.jPanelChartTabMonth.setjPanelChartTabMonthParam(this.jPanelChartTabMonthParam);
+		
 		this.jSplitTabChart = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
 		jSplitTabChart.add(jPanelChartTabMonth, JSplitPane.LEFT);

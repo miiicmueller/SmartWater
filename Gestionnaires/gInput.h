@@ -6,6 +6,7 @@
 
 #include "Gestionnaire.h"
 #include "../Tools/tDate.h"
+#include "Modules/mCompteur.h"
 #include "mGSM.h"
 
 //Structure de valeur des compteurs

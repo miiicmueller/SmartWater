@@ -79,6 +79,16 @@ public class JPanelChartTabMonth extends JPanel {
 	|*				Set				*|
 	\*------------------------------*/
 
+	public void getConsom() {
+		this.jPanelChartTabMonthParam.readConso();
+	}
+
+	public void setjPanelChartTabMonthParam(
+			JPanelChartTabMonthParam jPanelChartTabMonthParam) {
+		this.jPanelChartTabMonthParam = jPanelChartTabMonthParam;
+
+	}
+
 	public void updateGraph(int[] MonthConsum, int[] MonthLim) {
 		this.monthConsom = MonthConsum;
 		updateGraphLim(MonthLim);
@@ -151,7 +161,7 @@ public class JPanelChartTabMonth extends JPanel {
 		BorderLayout bl = new BorderLayout();
 		this.setLayout(bl);
 
-		this.jPanelControlChart = new JPanelControlChart(resourceLang);
+		this.jPanelControlChart = new JPanelControlChart(resourceLang, this);
 
 		CategoryDataset donneeGraph = getGraphDataSet(this.monthConsom,
 				this.monthLim);
@@ -251,6 +261,8 @@ public class JPanelChartTabMonth extends JPanel {
 	// Valeurs des séries
 	private int[] monthConsom;
 	private int[] monthLim;
+
+	private JPanelChartTabMonthParam jPanelChartTabMonthParam;
 
 	private final int MIN_HEIGHT = 600;
 	private final int MIN_WIDTH = 600;

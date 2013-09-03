@@ -7,6 +7,7 @@ import java.util.ResourceBundle;
 import javax.swing.JPanel;
 import javax.swing.JSplitPane;
 
+import ch.hearc.SmartWater.gui.login.Session;
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelChartTabMonth;
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelChartTabMonthParam;
 
@@ -16,9 +17,10 @@ public class JPanelComsomJour extends JPanel {
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
 	public JPanelComsomJour(ResourceBundle resourceLang,
-			Map<String, String> parameters) {
+			Map<String, String> parameters, Session session) {
 		this.resourceLang = resourceLang;
 		this.parameters = parameters;
+		this.session = session;
 		geometrie();
 		controle();
 		apparence();
@@ -28,12 +30,13 @@ public class JPanelComsomJour extends JPanel {
 	|*				Set				*|
 	\*------------------------------*/
 
-
 	public JPanelChartJourPanParam getJPanelChartJourPanParam() {
 		return this.jPanelChartJourPanParam;
 	}
 
-	
+	public void readConsom() {
+		this.jPanelChartJourPanParam.readConso();
+	}
 	/*------------------------------------------------------------------*\
 	|*							Methodes Private						*|
 	\*------------------------------------------------------------------*/
@@ -50,9 +53,10 @@ public class JPanelComsomJour extends JPanel {
 
 		this.setLayout(new BorderLayout());
 
-		this.jPanelChartJourPanGraph = new JPanelChartJourPanGraph(resourceLang);
+		this.jPanelChartJourPanGraph = new JPanelChartJourPanGraph(resourceLang,this);
 		this.jPanelChartJourPanParam = new JPanelChartJourPanParam(
-				resourceLang, this.parameters, this.jPanelChartJourPanGraph);
+				resourceLang, this.parameters, this.jPanelChartJourPanGraph,
+				this.session);
 
 		this.jSplitTabChart = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
 
@@ -72,6 +76,7 @@ public class JPanelComsomJour extends JPanel {
 	// Input
 	private ResourceBundle resourceLang;
 	private Map<String, String> parameters;
+	private Session session;
 
 	// Panel de contrôle
 	private JPanelChartJourPanParam jPanelChartJourPanParam;

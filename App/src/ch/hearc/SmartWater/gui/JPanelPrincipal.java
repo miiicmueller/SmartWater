@@ -128,7 +128,8 @@ public class JPanelPrincipal extends JPanel {
 				resourceLang, session);
 		this.jPanelConsomMois = new JPanelConsomMois(resourceLang,
 				this.parameters, session);
-		this.jPanelComsomJour = new JPanelComsomJour(resourceLang, parameters);
+		this.jPanelComsomJour = new JPanelComsomJour(resourceLang, parameters,
+				session);
 		this.jPanelCompteurs = new JPanelCompteurs(resourceLang);
 		this.jPanelDiag = new JPanelDiag(resourceLang, this.session);
 
