@@ -8,18 +8,21 @@
 #include "../Tools/tDate.h"
 #include "mGSM.h"
 
+//Structure de valeur des compteurs
+typedef struct
+    {
+    UInt32 value;
+    tDate date;
+    } gInputMeterValueStruct;
+
 class gInput: public Gestionnaire
     {
 private:
-    int counterValues;
-
-    int batteryValue;
-
-    int tempSensValues;
+    gInputMeterValueStruct valueMeters[2];
 
     char* smsTab;
 
-    int smsNb;
+    UInt8 smsNb;
 
     tDate currentTime;
 

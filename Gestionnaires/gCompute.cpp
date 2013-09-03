@@ -10,11 +10,9 @@
 //
 //gInput : le gestionnaire qui contient les entrées
 //----------------------------------------------------------------
-gCompute::gCompute(gInput* theGInput, gTerminal* theGTerminal,
-	tToolsCluster* theTools)
+gCompute::gCompute(gInput* theGInput)
     {
     this->theGInput = theGInput;
-    this->theGTerminal = theGTerminal;
     }
 
 void gCompute::setup()
@@ -27,7 +25,7 @@ void gCompute::execute()
 
     this->computeSMS();
 
-    this->computeConsumption();
+    //this->computeConsumption(); //TODO adapter
     }
 
 void gCompute::computeTerminal()
@@ -174,6 +172,73 @@ void gCompute::computeSMS()
     {
     }
 
-void gCompute::computeConsumption()
+//----------------------------------------------------------------
+//fonction de calcul de depassement de consommation d'eau
+//
+//retourne true s'il y a un depassement de consommation
+//----------------------------------------------------------------
+bool gCompute::computeConsumption(iMeterChannel aChannel)
     {
+    UInt8 aMonth = 0;
+    static UInt8 aPreviousDay = 0;
+    UInt8 aDay = 0;
+    static UInt8 aValueBeginMonth = 0; //consommation le premier jour du mois
+    static UInt32 aPreviousValue = 0;
+    UInt32 aValue = 0;
+    UInt8 aTemp = 0;
+    bool aWarningConsumption = false;
+    bool aRet = false;
+
+//    if (kMeterSimulation != aChannel)
+//	{
+//	if (0 == aPreviousDay) // la premiere fois
+//	    {
+//	    aDay = theGInput->valueMeters->date.day;
+//	    aPreviousDay = aDay;
+//	    aPreviousValue = theGInput->valueMeters->value;
+//	    }
+//	else
+//	    {
+//	    aDay = theGInput->valueMeters->date.day; // prend la nouvelle date
+//
+//	    if (aDay != aPreviousDay) // un nouveau jour est passe
+//		{
+//		aValue = theGInput->valueMeters->value;
+//
+//		if (1 == aDay) //met a jour pour le premier jour du mois
+//		    {
+//		    aValueBeginMonth = aValue;
+//		    }
+//
+//		if (ceil(
+//			(tMonthsLimits::limits[aMonth - 1]
+//				- (aValue - aValueBeginMonth)) / (32 - aDay))
+//			< (aValue - aPreviousValue)) //calcul si depasse la limite quotidienne
+//		    {
+//		    if (aWarningConsumption)
+//			{
+//			this->overrunConsumption = true;
+//			}
+//		    else // premier jour de depassement de la limite
+//			{
+//			aWarningConsumption = true;
+//			}
+//		    }
+//		else // pas de depassement
+//		    {
+//		    aWarningConsumption = false;
+//		    this->overrunConsumption = false;
+//		    }
+//
+//		aPreviousValue = aValue;
+//		aPreviousDay = aDay;
+//		}
+//	    }
+//	}
+//    else // il s'agit d'un compteur de simulation
+//	{
+//
+//	}
+    return aRet;
     }
+

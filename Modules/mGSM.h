@@ -67,7 +67,6 @@ private:
     //tools
     static tCommandesAT commandesAtGsm; //commandes pour contrôler le module GSM
     UInt16 indexSMS; //index designant le prochaine SMS a devoir etre lu
-    mGSMStateEnum state; // etat du module
     static mDelay timeOut;
 
 
@@ -77,6 +76,7 @@ private:
     //aGoodResponse : bonne reponse, renvoie true
     //aBadResponse : mauvaise reponse, renvoie false
     //aTimeOutMs : duree en milliseconde durant laquelle la méthode essaie de trouver correpondance
+    //retour : true si bonne reponse, false si mauvaise reponse ou si reponse differente
     //----------------------------------------------------------------
     bool mCheckResponse(char* aGoodResponse, char* aBadResponse, UInt16 aTimeOutMs);
 
@@ -91,6 +91,7 @@ public:
 
     UInt8 phoneNumber[kNbFiguresPhone+1]; //numero de telephone de la carte SIM. Format : "+417********"
     UInt8 codePIN[kNbFiguresPin+1];
+    mGSMStateEnum state; // etat du module
 
     //----------------------------------------------------------------
     //constructeur
@@ -137,9 +138,11 @@ public:
     //----------------------------------------------------------------
     //obtenir l'heure
     //
-    //retour :  la date complete
+    //aDate : pointeur sur la date complete
+    //retour : true si il n'y a a pas d'erreur
+    //remarque : ce service coute un SMS
     //----------------------------------------------------------------
-    tDate getDate();
+    bool getDate(tDate* aDate);
 
     //----------------------------------------------------------------
     //obtenir le credit restant

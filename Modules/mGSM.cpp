@@ -403,6 +403,7 @@ tDate mGSM::getDate()
     UInt8 aNbSms = 0;
     UInt16 i = 0;
     UInt8 j = 0;
+    mDelay aDelayGetNewSms;
 
     aIndex = getNbSms() + 1; //prend le nombre de SMS
     if (kOk == this->state) // si la recuperation du nombre de SMS est ok
@@ -411,9 +412,9 @@ tDate mGSM::getDate()
 
 	if (mGSM::sendSMS((UInt8*) "getDate\0", (UInt8*) this->phoneNumber)) // on s'envoie un SMS
 	    {
-
-	    mGSM::timeOut.startDelayMS(kTimeReceiveSms); // TODO mettre le bon temps
-	    while (!mGSM::timeOut.isDone() && !(aNbSms >= aIndex)) // attend qu'on ait recu un ou plusieurs SMS
+	    this->state = kErrorGeneral;
+	    aDelayGetNewSms.startDelayMS(kTimeReceiveSms); // TODO mettre le bon temps
+	    while (!aDelayGetNewSms.isDone() && !(aNbSms >= aIndex)) // attend qu'on ait recu un ou plusieurs SMS
 		{
 		aNbSms = getNbSms();
 		}
