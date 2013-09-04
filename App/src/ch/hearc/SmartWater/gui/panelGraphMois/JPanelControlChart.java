@@ -13,10 +13,11 @@ public class JPanelControlChart extends JPanel {
 	/*------------------------------------------------------------------*\
 	 |*							Constructeurs							*|
 	 \*------------------------------------------------------------------*/
-	public JPanelControlChart(ResourceBundle resourceLang) {
+	public JPanelControlChart(ResourceBundle resourceLang,
+			JPanelChartTabMonth jPanelChartTabMonth) {
 
 		this.resourceLang = resourceLang;
-
+		this.jPanelChartTabMonth = jPanelChartTabMonth;
 		geometrie();
 		controle();
 		apparence();
@@ -35,26 +36,26 @@ public class JPanelControlChart extends JPanel {
 	}
 
 	private void controle() {
-		
-//		this.buttonGetConsomm.addActionListener(new ActionListener() {
-//			
-//			@Override
-//			public void actionPerformed(ActionEvent event) {
-//				
-//				
-//			}
-//		});
+
+		this.buttonGetConsomm.addActionListener(new ActionListener() {
+
+			@Override
+			public void actionPerformed(ActionEvent event) {
+				// Lire les consommations
+				JPanelControlChart.this.jPanelChartTabMonth.getConsom();
+			}
+		});
 
 	}
 
 	private void geometrie() {
-		
-//		this.setLayout(new FlowLayout(FlowLayout.CENTER));
-//		
-//		this.buttonGetConsomm = new JButton((String)resourceLang.getObject("buttonGetConsomm"));
-//		
-//		this.add(buttonGetConsomm);
-		
+
+		this.setLayout(new FlowLayout(FlowLayout.CENTER));
+
+		this.buttonGetConsomm = new JButton(
+				(String) resourceLang.getObject("buttonGetConsomm"));
+
+		this.add(buttonGetConsomm);
 
 	}
 
@@ -64,6 +65,7 @@ public class JPanelControlChart extends JPanel {
 
 	// Tools
 	private ResourceBundle resourceLang;
-	
-	//private JButton buttonGetConsomm ;
+	private JPanelChartTabMonth jPanelChartTabMonth;
+
+	private JButton buttonGetConsomm;
 }

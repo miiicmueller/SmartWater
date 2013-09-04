@@ -145,6 +145,7 @@ public class ComConnexion implements ComConnexions_I {
 
 	public void write(String strToSend) throws Exception {
 		char[] charTab = strToSend.toCharArray();
+		System.out.println(strToSend);
 		byte[] tabByteToSend = new byte[charTab.length];
 		for (int i = 0; i < charTab.length; i++) {
 			tabByteToSend[i] = (byte) charTab[i];

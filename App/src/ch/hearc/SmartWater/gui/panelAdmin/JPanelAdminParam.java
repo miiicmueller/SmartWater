@@ -111,7 +111,7 @@ public class JPanelAdminParam extends JPanel {
 						break;
 					case "paramMdpA" :
 						this.session.writeCmd(this.session.CMD_MDP_ADMIN,
-								this.jChampsParam[i].getText());
+								this.jChampsParam[i].getText()+"_"+this.jChampsParam[i].getText());
 						break;
 					case "paramOffsetTemp" :
 						this.session.writeCmd(this.session.CMD_OFF_TEMP,

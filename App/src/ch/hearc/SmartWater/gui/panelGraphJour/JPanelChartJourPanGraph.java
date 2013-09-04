@@ -16,8 +16,10 @@ public class JPanelChartJourPanGraph extends JPanel {
 	/*------------------------------------------------------------------*\
 	|*							Constructeurs							*|
 	\*------------------------------------------------------------------*/
-	public JPanelChartJourPanGraph(ResourceBundle resourceLang) {
+	public JPanelChartJourPanGraph(ResourceBundle resourceLang,
+			JPanelComsomJour jPanelComsomJour) {
 		this.resourceLang = resourceLang;
+		this.jPanelComsomJour = jPanelComsomJour ;
 
 		geometrie();
 		controle();
@@ -48,7 +50,7 @@ public class JPanelChartJourPanGraph extends JPanel {
 		this.setLayout(new BorderLayout());
 
 		this.jPanelChartJour = new JPanelChartJour(resourceLang);
-		this.jPanelChartJourControl = new JPanelChartJourControl(resourceLang);
+		this.jPanelChartJourControl = new JPanelChartJourControl(resourceLang,this.jPanelComsomJour);
 
 		this.add(this.jPanelChartJour, BorderLayout.CENTER);
 		this.add(this.jPanelChartJourControl, BorderLayout.SOUTH);
@@ -60,7 +62,8 @@ public class JPanelChartJourPanGraph extends JPanel {
 
 	// Input
 	private ResourceBundle resourceLang;
-
+	private JPanelComsomJour jPanelComsomJour;
+	
 	// Tools
 	private JPanelChartJour jPanelChartJour;
 	private JPanelChartJourControl jPanelChartJourControl;

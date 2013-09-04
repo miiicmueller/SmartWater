@@ -93,7 +93,7 @@ public class Session extends Component {
 		}
 		// Initialise l'ouverture d'une session
 		this.comConnection.write(new String("_" + this.userName + "_"
-				+ this.userPassword + "_" + this.CMD_DISCONNECT + "_\r"));
+				+ this.userPassword + "_" + this.CMD_DISCONNECT + "\r"));
 
 		// Démmarage du timeout
 		this.timeOut = false;
@@ -233,7 +233,7 @@ public class Session extends Component {
 					JOptionPane.DEFAULT_OPTION, JOptionPane.ERROR_MESSAGE);
 		}
 	}
-	
+
 	public void readCmd(String aCommand) {
 		if (this.isLogged()) {
 
@@ -270,7 +270,7 @@ public class Session extends Component {
 
 		// Si on a été en timeout
 		if (this.timeOut) {
-//			this.logged = false;
+			// this.logged = false;
 			System.out.println("Timeout !!");
 			return 1;
 		} else {
@@ -290,7 +290,7 @@ public class Session extends Component {
 		}
 		// Initialise l'ouverture d'une session
 		this.comConnection.write(new String("_" + this.userName + "_"
-				+ this.userPassword + "_" + this.CMD_CONNECT + "_\r"));
+				+ this.userPassword + "_" + this.CMD_CONNECT + "\r"));
 
 		// Démmarage du timeout
 		this.timeOut = false;
@@ -308,6 +308,7 @@ public class Session extends Component {
 		} else {
 			// analyse de la réponse
 			String aStrAnalyse = aAnswer.toString();
+			System.out.println("Reponse : " + aStrAnalyse);
 			String[] aStrTab = aStrAnalyse.split("_");
 
 			switch (aStrTab[1]) {
@@ -324,11 +325,13 @@ public class Session extends Component {
 			}
 		}
 	}
-
 	private void startTimeout(final long aDelay) {
 		// Initialisation du timeout à false
 		this.timeOut = false;
-		Thread threadTimeout = new Thread(new Runnable() {
+		//On attend que l'ancien thread soit mort
+		while(this.threadTimeout.isAlive());
+		
+		this.threadTimeout = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -356,12 +359,13 @@ public class Session extends Component {
 	private String userName;
 	private String userPassword;
 	private List<String> listPort;
+	private Thread threadTimeout ;
 
 	public final long DELAY_TIMEOUT = 2000;
 
 	// Nom des commandes
 	public final String CMD_MODE = "mode_";
-	public final String CMD_MISEAHEURE = "mah_";
+	public final String CMD_MISEAHEURE = "clock_";
 	public final String CMD_DISPO = "dispo_";
 	public final String CMD_OFF_TEMP = "offset_";
 	public final String CMD_MDP_ADMIN = "passa_";
@@ -372,10 +376,10 @@ public class Session extends Component {
 	public final String CMD_DIAG_UNIT = "dysfuntion_";
 	public final String CMD_ALARM_NUM = "alarm_";
 	public final String CMD_LIMITES = "limits_";
-	public final String CMD_STATE = "etat_";
+	public final String CMD_STATE = "state_";
 	public final String CMD_MDP_USER = "passu_";
-	public final String CMD_MONTH_CONS = "monthlyConsumption_";
-	public final String CMD_DAY_CONS = "dailyConsumption_";
+	public final String CMD_MONTH_CONS = "monthlyconsumption_";
+	public final String CMD_DAY_CONS = "dailyconsumption_";
 	public final String CMD_CONNECT = "connect_";
 	public final String CMD_DISCONNECT = "disconnect_";
 	public final String CMD_UNIT_NAME = "unitname_";
