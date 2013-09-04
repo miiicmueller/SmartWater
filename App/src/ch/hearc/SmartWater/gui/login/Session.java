@@ -357,7 +357,7 @@ public class Session extends Component {
 	private String userPassword;
 	private List<String> listPort;
 
-	public final long DELAY_TIMEOUT = 2000;
+	public final long DELAY_TIMEOUT = 10000;
 
 	// Nom des commandes
 	public final String CMD_MODE = "mode_";
