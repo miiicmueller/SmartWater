@@ -4,7 +4,7 @@
 #include "mTempSensor.h"
 
 /**
- * Création d'un senseur de temperature
+ * Creation d'un senseur de temperature
  * sensorAddress : Adresse du capteur
  * i2cBus : Noeud i2c sur lequel il est connecté.
  */
@@ -14,6 +14,7 @@ mTempSensor::mTempSensor(char sensorAddress, iI2C *i2cBus)
     this->aStatus = 0;
     this->i2c_1 = i2cBus;
     }
+
 mTempSensor::~mTempSensor()
     {
 
@@ -25,7 +26,7 @@ mTempSensor::~mTempSensor()
 void mTempSensor::mOpen()
     {
     this->i2c_1->enable();
-    this->configSensor(kConfiguration,0x60);
+    this->configSensor(kConfiguration, 0x60);
     }
 
 /**
@@ -34,7 +35,7 @@ void mTempSensor::mOpen()
  */
 void mTempSensor::mClose()
     {
-    this->configSensor(kConfiguration,0x01);
+    this->configSensor(kConfiguration, 0x01);
     }
 
 /**
@@ -42,7 +43,6 @@ void mTempSensor::mClose()
  */
 void mTempSensor::mSetup()
     {
-    this->configSensor(kConfiguration,0x60);
     }
 
 /**
@@ -176,7 +176,7 @@ bool mTempSensor::configSensor(mTempSensorRegEnum aRegister, char aValue)
 	//On attent que l'on transmette le byte suivant
 	while (this->i2c_1->getStatusFlag(kTXIFG) == false)
 	    ;
-	//écriture
+	//ecriture
 	this->i2c_1->write(aValue);
 	//On attent que la fin
 	while (this->i2c_1->getStatusFlag(kTXIFG) == true)
@@ -228,5 +228,4 @@ bool mTempSensor::configSensor(mTempSensorRegEnum aRegister, char aValue)
 	return false;
 	}
     }
-
 

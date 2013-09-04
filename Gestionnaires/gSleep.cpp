@@ -9,7 +9,7 @@
 #include "Modules/mTempSensor.h"
 
 gSleep::gSleep(tToolsCluster* aToolCluster, mRTC* amRTC, mGSM* aGsm,
-	mCompteur* aCompteur, mTempSensor* amTempSensor)
+	mCompteur* aCompteur, mTempSensor* amTempSensor, gCompute* aGCompute)
     {
 
     char aHour = 0, aMinutes = 0, aSec = 0, aRes = 0;
@@ -19,23 +19,23 @@ gSleep::gSleep(tToolsCluster* aToolCluster, mRTC* amRTC, mGSM* aGsm,
     this->aGsm = aGsm;
     this->aCompteur = aCompteur;
     this->amTempSensor = amTempSensor;
+    this->aGCompute = aGCompute;
 
     //On initialise les ancienne valeur
     this->aHourOld = 0;
     this->aMinOld = 0;
     this->aSecOld = 0;
 
-    //Récupération de l'heure
+    //Recuperation de l'heure
     amRTC->readTime(&aHour, &aMinutes, &aSec);
 
-    //On calcul on on se retrouve dans les portion horaire
-    aRes = (aMinutes + aHour * 60) / this->atAvailability->aIntervalMn; // si on désire toute les 10 min, et que aMinutes = 15 => aRes = 1 . On est dans la deuxième tranche, la première étant 0
+    //On calcul on on se retrouve dans les portions horaire
+    aRes = (aMinutes + aHour * 60) / this->atAvailability->aIntervalMn; // si on desire toute les 10 min, et que aMinutes = 15 => aRes = 1 . On est dans la deuxieme tranche, la premiere etant 0
     this->aMinOld = aRes * this->atAvailability->aIntervalMn;
     }
 
 void gSleep::setup()
     {
-
     }
 
 void gSleep::execute()
@@ -43,13 +43,14 @@ void gSleep::execute()
     char aHour = 0, aMinutes = 0, aSec = 0;
     int aMinutesCalc = 0;
 
-    //Récupération de l'heure
+    //Recuperation de l'heure
     amRTC->readTime(&aHour, &aMinutes, &aSec);
     aMinutesCalc = (aHour * 60) + aMinutes;
 
-    //Comparaison avec les ancienne valeure
+    //Comparaison avec les ancienne valeurs
 
     //Ici on dort
+    //TODO : tester si les autres gestionnaires ont termine leur travail
     if (aMinutesCalc >= this->aMinOld + this->atAvailability->aTimeMn) // Suivant l'exemple si aMinutes = 15 et aMinold = 10 et aTime = 5 , on passe
 	{
 	//Setter l'alarme
@@ -63,10 +64,10 @@ void gSleep::execute()
 	this->aCompteur->mClose();
 	this->amTempSensor->mClose();
 
-	//On endort le porcesseur
+	//On endort le processeur
 	mCpu::setPowerMode(kLPM3);
 
-	//Lors du réveil on sera là
+	//Lors du reveil on sera la�
 	this->aGsm->mOpen();
 	this->aCompteur->mOpen();
 	this->amTempSensor->mOpen();

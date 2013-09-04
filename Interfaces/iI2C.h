@@ -18,52 +18,66 @@
 #define SDA_PIN_B0       BIT0                  // UCB0SDA pin
 #define SCL_PIN_B0       BIT1                  // UCB0SCL pin
 #define SDA_PIN_B1       BIT1                  // UCB0SDA pin
-#define SCL_PIN_B1       BIT2					// UCB0SCL pin
-typedef enum {
-	kUSCI_B0 = 0, kUSCI_B1 = 1
-} iI2CPortEnum;
+#define SCL_PIN_B1       BIT2		       // UCB0SCL pin
+typedef enum
+    {
+    kUSCI_B0 = 0,
+    kUSCI_B1 = 1
+    } iI2CPortEnum;
 
-typedef enum {
-	k100kHz, k400kHz
-} iI2CSpeedEnum;
+typedef enum
+    {
+    k100kHz,
+    k400kHz
+    } iI2CSpeedEnum;
 
-typedef enum {
+typedef enum
+    {
 
-} iI2CStatusFlagEnum;
+    } iI2CStatusFlagEnum;
 
-typedef enum {
-	kMaster, kSlave
-} iI2CModesEnum;
+typedef enum
+    {
+    kMaster,
+    kSlave
+    } iI2CModesEnum;
 
-typedef enum {
-	kTXIFG, kSTT, kNACK, kBUSY, kSTP,kRXIFG
-} iI2CFlagEnum;
+typedef enum
+    {
+    kTXIFG,
+    kSTT,
+    kNACK,
+    kBUSY,
+    kSTP,
+    kRXIFG
+    } iI2CFlagEnum;
 
-class iI2C: public Interface {
+class iI2C: public Interface
+    {
 private:
-	iI2CPortEnum i2cPort;
-	bool isEnabled;
-	//Variable global pour g�rer l'affectations des
-	// interruptions
-	static iI2C* USCI_B0;
-	static iI2C* USCI_B1;
+    iI2CPortEnum i2cPort;
+    bool isEnabled;
+    //Variable global pour g�rer l'affectations des
+    // interruptions
+    static iI2C* USCI_B0;
+    static iI2C* USCI_B1;
 
 public:
-	iI2C(iI2CSpeedEnum i2cSpeed, iI2CPortEnum i2cPort, iI2CModesEnum i2cMode,
-			char i2cAddress);
-	~iI2C();
-	void config(iI2CSpeedEnum i2cSpeed, iI2CModesEnum i2cMode, char i2cAddress);
-	void start();
-	void stop();
-	void reStart();
-	void setWriteMode();
-	void setReadMode();
-	void enable();
-	void disable();
-	void setSlaveAddr(char aSlaveAddr);
-	bool write(UInt8 aData);
-	UInt8 read();
-	bool getStatusFlag(iI2CFlagEnum aFlag);
+    iI2C(iI2CSpeedEnum i2cSpeed, iI2CPortEnum i2cPort, iI2CModesEnum i2cMode,
+	    char i2cAddress);
+    ~iI2C();
+    void config(iI2CSpeedEnum i2cSpeed, iI2CModesEnum i2cMode, char i2cAddress);
+    void start();
+    void stop();
+    void reStart();
+    void setWriteMode();
+    void setReadMode();
+    void enable();
+    void disable();
+    void setSlaveAddr(char aSlaveAddr);
+    bool write(UInt8 aData);
+    UInt8 read();
+    bool getStatusFlag(iI2CFlagEnum aFlag);
 
-};
+    };
 #endif

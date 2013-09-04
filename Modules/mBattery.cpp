@@ -3,18 +3,17 @@
 
 #include "mBattery.h"
 
-
-mBattery::mBattery()
-:batteryValue(0)
-{
-}
+mBattery::mBattery() :
+	batteryValue(0)
+    {
+    }
 
 bool mBattery::CheckBattery()
-{
-	return 0;
-}
+    {
+    return 0;
+    }
 
 int mBattery::GetBatteryValue()
-{
-	return 0;
-}
+    {
+    return 0;
+    }

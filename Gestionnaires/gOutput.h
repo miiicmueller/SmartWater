@@ -10,6 +10,7 @@
 #include "mRTC.h"
 #include "mUSB.h"
 #include "tDate.h"
+#include "tToolsCluster.h"
 
 class gOutput: public Gestionnaire
     {
@@ -19,7 +20,8 @@ public:
     //
     //gCompute : le gestionnaire qui contient les donnees qui devront etre sorties
     //----------------------------------------------------------------
-    gOutput(gCompute* theGCompute, mGSM* theGSM, mRTC* theRTC, mUSB* theUSB);
+    gOutput(gCompute* theGCompute, mGSM* theGSM, mRTC* theRTC, mUSB* theUSB,
+	    tToolsCluster* theTools);
 
     void setup();
 
@@ -30,5 +32,6 @@ private:
     mGSM* theGSM;
     mRTC* theRTC;
     mUSB* theUSB;
+    tToolsCluster* theTools;
     };
 #endif

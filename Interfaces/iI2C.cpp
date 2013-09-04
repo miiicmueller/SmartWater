@@ -177,10 +177,10 @@ void iI2C::enable()
 	if (UCB1STAT & UCBBUSY)                // test if bus to be free
 	    {                                  // otherwise a manual Clock on is
 					       // generated
-	    I2C_PORT_SEL_B1 &= ~SCL_PIN_B1;    // Select Port function for SCL
-	    I2C_PORT_OUT_B1 &= ~SCL_PIN_B1;             //
-	    I2C_PORT_DIR_B1 |= SCL_PIN_B1;              // drive SCL low
-	    I2C_PORT_SEL_B1 |= SDA_PIN_B1 + SCL_PIN_B1; // select module function for the
+//	    I2C_PORT_SEL_B1 &= ~SCL_PIN_B1;    // Select Port function for SCL
+//	    I2C_PORT_OUT_B1 &= ~SCL_PIN_B1;             //
+//	    I2C_PORT_DIR_B1 |= SCL_PIN_B1;              // drive SCL low
+//	    I2C_PORT_SEL_B1 |= SDA_PIN_B1 + SCL_PIN_B1; // select module function for the
 	    // used I2C pins
 	    }
 	break;

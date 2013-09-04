@@ -162,8 +162,8 @@ bool tToolsCluster::setAvailability(char* aPeriode, char* aDuree)
 	aMinPeriod += (60 * aHourPeriod);
 	aMinDuty += (60 * aHourDuty);
 
-	if ((aMinPeriod > MinPeriode) && (aMinPeriod < MaxPeriode)
-		&& (aMinDuty > MinDuree) && (aMinDuty < MaxDuree))
+	if ((aMinPeriod >= MinPeriode) && (aMinPeriod <= MaxPeriode)
+		&& (aMinDuty >= MinDuree) && (aMinDuty <= MaxDuree))
 	    {
 	    isSuccessful = true;
 	    this->theAvailability->aIntervalMn = aMinPeriod;
@@ -202,13 +202,15 @@ bool tToolsCluster::setMode(char* aMode)
 
 bool tToolsCluster::setTemperatureOffset(char* aTemperatureOffset)
     {
-    float aOffset;
+    UInt8 aOffsetUnit;
+    UInt8 aOffsetDecimal;
     bool isSuccessful = false;
 
-    if (sscanf(aTemperatureOffset, "%f", &aOffset) == 1)
+    if (sscanf(aTemperatureOffset, "%d.%d", &aOffsetUnit, &aOffsetDecimal) == 2)
 	{
 	isSuccessful = true;
-	this->theTemperatureOffset->aOffset.aFloatVal = aOffset;
+	this->theTemperatureOffset->aOffset.aFloatVal = aOffsetUnit
+		+ (0.1 * aOffsetDecimal);
 	this->theTemperatureOffset->save();
 	}
     return isSuccessful;
@@ -224,10 +226,9 @@ bool tToolsCluster::setUnitName(char* aUnitName)
 
 bool tToolsCluster::setPINCode(char* aPINCode)
     {
-    UInt16 aPIN;
     bool isSuccessful = false;
 
-    if (sscanf(aPINCode, "%4d", &aPIN) == 1)
+    if (strlen(aPINCode) == 4)
 	{
 	isSuccessful = true;
 	strcpy(this->theSIMCard->thePINCode, aPINCode);

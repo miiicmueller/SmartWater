@@ -8,6 +8,7 @@
 #define kTimeOutResponse 10000
 #define kTimeOutSendSms 70000
 #define kWaitCommand 2000
+#define kWaitCommandSendSms 5000
 #define kTimeReceiveSms 60000
 #define kWaitSendSms 200
 #define kSizeStringDate 17
@@ -172,14 +173,16 @@ void mGSM::mClose()
 //donne le prochain SMS a etre lu
 //
 //aSMS : pointe la variable dans laquelle on veut recuperer le SMS
-//retour : true si aSMS contient le SMS, false si tous les SMS ont ete lus
+//aHasSms : pointeur pour savoir si aSMS contient un SMS, false si tous les SMS ont ete lus
+//retour : true s'il n'y a pas eu d'erreur durant la methode
 //----------------------------------------------------------------
-bool mGSM::getSMS(char* aSMS)
+bool mGSM::getSMS(char* aSMS, bool* aHasSms)
     {
     char aDataReceived[kSciRecBufReceptionSize ] = ""; // data recues du buffer
-    UInt8 aTemp; //variable intermediaire de retour du sscanf
     bool aIsOk = false; //variable de retour
     bool aIsError = false; //variable de retour
+
+    this->state = kErrorGeneral;
 
     // demande le prochain SMS
     mGSM::uart.clearInternalSerialBuffer(); //efface buffer
@@ -191,7 +194,7 @@ bool mGSM::getSMS(char* aSMS)
 
     //sequence de commande
     mGSM::uart.sendString(mGSM::commandesAtGsm.getSMS);
-    if (indexSMS < 10)
+    if (indexSMS < 10) //ecrit l'index du sms a lire
 	{
 	mGSM::uart.write((char) (indexSMS + 48));
 	}
@@ -207,8 +210,7 @@ bool mGSM::getSMS(char* aSMS)
 	{
 	if (mGSM::uart.readFrameToCRLF(aDataReceived))
 	    {
-	    aTemp = strcmp(aDataReceived, "OK");
-	    if (0 == aTemp) //pas de SMS a lire
+	    if (0 == strcmp(aDataReceived, "OK")) //pas de SMS a lire
 		{
 		this->indexSMS = 1;
 
@@ -222,39 +224,38 @@ bool mGSM::getSMS(char* aSMS)
 		    this->state = kErrorDeleteAllSms;
 		    }
 
-		aIsOk = false; // ne contient plus de SMS
+		aIsOk = true;
+		*aHasSms = false; // ne contient plus de SMS
+		}
+	    else if (0 == strcmp(aDataReceived, "ERROR")) // erreur de commande
+		{
+		this->state = kErrorReadSms;
+
 		aIsError = true;
 		}
-	    else
+	    else if ('+' == aDataReceived[0] && 'C' == aDataReceived[1]
+		    && 'M' == aDataReceived[2] && ':' == aDataReceived[5]) //controle le debut de l'entete
 		{
-		aTemp = strcmp(aDataReceived, "ERROR");
-		if (0 == aTemp) // erreur de commande
+		*aHasSms = true;
+		mGSM::timeOut.startDelayMS(kTimeOutResponse);
+		while ((false == mGSM::uart.readFrameToCRLF(aDataReceived))
+			&& (false == mGSM::timeOut.isDone()))
+		    ; //lit le message
+
+		if (mGSM::timeOut.isDone())
 		    {
 		    this->state = kErrorReadSms;
-
 		    aIsError = true;
 		    }
-		else if ('+' == aDataReceived[0] && 'C' == aDataReceived[1]
-			&& 'M' == aDataReceived[2] && ':' == aDataReceived[5]) //controle le debut de l'entete
+		else
 		    {
-		    mGSM::timeOut.startDelayMS(kTimeOutResponse);
-		    while ((false == mGSM::uart.readFrameToCRLF(aDataReceived))
-			    && (false == mGSM::timeOut.isDone()))
-			; //lit le message
-
-		    if (mGSM::timeOut.isDone())
-			{
-			this->state = kErrorReadSms;
-			aIsError = true;
-			}
-		    else
-			{
-			strcpy((char *) aSMS, (const char *) aDataReceived); // copie du SMS (il ne peut y avoir qu'une seule ligne)
-			this->indexSMS++;
-			aIsOk = true;
-			}
+		    strcpy((char *) aSMS, (const char *) aDataReceived); // copie du SMS (il ne peut y avoir qu'une seule ligne)
+		    this->indexSMS++;
+		    this->state = kOk;
+		    aIsOk = true;
 		    }
 		}
+
 	    }
 	}
 
@@ -278,11 +279,10 @@ bool mGSM::sendSMS(UInt8* aSMS, UInt8* aPhoneNumber)
     {
     char aAnswer[kSciRecBufSize ];
     UInt16 aValue; //variable de recuperation de valeur dans trame
-    UInt8 aTemp; //variable intermediaire de retour du sscanf
     bool aIsOk = false;
     bool aIsError = false;
 
-    mGSM::timeOut.startDelayMS(kWaitCommand); // attend avant commande
+    mGSM::timeOut.startDelayMS(kWaitCommandSendSms); // attend avant commande
     while (!mGSM::timeOut.isDone())
 	;
 
@@ -302,66 +302,61 @@ bool mGSM::sendSMS(UInt8* aSMS, UInt8* aPhoneNumber)
 	{
 	if (mGSM::uart.readFrameToCRLF(aAnswer))
 	    {
-	    aTemp = sscanf(aAnswer, "+CMGS: %d", &aValue); //message de validation d'envoi
-	    if (1 == aTemp)
+	    if (1 == sscanf(aAnswer, "+CMGS: %d", &aValue)) //message de validation d'envoi
 		{
 		this->state = kOk;
 		aIsOk = true;
 		}
-	    else
+	    else if (1 == sscanf(aAnswer, "+CMS ERROR: %d", &aValue)) //message d'erreur
 		{
-		aTemp = sscanf(aAnswer, "+CMS ERROR: %d", &aValue);
-		if (1 == aTemp) //message d'erreur connu
+		switch (aValue)
 		    {
-		    switch (aValue)
-			{
-		    case 304:
-			this->state = kErrorModePDU;
-			break;
-		    case 305:
-			this->state = kErrorModeText;
-			break;
-		    case 310:
-			this->state = kErrorSimNotInserted;
-			break;
-		    case 311:
-			this->state = kErrorSimRequired;
-			break;
-		    case 313:
-			this->state = kErrorSimFailure;
-			break;
-		    case 314:
-			this->state = kErrorSimBusy;
-			break;
-		    case 315:
-			this->state = kErrorSimWrong;
-			break;
-		    case 316:
-			this->state = kErrorSimPukRequired;
-			break;
-		    case 317:
-			this->state = kErrorSimPin2Required;
-			break;
-		    case 318:
-			this->state = kErrorSimPuk2Required;
-			break;
-		    case 320:
-			this->state = kErrorMemoryFailure;
-			break;
-		    case 322:
-			this->state = kErrorMemoryFull;
-			break;
-		    case 331:
-			this->state = kErrorAntenna;
-			break;
-		    case 332:
-			this->state = kErrorSendSmsTimeOut;
-			break;
-		    default:
-			this->state = kErrorGeneral;
-			}
-		    aIsError = true;
+		case 304:
+		    this->state = kErrorModePDU;
+		    break;
+		case 305:
+		    this->state = kErrorModeText;
+		    break;
+		case 310:
+		    this->state = kErrorSimNotInserted;
+		    break;
+		case 311:
+		    this->state = kErrorSimRequired;
+		    break;
+		case 313:
+		    this->state = kErrorSimFailure;
+		    break;
+		case 314:
+		    this->state = kErrorSimBusy;
+		    break;
+		case 315:
+		    this->state = kErrorSimWrong;
+		    break;
+		case 316:
+		    this->state = kErrorSimPukRequired;
+		    break;
+		case 317:
+		    this->state = kErrorSimPin2Required;
+		    break;
+		case 318:
+		    this->state = kErrorSimPuk2Required;
+		    break;
+		case 320:
+		    this->state = kErrorMemoryFailure;
+		    break;
+		case 322:
+		    this->state = kErrorMemoryFull;
+		    break;
+		case 331:
+		    this->state = kErrorAntenna;
+		    break;
+		case 332:
+		    this->state = kErrorSendSmsTimeOut;
+		    break;
+		default:
+		    this->state = kErrorGeneral;
 		    }
+		aIsError = true;
 		}
 	    }
 	}
@@ -387,7 +382,7 @@ mGSM::~mGSM()
 //obtenir l'heure
 //
 //aDate : pointeur sur la date complete
-//retour : true si il n'y a a pas d'erreur
+//retour : true s'il n'y a pas eu d'erreur durant la methode
 //remarque : ce service coute un SMS
 //----------------------------------------------------------------
 bool mGSM::getDate(tDate* aDate)
@@ -398,14 +393,13 @@ bool mGSM::getDate(tDate* aDate)
     bool aIsOk = false;
     bool aIsError = false;
     bool aAllRead = false;
-    SInt16 aTemp;
     UInt8 aIndex = this->indexSMS; // index de lecture des sms recus dans la carte sim
     UInt8 aNbSms = 0;
     UInt16 i = 0;
     UInt8 j = 0;
     mDelay aDelayGetNewSms;
 
-    aIndex = getNbSms() + 1; //prend le nombre de SMS
+    getNbSms(&aIndex); //prend le nombre de SMS
     if (kOk == this->state) // si la recuperation du nombre de SMS est ok
 	{
 	this->state = kErrorGeneral;
@@ -413,11 +407,13 @@ bool mGSM::getDate(tDate* aDate)
 	if (mGSM::sendSMS((UInt8*) "getDate\0", (UInt8*) this->phoneNumber)) // on s'envoie un SMS
 	    {
 	    this->state = kErrorGeneral;
-	    aDelayGetNewSms.startDelayMS(kTimeReceiveSms); // TODO mettre le bon temps
-	    while (!aDelayGetNewSms.isDone() && !(aNbSms >= aIndex)) // attend qu'on ait recu un ou plusieurs SMS
+
+	    aDelayGetNewSms.startDelayMS(kTimeReceiveSms);
+	    while (!aDelayGetNewSms.isDone() && !(aNbSms > aIndex)) // attend qu'on ait recu un ou plusieurs SMS
 		{
-		aNbSms = getNbSms();
+		getNbSms(&aNbSms);
 		}
+
 	    if (!mGSM::timeOut.isDone())
 		{
 		while (!aAllRead && !aIsError)
@@ -433,7 +429,7 @@ bool mGSM::getDate(tDate* aDate)
 
 		    // demande de lire le prochain SMS
 		    mGSM::uart.sendString(mGSM::commandesAtGsm.getSMS);
-		    if (aIndex < 10)
+		    if (aIndex < 10) //ecrit l'index du sms a lire
 			{
 			mGSM::uart.write((char) (aIndex + 48));
 			}
@@ -482,11 +478,10 @@ bool mGSM::getDate(tDate* aDate)
 						aDataReceived[i]; // copie le numero
 					}
 
-				    aTemp = strcmp(aNumberPhoneString,
-					    (char*) this->phoneNumber);
-				    if (0 == aTemp) // controle qu'il s'agit du SMS qu'on s'est envoye
+				    if (0
+					    == strcmp(aNumberPhoneString,
+						    (char*) this->phoneNumber)) // controle qu'il s'agit du SMS qu'on s'est envoye
 					{
-
 					while (aDataReceived[i] != '/'
 						&& i < kSciRecBufSize ) // recherche la position de la date
 					    {
@@ -510,16 +505,14 @@ bool mGSM::getDate(tDate* aDate)
 					    aDate->hour = (aDataReceived[i + 7]
 						    - 48) * 10
 						    + aDataReceived[i + 8] - 48;
-					    aDate->minute =
-						    (aDataReceived[i + 10] - 48)
-							    * 10
-							    + aDataReceived[i
-								    + 11] - 48;
-					    aDate->second =
-						    (aDataReceived[i + 13] - 48)
-							    * 10
-							    + aDataReceived[i
-								    + 14] - 48;
+					    aDate->minute = (aDataReceived[i
+						    + 10] - 48) * 10
+						    + aDataReceived[i + 11]
+						    - 48;
+					    aDate->second = (aDataReceived[i
+						    + 13] - 48) * 10
+						    + aDataReceived[i + 14]
+						    - 48;
 					    this->state = kOk;
 					    }
 					else
@@ -543,7 +536,7 @@ bool mGSM::getDate(tDate* aDate)
 	    }
 	}
 
-    if(kOk==this->state)
+    if (kOk == this->state)
 	{
 	return true;
 	}
@@ -556,13 +549,12 @@ bool mGSM::getDate(tDate* aDate)
 //----------------------------------------------------------------
 //obtenir le credit restant
 //
-//retour : 	le credit en centimes de franc
+//aCreditCts : pointeur sur le credit en centimes de franc
+//retour : true s'il n'y a pas eu d'erreur durant la methode
 //----------------------------------------------------------------
-UInt16 mGSM::getCredit()
+bool mGSM::getCredit(UInt16* aCreditCts)
     {
-    UInt16 aCredit = 0;
     UInt16 i = 0;
-    bool aTemp = false; // variable temporaire de recuperation de retour de fonction
     bool aIsOk = false;
     char aDataReceived[kSciRecBufReceptionSize ] = ""; // data recues du buffer
 
@@ -579,9 +571,7 @@ UInt16 mGSM::getCredit()
     mGSM::timeOut.startDelayMS(kTimeOutResponse);
     while (!aIsOk && !mGSM::timeOut.isDone()) // cherche la deuxieme partie
 	{
-	aTemp = false;
-	aTemp = mGSM::uart.readFrameToCRLF(aDataReceived);
-	if (true == aTemp)
+	if (mGSM::uart.readFrameToCRLF(aDataReceived))
 	    {
 	    if ('+' == aDataReceived[0] && 'C' == aDataReceived[1]
 		    && 'U' == aDataReceived[2] && 'S' == aDataReceived[3]
@@ -595,7 +585,7 @@ UInt16 mGSM::getCredit()
     if (aIsOk)
 	{
 	aIsOk = false;
-	while (!aIsOk && i < kSciRecBufSize - 2)
+	while (!aIsOk && (i < (kSciRecBufSize - 2)))
 	    {
 	    if (aDataReceived[i] <= 57 && aDataReceived[i] >= 48
 		    && (aDataReceived[i + 1] == '.'
@@ -612,11 +602,14 @@ UInt16 mGSM::getCredit()
 
 	if (aIsOk)
 	    {
+	    *aCreditCts = 0;
+
 	    if (aDataReceived[i - 1] <= 57 && aDataReceived[i - 1] >= 48)
 		{
-		aCredit = (aDataReceived[i - 1] - 48) * 1000; // ajoute les dizaines de franc
+		*aCreditCts = (aDataReceived[i - 1] - 48) * 1000; // ajoute les dizaines de franc
 		}
-	    aCredit += (aDataReceived[i] - 48) * 100
+
+	    *aCreditCts += (aDataReceived[i] - 48) * 100
 		    + (aDataReceived[i + 2] - 48) * 10
 		    + (aDataReceived[i + 3] - 48) * 1; // ajoute le reste
 	    }
@@ -630,87 +623,17 @@ UInt16 mGSM::getCredit()
 	this->state = kErrorGetCredit;
 	}
 
-    return aCredit;
-    }
-
-//----------------------------------------------------------------
-//controle si une reponse recue du GSM et la compare avec deux possibilit�s
-//
-//aGoodResponse : bonne reponse, renvoie true
-//aBadResponse : mauvaise reponse, renvoie false
-//aTimeOutMs : duree en milliseconde durant laquelle la m�thode essaie de trouver correpondance
-//----------------------------------------------------------------
-bool mGSM::mCheckResponse(char* aGoodResponse, char* aBadResponse,
-	UInt16 aTimeOutMs)
-    {
-    char aAnswer[kSciRecBufReceptionSize ] = "";
-    bool aTemp; // variable temporaire de recuperation de retour de fonction
-    int aTemp2 = 1;
-    bool aIsOk = false;
-    bool aIsError = false;
-
-    mGSM::timeOut.startDelayMS(aTimeOutMs);
-    while (!mGSM::timeOut.isDone() && !aIsOk && !aIsError) //lit le message
-	{
-	aTemp = false;
-	aTemp = mGSM::uart.readFrameToCRLF(aAnswer);
-	if (true == aTemp)
-	    {
-	    aTemp2 = strcmp(aAnswer, aGoodResponse);
-	    if (0 == aTemp2)
-		{
-		aIsOk = true;
-		}
-	    else
-		{
-		aTemp2 = strcmp(aAnswer, aBadResponse);
-		if (0 == aTemp2)
-		    {
-		    aIsError = true;
-		    }
-		}
-	    }
-	}
-
-    if (mGSM::timeOut.isDone())
-	{
-	aIsError = true;
-	}
-
     return aIsOk;
-    }
-
-//----------------------------------------------------------------
-//envoie le texte SMS sur l'UART en le parsant pour ne pas bourrer le FIFO du module GSM
-//
-//aSMS : le SMS � transmettre
-//----------------------------------------------------------------
-void mGSM::mSenderSms(UInt8* aSMS)
-    {
-    UInt16 i = 0;
-    while (aSMS[i] != 0)
-	{
-	if (0 == i % kSizeParseSms)
-	    {
-	    mGSM::timeOut.startDelayMS(kWaitSendSms);
-	    while (!mGSM::timeOut.isDone())
-		; // attend pour ne pas bourrer le FIFO du module GSM
-	    }
-
-	mGSM::uart.write(aSMS[i]); // envoie la chaine char par char
-
-	i++;
-	}
     }
 
 //----------------------------------------------------------------
 //fonction pour connaitre combien de SMS sont dans la memoire SIM
 //
-//retour : le nombre de SMS present dans la memoire
+//aNbSms : le nombre de SMS present dans la memoire
+//retour : true s'il n'y a pas eu d'erreur durant la methode
 //----------------------------------------------------------------
-UInt8 mGSM::getNbSms()
+bool mGSM::getNbSms(UInt8* aNbSms)
     {
-    UInt8 aNbSms = 0;
     bool aIsError = false;
     bool aIsOk = false;
     char aDataReceived[kSciRecBufReceptionSize ] = ""; // data recues du buffer
@@ -739,12 +662,82 @@ UInt8 mGSM::getNbSms()
 		    && 'P' == aDataReceived[2] && ':' == aDataReceived[5]) //test l'entete
 		{
 		aIsOk = true;
-		aNbSms = (aDataReceived[12] - 48) * 10 + aDataReceived[13] - 48;
+
+		if (',' != aDataReceived[13]) // argent restant > 10CHF
+		    {
+		    *aNbSms = (aDataReceived[12] - 48) * 10 + aDataReceived[13]
+			    - 48;
+		    }
+		else
+		    {
+		    *aNbSms = aDataReceived[12] - 48;
+		    }
 		this->state = kOk;
 		}
 	    }
 	}
 
-    return aNbSms;
+    return aIsOk;
+    }
+
+//----------------------------------------------------------------
+//controle si une reponse recue du GSM et la compare avec deux possibilit�s
+//
+//aGoodResponse : bonne reponse, renvoie true
+//aBadResponse : mauvaise reponse, renvoie false
+//aTimeOutMs : duree en milliseconde durant laquelle la m�thode essaie de trouver correpondance
+//----------------------------------------------------------------
+bool mGSM::mCheckResponse(char* aGoodResponse, char* aBadResponse,
+	UInt16 aTimeOutMs)
+    {
+    char aAnswer[kSciRecBufReceptionSize ] = "";
+    bool aIsOk = false;
+    bool aIsError = false;
+
+    mGSM::timeOut.startDelayMS(aTimeOutMs);
+    while (!mGSM::timeOut.isDone() && !aIsOk && !aIsError) //lit le message
+	{
+	if (mGSM::uart.readFrameToCRLF(aAnswer))
+	    {
+	    if (0 == strcmp(aAnswer, aGoodResponse))
+		{
+		aIsOk = true;
+		}
+	    else if (0 == strcmp(aAnswer, aBadResponse))
+		{
+		aIsError = true;
+		}
+	    }
+	}
+
+    if (mGSM::timeOut.isDone())
+	{
+	aIsError = true;
+	}
+
+    return aIsOk;
+    }
+
+//----------------------------------------------------------------
+//envoie le texte SMS sur l'UART en le parsant pour ne pas bourrer le FIFO du module GSM
+//
+//aSMS : le SMS a transmettre
+//----------------------------------------------------------------
+void mGSM::mSenderSms(UInt8* aSMS)
+    {
+    UInt16 i = 0;
+    while (aSMS[i] != 0)
+	{
+	if (0 == i % kSizeParseSms)
+	    {
+	    mGSM::timeOut.startDelayMS(kWaitSendSms);
+	    while (!mGSM::timeOut.isDone())
+		; // attend pour ne pas bourrer le FIFO du module GSM
+	    }
+
+	mGSM::uart.write(aSMS[i]); // envoie la chaine char par char
+
+	i++;
+	}
     }
 

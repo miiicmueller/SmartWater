@@ -8,6 +8,12 @@
 #include "../Tools/tDate.h"
 #include "Modules/mCompteur.h"
 #include "mGSM.h"
+#include "mTempSensor.h"
+#include "../Modules/mRTC.h"
+#include "mCompteur.h"
+#include "Tools/tToolsCluster.h"
+#include "tCommandsAnalyzer.h"
+#include "def.h"
 
 //Structure de valeur des compteurs
 typedef struct
@@ -16,38 +22,46 @@ typedef struct
     tDate date;
     } gInputMeterValueStruct;
 
+typedef struct
+    {
+    //SMS
+    tCommandsEnum* aAction;
+    char* theParameters[12];
+    UInt8* theParametersNumber;
+    tCommandsUserNbEnum* aUserNb;
+
+    //compteurs
+    gInputMeterValueStruct valueMeters[2];
+
+    //capteurs de temperature
+    UInt16 temperature;
+    } gInputMailBox;
+
 class gInput: public Gestionnaire
     {
 private:
-    gInputMeterValueStruct valueMeters[2];
+    mTempSensor* theTempSensor;
 
-    char* smsTab;
+    mCompteur* theCompteurs[2];
 
-    UInt8 smsNb;
-
-    tDate currentTime;
+    mRTC* theRTC;
 
     mGSM* theGSM;
 
+    tToolsCluster* theTools;
+
+    tCommandsAnalyzer theAnalyzer;
+
 public:
+    gInputMailBox theInputMailBox;
+
     //----------------------------------------------------------------
     //constructeur
     //----------------------------------------------------------------
-    gInput(mGSM* theGSM);
+    gInput(mGSM* theGSM, mCompteur* theCompteurs[2], mRTC* theRTC,
+	    mTempSensor* theTempSensor, tToolsCluster* theTools);
 
     ~gInput();
-
-    int getCounterValue(char counterNb);
-
-    int getBatteryValue();
-
-    int getTempSensValue(char tempSensNb);
-
-    char* getSms(int nSms);
-
-    int getSmsNb();
-
-    tDate getCurrentTime();
 
     void setup();
 

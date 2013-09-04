@@ -30,6 +30,7 @@ public class JPanelComsomJour extends JPanel {
 	|*				Set				*|
 	\*------------------------------*/
 
+
 	public JPanelChartJourPanParam getJPanelChartJourPanParam() {
 		return this.jPanelChartJourPanParam;
 	}

@@ -10,12 +10,15 @@
 #include "Modules/mGSM.h"
 #include "Modules/mCompteur.h"
 #include "Modules/mTempSensor.h"
-
+#include "Tools/tAvailability.h"
+#include "gCompute.h"
 
 class gSleep: public Gestionnaire
     {
 public:
-    gSleep(tToolsCluster* aToolCluster, mRTC* amRTC, mGSM* aGsm,mCompteur* aCompteur,mTempSensor* amTempSensor);
+    gSleep(tToolsCluster* aToolCluster, mRTC* amRTC, mGSM* aGsm,
+	    mCompteur* aCompteur, mTempSensor* amTempSensor,
+	    gCompute* aGCompute);
     void setup();
     void execute();
 
@@ -25,6 +28,7 @@ private:
     mGSM* aGsm;
     mCompteur* aCompteur;
     mTempSensor* amTempSensor;
+    gCompute* aGCompute;
 
     char aHourOld;
     char aMinOld;

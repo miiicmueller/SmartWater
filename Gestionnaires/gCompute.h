@@ -7,6 +7,7 @@
 #include "Gestionnaire.h"
 #include "../Tools/tDate.h"
 #include "../Def/def.h"
+#include "../Modules/mCompteur.h"
 #include "gInput.h"
 #include "gTerminal.h"
 #include "mRTC.h"
@@ -15,10 +16,11 @@
 typedef struct
     {
     //pour les reponses SMS
-    char aReplySMS[100];
+    char aReplySMS[150];
+    tCommandsUserNbEnum* aUserNb;
 
     //pour la reponse USB
-    char aReplyUSB[100];
+    char aReplyUSB[150];
 
     //pour la mise a l'heure automatique
     bool mahAuto;

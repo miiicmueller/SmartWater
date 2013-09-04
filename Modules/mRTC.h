@@ -23,6 +23,5 @@ public:
     void setHour(char aHour, char aMinute, char aSecond);
     void setAlarm(char aHour, char aMinute);
     void calibration(int aTemperature);
-
     };
 #endif

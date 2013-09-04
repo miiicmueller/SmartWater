@@ -5,17 +5,17 @@
 #include <assert.h>
 
 #include "tParameters.h"
+#include "def.h"
 
-class tAvailability : public tParameters
-{
+class tAvailability: public tParameters
+    {
 public:
-	UInt16 aIntervalMn;
-	UInt16 aTimeMn;
+    UInt16 aIntervalMn;
+    UInt16 aTimeMn;
 
-	tAvailability(mEEPROM *mEeprom,UInt16 aModeNum);
-	void save();
-	void load();
+    tAvailability(mEEPROM *mEeprom, UInt16 aModeNum);
+    void save();
+    void load();
 
-
-};
+    };
 #endif

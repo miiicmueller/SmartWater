@@ -120,6 +120,10 @@ void tCommandsAnalyzer::tCommandsParser(char* aMessage)
 		this->aCommandResult.aCommandEnum = kCommandError;
 		}
 	    }
+	else
+	    {
+	    this->aCommandResult.aCommandEnum = kCommandError;
+	    }
 	}
     }
 
@@ -232,7 +236,7 @@ void tCommandsAnalyzer::tCommandAnalyzer()
 	    {
 	    this->aCommandResult.aCommandEnum = kCommandLimits;
 	    }
-	else if (strcmp(this->aCommandBrut.theCommand, "etat") == 0)
+	else if (strcmp(this->aCommandBrut.theCommand, "state") == 0)
 	    {
 	    this->aCommandResult.aCommandEnum = kCommandEtat;
 	    }
@@ -257,7 +261,7 @@ void tCommandsAnalyzer::tCommandAnalyzer()
     //commandes administrateur
     else
 	{
-	if (strcmp(this->aCommandBrut.theCommand, "mah") == 0)
+	if (strcmp(this->aCommandBrut.theCommand, "clock") == 0)
 	    {
 	    this->aCommandResult.aCommandEnum = kCommandMah;
 	    }

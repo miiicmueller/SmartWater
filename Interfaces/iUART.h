@@ -27,99 +27,119 @@
 
 using namespace std;
 
-typedef enum {
-	k7bits, k8bits
-} iUARTDataCfgEnum;
+typedef enum
+    {
+    k7bits,
+    k8bits
+    } iUARTDataCfgEnum;
 
-typedef enum {
-	k1StBits, k2StBits
-} iUARTStopBitsEnum;
+typedef enum
+    {
+    k1StBits,
+    k2StBits
+    } iUARTStopBitsEnum;
 
-typedef enum {
-	kNone, kOdd, kEven
-} iUARTPartityEnum;
+typedef enum
+    {
+    kNone,
+    kOdd,
+    kEven
+    } iUARTPartityEnum;
 
-typedef enum {
-	kLSBFirst = 0, kMSBFirst = 1
-} iUARTSendModeEnum;
+typedef enum
+    {
+    kLSBFirst = 0,
+    kMSBFirst = 1
+    } iUARTSendModeEnum;
 
-typedef enum {
-	kUSCI_A0 = 0, kUSCI_A1 = 1
-} iUARTPortEnum;
+typedef enum
+    {
+    kUSCI_A0 = 0,
+    kUSCI_A1 = 1
+    } iUARTPortEnum;
 
-typedef enum {
-	kUCBUSY = 0x01,
-	kUCRXERR = 0x04,
-	kUCPE = 0x10,
-	kUCOE = 0x20,
-	kUCFE = 0x40,
-	kUCLISTEN = 0x80
-} iUARTStatusFlagEnum;
+typedef enum
+    {
+    kUCBUSY = 0x01,
+    kUCRXERR = 0x04,
+    kUCPE = 0x10,
+    kUCOE = 0x20,
+    kUCFE = 0x40,
+    kUCLISTEN = 0x80
+    } iUARTStatusFlagEnum;
 
-typedef enum {
-	k300,k4800, k9600, k19200, k57600, k115200
-} iUARTBaudrateEnum;
+typedef enum
+    {
+    k300,
+    k4800,
+    k9600,
+    k19200,
+    k57600,
+    k115200
+    } iUARTBaudrateEnum;
 
 //Structure du buffer tournant
-typedef struct {
-	UInt8 UsciRecBuf[kSciRecBufReceptionSize ];
-	UInt16 InIndex;
-	UInt16 OutIndex;
-	UInt8 ByteCount;
-	bool BufferIsFull;
-} iUARTRecBufStruct;
+typedef struct
+    {
+    UInt8 UsciRecBuf[kSciRecBufReceptionSize ];
+    UInt16 InIndex;
+    UInt16 OutIndex;
+    UInt8 ByteCount;
+    bool BufferIsFull;
+    } iUARTRecBufStruct;
 
-class iUART: public Interface {
+class iUART: public Interface
+    {
 private:
-	iUARTPortEnum serialPort;
-	UInt8 uartBuffer[kSciRecBufReceptionSize];
-	bool isEnabled;
-	bool dataReceived;
+    iUARTPortEnum serialPort;
+    UInt8 uartBuffer[kSciRecBufReceptionSize ];
+    bool isEnabled;
+    bool dataReceived;
 
-	iUARTRecBufStruct USCIRingBuffer;
+    iUARTRecBufStruct USCIRingBuffer;
 
-	//Variable global pour gï¿½rer l'affectations des
-	// interruptions
-	static iUART* USCI_0;
-	static iUART* USCI_1;
+    //Variable global pour gï¿½rer l'affectations des
+    // interruptions
+    static iUART* USCI_0;
+    static iUART* USCI_1;
 
-	// Fonction d'interruption propre a chaque objet
-	void interruptHandler();
+    // Fonction d'interruption propre a chaque objet
+    void interruptHandler();
 
-	//Interruptions handlers
-	friend void USCI_A0(void);
-	friend void USCI_A1(void);
+    //Interruptions handlers
+    friend void USCI_A0(void);
+    friend void USCI_A1(void);
 
 public:
-	iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
-			iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
-			iUARTDataCfgEnum aDataCfg, iUARTBaudrateEnum aBaudrate);
-	~iUART();
-	void config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
-			iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg,
-			iUARTBaudrateEnum aBaudrate);
-	bool getStatusFlag(iUARTStatusFlagEnum aStatFlag);
-	void enable();
-	void disable();
-	UInt8 read();
-	bool write(UInt8 aData);
-	bool sendString(UInt8* aString);
-	bool isBufferEmpty();
+    iUART(iUARTPortEnum aPort, iUARTSendModeEnum aSendMode,
+	    iUARTStopBitsEnum aStopBits, iUARTPartityEnum aParity,
+	    iUARTDataCfgEnum aDataCfg, iUARTBaudrateEnum aBaudrate);
+    ~iUART();
+    void config(iUARTSendModeEnum aSendMode, iUARTStopBitsEnum aStopBits,
+	    iUARTPartityEnum aParity, iUARTDataCfgEnum aDataCfg,
+	    iUARTBaudrateEnum aBaudrate);
+    bool getStatusFlag(iUARTStatusFlagEnum aStatFlag);
+    void enable();
+    void disable();
+    UInt8 read();
+    bool write(UInt8 aData);
+    bool sendString(UInt8* aString);
+    bool isBufferEmpty();
 //	int readLine(char* aBuffer);
-	void clearReceptionBuffer();
-	void clearInternalSerialBuffer();
-	bool retInString(UInt8* string);
-	bool readFrame(UInt8* string);
-	UInt16 availableCharToRead();
-	bool readFullFrame(UInt8* stringReceived);
+    void clearReceptionBuffer();
+    void clearInternalSerialBuffer();
+    bool retInString(UInt8* string);
+    bool readFrame(UInt8* string);
+    UInt16 availableCharToRead();
+    bool readFullFrame(UInt8* stringReceived);
 
-	/**
-	 * Fonction permettant d'obtenir les bytes reçus jusqu'au \r\n
-	 *
-	 * aString : chaine resortant la prochaine chaîne de byte reçus en mémoire, jusqu'à un CRLF
-	 * retour : true si une nouvelle chaîne a ete trouvee
-	 */
-	bool readFrameToCRLF(char* string);
+    /**
+     * Fonction permettant d'obtenir les bytes reçus jusqu'au \r\n
+     *
+     * aString : chaine resortant la prochaine chaîne de byte reçus en mémoire, jusqu'à un CRLF
+     * retour : true si une nouvelle chaîne a ete trouvee
+     */
+    bool readFrameToCRLF(char* string);
 
-};
+    };
 #endif

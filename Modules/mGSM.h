@@ -74,7 +74,8 @@ private:
     //aTimeOutMs : duree en milliseconde durant laquelle la méthode essaie de trouver correpondance
     //retour : true si bonne reponse, false si mauvaise reponse ou si reponse differente
     //----------------------------------------------------------------
-    bool mCheckResponse(char* aGoodResponse, char* aBadResponse, UInt16 aTimeOutMs);
+    bool mCheckResponse(char* aGoodResponse, char* aBadResponse,
+	    UInt16 aTimeOutMs);
 
     //----------------------------------------------------------------
     //envoie le texte SMS sur l'UART en le parsant pour ne pas bourrer le FIFO du module GSM
@@ -118,9 +119,10 @@ public:
     //donne le prochain SMS a etre lu
     //
     //aSMS : pointe la variable dans laquelle on veut recuperer le SMS
-    //retour : 	true si aSMS contient le SMS, false si tous les SMS ont ete lus
+    //aHasSms : pointeur pour savoir si aSMS contient un SMS, false si tous les SMS ont ete lus
+    //retour : true s'il n'y a pas eu d'erreur durant la methode
     //----------------------------------------------------------------
-    bool getSMS(char* aSMS);
+    bool getSMS(char* aSMS, bool* aHasSms);
 
     //----------------------------------------------------------------
     //envoi un SMS
@@ -135,7 +137,7 @@ public:
     //obtenir l'heure
     //
     //aDate : pointeur sur la date complete
-    //retour : true si il n'y a a pas d'erreur
+    //retour : true s'il n'y a pas eu d'erreur durant la methode
     //remarque : ce service coute un SMS
     //----------------------------------------------------------------
     bool getDate(tDate* aDate);
@@ -143,16 +145,18 @@ public:
     //----------------------------------------------------------------
     //obtenir le credit restant
     //
-    //retour : 	le credit en centimes de franc
+    //aCreditCts : pointeur sur le credit en centimes de franc
+    //retour : true s'il n'y a pas eu d'erreur durant la methode
     //----------------------------------------------------------------
-    UInt16 getCredit();
+    bool getCredit(UInt16* aCreditCts);
 
     //----------------------------------------------------------------
     //fonction pour connaitre combien de SMS sont dans la memoire SIM
     //
-    //retour : le nombre de SMS present dans la memoire
+    //aNbSms : le nombre de SMS present dans la memoire
+    //retour : true s'il n'y a pas eu d'erreur durant la methode
     //----------------------------------------------------------------
-    UInt8 getNbSms();
+    bool getNbSms(UInt8* aNbSms);
 
     };
 #endif

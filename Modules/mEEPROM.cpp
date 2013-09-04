@@ -10,7 +10,7 @@
 //Taille de la table
 #define kTABLE_SIZE		1024
 
-// Adresse des données
+// Adresse des donnees
 #define kDATA_BASE_ADR kTABLE_BASE_ADR + kTABLE_SIZE
 
 //Position de la structure de la table
@@ -20,11 +20,10 @@
 #define kAdrHighPos 3
 #define kSizeLowPos  4
 #define kSizeHighPos  5
-
 #define kRecordSize 6
 
 /**
- * Création d'une EEPROM
+ * Creation d'une EEPROM
  * moduleAddress : Adresse de l'EEPROM
  * i2cBus : Noeud i2c sur lequel il est connecté.
  */
@@ -832,6 +831,9 @@ char mEEPROM::read(UInt16 address)
 	    while (this->i2c_1->getStatusFlag(kRXIFG) == false)
 		;
 
+	    while (this->i2c_1->getStatusFlag(kSTP) == true)
+		;
+
 	    return this->i2c_1->read();
 
 	    }
@@ -888,7 +890,7 @@ bool mEEPROM::ackPolling()
 	this->i2c_1->stop();                // stop condition is generated after
 	while (this->i2c_1->getStatusFlag(kSTP) == true)
 	    ; // wait till stop bit is reset
-	// Software delay
+	      // Software delay
 	__delay_cycles(500);
 	if (delayTimeout.isDone())
 	    {
