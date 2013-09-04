@@ -16,5 +16,7 @@ public:
     void save();
     void load();
 
+    ~tTemperatureOffset();
+
     };
 #endif

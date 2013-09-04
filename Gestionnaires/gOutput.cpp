@@ -56,3 +56,7 @@ void gOutput::execute()
 	    }
 	}
     }
+
+gOutput::~gOutput()
+    {
+    }

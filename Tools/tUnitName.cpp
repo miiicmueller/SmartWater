@@ -27,3 +27,7 @@ void tUnitName::load()
     //Recuperation des donnees
     this->mPeriphSauv->load(this->aId, (UInt8*) this->aName);
     }
+
+tUnitName::~tUnitName()
+    {
+    }

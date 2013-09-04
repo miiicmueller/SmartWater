@@ -20,6 +20,8 @@ public:
     void save();
     void load();
 
+    ~tCompteur();
+
     };
 
 #endif

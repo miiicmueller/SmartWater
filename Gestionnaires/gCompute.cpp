@@ -149,8 +149,8 @@ void gCompute::computeTerminal()
 		}
 	    break;
 	case kCommandSimulate:
-	    this->theComputeMailBox.simulation = true;
-	    this->theComputeMailBox.aUserSimulation =
+	    this->theComputeMailBox.isSimulation = true;
+	    this->theComputeMailBox.aUserSelect =
 		    *(this->theGTerminal->theTerminalMailBox.aUserNb);
 	    break;
 	case kCommandReset:
@@ -311,8 +311,8 @@ void gCompute::computeSMS()
 		this->theGInput->theInputMailBox.theParameters[1]);
 	break;
     case kCommandSimulate:
-	this->theComputeMailBox.simulation = true;
-	this->theComputeMailBox.aUserSimulation =
+	this->theComputeMailBox.isSimulation = true;
+	this->theComputeMailBox.aUserSelect =
 		*(this->theGInput->theInputMailBox.aUserNb);
 	break;
     case kCommandReset:
@@ -385,100 +385,172 @@ void gCompute::computeSMS()
 
 //----------------------------------------------------------------
 //fonction de calcul de depassement de consommation d'eau
+//met aussi a jour MeasuresStatments
 //
 //aChannel : choix du compteur
 //retourne true s'il y a un depassement de consommation
 //----------------------------------------------------------------
 bool gCompute::computeConsumption(iMeterChannel aChannel)
     {
-//    UInt8 aMonth = 0;
-//    UInt8 aDay = 0;
-//    UInt32 aValue = 0;
-//    UInt16 aLimitDay = 0;
-//    static UInt8 aValueBeginMonth = 0; //consommation le premier jour du mois
-//    static UInt8 aPreviousDay = 0;
-//    static UInt32 aPreviousValue = 0;
-//    static bool aWarningConsumption = false;
+    UInt8 aMonth = 0;
+    UInt8 aDay = 0;
+    UInt32 aValue = 0;
+    UInt16 aLimitDay = 0;
     bool aOverrunConsumption = false; // variable de retour
+    UInt8 aChoiceMeter = 0;
+    static UInt8 aValueBeginMonth[2] =
+	{
+	0, 0
+	}; //consommation le premier jour du mois
+    static UInt8 aPreviousDay[2] =
+	{
+	0, 0
+	};
+    static UInt32 aPreviousValue[2] =
+	{
+	0, 0
+	};
+    static bool aFullMonth[2] =
+	{
+	false, false
+	}; // le programme n'a pas commence au milieu de ce mois
+    static bool aWarningConsumption[2] =
+	{
+	false, false
+	}; // depassement la veille - car il faut un depassement deux jours de suite pour alerter
 
-    //TODO adapter au tableaude compteur
-//    if (0 == aPreviousDay) // la premiere fois
-//	{
-//	aDay = theGInput->valueMeters->date.day;
-//	aPreviousDay = aDay;
-//	aPreviousValue = theGInput->valueMeters->value;
-//	}
-//    else
-//	{
-//	aDay = theGInput->valueMeters->date.day; // prend la nouvelle date
-//
-//	if (aDay != aPreviousDay) // un nouveau jour est passe
-//	    {
-//	    aMonth = theGInput->valueMeters->date.month;
-//	    aValue = theGInput->valueMeters->value;
-//
-//	    if (1 == aDay) //met a jour pour le premier jour du mois
-//		{
-//		aValueBeginMonth = aValue;
-//		}
-//
-//	    //calcul de la limite du jour
-//	    if (4 == aMonth || 6 == aMonth || 9 == aMonth || 11 == aMonth) //mois à 30 jours
-//		{
-//		aLimitDay =
-//			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
-//				- (aValue - aValueBeginMonth))
-//				/ (float) (31 - aDay)) + 0.5);
-//		}
-//	    else if (2 == aMonth && 29 == aDay) //mois à 29 jours
-//		{
-//		aLimitDay = (UInt16) ((float) (tMonthsLimits::limits[aMonth - 1]
-//			- (aValue - aValueBeginMonth)) + 0.5);
-//		}
-//	    else if (2 == aMonth) //mois à 28 jours
-//		{
-//		aLimitDay =
-//			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
-//				- (aValue - aValueBeginMonth))
-//				/ (float) (29 - aDay)) + 0.5);
-//		}
-//	    else //mois à 31 jours
-//		{
-//		aLimitDay =
-//			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
-//				- (aValue - aValueBeginMonth))
-//				/ (float) (32 - aDay)) + 0.5);
-//
-//		}
-//
-//	    if (aLimitDay < (aValue - aPreviousValue)) //calcul si depasse la limite quotidienne
-//		{
-//		if (aWarningConsumption)
-//		    {
-//		    aOverrunConsumption = true;
-//		    }
-//		else // premier jour de depassement de la limite
-//		    {
-//		    aWarningConsumption = true;
-//		    }
-//		}
-//	    else // pas de depassement
-//		{
-//		aWarningConsumption = false;
-//		}
-//
-//	    aPreviousValue = aValue;
-//	    aPreviousDay = aDay;
-//	    }
-//
-//	}
+    aChoiceMeter = this->theComputeMailBox.aUserSelect - 1; //selectionne le bon compteur
+
+    if (0 == aPreviousDay[aChoiceMeter]) // la premiere fois
+	{
+	aPreviousDay[aChoiceMeter] =
+		theGInput->theInputMailBox.valueMeters[aChoiceMeter].date.day;
+	aPreviousValue[aChoiceMeter] =
+		theGInput->theInputMailBox.valueMeters[aChoiceMeter].value;
+	aValueBeginMonth[aChoiceMeter] = aPreviousValue[aChoiceMeter];
+	}
+    else
+	{
+	aDay = theGInput->theInputMailBox.valueMeters[aChoiceMeter].date.day; // prend la date
+
+	if (aDay != aPreviousDay[aChoiceMeter]) // un nouveau jour est passe
+	    {
+	    aMonth =
+		    theGInput->theInputMailBox.valueMeters[aChoiceMeter].date.month;
+	    aValue = theGInput->theInputMailBox.valueMeters[aChoiceMeter].value;
+
+	    //met a jour lorsqu'on est un nouveau mois
+	    if (1 == aDay)
+		{
+		aFullMonth[aChoiceMeter] = true;
+
+		if (!this->theComputeMailBox.isSimulation) // ne met pas a jour les statistiques en simu
+		    {
+		    //enregistre la consommation du mois passe
+		    if (1 == aMonth) // pour le mois de decembre
+			{
+			theTools->theMeasuresStatement[aChoiceMeter]->MonthlyConsumption[11] =
+				(aValue - aValueBeginMonth[aChoiceMeter]);
+			}
+		    else // pour les autres mois
+			{
+			theTools->theMeasuresStatement[aChoiceMeter]->MonthlyConsumption[aMonth
+				- 2] = aValue - aValueBeginMonth[aChoiceMeter];
+			}
+
+		    //efface les consommations des jours du mois passe
+		    for (int i = 0; i < 31; i++)
+			{
+			theTools->theMeasuresStatement[aChoiceMeter]->CurrentMonthConsumption[i] =
+				0;
+			}
+		    }
+
+		aValueBeginMonth[aChoiceMeter] = aValue;
+		}
+
+	    if (!this->theComputeMailBox.isSimulation) // ne met pas a jour les statistiques en simu
+		{
+		theTools->theMeasuresStatement[aChoiceMeter]->CurrentMonthConsumption[aDay
+			- 2] = aValue - aPreviousValue[aChoiceMeter]; //enregistre la consommation de la veille
+		}
+
+	    if (aFullMonth[aChoiceMeter]) // cas ou le programme commence ce mois des le debut
+		{
+		//calcul de la limite du jour
+		if (4 == aMonth || 6 == aMonth || 9 == aMonth || 11 == aMonth) //mois à 30 jours
+		    {
+		    aLimitDay =
+			    (UInt16) (((float) (theTools->theMonthsLimits[aChoiceMeter]->limits[aMonth
+				    - 1]
+				    - (aValue - aValueBeginMonth[aChoiceMeter]))
+				    / (float) (31 - aDay)) + 0.5);
+		    }
+		else if (2 == aMonth && 29 == aDay) //mois à 29 jours
+		    {
+		    aLimitDay =
+			    (UInt16) ((float) (theTools->theMonthsLimits[aChoiceMeter]->limits[aMonth
+				    - 1]
+				    - (aValue - aValueBeginMonth[aChoiceMeter]))
+				    + 0.5);
+		    }
+		else if (2 == aMonth) //mois à 28 jours
+		    {
+		    aLimitDay =
+			    (UInt16) (((float) (theTools->theMonthsLimits[aChoiceMeter]->limits[aMonth
+				    - 1]
+				    - (aValue - aValueBeginMonth[aChoiceMeter]))
+				    / (float) (29 - aDay)) + 0.5);
+		    }
+		else //mois à 31 jours
+		    {
+		    aLimitDay =
+			    (UInt16) (((float) (theTools->theMonthsLimits[aChoiceMeter]->limits[aMonth
+				    - 1]
+				    - (aValue - aValueBeginMonth[aChoiceMeter]))
+				    / (float) (32 - aDay)) + 0.5);
+		    }
+		}
+	    else // le programme a commence au milieu de ce mois, il faut calculer la limite differemment
+		{
+		aLimitDay =
+			(UInt16) ((float) theTools->theMonthsLimits[aChoiceMeter]->limits[aMonth
+				- 1] / (float) 30);
+		}
+
+	    this->theComputeMailBox.indexOverrunSimulation =
+		    (UInt16) ((float) (-62 + 2 * aDay - 31 * aValue
+			    + aDay * aValue
+			    - theTools->theMonthsLimits[aChoiceMeter]->limits[aMonth
+				    - 1]) / (float) (-32 + aDay)); // calcul d'indice pour le jour prochain pour avoir un depassement
+
+	    if (aLimitDay < (aValue - aPreviousValue[aChoiceMeter])) //calcul si depasse la limite quotidienne
+		{
+		if (aWarningConsumption[aChoiceMeter])
+		    {
+		    aOverrunConsumption = true;
+		    }
+		else // premier jour de depassement de la limite
+		    {
+		    aWarningConsumption[aChoiceMeter] = true;
+		    }
+		}
+	    else // pas de depassement
+		{
+		aWarningConsumption[aChoiceMeter] = false;
+		}
+
+	    aPreviousValue[aChoiceMeter] = aValue;
+	    aPreviousDay[aChoiceMeter] = aDay;
+	    }
+	}
     return aOverrunConsumption;
     }
 
 void gCompute::computeIsFinished()
     {
     if ((!this->theComputeMailBox.mahAuto)
-	    && (!this->theComputeMailBox.simulation)
+	    && (!this->theComputeMailBox.isSimulation)
 	    && (!this->theGInput->theInputMailBox.aAction == kCommandNoCommand)
 	    && (*(this->theGTerminal->theTerminalMailBox.aTerminalState)
 		    != kTerminalDisconnected))
@@ -489,4 +561,8 @@ void gCompute::computeIsFinished()
 	{
 	this->theComputeMailBox.isWorkFinished = false;
 	}
+    }
+
+gCompute::~gCompute()
+    {
     }

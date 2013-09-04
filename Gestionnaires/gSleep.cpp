@@ -80,3 +80,7 @@ void gSleep::execute()
 	}
 
     }
+
+gSleep::~gSleep()
+    {
+    }

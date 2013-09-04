@@ -17,5 +17,7 @@ public:
     void save();
     void load();
 
+    ~tAvailability();
+
     };
 #endif

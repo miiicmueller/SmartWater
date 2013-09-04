@@ -25,10 +25,12 @@ typedef struct
     //pour la mise a l'heure automatique
     bool mahAuto;
 
-    //pour la simulation
-    bool simulation;
-    tCommandsUserNbEnum aUserSimulation;
+    //pour la selection du compteur
+    tCommandsUserNbEnum aUserSelect;
 
+    //pour la simulation
+    bool isSimulation;
+    UInt32 indexOverrunSimulation; // index qu'il faut pour simuler un depassement de consommation
     //pour savoir si le travail est termine
     bool isWorkFinished;
     } gComputeMailBox;
@@ -68,6 +70,8 @@ public:
     void setup();
 
     void execute();
+
+    ~gCompute();
 
     };
 #endif

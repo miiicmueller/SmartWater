@@ -7,3 +7,7 @@ tDate::tDate()
     {
 
     }
+
+tDate::~tDate()
+    {
+    }

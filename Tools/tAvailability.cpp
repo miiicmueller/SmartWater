@@ -51,3 +51,6 @@ void tAvailability::load()
 
     }
 
+tAvailability::~tAvailability()
+    {
+    }

@@ -59,5 +59,7 @@ public:
 
     gTerminalMailBox theTerminalMailBox;
 
+    ~gTerminal();
+
     };
 #endif
