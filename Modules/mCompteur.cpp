@@ -5,6 +5,7 @@
 //*****************************************************************************
 
 #include "mCompteur.h"
+#include "mDelay.h"
 
 #define kEnableMeter 4 // activation des comtpeurs
 #define kDisableMeter 0 // desactivation des comtpeurs
@@ -115,7 +116,7 @@ UInt32 mCompteur::mRead()
 	0
 	};
 
-    UInt8 aDummy[5] =
+    UInt8 aDummy[25] =
 	{
 	0
 	};
@@ -124,6 +125,7 @@ UInt32 mCompteur::mRead()
     bool aIsOk;
     UInt8 aNumb1; //variables bidons recuperant des valeurs non-importantes de la trame
     UInt8 aNumb2;
+    mDelay aDelayTimeout;
 
     //efface le buffer de reception
     mCompteur::uart.clearInternalSerialBuffer();
@@ -132,84 +134,86 @@ UInt32 mCompteur::mRead()
     this->enable.write(kDisableMeter);
     this->enable.write(kEnableMeter);
 
-    //lecture de la premiere partie de la trame
-
-    //FIXME Quand le fonction  "readFrame" sera modifiee, il faut enlever la lecture des Dummy et attendre d'abord les 85 caracteres
-
-    //Recuperation des donnees fabricant fluide et version
-    while (!mCompteur::uart.readFrame(aFabFlVers))
+    //Attente d'un certains temp pour recevoir les caractère
+    aDelayTimeout.startDelayMS(3000); //Timeout ce 3s
+    //On attend
+    while ((mCompteur::uart.availableCharToRead() == 85)
+	    || aDelayTimeout.isDone())
 	;
-    while (!mCompteur::uart.readFrame(aDummy))
-	;
-
-    //Recuperation de la valeur du compteur
-    while (!mCompteur::uart.readFrame(aDebitMesure))
-	;
-    while (!mCompteur::uart.readFrame(aDummy))
-	;
-
-    //Recuperation de la date de fabrication
-    while (!mCompteur::uart.readFrame(aDateFabr))
-	;
-    while (!mCompteur::uart.readFrame(aDummy))
-	;
-
-    //Recuperation du numero de serie
-    while (!mCompteur::uart.readFrame(aSerialNum))
-	;
-    while (!mCompteur::uart.readFrame(aDummy))
-	;
-
-    //Recuperation de la taille normalisee
-    while (!mCompteur::uart.readFrame(aTailleNom))
-	;
-    while (!mCompteur::uart.readFrame(aDummy))
-	;
-
-    //Fin de trame
-    while (!mCompteur::uart.readFrame(aDummy))
-	;
-    while (!mCompteur::uart.readFrame(aDummy))
-	;
-
-    //Recuperation du fabricant, fluide, version
-    sscanf((char*) aFabFlVers, "/%s %s      %s",
-	    &(this->compteurParam->aManufacturer),
-	    &(this->compteurParam->aFluide), &(this->compteurParam->aVersNum));
-
-    //Recuperation de la date de fabrication
-    sscanf((char*) aDateFabr, "%d.%d(%s)", &aNumb1, &aNumb2,
-	    &(this->compteurParam->aFabDate));
-
-    this->compteurParam->aFabDate[strlen((char*) this->compteurParam->aFabDate)
-	    - 1] = 0x00;
-
-    //Recuperation du numero de serie
-    sscanf((char*) aSerialNum, "%d.%d(%s)", &aNumb1, &aNumb2,
-	    &(this->compteurParam->aSerialNum));
-
-    this->compteurParam->aSerialNum[strlen(
-	    (char*) this->compteurParam->aSerialNum) - 1] = 0x00;
-
-    //Recuperation de la taille nominale
-    sscanf((char*) aTailleNom, "%d.%d(%s)", &aNumb1, &aNumb2,
-	    &(this->compteurParam->aNominalSize));
-
-    this->compteurParam->aNominalSize[strlen(
-	    (char*) this->compteurParam->aNominalSize) - 1] = 0x00;
-
-    //Recuperation de l'indice
-    aIsOk = sscanf((char*) aDebitMesure, "%d.%d(%d*m3)", &aNumb1, &aNumb2,
-	    &aRet);
-
-//retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
-    if (aIsOk)
+    if (aDelayTimeout.isDone())
 	{
-	return aRet;
+	return 0;
 	}
     else
 	{
-	return 0;
+	for (int i = 0; mCompteur::uart.readFrameToCRLF((char*) aDummy); i++)
+	    switch (i)
+		{
+	    case 1:
+		strcpy((char*) aFabFlVers, (char*) aDummy);
+		break;
+	    case 2:
+		strcpy((char*) aDebitMesure, (char*) aDummy);
+		break;
+	    case 3:
+		strcpy((char*) aDateFabr, (char*) aDummy);
+		break;
+	    case 4:
+		strcpy((char*) aSerialNum, (char*) aDummy);
+		break;
+	    case 5:
+		strcpy((char*) aTailleNom, (char*) aDummy);
+		break;
+	    case 6:
+		strcpy((char*) aDummy, (char*) aDummy);
+		break;
+	    case 7:
+		strcpy((char*) aDummy, (char*) aDummy);
+		break;
+	    default:
+		return 0;
+
+		}
+	//Recuperation du fabricant, fluide, version
+	sscanf((char*) aFabFlVers, "/%s %s      %s",
+		&(this->compteurParam->aManufacturer),
+		&(this->compteurParam->aFluide),
+		&(this->compteurParam->aVersNum));
+
+	//Recuperation de la date de fabrication
+	sscanf((char*) aDateFabr, "%d.%d(%s)", &aNumb1, &aNumb2,
+		&(this->compteurParam->aFabDate));
+
+	this->compteurParam->aFabDate[strlen(
+		(char*) this->compteurParam->aFabDate) - 1] = 0x00;
+
+	//Recuperation du numero de serie
+	sscanf((char*) aSerialNum, "%d.%d(%s)", &aNumb1, &aNumb2,
+		&(this->compteurParam->aSerialNum));
+
+	this->compteurParam->aSerialNum[strlen(
+		(char*) this->compteurParam->aSerialNum) - 1] = 0x00;
+
+	//Recuperation de la taille nominale
+	sscanf((char*) aTailleNom, "%d.%d(%s)", &aNumb1, &aNumb2,
+		&(this->compteurParam->aNominalSize));
+
+	this->compteurParam->aNominalSize[strlen(
+		(char*) this->compteurParam->aNominalSize) - 1] = 0x00;
+
+	//Recuperation de l'indice
+	aIsOk = sscanf((char*) aDebitMesure, "%d.%d(%d*m3)", &aNumb1, &aNumb2,
+		&aRet);
+
+	//retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
+	if (aIsOk)
+	    {
+	    return aRet;
+	    }
+	else
+	    {
+	    return 0;
+	    }
 	}
     }
 

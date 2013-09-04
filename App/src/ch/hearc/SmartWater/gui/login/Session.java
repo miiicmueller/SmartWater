@@ -328,7 +328,10 @@ public class Session extends Component {
 	private void startTimeout(final long aDelay) {
 		// Initialisation du timeout à false
 		this.timeOut = false;
-		Thread threadTimeout = new Thread(new Runnable() {
+		//On attend que l'ancien thread soit mort
+		while(this.threadTimeout.isAlive());
+		
+		this.threadTimeout = new Thread(new Runnable() {
 
 			@Override
 			public void run() {
@@ -356,8 +359,9 @@ public class Session extends Component {
 	private String userName;
 	private String userPassword;
 	private List<String> listPort;
+	private Thread threadTimeout ;
 
-	public final long DELAY_TIMEOUT = 10000;
+	public final long DELAY_TIMEOUT = 2000;
 
 	// Nom des commandes
 	public final String CMD_MODE = "mode_";
