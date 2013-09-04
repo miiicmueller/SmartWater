@@ -527,7 +527,7 @@ bool iUART::isBufferEmpty()
     }
 
 /**
- * Handler d'interruption propre ï¿½ chaque objets
+ * Handler d'interruption propre a chaque objet
  *
  */
 void iUART::interruptHandler()
@@ -545,14 +545,14 @@ void iUART::interruptHandler()
 	// Test que le buffer ne soit pas plein
 	if (false == this->USCIRingBuffer.BufferIsFull)
 	    {
-	    //Alors on ï¿½crit le byte recus dans le buffer
+	    //Alors on ecrit le byte recus dans le buffer
 	    this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
 		    aReceivedChar;
 
-	    //On incrï¿½ment l'index et le nombre de byte recus
+	    //On increment l'index et le nombre de byte recus
 	    this->USCIRingBuffer.InIndex++;
 
-	    // Si on a atteint la derni�re case on revient � 0
+	    // Si on a atteint la derniere case on revient a 0
 	    if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
 		{
 		this->USCIRingBuffer.InIndex = 0;
@@ -580,14 +580,14 @@ void iUART::interruptHandler()
 	// Test que le buffer ne soit pas plein
 	if (false == this->USCIRingBuffer.BufferIsFull)
 	    {
-	    //Alors on ï¿½crit le byte recus dans le buffer
+	    //Alors on ecrit le byte recus dans le buffer
 	    this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
 		    aReceivedChar;
 
-	    //On incrï¿½ment l'index et le nombre de byte recus
+	    //On increment l'index et le nombre de byte recus
 	    this->USCIRingBuffer.InIndex++;
 
-	    // Si on a atteint la derniï¿½re case on revient ï¿½ 0
+	    // Si on a atteint la derniere case on revient a 0
 	    if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
 		{
 		this->USCIRingBuffer.InIndex = 0;
@@ -610,10 +610,10 @@ void iUART::interruptHandler()
 
 /**
  * Fonction qui permet d'obtenir l'ensemble des bytes recus
- * en mï¿½moire sï¿½parï¿½ d'un CR+LF
+ * en me�moire separe d'un CR+LF
  *
- * aBuffer : Buffer d'entrï¿½e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
- * retour  : -1 si on a rien trouvï¿½ sinon la taille de la chaï¿½ne
+ * aBuffer : Buffer d'entree qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+ * retour  : -1 si on a rien trouve sinon la taille de la chaine
  */
 bool iUART::readFrame(UInt8* string)
     {
@@ -676,44 +676,45 @@ bool iUART::readFrameToCRLF(char* aString)
 	{
 	//Recuperation des bytes recus jusqu'� CR ou LF
 	for (i = 0;
-		(i < aNDataReceived)
-			&& (i < kSciRecBufSize )&& (false == aEndString); i++){
-			pieceOfString[i] = this->read(); //prend les nouveaux bytes
-
-			if (('\r' == pieceOfString[i]) || ('\n' == pieceOfString[i]))// trouve LF ou CR
+		((i < aNDataReceived)
+			&& (i < kSciRecBufSize )&&(false == aEndString)); i++)
 			    {
-			    aEndString = true;
-			    }
-			}
+			    pieceOfString[i] = this->read(); //prend les nouveaux bytes
 
-		    strcat((char*) this->uartBuffer, pieceOfString); // ajoute les nouveaux bytes
-
-		    if (aEndString )// on a la fin d'une ligne
-			{
-			for(i=0; (this->uartBuffer[i] !=0) && (i < kSciRecBufSize); i++) // copie de buffer interne dans la variable de sortie
-			    {
-			    if(('\r' == this->uartBuffer[i]) || ('\n' == this->uartBuffer[i]))
+			    if (('\r' == pieceOfString[i]) || ('\n' == pieceOfString[i]))// trouve LF ou CR
 				{
-				aString[i]=0;
+				aEndString = true;
+				}
+			    }
+
+			strcat((char*) this->uartBuffer, pieceOfString); // ajoute les nouveaux bytes
+
+			if (aEndString )// on a la fin d'une ligne
+			    {
+			    for(i=0; (this->uartBuffer[i] !=0) && (i < kSciRecBufSize); i++) // copie de buffer interne dans la variable de sortie
+				{
+				if(('\r' == this->uartBuffer[i]) || ('\n' == this->uartBuffer[i]))
+				    {
+				    aString[i]=0;
+				    }
+				else
+				    {
+				    aString[i]=this->uartBuffer[i];
+				    }
+				}
+
+			    if(1!=i) // si la chaine contient pas que CR ou LF uniquement
+				{
+				this->clearInternalSerialBuffer();
+				aIsOk = true;
 				}
 			    else
 				{
-				aString[i]=this->uartBuffer[i];
+				this->uartBuffer[0]=0;
+				aIsOk = false;
 				}
 			    }
-
-			if(1!=i) // si la chaine contient pas que CR ou LF uniquement
-			    {
-			    this->clearInternalSerialBuffer();
-			    aIsOk = true;
-			    }
-			else
-			    {
-			    this->uartBuffer[0]=0;
-			    aIsOk = false;
-			    }
 			}
-		    }
 
     return aIsOk;
     }
@@ -915,10 +916,10 @@ __interrupt void USCI_A0(void)
 #pragma vector=USCI_A1_VECTOR
 __interrupt void USCI_A1(void)
     {
-//Vï¿½rifiation que c'est bien un interruption en reception
+//Verifiation que c'est bien un interruption en reception
     if ((UCA1IFG & UCRXIFG)== UCRXIFG)
 	{
-	// On teste si le pointeur iUART_1 a ï¿½tï¿½  affectï¿½
+	// On teste si le pointeur iUART_1 a ete  affecte
 	if (iUART::USCI_1 != NULL)
 	    {
 	    iUART::USCI_1->interruptHandler();

@@ -29,3 +29,6 @@ void tAlarmNumber::load()
     this->mPeriphSauv->load(this->aId, (UInt8*) this->aTelNumber);
     }
 
+tAlarmNumber::~tAlarmNumber()
+    {
+    }

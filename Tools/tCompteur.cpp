@@ -10,45 +10,43 @@ tCompteur::tCompteur(mEEPROM *mEeprom, UInt16 aModeNum)
 
     //Configuration de la sauvegarde
     this->aId = kCOMPTEUR_BASE_ID + aModeNum; //Id unique
-    this->aNbBytes = 46;
+    this->aNbBytes = kSizeSerializerCompteur;
 
-    //Allocation de la mémoire
+    //Allocation de la memoire
     this->mPeriphSauv->malloc(this->aId, this->aNbBytes);
 
     }
 
 void tCompteur::save()
     {
-    UInt8 aDataTab[46] =
-	{
-	0
-	};
-    UInt8 i = 0;
+    UInt8 aDataTab[kSizeSerializerCompteur];
+    UInt8 i;
+    UInt8 j;
 
     //Serialisation
-    for (i = 0; i < 4; i++)
+    for (j = 0, i = 0; j < kSizeManufacturer; i++, j++)
 	{
-	aDataTab[i] = (UInt8) this->aManufacturer[i];
+	aDataTab[i] = (UInt8) this->aManufacturer[j];
 	}
-    for (i = 4; i < 14; i++)
+    for (j = 0; j < kSizeFluide; i++, j++)
 	{
-	aDataTab[i] = (UInt8) this->aFluide[i];
+	aDataTab[i] = (UInt8) this->aFluide[j];
 	}
-    for (i = 14; i < 19; i++)
+    for (j = 0; j < kSizeVersNum; i++, j++)
 	{
-	aDataTab[i] = (UInt8) this->aVersNum[i];
+	aDataTab[i] = (UInt8) this->aVersNum[j];
 	}
-    for (i = 19; i < 28; i++)
+    for (j = 0; j < kSizeFabDate; i++, j++)
 	{
-	aDataTab[i] = (UInt8) this->aFabDate[i];
+	aDataTab[i] = (UInt8) this->aFabDate[j];
 	}
-    for (i = 28; i < 36; i++)
+    for (j = 0; j < kSizeSerialNum; i++, j++)
 	{
-	aDataTab[i] = (UInt8) this->aSerialNum[i];
+	aDataTab[i] = (UInt8) this->aSerialNum[j];
 	}
-    for (i = 36; i < 46; i++)
+    for (j = 0; j < kSizeNominalSize; i++, j++)
 	{
-	aDataTab[i] = (UInt8) this->aNominalSize[i];
+	aDataTab[i] = (UInt8) this->aNominalSize[j];
 	}
 
     //Enregistrement dans l'EEPROM
@@ -57,39 +55,40 @@ void tCompteur::save()
     }
 void tCompteur::load()
     {
-    UInt8 aDataTab[46] =
-	{
-	0
-	};
-    UInt8 i = 0;
+    UInt8 aDataTab[kSizeSerializerCompteur];
+    UInt8 i;
+    UInt8 j;
 
     //Recuperation des donnees
     this->mPeriphSauv->load(this->aId, aDataTab);
 
     //Deserialisation
-    for (i = 0; i < 4; i++)
+    for (j = 0, i = 0; j < kSizeManufacturer; i++, j++)
 	{
-	this->aManufacturer[i] = (char) aDataTab[i];
+	this->aManufacturer[j] = (char) aDataTab[i];
 	}
-    for (i = 4; i < 14; i++)
+    for (j = 0; j < kSizeFluide; i++, j++)
 	{
-	this->aFluide[i] = (char) aDataTab[i];
+	this->aFluide[j] = (char) aDataTab[i];
 	}
-    for (i = 14; i < 19; i++)
+    for (j = 0; j < kSizeVersNum; i++, j++)
 	{
-	this->aVersNum[i] = (char) aDataTab[i];
+	this->aVersNum[j] = (char) aDataTab[i];
 	}
-    for (i = 19; i < 28; i++)
+    for (j = 0; j < kSizeFabDate; i++, j++)
 	{
-	this->aFabDate[i] = (char) aDataTab[i];
+	this->aFabDate[j] = (char) aDataTab[i];
 	}
-    for (i = 28; i < 36; i++)
+    for (j = 0; j < kSizeSerialNum; i++, j++)
 	{
-	this->aSerialNum[i] = (char) aDataTab[i];
+	this->aSerialNum[j] = (char) aDataTab[i];
 	}
-    for (i = 36; i < 46; i++)
+    for (j = 0; j < kSizeNominalSize; i++, j++)
 	{
-	this->aNominalSize[i] = (char) aDataTab[i];
+	this->aNominalSize[j] = (char) aDataTab[i];
 	}
     }
 
+tCompteur::~tCompteur()
+    {
+    }

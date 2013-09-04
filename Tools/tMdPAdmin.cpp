@@ -28,3 +28,6 @@ void tMdPAdmin::load()
     this->mPeriphSauv->load(this->aId, (UInt8*) this->mdPAdmin);
     }
 
+tMdPAdmin::~tMdPAdmin()
+    {
+    }

@@ -15,5 +15,6 @@ public:
     tMdPUser(mEEPROM *mEeprom, UInt16 aModeNum);
     void save();
     void load();
+    ~tMdPUser();
     };
 #endif

@@ -32,12 +32,15 @@ void gOutput::execute()
 	}
 
     //reponse SMS
-    if (!this->theGSM->sendSMS(
-	    (UInt8*) (this->theGCompute->theComputeMailBox.aReplySMS),
-	    (UInt8*) (this->theTools->theAlarmNumber[*(this->theGCompute->theComputeMailBox.aUserNb)
-		    - 1]->aTelNumber)))
+    if (this->theGCompute->theComputeMailBox.aReplySMS[0] != '\0')
 	{
-	// TODO : en cas d'erreur d'envoi de SMS
+	if (!this->theGSM->sendSMS(
+		(UInt8*) (this->theGCompute->theComputeMailBox.aReplySMS),
+		(UInt8*) (this->theTools->theAlarmNumber[*(this->theGCompute->theComputeMailBox.aUserNb)
+			- 1]->aTelNumber)))
+	    {
+	    // TODO : en cas d'erreur d'envoi de SMS
+	    }
 	}
 
     //mise a l'heure automatique
@@ -55,4 +58,8 @@ void gOutput::execute()
 		    (char) theDate.second);
 	    }
 	}
+    }
+
+gOutput::~gOutput()
+    {
     }

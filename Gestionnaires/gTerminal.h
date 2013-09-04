@@ -57,6 +57,8 @@ public:
 
     void execute();
 
+    ~gTerminal();
+
     gTerminalMailBox theTerminalMailBox;
 
     };

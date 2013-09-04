@@ -26,10 +26,11 @@ typedef struct
     bool mahAuto;
 
     //pour la simulation
-    bool simulation;
+    bool isSimulation;
     tCommandsUserNbEnum aUserSimulation;
-
-    //pour savoir si le travail est termine
+    UInt32 indexOverrunSimulation; // index qu'il faut pour simuler un depassement de consommation
+    
+//pour savoir si le travail est termine
     bool isWorkFinished;
     } gComputeMailBox;
 
@@ -68,6 +69,8 @@ public:
     void setup();
 
     void execute();
+
+    ~gCompute();
 
     };
 #endif

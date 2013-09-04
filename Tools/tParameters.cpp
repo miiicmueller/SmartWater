@@ -11,3 +11,6 @@ void tParameters::setId()
     {
     }
 
+tParameters::~tParameters()
+    {
+    }

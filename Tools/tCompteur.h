@@ -6,19 +6,29 @@
 
 #include "tParameters.h"
 
+#define kSizeManufacturer	4
+#define kSizeFluide		10
+#define kSizeVersNum		6
+#define kSizeSerialNum		10
+#define kSizeFabDate		10
+#define kSizeNominalSize	10
+#define kSizeSerializerCompteur 50
+
 class tCompteur: public tParameters
     {
 public:
-    char aManufacturer[4]; // Fabriquant : GWF
-    char aFluide[10]; //Fluide contenu : Wasser ou Gas
-    char aVersNum[6]; //Version de compteur : VX.X
-    char aSerialNum[10]; //Numero de serie : xxxxxxx
-    char aFabDate[10]; //Date de fabrication ou calibration : xx-xx-xx
-    char aNominalSize[10]; // Taille nominal : (xxxx)
+    char aManufacturer[kSizeManufacturer]; // Fabriquant : GWF
+    char aFluide[kSizeFluide]; //Fluide contenu : Wasser ou Gas
+    char aVersNum[kSizeVersNum]; //Version de compteur : VX.X
+    char aSerialNum[kSizeSerialNum]; //Numero de serie : xxxxxxx
+    char aFabDate[kSizeFabDate]; //Date de fabrication ou calibration : xx-xx-xx
+    char aNominalSize[kSizeNominalSize]; // Taille nominal : (xxxx)
 
     tCompteur(mEEPROM *mEeprom, UInt16 aModeNum);
     void save();
     void load();
+
+    ~tCompteur();
 
     };
 

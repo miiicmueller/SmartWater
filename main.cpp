@@ -84,17 +84,20 @@ void main(void)
 
     mGSM theGSM;
     theGSM.mSetup();
-    theGSM.mOpen();
+    //theGSM.mOpen();
 
     iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
     UInt16 eePromAddress = 0x50;
     mEEPROM aEEPROM(eePromAddress, &i2cBus);
     aEEPROM.mOpen();
 
+   // aEEPROM.initIdTable();
+
     tToolsCluster theTools(&aEEPROM);
     // TODO : reset a enlever
-    theTools.reset();
-    theTools.saveAll();
+//    theTools.reset();
+//    theTools.saveAll();
+    theTools.loadAll();
 
     mTempSensor theTempSensor(0x48, &i2cBus);
     theTempSensor.mSetup();
@@ -111,7 +114,7 @@ void main(void)
     // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
 
     gInput theGInput(&theGSM, theCountersTab, &theRTC, &theTempSensor,
-	    &theTools);
+	    &theTools, &theUSB);
     gTerminal theTerminalUSB(&theTools, &theUSB);
     gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools, &theRTC);
     gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB, &theTools);
@@ -124,18 +127,23 @@ void main(void)
     theGOutput.setup();
     theGSleep.setup();
 
-    mDelay aDelay;
+    mDelay aDelayCompute;
+    mDelay aDelayInput;
 
     while (1)
 	{
-	if (aDelay.isDone())
+	if (aDelayCompute.isDone())
 	    {
-	    aDelay.startDelayMS(2);
-	    theGInput.execute();
+	    aDelayCompute.startDelayMS(1);
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
 	    theGOutput.execute();
-	    //theGSleep.execute();
+	    theGSleep.execute();
+	    }
+	if (aDelayInput.isDone())
+	    {
+	    aDelayInput.startDelayMS(20000);
+	    theGInput.execute();
 	    }
 	}
 

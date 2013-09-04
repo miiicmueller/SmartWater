@@ -29,3 +29,6 @@ void tMode::load()
     this->mPeriphSauv->load(this->aId, (UInt8*) &(this->mode));
     }
 
+tMode::~tMode()
+    {
+    }
