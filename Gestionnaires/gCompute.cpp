@@ -386,71 +386,93 @@ void gCompute::computeSMS()
 //----------------------------------------------------------------
 //fonction de calcul de depassement de consommation d'eau
 //
+//aChannel : choix du compteur
 //retourne true s'il y a un depassement de consommation
 //----------------------------------------------------------------
 bool gCompute::computeConsumption(iMeterChannel aChannel)
     {
     UInt8 aMonth = 0;
-    static UInt8 aPreviousDay = 0;
     UInt8 aDay = 0;
-    static UInt8 aValueBeginMonth = 0; //consommation le premier jour du mois
-    static UInt32 aPreviousValue = 0;
     UInt32 aValue = 0;
-    UInt8 aTemp = 0;
-    bool aWarningConsumption = false;
-    bool aRet = false;
+    UInt16 aLimitDay = 0;
+    static UInt8 aValueBeginMonth = 0; //consommation le premier jour du mois
+    static UInt8 aPreviousDay = 0;
+    static UInt32 aPreviousValue = 0;
+    static bool aWarningConsumption = false;
+    bool aOverrunConsumption = false; // variable de retour
 
-//    if (kMeterSimulation != aChannel)
+    //TODO adapter au tableaude compteur
+//    if (0 == aPreviousDay) // la premiere fois
 //	{
-//	if (0 == aPreviousDay) // la premiere fois
-//	    {
-//	    aDay = theGInput->valueMeters->date.day;
-//	    aPreviousDay = aDay;
-//	    aPreviousValue = theGInput->valueMeters->value;
-//	    }
-//	else
-//	    {
-//	    aDay = theGInput->valueMeters->date.day; // prend la nouvelle date
+//	aDay = theGInput->valueMeters->date.day;
+//	aPreviousDay = aDay;
+//	aPreviousValue = theGInput->valueMeters->value;
+//	}
+//    else
+//	{
+//	aDay = theGInput->valueMeters->date.day; // prend la nouvelle date
 //
-//	    if (aDay != aPreviousDay) // un nouveau jour est passe
+//	if (aDay != aPreviousDay) // un nouveau jour est passe
+//	    {
+//	    aMonth = theGInput->valueMeters->date.month;
+//	    aValue = theGInput->valueMeters->value;
+//
+//	    if (1 == aDay) //met a jour pour le premier jour du mois
 //		{
-//		aValue = theGInput->valueMeters->value;
-//
-//		if (1 == aDay) //met a jour pour le premier jour du mois
-//		    {
-//		    aValueBeginMonth = aValue;
-//		    }
-//
-//		if (ceil(
-//			(tMonthsLimits::limits[aMonth - 1]
-//				- (aValue - aValueBeginMonth)) / (32 - aDay))
-//			< (aValue - aPreviousValue)) //calcul si depasse la limite quotidienne
-//		    {
-//		    if (aWarningConsumption)
-//			{
-//			this->overrunConsumption = true;
-//			}
-//		    else // premier jour de depassement de la limite
-//			{
-//			aWarningConsumption = true;
-//			}
-//		    }
-//		else // pas de depassement
-//		    {
-//		    aWarningConsumption = false;
-//		    this->overrunConsumption = false;
-//		    }
-//
-//		aPreviousValue = aValue;
-//		aPreviousDay = aDay;
+//		aValueBeginMonth = aValue;
 //		}
+//
+//	    //calcul de la limite du jour
+//	    if (4 == aMonth || 6 == aMonth || 9 == aMonth || 11 == aMonth) //mois à 30 jours
+//		{
+//		aLimitDay =
+//			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
+//				- (aValue - aValueBeginMonth))
+//				/ (float) (31 - aDay)) + 0.5);
+//		}
+//	    else if (2 == aMonth && 29 == aDay) //mois à 29 jours
+//		{
+//		aLimitDay = (UInt16) ((float) (tMonthsLimits::limits[aMonth - 1]
+//			- (aValue - aValueBeginMonth)) + 0.5);
+//		}
+//	    else if (2 == aMonth) //mois à 28 jours
+//		{
+//		aLimitDay =
+//			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
+//				- (aValue - aValueBeginMonth))
+//				/ (float) (29 - aDay)) + 0.5);
+//		}
+//	    else //mois à 31 jours
+//		{
+//		aLimitDay =
+//			(UInt16) (((float) (tMonthsLimits::limits[aMonth - 1]
+//				- (aValue - aValueBeginMonth))
+//				/ (float) (32 - aDay)) + 0.5);
+//
+//		}
+//
+//	    if (aLimitDay < (aValue - aPreviousValue)) //calcul si depasse la limite quotidienne
+//		{
+//		if (aWarningConsumption)
+//		    {
+//		    aOverrunConsumption = true;
+//		    }
+//		else // premier jour de depassement de la limite
+//		    {
+//		    aWarningConsumption = true;
+//		    }
+//		}
+//	    else // pas de depassement
+//		{
+//		aWarningConsumption = false;
+//		}
+//
+//	    aPreviousValue = aValue;
+//	    aPreviousDay = aDay;
 //	    }
-//	}
-//    else // il s'agit d'un compteur de simulation
-//	{
 //
 //	}
-    return aRet;
+    return aOverrunConsumption;
     }
 
 void gCompute::computeIsFinished()

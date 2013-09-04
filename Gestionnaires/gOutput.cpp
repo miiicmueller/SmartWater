@@ -32,10 +32,13 @@ void gOutput::execute()
 	}
 
     //reponse SMS
-    this->theGSM->sendSMS(
+    if (!this->theGSM->sendSMS(
 	    (UInt8*) (this->theGCompute->theComputeMailBox.aReplySMS),
 	    (UInt8*) (this->theTools->theAlarmNumber[*(this->theGCompute->theComputeMailBox.aUserNb)
-		    - 1]->aTelNumber));
+		    - 1]->aTelNumber)))
+	{
+	// TODO : en cas d'erreur d'envoi de SMS
+	}
 
     //mise a l'heure automatique
     if (this->theGCompute->theComputeMailBox.mahAuto)

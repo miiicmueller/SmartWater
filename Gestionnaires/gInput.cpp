@@ -36,12 +36,13 @@ void gInput::execute()
     //pour les SMS
     // TODO : a verifier -> getSMS a peut-etre change de syntaxe
     char theSMS[200];
+    bool hasSMS;
 
     theSMS[0] = '\0';
 
-    if (this->theGSM->getNbSms() != 0)
+    if (!this->theGSM->getSMS(theSMS, &hasSMS))
 	{
-	this->theGSM->getSMS(theSMS);
+	// TODO : en cas d'erreur de lecture du SMS
 	}
 
     this->theAnalyzer.tCommandsAnalysis(theSMS, this->theTools);
