@@ -5,6 +5,7 @@
 #include <assert.h>
 
 #include "tParameters.h"
+#include "def.h"
 
 class tAvailability: public tParameters
     {

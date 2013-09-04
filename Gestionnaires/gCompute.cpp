@@ -391,14 +391,14 @@ void gCompute::computeSMS()
 //----------------------------------------------------------------
 bool gCompute::computeConsumption(iMeterChannel aChannel)
     {
-    UInt8 aMonth = 0;
-    UInt8 aDay = 0;
-    UInt32 aValue = 0;
-    UInt16 aLimitDay = 0;
-    static UInt8 aValueBeginMonth = 0; //consommation le premier jour du mois
-    static UInt8 aPreviousDay = 0;
-    static UInt32 aPreviousValue = 0;
-    static bool aWarningConsumption = false;
+//    UInt8 aMonth = 0;
+//    UInt8 aDay = 0;
+//    UInt32 aValue = 0;
+//    UInt16 aLimitDay = 0;
+//    static UInt8 aValueBeginMonth = 0; //consommation le premier jour du mois
+//    static UInt8 aPreviousDay = 0;
+//    static UInt32 aPreviousValue = 0;
+//    static bool aWarningConsumption = false;
     bool aOverrunConsumption = false; // variable de retour
 
     //TODO adapter au tableaude compteur

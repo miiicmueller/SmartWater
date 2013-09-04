@@ -67,23 +67,32 @@ void main(void)
 	{
 	}
 
+    //activation des interruptions
     __bis_SR_register(GIE);
+
+    //instanciation des interfaces
+    //parametrage des interfaces
+    //instanciation des modules
+    //parametrage des modules
+    //instanciation des utilitaires
+    //parametrage des utilitaires
+    //instanciation des gestionnaires
+    //parametrage des gestionnaires
 
     mDelay::mSetup();
     mDelay::mOpen();
 
     mGSM theGSM;
     theGSM.mSetup();
-    //theGSM.mOpen();
+    theGSM.mOpen();
 
     iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
-    UInt16 moduleAddress = 0x50;
-    mEEPROM aEEPROM(moduleAddress, &i2cBus);
+    UInt16 eePromAddress = 0x50;
+    mEEPROM aEEPROM(eePromAddress, &i2cBus);
     aEEPROM.mOpen();
 
-    // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
-
     tToolsCluster theTools(&aEEPROM);
+    // TODO : reset a enlever
     theTools.reset();
     theTools.saveAll();
 
@@ -96,19 +105,24 @@ void main(void)
     mRTC theRTC;
     theRTC.mOpen();
 
-    mCompteur* monCompteur[2];
-    monCompteur[0] = new mCompteur(kMeter1, &aEEPROM);
-    monCompteur[1] = new mCompteur(kMeter2, &aEEPROM);
+    mCompteur* theCountersTab[2];
+    theCountersTab[0] = new mCompteur(kMeter1, &aEEPROM);
+    theCountersTab[1] = new mCompteur(kMeter2, &aEEPROM);
+    // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
 
-    gInput theGInput(&theGSM, monCompteur, &theRTC, &theTempSensor, &theTools);
+    gInput theGInput(&theGSM, theCountersTab, &theRTC, &theTempSensor,
+	    &theTools);
     gTerminal theTerminalUSB(&theTools, &theUSB);
     gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools, &theRTC);
     gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB, &theTools);
+    gSleep theGSleep(&theTools, &theRTC, &theGSM, theCountersTab[0],
+	    &theTempSensor, &theGCompute);
 
     theGInput.setup();
     theTerminalUSB.setup();
     theGCompute.setup();
     theGOutput.setup();
+    theGSleep.setup();
 
     mDelay aDelay;
 
@@ -121,6 +135,7 @@ void main(void)
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
 	    theGOutput.execute();
+	    //theGSleep.execute();
 	    }
 	}
 

@@ -48,6 +48,7 @@ void gInput::execute()
     this->theAnalyzer.tCommandsAnalysis(theSMS, this->theTools);
 
     //pour les compteurs
+    // TODO : un moyen de verifier quels compteurs sont utilises
     for (int i = 0; i <= 1; i++)
 	{
 	this->theInputMailBox.valueMeters[i].value =
