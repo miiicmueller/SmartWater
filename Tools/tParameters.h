@@ -6,18 +6,19 @@
 #include "Def/def.h"
 #include "Modules/mEEPROM.h"
 
-class tParameters {
+class tParameters
+    {
 protected:
-	UInt16 aId;
-	UInt16 aNbBytes;
-	mEEPROM *mPeriphSauv;
+    UInt16 aId;
+    UInt16 aNbBytes;
+    mEEPROM *mPeriphSauv;
 private:
 
 public:
-	void getId();
-	void setId();
-	virtual void save()= 0;
-	virtual void load()= 0;
+    void getId();
+    void setId();
+    virtual void save()= 0;
+    virtual void load()= 0;
 
-};
+    };
 #endif

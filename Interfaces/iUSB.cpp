@@ -120,8 +120,15 @@ bool iUSB::getFullFrame(char* FrameBuffer)
 	cdcReceiveDataInBuffer((BYTE*) pieceOfString, this->bufferSize,
 		CDC0_INTFNUM);        //Get the next piece of the string
 
-	strcat(this->usbSerialBuffer, pieceOfString);
-
+	if ((MAX_BUFFERSIZE - strlen(this->usbSerialBuffer))
+		> strlen(pieceOfString))
+	    {
+	    strcat(this->usbSerialBuffer, pieceOfString);
+	    }
+	else
+	    {
+	    this->clearSerialBuffer();
+	    }
 	// Test \r
 	if (retInString(this->usbSerialBuffer))
 	    {

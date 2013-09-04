@@ -15,10 +15,11 @@
 typedef struct
     {
     //pour les reponses SMS
-    char aReplySMS[100];
+    char aReplySMS[150];
+    tCommandsUserNbEnum* aUserNb;
 
     //pour la reponse USB
-    char aReplyUSB[100];
+    char aReplyUSB[150];
 
     //pour la mise a l'heure automatique
     bool mahAuto;

@@ -81,15 +81,15 @@ void main(void)
     mEEPROM aEEPROM(moduleAddress, &i2cBus);
     aEEPROM.mOpen();
 
-    mTempSensor theTempSensor(0x48, &i2cBus);
-    theTempSensor.mSetup();
-    theTempSensor.mOpen();
-
     // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
 
     tToolsCluster theTools(&aEEPROM);
     theTools.reset();
     theTools.saveAll();
+
+    mTempSensor theTempSensor(0x48, &i2cBus);
+    theTempSensor.mSetup();
+    theTempSensor.mOpen();
 
     mUSB theUSB(&bCDCDataReceived_event);
 
@@ -100,10 +100,10 @@ void main(void)
     monCompteur[0] = new mCompteur(kMeter1, &aEEPROM);
     monCompteur[1] = new mCompteur(kMeter2, &aEEPROM);
 
-    gInput theGInput(&theGSM, monCompteur, &theRTC, &theTempSensor);
+    gInput theGInput(&theGSM, monCompteur, &theRTC, &theTempSensor, &theTools);
     gTerminal theTerminalUSB(&theTools, &theUSB);
     gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools, &theRTC);
-    gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB);
+    gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB, &theTools);
 
     theGInput.setup();
     theTerminalUSB.setup();

@@ -7,15 +7,15 @@
 #include "tParameters.h"
 #include "Modules/mEEPROM.h"
 
-class tMeasuresStatement : public tParameters
-{
+class tMeasuresStatement: public tParameters
+    {
 
 public:
-	UInt16 MonthlyConsumption[12];
-	UInt16 CurrentMonthConsumption[31];
+    UInt16 MonthlyConsumption[12];
+    UInt16 CurrentMonthConsumption[31];
 
-	tMeasuresStatement(mEEPROM *mEeprom, UInt16 aModeNum);
-	void save();
-	void load();
-};
+    tMeasuresStatement(mEEPROM *mEeprom, UInt16 aModeNum);
+    void save();
+    void load();
+    };
 #endif

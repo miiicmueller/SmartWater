@@ -6,16 +6,16 @@
 
 #include "Interface.h"
 
-class iAI : public Interface
-{
+class iAI: public Interface
+    {
 public:
-	void CfgPortAI();
+    void CfgPortAI();
 
-	void StartConversion();
+    void StartConversion();
 
-	void Enable();
+    void Enable();
 
-	void Disable();
+    void Disable();
 
-};
+    };
 #endif

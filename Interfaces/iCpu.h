@@ -7,7 +7,7 @@
 
 typedef enum
     {
-	kActiveMode,
+    kActiveMode,
     kLPM0,
     kLPM1,
     kLPM2,

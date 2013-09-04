@@ -7,7 +7,6 @@
 #ifndef M_COMPTEUR_H
 #define M_COMPTEUR_H
 
-
 #include "Module.h"
 #include "../Def/def.h"
 #include "../Interfaces/iUART.h"
@@ -21,7 +20,6 @@ typedef enum // choix du compteur
     kMeter2 = 3,
     kMeterSimulation = 1
     } iMeterChannel;
-
 
 using namespace std;
 
@@ -37,7 +35,7 @@ private:
     //tool
     UInt8 channelCodeMultiplexer; // code pour que le multiplexeur selectionne le bon compteur
     tCompteur *compteurParam;
-	UInt8 aStatus ;
+    UInt8 aStatus;
 
     void sendFrame(char* aFrame);
     void sendChar(char aChar);

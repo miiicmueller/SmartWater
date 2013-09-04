@@ -70,6 +70,7 @@ void mCompteur::mOpen()
 //activation des entrees
     this->uart.enable();
     this->channelMultiplexer.write(channelCodeMultiplexer);
+    this->enable.write(kHigh);
     }
 
 //----------------------------------------------------------------
@@ -80,6 +81,7 @@ void mCompteur::mClose()
 //desactivation des entrees
     this->uart.disable();
     this->channelMultiplexer.write(0);
+    this->enable.write(kLow);
     }
 
 //----------------------------------------------------------------

@@ -40,17 +40,10 @@ iRTC::~iRTC()
  * Activation du reveil du micro tout les xx minutes
  * aMin : minutes absolues pour l'alarme
  */
-void iRTC::setAlarm(char aMin)
+void iRTC::setAlarm(char aHour, char aMin)
     {
-//	char aTempSec, aTempHr;
-//	this->aDeltaMinuteAlarme = aMin;
-//	//Recuperation de l'heure en cours
-//	this->readTime(&aTempSec, &this->aMinuteAlarme, &aTempHr);
-//	this->aMinuteAlarme += this->aDeltaMinuteAlarme;
-//	RTCAHOUR = 0x00;
-    //RTCAMIN = this->aMinuteAlarme + 0x80;
 
-    RTCAHOUR = 0x00;
+    RTCAHOUR = aHour + 0x80;
     RTCAMIN = aMin + 0x80;
     RTCADOW = 0x00;
     RTCADAY = 0x00;
@@ -125,7 +118,6 @@ void iRTC::setDate(int aYear, char aMonth, char aDay, char aDayOfWeek)
     RTCYEAR = aYear;
     RTCMON = aMonth;
     RTCDAY = aDay;
-    RTCDOW = aDayOfWeek;
     }
 
 /**
@@ -163,7 +155,7 @@ void iRTC::enableRTC()
     }
 
 /**
- * Desactivation de la RTC (le clk)
+ * Désactivation de la RTC (le clk)
  */
 void iRTC::disableRTC()
     {
@@ -172,7 +164,7 @@ void iRTC::disableRTC()
     }
 
 /**
- * Fonction appelee lors du reveil du microcontroleur
+ * Fonction appelé lors du réveil du microcontrolleur
  */
 void iRTC::wakeUpInterrupt()
     {

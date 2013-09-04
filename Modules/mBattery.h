@@ -6,17 +6,16 @@
 
 #include "Module.h"
 
-class mBattery : public Module
-{
+class mBattery: public Module
+    {
 private:
-	int batteryValue;
-
+    int batteryValue;
 
 public:
-	mBattery();
-	bool CheckBattery();
+    mBattery();
+    bool CheckBattery();
 
-	int GetBatteryValue();
+    int GetBatteryValue();
 
-};
+    };
 #endif

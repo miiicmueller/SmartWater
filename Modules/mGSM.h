@@ -74,7 +74,8 @@ private:
     //aTimeOutMs : duree en milliseconde durant laquelle la méthode essaie de trouver correpondance
     //retour : true si bonne reponse, false si mauvaise reponse ou si reponse differente
     //----------------------------------------------------------------
-    bool mCheckResponse(char* aGoodResponse, char* aBadResponse, UInt16 aTimeOutMs);
+    bool mCheckResponse(char* aGoodResponse, char* aBadResponse,
+	    UInt16 aTimeOutMs);
 
     //----------------------------------------------------------------
     //envoie le texte SMS sur l'UART en le parsant pour ne pas bourrer le FIFO du module GSM

@@ -4,13 +4,27 @@
 #include "gInput.h"
 
 gInput::gInput(mGSM* theGSM, mCompteur* theCompteurs[2], mRTC* theRTC,
-	mTempSensor* theTempSensor)
+	mTempSensor* theTempSensor, tToolsCluster* theTools)
     {
     this->theGSM = theGSM;
     this->theRTC = theRTC;
     this->theTempSensor = theTempSensor;
     this->theCompteurs[0] = theCompteurs[0];
     this->theCompteurs[1] = theCompteurs[1];
+    this->theTools = theTools;
+
+    //assignation du contenu de la mailbox
+    this->theInputMailBox.aUserNb = &(this->theAnalyzer.aCommandResult.aUserNb);
+    this->theInputMailBox.aAction =
+	    &(this->theAnalyzer.aCommandResult.aCommandEnum);
+    this->theInputMailBox.theParametersNumber =
+	    &(this->theAnalyzer.aCommandResult.parametersNumber);
+
+    for (int i = 0; i < 12; i++)
+	{
+	this->theInputMailBox.theParameters[i] =
+		this->theAnalyzer.aCommandBrut.theParameters[i];
+	}
     }
 
 void gInput::setup()
@@ -19,6 +33,38 @@ void gInput::setup()
 
 void gInput::execute()
     {
+    //pour les SMS
+    // TODO : a verifier -> getSMS a peut-etre change de syntaxe
+    char theSMS[200];
+
+    theSMS[0] = '\0';
+
+    if (this->theGSM->getNbSms() != 0)
+	{
+	this->theGSM->getSMS(theSMS);
+	}
+
+    this->theAnalyzer.tCommandsAnalysis(theSMS, this->theTools);
+
+    //pour les compteurs
+    for (int i = 0; i <= 1; i++)
+	{
+	this->theInputMailBox.valueMeters[i].value =
+		this->theCompteurs[i]->mRead();
+	this->theRTC->readTime(
+		(char*) &(this->theInputMailBox.valueMeters[i].date.hour),
+		(char*) &(this->theInputMailBox.valueMeters[i].date.minute),
+		(char*) &(this->theInputMailBox.valueMeters[i].date.second));
+	this->theRTC->readDate(
+		(int*) &(this->theInputMailBox.valueMeters[i].date.year),
+		(char*) &(this->theInputMailBox.valueMeters[i].date.month),
+		(char*) &(this->theInputMailBox.valueMeters[i].date.day),
+		(char*) &(this->theInputMailBox.valueMeters[i].date.dayOfWeek));
+	}
+
+    //pour la temperature
+    this->theInputMailBox.temperature = this->theTempSensor->readTemp();
+
     }
 
 gInput::~gInput()

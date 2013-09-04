@@ -8,8 +8,11 @@
 #include "../Tools/tDate.h"
 #include "mGSM.h"
 #include "mTempSensor.h"
-#include "mRTC.h"
+#include "../Modules/mRTC.h"
 #include "mCompteur.h"
+#include "Tools/tToolsCluster.h"
+#include "tCommandsAnalyzer.h"
+#include "def.h"
 
 //Structure de valeur des compteurs
 typedef struct
@@ -21,8 +24,10 @@ typedef struct
 typedef struct
     {
     //SMS
-    bool hasSMS;
-    char theSMS[200];
+    tCommandsEnum* aAction;
+    char* theParameters[12];
+    UInt8* theParametersNumber;
+    tCommandsUserNbEnum* aUserNb;
 
     //compteurs
     gInputMeterValueStruct valueMeters[2];
@@ -42,6 +47,10 @@ private:
 
     mGSM* theGSM;
 
+    tToolsCluster* theTools;
+
+    tCommandsAnalyzer theAnalyzer;
+
 public:
     gInputMailBox theInputMailBox;
 
@@ -49,7 +58,7 @@ public:
     //constructeur
     //----------------------------------------------------------------
     gInput(mGSM* theGSM, mCompteur* theCompteurs[2], mRTC* theRTC,
-	    mTempSensor* theTempSensor);
+	    mTempSensor* theTempSensor, tToolsCluster* theTools);
 
     ~gInput();
 

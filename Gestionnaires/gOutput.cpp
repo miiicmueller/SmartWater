@@ -9,12 +9,13 @@
 //gCompute : le gestionnaire qui contient les donnees qui devront etre sorties
 //----------------------------------------------------------------
 gOutput::gOutput(gCompute* theGCompute, mGSM* theGSM, mRTC* theRTC,
-	mUSB* theUSB)
+	mUSB* theUSB, tToolsCluster* theTools)
     {
     this->theGCompute = theGCompute;
     this->theGSM = theGSM;
     this->theRTC = theRTC;
     this->theUSB = theUSB;
+    this->theTools = theTools;
     }
 
 void gOutput::setup()
@@ -31,21 +32,24 @@ void gOutput::execute()
 	}
 
     //reponse SMS
-    //TODO : envoyer le SMS de reponse
+    this->theGSM->sendSMS(
+	    (UInt8*) (this->theGCompute->theComputeMailBox.aReplySMS),
+	    (UInt8*) (this->theTools->theAlarmNumber[*(this->theGCompute->theComputeMailBox.aUserNb)
+		    - 1]->aTelNumber));
 
     //mise a l'heure automatique
-    //TODO : enlever les commentaires
-    /*if (this->theGCompute->theComputeMailBox.mahAuto)
-     {
-     this->theGCompute->theComputeMailBox.mahAuto = false;
+    if (this->theGCompute->theComputeMailBox.mahAuto)
+	{
+	this->theGCompute->theComputeMailBox.mahAuto = false;
 
-     tDate theDate;
+	tDate theDate;
 
-     if (theGSM->getDate(&theDate))
-     {
-     theRTC->setDate(theDate->year, theDate->month, theDate->day,
-     theDate->dayOfWeek);
-     theRTC->setHour(theDate->hour, theDate->minute, theDate->second);
-     }
-     }*/
+	if (theGSM->getDate(&theDate))
+	    {
+	    theRTC->setDate((int) theDate.year, (char) theDate.month,
+		    (char) theDate.day, (char) theDate.dayOfWeek);
+	    theRTC->setHour((char) theDate.hour, (char) theDate.minute,
+		    (char) theDate.second);
+	    }
+	}
     }

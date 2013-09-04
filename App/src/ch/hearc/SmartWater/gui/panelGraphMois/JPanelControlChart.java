@@ -1,6 +1,8 @@
 package ch.hearc.SmartWater.gui.panelGraphMois;
 
 import java.awt.FlowLayout;
+import java.awt.event.ActionEvent;
+import java.awt.event.ActionListener;
 import java.util.ResourceBundle;
 
 import javax.swing.JButton;
@@ -33,16 +35,25 @@ public class JPanelControlChart extends JPanel {
 	}
 
 	private void controle() {
+		
+//		this.buttonGetConsomm.addActionListener(new ActionListener() {
+//			
+//			@Override
+//			public void actionPerformed(ActionEvent event) {
+//				
+//				
+//			}
+//		});
 
 	}
 
 	private void geometrie() {
 		
-		this.setLayout(new FlowLayout(FlowLayout.CENTER));
-		
-		this.buttonGetConsomm = new JButton((String)resourceLang.getObject("buttonGetConsomm"));
-		
-		this.add(buttonGetConsomm);
+//		this.setLayout(new FlowLayout(FlowLayout.CENTER));
+//		
+//		this.buttonGetConsomm = new JButton((String)resourceLang.getObject("buttonGetConsomm"));
+//		
+//		this.add(buttonGetConsomm);
 		
 
 	}
@@ -54,5 +65,5 @@ public class JPanelControlChart extends JPanel {
 	// Tools
 	private ResourceBundle resourceLang;
 	
-	private JButton buttonGetConsomm ;
+	//private JButton buttonGetConsomm ;
 }

@@ -41,7 +41,6 @@ void gTerminal::setup()
 	this->theTerminalMailBox.theParameters[i] =
 		this->theAnalyzer.aCommandBrut.theParameters[i];
 	}
-
     }
 
 //----------------------------------------------------------------
