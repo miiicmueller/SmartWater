@@ -676,44 +676,45 @@ bool iUART::readFrameToCRLF(char* aString)
 	{
 	//Recuperation des bytes recus jusqu'� CR ou LF
 	for (i = 0;
-		(i < aNDataReceived)
-			&& (i < kSciRecBufSize )&& (false == aEndString); i++){
-			pieceOfString[i] = this->read(); //prend les nouveaux bytes
-
-			if (('\r' == pieceOfString[i]) || ('\n' == pieceOfString[i]))// trouve LF ou CR
+		((i < aNDataReceived)
+			&& (i < kSciRecBufSize )&&(false == aEndString)); i++)
 			    {
-			    aEndString = true;
-			    }
-			}
+			    pieceOfString[i] = this->read(); //prend les nouveaux bytes
 
-		    strcat((char*) this->uartBuffer, pieceOfString); // ajoute les nouveaux bytes
-
-		    if (aEndString )// on a la fin d'une ligne
-			{
-			for(i=0; (this->uartBuffer[i] !=0) && (i < kSciRecBufSize); i++) // copie de buffer interne dans la variable de sortie
-			    {
-			    if(('\r' == this->uartBuffer[i]) || ('\n' == this->uartBuffer[i]))
+			    if (('\r' == pieceOfString[i]) || ('\n' == pieceOfString[i]))// trouve LF ou CR
 				{
-				aString[i]=0;
+				aEndString = true;
+				}
+			    }
+
+			strcat((char*) this->uartBuffer, pieceOfString); // ajoute les nouveaux bytes
+
+			if (aEndString )// on a la fin d'une ligne
+			    {
+			    for(i=0; (this->uartBuffer[i] !=0) && (i < kSciRecBufSize); i++) // copie de buffer interne dans la variable de sortie
+				{
+				if(('\r' == this->uartBuffer[i]) || ('\n' == this->uartBuffer[i]))
+				    {
+				    aString[i]=0;
+				    }
+				else
+				    {
+				    aString[i]=this->uartBuffer[i];
+				    }
+				}
+
+			    if(1!=i) // si la chaine contient pas que CR ou LF uniquement
+				{
+				this->clearInternalSerialBuffer();
+				aIsOk = true;
 				}
 			    else
 				{
-				aString[i]=this->uartBuffer[i];
+				this->uartBuffer[0]=0;
+				aIsOk = false;
 				}
 			    }
-
-			if(1!=i) // si la chaine contient pas que CR ou LF uniquement
-			    {
-			    this->clearInternalSerialBuffer();
-			    aIsOk = true;
-			    }
-			else
-			    {
-			    this->uartBuffer[0]=0;
-			    aIsOk = false;
-			    }
 			}
-		    }
 
     return aIsOk;
     }
@@ -915,10 +916,10 @@ __interrupt void USCI_A0(void)
 #pragma vector=USCI_A1_VECTOR
 __interrupt void USCI_A1(void)
     {
-//Vï¿½rifiation que c'est bien un interruption en reception
+//Verifiation que c'est bien un interruption en reception
     if ((UCA1IFG & UCRXIFG)== UCRXIFG)
 	{
-	// On teste si le pointeur iUART_1 a ï¿½tï¿½  affectï¿½
+	// On teste si le pointeur iUART_1 a ete  affecte
 	if (iUART::USCI_1 != NULL)
 	    {
 	    iUART::USCI_1->interruptHandler();

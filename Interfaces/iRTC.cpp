@@ -94,7 +94,7 @@ void iRTC::readDate(int *aYear, char *aMonth, char *aDay, char *aDayOfWeek)
 void iRTC::readTime(char *aHour, char *aMin, char *aSecond)
     {
 
-//Attente que l'heure soit valide env 1-2s pour être synchronisé
+//Attente que l'heure soit valide env 1-2s pour etre synchronise
 // Il vaudrait mieux utiliser les interruptions
     while ((RTCCTL01 & RTCRDY))
 	;
@@ -108,8 +108,8 @@ void iRTC::readTime(char *aHour, char *aMin, char *aSecond)
 
 /**
  * Configuration de la date. Tout les nombres sont entiers
- * aYear : Année sur 16bits
- * aMonth: Mois de l'année sur 8bits
+ * aYear : Annee sur 16bits
+ * aMonth: Mois de l'annee sur 8bits
  * aDay : Jour du mois sur 8bits
  * aDayOfWeek : jour de la semaine sur 8bits
  */

@@ -122,6 +122,7 @@ UInt32 mCompteur::mRead()
 	};
 
     UInt32 aRet = 0;
+    int i = 0, j = 0;
     bool aIsOk;
     UInt8 aNumb1; //variables bidons recuperant des valeurs non-importantes de la trame
     UInt8 aNumb2;
@@ -134,87 +135,91 @@ UInt32 mCompteur::mRead()
     this->enable.write(kDisableMeter);
     this->enable.write(kEnableMeter);
 
-    //Attente d'un certains temp pour recevoir les caractère
-    aDelayTimeout.startDelayMS(3000); //Timeout ce 3s
+    //Attente d'un certains temps pour recevoir les caractere
+    aDelayTimeout.startDelayMS(5000); //Timeout ce 3s
     //On attend
-    while ((mCompteur::uart.availableCharToRead() == 85)
-	    || aDelayTimeout.isDone())
+    while ((mCompteur::uart.availableCharToRead() < 85)
+	    && !aDelayTimeout.isDone())
 	;
-    if (aDelayTimeout.isDone())
+    if (!aDelayTimeout.isDone())
 	{
-	return 0;
-	}
-    else
-	{
-	for (int i = 0; mCompteur::uart.readFrameToCRLF((char*) aDummy); i++)
-	    switch (i)
+	for (i = 0, j = 0; (i < 7) && (j < 6);)
+	    {
+	    if (mCompteur::uart.readFrameToCRLF((char*) aDummy))
 		{
-	    case 1:
-		strcpy((char*) aFabFlVers, (char*) aDummy);
-		break;
-	    case 2:
-		strcpy((char*) aDebitMesure, (char*) aDummy);
-		break;
-	    case 3:
-		strcpy((char*) aDateFabr, (char*) aDummy);
-		break;
-	    case 4:
-		strcpy((char*) aSerialNum, (char*) aDummy);
-		break;
-	    case 5:
-		strcpy((char*) aTailleNom, (char*) aDummy);
-		break;
-	    case 6:
-		strcpy((char*) aDummy, (char*) aDummy);
-		break;
-	    case 7:
-		strcpy((char*) aDummy, (char*) aDummy);
-		break;
-	    default:
-		return 0;
+		i++;
 
+		switch (i - 1)
+		    {
+		case 0:
+		    strcpy((char*) aFabFlVers, (char*) aDummy);
+		    break;
+		case 1:
+		    strcpy((char*) aDebitMesure, (char*) aDummy);
+		    break;
+		case 2:
+		    strcpy((char*) aDateFabr, (char*) aDummy);
+		    break;
+		case 3:
+		    strcpy((char*) aSerialNum, (char*) aDummy);
+		    break;
+		case 4:
+		    strcpy((char*) aTailleNom, (char*) aDummy);
+		    break;
+		case 5:
+		    strcpy((char*) aDummy, (char*) aDummy);
+		    break;
+		default:
+		    return 0;
+		    }
 		}
-	//Recuperation du fabricant, fluide, version
-	sscanf((char*) aFabFlVers, "/%s %s      %s",
-		&(this->compteurParam->aManufacturer),
-		&(this->compteurParam->aFluide),
-		&(this->compteurParam->aVersNum));
-
-	//Recuperation de la date de fabrication
-	sscanf((char*) aDateFabr, "%d.%d(%s)", &aNumb1, &aNumb2,
-		&(this->compteurParam->aFabDate));
-
-	this->compteurParam->aFabDate[strlen(
-		(char*) this->compteurParam->aFabDate) - 1] = 0x00;
-
-	//Recuperation du numero de serie
-	sscanf((char*) aSerialNum, "%d.%d(%s)", &aNumb1, &aNumb2,
-		&(this->compteurParam->aSerialNum));
-
-	this->compteurParam->aSerialNum[strlen(
-		(char*) this->compteurParam->aSerialNum) - 1] = 0x00;
-
-	//Recuperation de la taille nominale
-	sscanf((char*) aTailleNom, "%d.%d(%s)", &aNumb1, &aNumb2,
-		&(this->compteurParam->aNominalSize));
-
-	this->compteurParam->aNominalSize[strlen(
-		(char*) this->compteurParam->aNominalSize) - 1] = 0x00;
-
-	//Recuperation de l'indice
-	aIsOk = sscanf((char*) aDebitMesure, "%d.%d(%d*m3)", &aNumb1, &aNumb2,
-		&aRet);
-
-	//retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
-	if (aIsOk)
-	    {
-	    return aRet;
+	    else
+		{
+		j++;
+		}
 	    }
-	else
+
+	if ((i == j) && (i == 6))
 	    {
-	    return 0;
+	    //Recuperation du fabricant, fluide, version
+	    sscanf((char*) aFabFlVers, "/%s %s      %s",
+		    &(this->compteurParam->aManufacturer),
+		    &(this->compteurParam->aFluide),
+		    &(this->compteurParam->aVersNum));
+
+	    //Recuperation de la date de fabrication
+	    sscanf((char*) aDateFabr, "%d.%d(%s)", &aNumb1, &aNumb2,
+		    &(this->compteurParam->aFabDate));
+
+	    this->compteurParam->aFabDate[strlen(
+		    (char*) this->compteurParam->aFabDate) - 1] = 0x00;
+
+	    //Recuperation du numero de serie
+	    sscanf((char*) aSerialNum, "%d.%d(%s)", &aNumb1, &aNumb2,
+		    &(this->compteurParam->aSerialNum));
+
+	    this->compteurParam->aSerialNum[strlen(
+		    (char*) this->compteurParam->aSerialNum) - 1] = 0x00;
+
+	    //Recuperation de la taille nominale
+	    sscanf((char*) aTailleNom, "%d.%d(%s)", &aNumb1, &aNumb2,
+		    &(this->compteurParam->aNominalSize));
+
+	    this->compteurParam->aNominalSize[strlen(
+		    (char*) this->compteurParam->aNominalSize) - 1] = 0x00;
+
+	    //Recuperation de l'indice
+	    aIsOk = sscanf((char*) aDebitMesure, "%d.%d(%d*m3)", &aNumb1,
+		    &aNumb2, &aRet);
+
+	    //retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
+	    if (aIsOk)
+		{
+		return aRet;
+		}
 	    }
 	}
+    return 0;
     }
 
 //----------------------------------------------------------------
