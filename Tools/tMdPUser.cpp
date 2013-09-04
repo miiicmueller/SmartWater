@@ -27,3 +27,7 @@ void tMdPUser::load()
     //Recuperation des donnees
     this->mPeriphSauv->load(this->aId, (UInt8*) this->mdPUser);
     }
+
+tMdPUser::~tMdPUser()
+    {
+    }

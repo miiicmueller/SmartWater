@@ -17,5 +17,6 @@ public:
     tMeasuresStatement(mEEPROM *mEeprom, UInt16 aModeNum);
     void save();
     void load();
+    ~tMeasuresStatement();
     };
 #endif

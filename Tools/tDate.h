@@ -18,5 +18,7 @@ public:
 
     tDate();
 
+    ~tDate();
+
     };
 #endif

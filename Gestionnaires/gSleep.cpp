@@ -83,3 +83,7 @@ void gSleep::execute()
 gSleep::~gSleep()
     {
     }
+
+gSleep::~gSleep()
+    {
+    }

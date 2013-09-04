@@ -51,3 +51,6 @@ void tMonthsLimits::load()
 	}
     }
 
+tMonthsLimits::~tMonthsLimits()
+    {
+    }

@@ -15,5 +15,7 @@ public:
     void save();
     void load();
 
+    ~tAlarmNumber();
+
     };
 #endif

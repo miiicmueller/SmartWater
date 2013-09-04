@@ -89,3 +89,6 @@ void tCompteur::load()
 	}
     }
 
+tCompteur::~tCompteur()
+    {
+    }

@@ -28,3 +28,6 @@ void tTemperatureOffset::load()
     this->mPeriphSauv->load(this->aId, this->aOffset.aCharArray);
     }
 
+tTemperatureOffset::~tTemperatureOffset()
+    {
+    }

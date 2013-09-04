@@ -60,3 +60,7 @@ void tMeasuresStatement::load()
 	this->CurrentMonthConsumption[i] |= (UInt16) aDataTab[j + 1];
 	}
     }
+
+tMeasuresStatement::~tMeasuresStatement()
+    {
+    }

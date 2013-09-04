@@ -17,5 +17,7 @@ public:
     void save();
     void load();
 
+    ~tMode();
+
     };
 #endif
