@@ -94,3 +94,6 @@ void gTerminal::execute()
 	}
     }
 
+gTerminal::~gTerminal()
+    {
+    }

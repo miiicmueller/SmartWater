@@ -51,8 +51,8 @@ void gInput::execute()
     // TODO : un moyen de verifier quels compteurs sont utilises
     for (int i = 0; i <= 1; i++)
 	{
-	this->theInputMailBox.valueMeters[i].value =
-		this->theCompteurs[i]->mRead();
+//	this->theInputMailBox.valueMeters[i].value =
+//		this->theCompteurs[i]->mRead();
 	this->theRTC->readTime(
 		(char*) &(this->theInputMailBox.valueMeters[i].date.hour),
 		(char*) &(this->theInputMailBox.valueMeters[i].date.minute),

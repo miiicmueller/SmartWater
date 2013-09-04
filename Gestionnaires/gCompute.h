@@ -69,5 +69,6 @@ public:
 
     void execute();
 
+    ~gCompute();
     };
 #endif

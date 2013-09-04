@@ -27,6 +27,8 @@ public:
 
     void execute();
 
+    ~gOutput();
+
 private:
     gCompute* theGCompute;
     mGSM* theGSM;

@@ -22,6 +22,8 @@ public:
     void setup();
     void execute();
 
+    ~gSleep();
+
 private:
     tAvailability* atAvailability;
     mRTC* amRTC;

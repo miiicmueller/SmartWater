@@ -490,3 +490,7 @@ void gCompute::computeIsFinished()
 	this->theComputeMailBox.isWorkFinished = false;
 	}
     }
+
+gCompute::~gCompute()
+    {
+    }

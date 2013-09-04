@@ -527,7 +527,7 @@ bool iUART::isBufferEmpty()
     }
 
 /**
- * Handler d'interruption propre ï¿½ chaque objets
+ * Handler d'interruption propre a chaque objet
  *
  */
 void iUART::interruptHandler()
@@ -545,14 +545,14 @@ void iUART::interruptHandler()
 	// Test que le buffer ne soit pas plein
 	if (false == this->USCIRingBuffer.BufferIsFull)
 	    {
-	    //Alors on ï¿½crit le byte recus dans le buffer
+	    //Alors on ecrit le byte recus dans le buffer
 	    this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
 		    aReceivedChar;
 
-	    //On incrï¿½ment l'index et le nombre de byte recus
+	    //On increment l'index et le nombre de byte recus
 	    this->USCIRingBuffer.InIndex++;
 
-	    // Si on a atteint la derni�re case on revient � 0
+	    // Si on a atteint la derniere case on revient a 0
 	    if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
 		{
 		this->USCIRingBuffer.InIndex = 0;
@@ -580,14 +580,14 @@ void iUART::interruptHandler()
 	// Test que le buffer ne soit pas plein
 	if (false == this->USCIRingBuffer.BufferIsFull)
 	    {
-	    //Alors on ï¿½crit le byte recus dans le buffer
+	    //Alors on ecrit le byte recus dans le buffer
 	    this->USCIRingBuffer.UsciRecBuf[this->USCIRingBuffer.InIndex] =
 		    aReceivedChar;
 
-	    //On incrï¿½ment l'index et le nombre de byte recus
+	    //On increment l'index et le nombre de byte recus
 	    this->USCIRingBuffer.InIndex++;
 
-	    // Si on a atteint la derniï¿½re case on revient ï¿½ 0
+	    // Si on a atteint la derniere case on revient a 0
 	    if (kSciRecBufSize <= this->USCIRingBuffer.InIndex)
 		{
 		this->USCIRingBuffer.InIndex = 0;
@@ -610,10 +610,10 @@ void iUART::interruptHandler()
 
 /**
  * Fonction qui permet d'obtenir l'ensemble des bytes recus
- * en mï¿½moire sï¿½parï¿½ d'un CR+LF
+ * en me�moire separe d'un CR+LF
  *
- * aBuffer : Buffer d'entrï¿½e qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
- * retour  : -1 si on a rien trouvï¿½ sinon la taille de la chaï¿½ne
+ * aBuffer : Buffer d'entree qui contiendra la ligne lue. Taille minimum de ce que l'on a recu
+ * retour  : -1 si on a rien trouve sinon la taille de la chaine
  */
 bool iUART::readFrame(UInt8* string)
     {
