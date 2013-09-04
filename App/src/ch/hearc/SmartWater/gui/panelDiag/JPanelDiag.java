@@ -73,17 +73,17 @@ public class JPanelDiag extends JPanel {
 						String aStrAnalyse = aReply.toString();
 						String[] aStrTab = aStrAnalyse.split("_");
 
-						if (aStrTab[1].equals("ERROR")) {
+						if (aStrTab[1] == null) {
+							JPanelDiag.this.jEtat.append(aStrAnalyse + "\r\n");
+						} else if (aStrTab[1].equals("ERROR")) {
 
 							JOptionPane jOptionLogOk = new JOptionPane();
 							jOptionLogOk.showConfirmDialog(JPanelDiag.this,
-									"Cannot reset memory", "Error",
+									"Cannot read module state", "Error",
 									JOptionPane.DEFAULT_OPTION,
 									JOptionPane.ERROR_MESSAGE);
 							return;
 
-						} else {
-							JPanelDiag.this.jEtat.append(aStrAnalyse + "\r\n");
 						}
 
 					} else {

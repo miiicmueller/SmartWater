@@ -113,7 +113,7 @@ public class JPanelAdminState extends JPanel {
 							aReply.delete(0, aReply.length());
 							JOptionPane jOptionOk = new JOptionPane();
 							jOptionOk.showConfirmDialog(JPanelAdminState.this,
-									"Factory reset success", "Success",
+									"MAH success", "Success",
 									JOptionPane.DEFAULT_OPTION,
 									JOptionPane.INFORMATION_MESSAGE);
 							break;
@@ -121,7 +121,7 @@ public class JPanelAdminState extends JPanel {
 							JOptionPane jOptionLogOk = new JOptionPane();
 							jOptionLogOk.showConfirmDialog(
 									JPanelAdminState.this,
-									"Cannot reset memory", "Error",
+									"Cannot MAH the module", "Error",
 									JOptionPane.DEFAULT_OPTION,
 									JOptionPane.ERROR_MESSAGE);
 							return;
@@ -178,7 +178,7 @@ public class JPanelAdminState extends JPanel {
 								JOptionPane jOptionLogOk = new JOptionPane();
 								jOptionLogOk.showConfirmDialog(
 										JPanelAdminState.this,
-										"Cannot reset memory", "Error",
+										"Cannot consult state", "Error",
 										JOptionPane.DEFAULT_OPTION,
 										JOptionPane.ERROR_MESSAGE);
 								return;
