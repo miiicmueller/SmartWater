@@ -23,6 +23,7 @@ import ch.hearc.SmartWater.gui.panelGraphJour.JPanelComsomJour;
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelChartTabMonthParam;
 import ch.hearc.SmartWater.gui.panelGraphMois.JPanelConsomMois;
 import ch.hearc.SmartWater.gui.panelParamChamps.JPanelParametres;
+import ch.hearc.SmartWater.gui.simulation.JPanelSimulation;
 
 public class JPanelPrincipal extends JPanel {
 
@@ -97,16 +98,16 @@ public class JPanelPrincipal extends JPanel {
 									.equals(ADMIN_USERNAME)) {
 
 					} else {
-						// JOptionPane jOptionWriteErr = new JOptionPane();
-						// jOptionWriteErr.showConfirmDialog(JPanelPrincipal.this,
-						// (String) JPanelPrincipal.this.resourceLang
-						// .getObject("adminLogErr"),
-						// (String) JPanelPrincipal.this.resourceLang
-						// .getObject("adminLogErrTit"),
-						// JOptionPane.DEFAULT_OPTION,
-						// JOptionPane.ERROR_MESSAGE);
-						//
-						// ongletPrincipaux.setSelectedIndex(0);
+						JOptionPane jOptionWriteErr = new JOptionPane();
+						jOptionWriteErr.showConfirmDialog(JPanelPrincipal.this,
+								(String) JPanelPrincipal.this.resourceLang
+										.getObject("adminLogErr"),
+								(String) JPanelPrincipal.this.resourceLang
+										.getObject("adminLogErrTit"),
+								JOptionPane.DEFAULT_OPTION,
+								JOptionPane.ERROR_MESSAGE);
+
+						ongletPrincipaux.setSelectedIndex(0);
 					}
 				}
 			}
@@ -133,13 +134,15 @@ public class JPanelPrincipal extends JPanel {
 		this.jPanelCompteurs = new JPanelCompteurs(resourceLang);
 		this.jPanelDiag = new JPanelDiag(resourceLang, this.session);
 
+		this.jPanelSimulation = new JPanelSimulation(resourceLang, this.session);
+
 		this.add(ongletPrincipaux, BorderLayout.CENTER);
 
 		// The following line enables to use scrolling tabs.
 		ongletPrincipaux.setTabLayoutPolicy(JTabbedPane.SCROLL_TAB_LAYOUT);
 
 		this.ongletPrincipaux.addTab(this.tabPAram, this.jPanelParametres);
-		this.ongletPrincipaux.addTab(this.tabSimu, new JButton("Salut"));
+		this.ongletPrincipaux.addTab(this.tabSimu, jPanelSimulation);
 		this.ongletPrincipaux.addTab(this.tabConsoMois, this.jPanelConsomMois);
 		this.ongletPrincipaux.addTab(this.tabConsoJour, this.jPanelComsomJour);
 		this.ongletPrincipaux.addTab(this.tabCompt, this.jPanelCompteurs);
@@ -161,6 +164,7 @@ public class JPanelPrincipal extends JPanel {
 	private JPanelCompteurs jPanelCompteurs;
 	private JPanelDiag jPanelDiag;
 	private JPanelAdministrator jPanelAdministrator;
+	private JPanelSimulation jPanelSimulation;
 
 	private Map<String, String> parameters;
 	private ResourceBundle resourceLang;

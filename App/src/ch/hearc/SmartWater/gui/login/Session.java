@@ -14,6 +14,7 @@ import ch.hearc.SmartWater.commUsb.ComConnexion;
 import ch.hearc.SmartWater.commUsb.ComOption;
 import ch.hearc.SmartWater.commUsb.dialogSel.JPanelPortSelControl;
 import ch.hearc.SmartWater.gui.JFrameSmartWater;
+import ch.hearc.SmartWater.gui.panelAdmin.JPanelAdminState;
 
 public class Session extends Component {
 
@@ -24,6 +25,7 @@ public class Session extends Component {
 		this.comConnection = connexion;
 		this.identified = false;
 		this.listPort = new ArrayList<String>();
+
 	}
 
 	/*------------------------------------------------------------------*\
@@ -98,6 +100,7 @@ public class Session extends Component {
 		// Démmarage du timeout
 		this.timeOut = false;
 		startTimeout(DELAY_TIMEOUT);
+
 		do {
 			// On attend une trame complète ou un timeout
 		} while (!this.comConnection.isAnswerAvailable(aAnswer)
@@ -328,9 +331,14 @@ public class Session extends Component {
 	private void startTimeout(final long aDelay) {
 		// Initialisation du timeout à false
 		this.timeOut = false;
-		//On attend que l'ancien thread soit mort
-		while(this.threadTimeout.isAlive());
-		
+
+		// On attend que l'ancien thread soit mort
+		if (this.threadTimeout != null) {
+			if (this.threadTimeout.isAlive()) {
+				this.threadTimeout.interrupt();
+			}
+		}
+
 		this.threadTimeout = new Thread(new Runnable() {
 
 			@Override
@@ -343,6 +351,7 @@ public class Session extends Component {
 
 			}
 		});
+
 		// Démmarage du thread
 		threadTimeout.start();
 	}
@@ -359,9 +368,9 @@ public class Session extends Component {
 	private String userName;
 	private String userPassword;
 	private List<String> listPort;
-	private Thread threadTimeout ;
+	private Thread threadTimeout;
 
-	public final long DELAY_TIMEOUT = 2000;
+	public final long DELAY_TIMEOUT = 20000;
 
 	// Nom des commandes
 	public final String CMD_MODE = "mode_";

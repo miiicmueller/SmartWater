@@ -57,9 +57,9 @@ public:
 
     void execute();
 
-    gTerminalMailBox theTerminalMailBox;
-
     ~gTerminal();
+
+    gTerminalMailBox theTerminalMailBox;
 
     };
 #endif

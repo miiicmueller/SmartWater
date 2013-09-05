@@ -65,7 +65,7 @@ public:
     //----------------------------------------------------------------
     //constructeur
     //
-    //gInput : le gestionnaire qui contient les entrées
+    //gInput : le gestionnaire qui contient les entrÃ©es
     //----------------------------------------------------------------
     gCompute(gInput* theGInput, gTerminal* theGTerminal,
 	    tToolsCluster* theTools, mRTC* theRTC);

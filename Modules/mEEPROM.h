@@ -48,5 +48,6 @@ public:
     void mClose();
     void mSetup();
     bool ackPolling();
+    bool ackPollingWr(UInt8 aAdr_hi);
     };
 #endif

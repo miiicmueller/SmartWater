@@ -13,6 +13,7 @@
 #include "mCompteur.h"
 #include "Tools/tToolsCluster.h"
 #include "tCommandsAnalyzer.h"
+#include "mUSB.h"
 #include "def.h"
 
 //Structure de valeur des compteurs
@@ -48,6 +49,8 @@ private:
 
     mGSM* theGSM;
 
+    mUSB* theUSB;
+
     tToolsCluster* theTools;
 
     tCommandsAnalyzer theAnalyzer;
@@ -59,7 +62,7 @@ public:
     //constructeur
     //----------------------------------------------------------------
     gInput(mGSM* theGSM, mCompteur* theCompteurs[2], mRTC* theRTC,
-	    mTempSensor* theTempSensor, tToolsCluster* theTools);
+	    mTempSensor* theTempSensor, tToolsCluster* theTools, mUSB* theUSB);
 
     ~gInput();
 

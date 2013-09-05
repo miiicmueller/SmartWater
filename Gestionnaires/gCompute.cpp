@@ -45,7 +45,8 @@ void gCompute::computeTerminal()
 	switch (*(this->theGTerminal->theTerminalMailBox.aAction))
 	    {
 	case kCommandMah:
-	    if (this->theGTerminal->theTerminalMailBox.theParametersNumber == 0)
+	    if (*(this->theGTerminal->theTerminalMailBox.theParametersNumber)
+		    == 0)
 		{
 		this->theComputeMailBox.mahAuto = true;
 		}
@@ -105,7 +106,8 @@ void gCompute::computeTerminal()
 		}
 	    break;
 	case kCommandLimits:
-	    if (this->theGTerminal->theTerminalMailBox.theParametersNumber > 0)
+	    if (*(this->theGTerminal->theTerminalMailBox.theParametersNumber)
+		    > 0)
 		{
 		if (!this->theTools->setMonthsLimits(
 			this->theGTerminal->theTerminalMailBox.theParameters,
@@ -117,13 +119,8 @@ void gCompute::computeTerminal()
 			    kCommandError;
 		    }
 		}
-	    else
-		{
-		this->theTools->getMonthsLimits(
-			this->theComputeMailBox.aReplySMS,
-			UInt8(
-				*(this->theGTerminal->theTerminalMailBox.aUserNb)));
-		}
+	    this->theTools->getMonthsLimits(this->theComputeMailBox.aReplyUSB,
+		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb)));
 	    break;
 	case kCommandEtat:
 	    this->theTools->getEtat(this->theComputeMailBox.aReplyUSB,
@@ -241,7 +238,7 @@ void gCompute::computeSMS()
     switch (*(this->theGInput->theInputMailBox.aAction))
 	{
     case kCommandMah:
-	if (this->theGInput->theInputMailBox.theParametersNumber == 0)
+	if (*(this->theGInput->theInputMailBox.theParametersNumber) == 0)
 	    {
 	    this->theComputeMailBox.mahAuto = true;
 	    }
@@ -279,7 +276,7 @@ void gCompute::computeSMS()
 		UInt8(*(this->theGInput->theInputMailBox.aUserNb)));
 	break;
     case kCommandLimits:
-	if (this->theGInput->theInputMailBox.theParametersNumber > 0)
+	if (*(this->theGInput->theInputMailBox.theParametersNumber) > 0)
 	    {
 	    if (!this->theTools->setMonthsLimits(
 		    this->theGInput->theInputMailBox.theParameters,
@@ -289,11 +286,8 @@ void gCompute::computeSMS()
 		*(this->theGInput->theInputMailBox.aAction) = kCommandError;
 		}
 	    }
-	else
-	    {
-	    this->theTools->getMonthsLimits(this->theComputeMailBox.aReplySMS,
-		    UInt8(*(this->theGInput->theInputMailBox.aUserNb)));
-	    }
+	this->theTools->getMonthsLimits(this->theComputeMailBox.aReplySMS,
+		UInt8(*(this->theGInput->theInputMailBox.aUserNb)));
 	break;
     case kCommandEtat:
 	this->theTools->getEtat(this->theComputeMailBox.aReplySMS,

@@ -7,6 +7,7 @@
 #include "Modules/mGSM.h"
 #include "Modules/mCompteur.h"
 #include "Modules/mTempSensor.h"
+#include "gCompute.h"
 
 gSleep::gSleep(tToolsCluster* aToolCluster, mRTC* amRTC, mGSM* aGsm,
 	mCompteur* aCompteur, mTempSensor* amTempSensor, gCompute* aGCompute)
@@ -48,10 +49,9 @@ void gSleep::execute()
     aMinutesCalc = (aHour * 60) + aMinutes;
 
     //Comparaison avec les ancienne valeurs
-
     //Ici on dort
-    //TODO : tester si les autres gestionnaires ont termine leur travail
-    if (aMinutesCalc >= this->aMinOld + this->atAvailability->aTimeMn) // Suivant l'exemple si aMinutes = 15 et aMinold = 10 et aTime = 5 , on passe
+    if ((aMinutesCalc >= (this->aMinOld + this->atAvailability->aTimeMn))
+	    && (this->aGCompute->theComputeMailBox.isWorkFinished)) // Suivant l'exemple si aMinutes = 15 et aMinold = 10 et aTime = 5 , on passe
 	{
 	//Setter l'alarme
 	this->amRTC->setAlarm(
@@ -67,7 +67,7 @@ void gSleep::execute()
 	//On endort le processeur
 	mCpu::setPowerMode(kLPM3);
 
-	//Lors du reveil on sera la 
+	//Lors du reveil on sera laï¿½
 	this->aGsm->mOpen();
 	this->aCompteur->mOpen();
 	this->amTempSensor->mOpen();
@@ -78,7 +78,6 @@ void gSleep::execute()
 	{
 
 	}
-
     }
 
 gSleep::~gSleep()
