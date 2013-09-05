@@ -86,9 +86,7 @@ void main(void)
     UInt16 eePromAddress = 0x50;
     mEEPROM aEEPROM(eePromAddress, &i2cBus);
     aEEPROM.mOpen();
-
-    //TODO : a enlever
-    // aEEPROM.initIdTable();
+   // aEEPROM.initIdTable();
 
     tToolsCluster theTools(&aEEPROM);
     // TODO : reset a enlever

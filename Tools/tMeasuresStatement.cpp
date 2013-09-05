@@ -29,7 +29,7 @@ void tMeasuresStatement::save()
 	aDataTab[j] = (UInt8) (this->MonthlyConsumption[i]);
 	aDataTab[j + 1] = (UInt8) (this->MonthlyConsumption[i] >> 8);
 	}
-    for (i = 0, j = 12; i < 31; i++, j += 2)
+    for (i = 0, j = 24; i < 31; i++, j += 2)
 	{
 	aDataTab[j] = (UInt8) (this->CurrentMonthConsumption[i]);
 	aDataTab[j + 1] = (UInt8) (this->CurrentMonthConsumption[i] >> 8);
@@ -54,7 +54,7 @@ void tMeasuresStatement::load()
 	this->MonthlyConsumption[i] = aDataTab[j];
 	this->MonthlyConsumption[i] |= aDataTab[j + 1];
 	}
-    for (i = 0, j = 12; i < 31; i++, j += 2)
+    for (i = 0, j = 23; i < 31; i++, j += 2)
 	{
 	this->CurrentMonthConsumption[i] = (UInt16) aDataTab[j];
 	this->CurrentMonthConsumption[i] |= (UInt16) aDataTab[j + 1];

@@ -51,6 +51,7 @@ void mEEPROM::mOpen()
     UInt16 aSize = 0;
     UInt16 i = 0;
     bool aHasNext = false;
+    bool aReadRes = false;
 
     this->i2c_1->enable();
     this->usedBytes = 0;
@@ -64,8 +65,8 @@ void mEEPROM::mOpen()
 	}
 
     //Si le premier byte est un zero alors on a rien Ou si on as pas pu lire
-    aByteTemp = (UInt16) (this->read(kTABLE_BASE_ADR));
-    aByteTemp |= (UInt16) (this->read(kTABLE_BASE_ADR+1) << 8);
+    aByteTemp = (UInt16) (this->read(kTABLE_BASE_ADR, &aReadRes));
+    aByteTemp |= (UInt16) (this->read(kTABLE_BASE_ADR + 1, &aReadRes) << 8);
     if (aByteTemp != 0)
 	{
 	aHasNext = true;
@@ -73,14 +74,14 @@ void mEEPROM::mOpen()
 		i += kSizeLowPos)
 	    {
 	    //lecture des tailles
-	    aSize = this->read(i);
-	    aSize |= (this->read(i + 1) << 8);
+	    aSize = this->read(i, &aReadRes);
+	    aSize |= (this->read(i + 1, &aReadRes) << 8);
 
 	    //Enregistrement de la taille deja allouee
 	    this->usedBytes += aSize;
 
 	    //Test si on arrive a la fin
-	    if (this->read(i + 2) == 0)
+	    if (this->read(i + 2, &aReadRes) == 0)
 		{
 		aHasNext = false;
 		}
@@ -128,6 +129,7 @@ bool mEEPROM::free(UInt16 aId)
     UInt16 aId_ee = 0;
     bool aHasNext = true;
     bool aIdFound = false;
+    bool aReadRes = false;
 
     UInt16 aLastSize = 0;
 
@@ -149,12 +151,12 @@ bool mEEPROM::free(UInt16 aId)
 		kRecordSize)
 	    {
 	    //lecture des IDs
-	    aId_ee = this->read(i + kIdLowPos);
-	    aId_ee |= (this->read(i + kIdHighPos) << 8);
+	    aId_ee = this->read(i + kIdLowPos, &aReadRes);
+	    aId_ee |= (this->read(i + kIdHighPos, &aReadRes) << 8);
 
 	    //Lecture de la taille
-	    aLastSize = this->read(i + kSizeLowPos);
-	    aLastSize |= (this->read(i + kSizeHighPos) << 8);
+	    aLastSize = this->read(i + kSizeLowPos, &aReadRes);
+	    aLastSize |= (this->read(i + kSizeHighPos, &aReadRes) << 8);
 
 	    //Verification si l'adresse existe deja
 	    if (aId_ee == aId)
@@ -163,7 +165,7 @@ bool mEEPROM::free(UInt16 aId)
 		}
 
 	    //Test si on arrive a la fin
-	    if (this->read(i + kRecordSize) == 0)
+	    if (this->read(i + kRecordSize, &aReadRes) == 0)
 		{
 		aHasNext = false;
 		}
@@ -280,7 +282,7 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize)
 //	    }
 	//On enregistre la fin des enregistrement
 	this->write(i + kRecordSize, 0x00);
-
+	this->write(i + kRecordSize + 1, 0x00);
 	return true;
 	}
     //Si la taille exigée est trop grande
@@ -291,6 +293,7 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize)
 	bool aHasNext = false;
 	bool aIdFound = false;
 	bool aIdFreeFound = false;
+	bool aReadRes = false;
 
 	UInt16 aLastAdr = 0;
 	UInt16 aLastSize = 0;
@@ -319,16 +322,16 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize)
 			kRecordSize)
 	    {
 	    //lecture des tailles
-	    aId_ee = this->read(i + kIdLowPos);
-	    aId_ee |= (this->read(i + kIdHighPos) << 8);
+	    aId_ee = this->read(i + kIdLowPos, &aReadRes);
+	    aId_ee |= (this->read(i + kIdHighPos, &aReadRes) << 8);
 
 	    //Lecture de l'addresse
-	    aLastAdr = this->read(i + kAdrLowPos);
-	    aLastAdr |= (this->read(i + kAdrHighPos) << 8);
+	    aLastAdr = this->read(i + kAdrLowPos, &aReadRes);
+	    aLastAdr |= (this->read(i + kAdrHighPos, &aReadRes) << 8);
 
 	    //Lecture de la taille
-	    aLastSize = this->read(i + kSizeLowPos);
-	    aLastSize |= (this->read(i + kSizeHighPos) << 8);
+	    aLastSize = this->read(i + kSizeLowPos, &aReadRes);
+	    aLastSize |= (this->read(i + kSizeHighPos, &aReadRes) << 8);
 
 	    //Verification si l'adresse existe déja
 	    if (aId_ee == aId)
@@ -342,7 +345,8 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize)
 		}
 
 	    //Test si on arrive a la fin
-	    else if (this->read(i + kRecordSize) == 0)
+	    else if (this->read(i + kRecordSize, &aReadRes) == 0x00
+		    && this->read(i + kRecordSize + 1, &aReadRes) == 0x00)
 		{
 		aHasNext = false;
 		}
@@ -446,6 +450,7 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize)
 //		}
 	    //On enregistre la fin des enregistrement
 	    this->write(i + kRecordSize, 0x00);
+	    this->write(i + kRecordSize + 1, 0x00);
 
 	    return true;
 	    }
@@ -476,6 +481,7 @@ bool mEEPROM::load(UInt16 aId, UInt8 aDataTab[])
     UInt16 i = 0;
     bool aHasNext = false;
     bool aIdFound = false;
+    bool aReadRes = false;
 
     UInt16 aLastAdr = 0;
     UInt16 aLastSize = 0;
@@ -500,16 +506,16 @@ bool mEEPROM::load(UInt16 aId, UInt8 aDataTab[])
 	    kRecordSize)
 	{
 	//lecture des tailles
-	aId_ee = this->read(i + kIdLowPos);
-	aId_ee |= (this->read(i + kIdHighPos) << 8);
+	aId_ee = this->read(i + kIdLowPos, &aReadRes);
+	aId_ee |= (this->read(i + kIdHighPos, &aReadRes) << 8);
 
 	//Lecture de l'addresse
-	aLastAdr = this->read(i + kAdrLowPos);
-	aLastAdr |= (this->read(i + kAdrHighPos) << 8);
+	aLastAdr = this->read(i + kAdrLowPos, &aReadRes);
+	aLastAdr |= (this->read(i + kAdrHighPos, &aReadRes) << 8);
 
 	//Lecture de la taille
-	aLastSize = this->read(i + kSizeLowPos);
-	aLastSize |= (this->read(i + kSizeHighPos) << 8);
+	aLastSize = this->read(i + kSizeLowPos, &aReadRes);
+	aLastSize |= (this->read(i + kSizeHighPos, &aReadRes) << 8);
 
 	//Verification si l'adresse existe déja
 	if (aId_ee == aId)
@@ -518,7 +524,8 @@ bool mEEPROM::load(UInt16 aId, UInt8 aDataTab[])
 	    }
 
 	//Test si on arrive a la fin
-	if (this->read(i + kRecordSize) == 0)
+	if (this->read(i + kRecordSize, &aReadRes) == 0x00
+		&& this->read(i + kRecordSize + 1, &aReadRes) == 0x00)
 	    {
 	    aHasNext = false;
 	    }
@@ -534,7 +541,7 @@ bool mEEPROM::load(UInt16 aId, UInt8 aDataTab[])
 //		{
 //		return false;
 //		}
-	    aDataTab[i] = this->read(aLastAdr + i);
+	    aDataTab[i] = this->read(aLastAdr + i, &aReadRes);
 	    }
 	return true;
 	}
@@ -559,6 +566,7 @@ bool mEEPROM::store(UInt16 aId, UInt8 aDataTab[])
     UInt16 i = 0;
     bool aHasNext = false;
     bool aIdFound = false;
+    bool aReadRes = false;
 
     UInt16 aLastAdr = 0;
     UInt16 aLastSize = 0;
@@ -584,16 +592,16 @@ bool mEEPROM::store(UInt16 aId, UInt8 aDataTab[])
 	    kRecordSize)
 	{
 	//lecture des tailles
-	aId_ee = this->read(i + kIdLowPos);
-	aId_ee |= (this->read(i + kIdHighPos) << 8);
+	aId_ee = this->read(i + kIdLowPos, &aReadRes);
+	aId_ee |= (this->read(i + kIdHighPos, &aReadRes) << 8);
 
 	//Lecture de l'addresse
-	aLastAdr = this->read(i + kAdrLowPos);
-	aLastAdr |= (this->read(i + kAdrHighPos) << 8);
+	aLastAdr = this->read(i + kAdrLowPos, &aReadRes);
+	aLastAdr |= (this->read(i + kAdrHighPos, &aReadRes) << 8);
 
 	//Lecture de la taille
-	aLastSize = this->read(i + kSizeLowPos);
-	aLastSize |= (this->read(i + kSizeHighPos) << 8);
+	aLastSize = this->read(i + kSizeLowPos, &aReadRes);
+	aLastSize |= (this->read(i + kSizeHighPos, &aReadRes) << 8);
 
 	//Verification si l'adresse existe déja
 	if (aId_ee == aId)
@@ -602,7 +610,8 @@ bool mEEPROM::store(UInt16 aId, UInt8 aDataTab[])
 	    }
 
 	//Test si on arrive a la fin
-	if (this->read(i + kRecordSize) == 0)
+	if (this->read(i + kRecordSize, &aReadRes) == 0x00
+		    && this->read(i + kRecordSize + 1, &aReadRes) == 0x00)
 	    {
 	    aHasNext = false;
 	    }
@@ -766,7 +775,7 @@ bool mEEPROM::write(UInt16 address, UInt8 value)
  * address : Adresse mémoire sur 16 bits (64k)
  * retour : Valeur lue
  */
-char mEEPROM::read(UInt16 address)
+char mEEPROM::read(UInt16 address, bool *result)
     {
 
     unsigned char aAdr_hi;
@@ -836,6 +845,7 @@ char mEEPROM::read(UInt16 address)
 	    while (this->i2c_1->getStatusFlag(kSTP) == true)
 		;
 
+	    *result = true;
 	    return this->i2c_1->read();
 
 	    }
@@ -844,7 +854,8 @@ char mEEPROM::read(UInt16 address)
 	    this->i2c_1->stop();
 	    while (this->i2c_1->getStatusFlag(kSTP) == true)
 		;
-	    return 255;
+	    *result = false;
+	    return 0;
 	    }
 	}
     else
@@ -852,7 +863,8 @@ char mEEPROM::read(UInt16 address)
 	this->i2c_1->stop();
 	while (this->i2c_1->getStatusFlag(kSTP) == true)
 	    ;
-	return 255;
+	*result = false;
+	return 0;
 	}
     }
 
@@ -863,6 +875,7 @@ char mEEPROM::read(UInt16 address)
 bool mEEPROM::ackPolling()
     {
     mDelay delayTimeout;
+    bool aResult = false;
 
     if (delayTimeout.disponibility == false)
 	{
@@ -872,15 +885,19 @@ bool mEEPROM::ackPolling()
     while (this->i2c_1->getStatusFlag(kBUSY) == true)
 	;
 
+    // Software delay
+    __delay_cycles(500);
+
     //1s de timeout
-    delayTimeout.startDelayMS(1000);
+    delayTimeout.startDelayMS(2000);
 
     do
 	{
 	// Software delay
 	__delay_cycles(500);
+	this->read(0x0000, &aResult);
 	}
-    while (this->read(0x0000) == 255 && !delayTimeout.isDone());
+    while (aResult == false && !delayTimeout.isDone());
 
     if (delayTimeout.isDone())
 	{
