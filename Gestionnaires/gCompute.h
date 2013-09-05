@@ -56,7 +56,6 @@ private:
 
     void computeSMS();
 
-    void computeConsumption();
 
     void computeIsFinished();
 
@@ -75,6 +74,8 @@ public:
     void setup();
 
     void execute();
+
+    void computeConsumption();
 
     ~gCompute();
 
