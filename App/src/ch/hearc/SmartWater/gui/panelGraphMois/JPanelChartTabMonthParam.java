@@ -205,9 +205,6 @@ public class JPanelChartTabMonthParam extends JPanel
 			String[] aStrTab = aStrAnalyse.split("_");
 
 			switch (aStrTab[1]) {
-				case "OK" :
-					strToSend.delete(0, strToSend.length());
-					break;
 				case "ERROR" :
 					JOptionPane jOptionLogOk = new JOptionPane();
 					jOptionLogOk.showConfirmDialog(this, "Error write Limits",
@@ -215,6 +212,13 @@ public class JPanelChartTabMonthParam extends JPanel
 							JOptionPane.ERROR_MESSAGE);
 					return;
 				default :
+					if (aStrTab.length == 13) {
+						JOptionPane jOptionOk = new JOptionPane();
+						jOptionOk.showConfirmDialog(this,
+								"ParamWrite Succes", "Success",
+								JOptionPane.DEFAULT_OPTION,
+								JOptionPane.INFORMATION_MESSAGE);
+					}
 					return;
 			}
 		} else {
@@ -226,9 +230,6 @@ public class JPanelChartTabMonthParam extends JPanel
 			return;
 
 		}
-		JOptionPane jOptionLogOk = new JOptionPane();
-		jOptionLogOk.showConfirmDialog(this, "ParamWrite Succes", "Success",
-				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 
 	}
 

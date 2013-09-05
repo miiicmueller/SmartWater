@@ -91,9 +91,9 @@ public class JPanelAdminState extends JPanel {
 				int minutes = Calendar.getInstance().get(Calendar.MINUTE);
 				int jourDuMois = Calendar.getInstance().get(
 						Calendar.DAY_OF_MONTH);
-				int mois = Calendar.getInstance().get(Calendar.MONTH + 1);
+				int mois = Calendar.getInstance().get(Calendar.MONTH) + 1;
 				int année = Calendar.getInstance().get(Calendar.YEAR);
-
+				System.out.println(mois);
 				aParamH = new String(String.valueOf(heure) + ":"
 						+ String.valueOf(minutes) + "_"
 						+ String.valueOf(jourDuMois) + ":"

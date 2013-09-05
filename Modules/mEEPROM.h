@@ -33,7 +33,7 @@ private:
     UInt8 aStatus;
 
     bool write(UInt16 address, UInt8 value);
-    char read(UInt16 address);
+    char read(UInt16 address, bool *result);
 
 public:
     mEEPROM(UInt16 moduleAddress, iI2C *i2cBus);

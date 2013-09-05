@@ -101,7 +101,7 @@ public class JPanelParametresChamps extends JPanel {
 						break;
 					case "paramMdpU" :
 						this.session.writeCmd(this.session.CMD_MDP_USER,
-								this.jChampsParam[i].getText());
+								this.jChampsParam[i].getText()+"_"+this.jChampsParam[i].getText());
 						break;
 				}
 
@@ -142,7 +142,6 @@ public class JPanelParametresChamps extends JPanel {
 		jOptionLogOk.showConfirmDialog(this, "ParamWrite Succes", "Success",
 				JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
 	}
-
 	/**
 	 * Lit tout les paramètres checkés
 	 */

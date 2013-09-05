@@ -382,7 +382,7 @@ public class Session extends Component {
 	public final String CMD_PIN_CODE = "pin_";
 	public final String CMD_SIMCRD_NUM = "own_";
 	public final String CMD_SIMUL = "simulate_";
-	public final String CMD_DIAG_UNIT = "dysfuntion_";
+	public final String CMD_DIAG_UNIT = "dysfunction_";
 	public final String CMD_ALARM_NUM = "alarm_";
 	public final String CMD_LIMITES = "limits_";
 	public final String CMD_STATE = "state_";
