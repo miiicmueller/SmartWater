@@ -30,9 +30,9 @@ typedef struct
     tCommandsUserNbEnum aUserSelect;
 
     //pour la surveillance de consommation
-    UInt32 overrunLimit[2];
-    UInt32 overrunConsumption[2];
-    bool hasOverrun[2];
+    UInt16 overrunConsumption[2]; // valeur depassee
+    UInt16 overrunLimit[2]; // limite de a ne pas depasser
+    bool hasOverrun[2] ; // le compteur a depasse
 
     //pour la simulation
     bool isSimulation;
@@ -58,7 +58,6 @@ private:
 
     void computeSMS();
 
-    void computeConsumption();
 
     void computeIsFinished();
 
@@ -77,6 +76,8 @@ public:
     void setup();
 
     void execute();
+
+    void computeConsumption();
 
     ~gCompute();
 

@@ -392,7 +392,6 @@ void gCompute::computeConsumption()
     UInt8 aDay = 0;
     UInt32 aValue = 0;
     UInt16 aLimitDay = 0;
-    bool aOverrunConsumption = false; // variable de retour
     UInt8 j = 0;
     static UInt8 aValueBeginMonth[2] =
 	{
@@ -518,17 +517,23 @@ void gCompute::computeConsumption()
 					- 1] / (float) 30);
 			}
 
+		    // calcul de l'indice a avoir le jour prochain pour avoir un depassement
+		    // - la valeur n'est pas tres precise car elle est calculee pour un mois a 31 jours
 		    this->theComputeMailBox.indexOverrunSimulation =
 			    (UInt16) ((float) (-62 + 2 * aDay - 31 * aValue
 				    + aDay * aValue
 				    - theTools->theMonthsLimits[j]->limits[aMonth
-					    - 1]) / (float) (-32 + aDay)); // calcul d'indice pour le jour prochain pour avoir un depassement
+					    - 1]) / (float) (-32 + aDay));
 
-		    if (aLimitDay < (aValue - aPreviousValue[j])) //calcul si depasse la limite quotidienne
+		    //calcul si depasse la limite quotidienne
+		    if (aLimitDay < (aValue - aPreviousValue[j]))
 			{
-			if (aWarningConsumption[j])
+			if (aWarningConsumption[j]) // valeur depassee
 			    {
-			    ///this->theComputeMailBox.overrunConsumption = true;
+			    this->theComputeMailBox.hasOverrun[j] = true;
+			    this->theComputeMailBox.overrunLimit[j] = aLimitDay;
+			    this->theComputeMailBox.overrunConsumption[j] = aValue
+				    - aPreviousValue[j];
 			    }
 			else // premier jour de depassement de la limite
 			    {
