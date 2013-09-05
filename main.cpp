@@ -129,67 +129,66 @@ void main(void)
     theGOutput.setup();
     theGSleep.setup();
 
+    mDelay aDelayCompute;
+    mDelay aDelayInput;
 
-    //test de compute consumption
-    theGInput.theInputMailBox.valueMeters[0].date.day=10;
-    theGInput.theInputMailBox.valueMeters[0].date.month=9;
-    theGInput.theInputMailBox.valueMeters[0].isConnected=true;
-    theGInput.theInputMailBox.valueMeters[0].value=10000;
-    for(int k=0; k<12; k++)
+    while (1)
 	{
-	theTools.theMonthsLimits[0]->limits[k]=970;
+	if (aDelayCompute.isDone())
+	    {
+	    aDelayCompute.startDelayMS(1);
+	    theTerminalUSB.execute();
+	    theGCompute.execute();
+	    theGOutput.execute();
+	    theGSleep.execute();
+	    }
+	if (aDelayInput.isDone())
+	    {
+	    aDelayInput.startDelayMS(20000);
+	    theGInput.execute();
+	    }
 	}
 
-    theGCompute.computeConsumption();
-
-    theGInput.theInputMailBox.valueMeters[0].date.day=11; //rien
-    theGInput.theInputMailBox.valueMeters[0].value=10030;
-    theGCompute.computeConsumption();
-
-    theGInput.theInputMailBox.valueMeters[0].date.day=11; //rien
-    theGInput.theInputMailBox.valueMeters[0].value=10031;
-    theGCompute.computeConsumption();
-
-    theGInput.theInputMailBox.valueMeters[0].date.day=12; //rien
-    theGInput.theInputMailBox.valueMeters[0].value=10060;
-    theGCompute.computeConsumption();
-
-    theGInput.theInputMailBox.valueMeters[0].date.day=13; //rien
-    theGInput.theInputMailBox.valueMeters[0].value=10090;
-    theGCompute.computeConsumption();
-
-    theGInput.theInputMailBox.valueMeters[0].date.day=14; //avertissmeent le lendemain
-    theGInput.theInputMailBox.valueMeters[0].value=10190;
-    theGCompute.computeConsumption();
-
-    theGInput.theInputMailBox.valueMeters[0].date.day=15; //alerte le lendemain
-    theGInput.theInputMailBox.valueMeters[0].value=10290;
-    theGCompute.computeConsumption();
-
-    theGInput.theInputMailBox.valueMeters[0].date.day=15; //alerte ici
-    theGInput.theInputMailBox.valueMeters[0].value=10320;
-    theGCompute.computeConsumption();
 
 
-
-//    mDelay aDelayCompute;
-//    mDelay aDelayInput;
-//
-//    while (1)
+//    //test de compute consumption
+//    theGInput.theInputMailBox.valueMeters[0].date.day=10;
+//    theGInput.theInputMailBox.valueMeters[0].date.month=9;
+//    theGInput.theInputMailBox.valueMeters[0].isConnected=true;
+//    theGInput.theInputMailBox.valueMeters[0].value=10000;
+//    for(int k=0; k<12; k++)
 //	{
-//	if (aDelayCompute.isDone())
-//	    {
-//	    aDelayCompute.startDelayMS(1);
-//	    theTerminalUSB.execute();
-//	    theGCompute.execute();
-//	    theGOutput.execute();
-//	    theGSleep.execute();
-//	    }
-//	if (aDelayInput.isDone())
-//	    {
-//	    aDelayInput.startDelayMS(20000);
-//	    theGInput.execute();
-//	    }
+//	theTools.theMonthsLimits[0]->limits[k]=970;
 //	}
+//
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=11; //rien
+//    theGInput.theInputMailBox.valueMeters[0].value=10030;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=11; //rien
+//    theGInput.theInputMailBox.valueMeters[0].value=10031;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=12; //rien
+//    theGInput.theInputMailBox.valueMeters[0].value=10060;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=13; //rien
+//    theGInput.theInputMailBox.valueMeters[0].value=10090;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=14; //avertissmeent le lendemain
+//    theGInput.theInputMailBox.valueMeters[0].value=10190;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=15; //alerte le lendemain
+//    theGInput.theInputMailBox.valueMeters[0].value=10290;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=15; //alerte ici
+//    theGInput.theInputMailBox.valueMeters[0].value=10320;
+//    theGCompute.computeConsumption();
 
     }

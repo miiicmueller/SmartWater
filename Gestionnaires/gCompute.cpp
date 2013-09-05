@@ -24,8 +24,8 @@ gCompute::gCompute(gInput* theGInput, gTerminal* theGTerminal,
 
 void gCompute::setup()
     {
+    this->theComputeMailBox.hasOverrun[0] = false;
     this->theComputeMailBox.hasOverrun[1] = false;
-    this->theComputeMailBox.hasOverrun[2] = false;
     this->theComputeMailBox.isSimulation = false;
     }
 
@@ -351,6 +351,7 @@ void gCompute::computeSMS()
 	{
     // reponse error
     case kCommandError:
+	//TODO : reponse _ERROR_ par SMS a enlever
 	sprintf(this->theComputeMailBox.aReplySMS, "_ERROR_");
 	break;
 	// reponse speciale deja ecrite dans le switch precedent
@@ -532,8 +533,8 @@ void gCompute::computeConsumption()
 			    {
 			    this->theComputeMailBox.hasOverrun[j] = true;
 			    this->theComputeMailBox.overrunLimit[j] = aLimitDay;
-			    this->theComputeMailBox.overrunConsumption[j] = aValue
-				    - aPreviousValue[j];
+			    this->theComputeMailBox.overrunConsumption[j] =
+				    aValue - aPreviousValue[j];
 			    }
 			else // premier jour de depassement de la limite
 			    {
