@@ -67,7 +67,7 @@ void gSleep::execute()
 	//On endort le processeur
 	mCpu::setPowerMode(kLPM3);
 
-	//Lors du reveil on sera la 
+	//Lors du reveil on sera laï¿½
 	this->aGsm->mOpen();
 	this->aCompteur->mOpen();
 	this->amTempSensor->mOpen();
@@ -78,10 +78,6 @@ void gSleep::execute()
 	{
 
 	}
-    }
-
-gSleep::~gSleep()
-    {
     }
 
 gSleep::~gSleep()

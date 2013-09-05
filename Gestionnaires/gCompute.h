@@ -27,7 +27,7 @@ typedef struct
 
     //pour la simulation
     bool isSimulation;
-    tCommandsUserNbEnum aUserSimulation;
+    tCommandsUserNbEnum aUserSelect;
     UInt32 indexOverrunSimulation; // index qu'il faut pour simuler un depassement de consommation
     
 //pour savoir si le travail est termine
@@ -61,7 +61,7 @@ public:
     //----------------------------------------------------------------
     //constructeur
     //
-    //gInput : le gestionnaire qui contient les entrées
+    //gInput : le gestionnaire qui contient les entrï¿½es
     //----------------------------------------------------------------
     gCompute(gInput* theGInput, gTerminal* theGTerminal,
 	    tToolsCluster* theTools, mRTC* theRTC);
