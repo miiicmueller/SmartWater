@@ -86,12 +86,12 @@ void main(void)
     UInt16 eePromAddress = 0x50;
     mEEPROM aEEPROM(eePromAddress, &i2cBus);
     aEEPROM.mOpen();
-   // aEEPROM.initIdTable();
+    // aEEPROM.initIdTable();
 
     tToolsCluster theTools(&aEEPROM);
     // TODO : reset a enlever
-//    theTools.reset();
-//    theTools.saveAll();
+    //theTools.reset();
+    //theTools.saveAll();
     theTools.loadAll();
 
     mGSM theGSM(theTools.theSIMCard);
@@ -138,7 +138,7 @@ void main(void)
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
 	    theGOutput.execute();
-	    theGSleep.execute();
+	    //theGSleep.execute();
 	    }
 	if (aDelayInput.isDone())
 	    {
@@ -146,8 +146,6 @@ void main(void)
 	    theGInput.execute();
 	    }
 	}
-
-
 
 //    //test de compute consumption
 //    theGInput.theInputMailBox.valueMeters[0].date.day=10;

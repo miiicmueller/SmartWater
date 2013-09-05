@@ -21,9 +21,9 @@ tSIMCard::tSIMCard(mEEPROM *mEeprom, UInt16 aModeNum)
 
 void tSIMCard::save()
     {
-    UInt8 aDataTab[24];
+    UInt8 aDataTab[20];
 
-    // Serialisation des limites
+    // Serialisation des donnees
     for (int i = 0; i < 15; i++)
 	{
 	aDataTab[i] = (UInt8) (this->theOwnNumber[i]);
@@ -39,12 +39,12 @@ void tSIMCard::save()
 
 void tSIMCard::load()
     {
-    UInt8 aDataTab[24];
+    UInt8 aDataTab[20];
 
     //Recuperation des donnees
     this->mPeriphSauv->load(this->aId, aDataTab);
 
-    // Deserialisation des limites
+    // Deserialisation des donnees
     for (int i = 0; i < 15; i++)
 	{
 	this->theOwnNumber[i] = (char) aDataTab[i];
