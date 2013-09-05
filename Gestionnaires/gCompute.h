@@ -29,7 +29,9 @@ typedef struct
     tCommandsUserNbEnum aUserSelect;
 
     //pour la surveillance de consommation
-    bool overrunConsumption[2];
+    UInt16 overrunConsumption[2]; // valeur depassee
+    UInt16 overrunLimit[2]; // limite de a ne pas depasser
+    bool hasOverrun[2] ; // le compteur a depasse
 
     //pour la simulation
     bool isSimulation;
