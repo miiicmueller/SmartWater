@@ -523,7 +523,7 @@ void gCompute::computeConsumption()
 			{
 			if (aWarningConsumption[j])
 			    {
-			    this->theComputeMailBox.overrunConsumption = true;
+			    ///this->theComputeMailBox.overrunConsumption = true;
 			    }
 			else // premier jour de depassement de la limite
 			    {
