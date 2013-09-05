@@ -165,7 +165,8 @@ bool mEEPROM::free(UInt16 aId)
 		}
 
 	    //Test si on arrive a la fin
-	    if (this->read(i + kRecordSize, &aReadRes) == 0)
+	    else if (this->read(i + kRecordSize, &aReadRes) == 0x00
+		    && this->read(i + kRecordSize + 1, &aReadRes) == 0x00)
 		{
 		aHasNext = false;
 		}
@@ -307,10 +308,10 @@ bool mEEPROM::malloc(UInt16 aId, UInt16 aSize)
 	//Lecture de la table pour vérifier si l'ID existe. Sinon on ne fait rien
 
 	//On attend que l'EEPROM soit prete
-//	if (!this->ackPolling())
-//	    {
-//	    return false;
-//	    }
+	if (!this->ackPolling())
+	    {
+	    return false;
+	    }
 
 	aHasNext = true;
 	aIdFound = false;
@@ -524,7 +525,7 @@ bool mEEPROM::load(UInt16 aId, UInt8 aDataTab[])
 	    }
 
 	//Test si on arrive a la fin
-	if (this->read(i + kRecordSize, &aReadRes) == 0x00
+	else if (this->read(i + kRecordSize, &aReadRes) == 0x00
 		&& this->read(i + kRecordSize + 1, &aReadRes) == 0x00)
 	    {
 	    aHasNext = false;
@@ -610,7 +611,7 @@ bool mEEPROM::store(UInt16 aId, UInt8 aDataTab[])
 	    }
 
 	//Test si on arrive a la fin
-	if (this->read(i + kRecordSize, &aReadRes) == 0x00
+	else if (this->read(i + kRecordSize, &aReadRes) == 0x00
 		    && this->read(i + kRecordSize + 1, &aReadRes) == 0x00)
 	    {
 	    aHasNext = false;
