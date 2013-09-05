@@ -28,6 +28,9 @@ typedef struct
     //pour la selection du compteur
     tCommandsUserNbEnum aUserSelect;
 
+    //pour la surveillance de consommation
+    bool overrunConsumption[2];
+
     //pour la simulation
     bool isSimulation;
     UInt32 indexOverrunSimulation; // index qu'il faut pour simuler un depassement de consommation
@@ -51,7 +54,7 @@ private:
 
     void computeSMS();
 
-    bool computeConsumption(iMeterChannel aChannel);
+    void computeConsumption();
 
     void computeIsFinished();
 
