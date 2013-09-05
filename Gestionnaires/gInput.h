@@ -21,6 +21,7 @@ typedef struct
     {
     UInt32 value;
     tDate date;
+    bool isConnected;
     } gInputMeterValueStruct;
 
 typedef struct

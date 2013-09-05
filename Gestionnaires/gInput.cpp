@@ -52,21 +52,28 @@ void gInput::execute()
 	this->theAnalyzer.tCommandsAnalysis(theSMS, this->theTools);
 
 	//pour les compteurs
-	// TODO : un moyen de verifier quels compteurs sont utilises
 	for (int i = 0; i <= 1; i++)
 	    {
 	    this->theCompteurs[i]->mOpen();
-	    this->theInputMailBox.valueMeters[i].value =
-		    this->theCompteurs[i]->mRead();
-	    this->theRTC->readTime(
-		    (char*) &(this->theInputMailBox.valueMeters[i].date.hour),
-		    (char*) &(this->theInputMailBox.valueMeters[i].date.minute),
-		    (char*) &(this->theInputMailBox.valueMeters[i].date.second));
-	    this->theRTC->readDate(
-		    (int*) &(this->theInputMailBox.valueMeters[i].date.year),
-		    (char*) &(this->theInputMailBox.valueMeters[i].date.month),
-		    (char*) &(this->theInputMailBox.valueMeters[i].date.day),
-		    (char*) &(this->theInputMailBox.valueMeters[i].date.dayOfWeek));
+
+	    if (this->theCompteurs[i]->mRead(
+		    &(this->theInputMailBox.valueMeters[i].value)))
+		{
+		this->theRTC->readTime(
+			(char*) &(this->theInputMailBox.valueMeters[i].date.hour),
+			(char*) &(this->theInputMailBox.valueMeters[i].date.minute),
+			(char*) &(this->theInputMailBox.valueMeters[i].date.second));
+		this->theRTC->readDate(
+			(int*) &(this->theInputMailBox.valueMeters[i].date.year),
+			(char*) &(this->theInputMailBox.valueMeters[i].date.month),
+			(char*) &(this->theInputMailBox.valueMeters[i].date.day),
+			(char*) &(this->theInputMailBox.valueMeters[i].date.dayOfWeek));
+		this->theInputMailBox.valueMeters[i].isConnected = true;
+		}
+	    else
+		{
+		this->theInputMailBox.valueMeters[i].isConnected = false;
+		}
 	    }
 
 	this->theCompteurs[0]->mClose();
