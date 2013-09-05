@@ -524,7 +524,8 @@ bool mEEPROM::load(UInt16 aId, UInt8 aDataTab[])
 	    }
 
 	//Test si on arrive a la fin
-	if (this->read(i + kRecordSize, &aReadRes) == 0)
+	if (this->read(i + kRecordSize, &aReadRes) == 0x00
+		&& this->read(i + kRecordSize + 1, &aReadRes) == 0x00)
 	    {
 	    aHasNext = false;
 	    }
@@ -609,7 +610,8 @@ bool mEEPROM::store(UInt16 aId, UInt8 aDataTab[])
 	    }
 
 	//Test si on arrive a la fin
-	if (this->read(i + kRecordSize, &aReadRes) == 0)
+	if (this->read(i + kRecordSize, &aReadRes) == 0x00
+		    && this->read(i + kRecordSize + 1, &aReadRes) == 0x00)
 	    {
 	    aHasNext = false;
 	    }
