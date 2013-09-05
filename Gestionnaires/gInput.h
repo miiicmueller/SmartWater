@@ -31,6 +31,7 @@ typedef struct
     char* theParameters[12];
     UInt8* theParametersNumber;
     tCommandsUserNbEnum* aUserNb;
+    char aReplyNb[15];
 
     //compteurs
     gInputMeterValueStruct valueMeters[2];

@@ -17,6 +17,7 @@ typedef struct
     {
     //pour les reponses SMS
     char aReplySMS[150];
+    char* aReplyNb;
     tCommandsUserNbEnum* aUserNb;
 
     //pour la reponse USB
@@ -31,11 +32,12 @@ typedef struct
     //pour la surveillance de consommation
     UInt16 overrunConsumption[2]; // valeur depassee
     UInt16 overrunLimit[2]; // limite de a ne pas depasser
-    bool hasOverrun[2] ; // le compteur a depasse
+    bool hasOverrun[2]; // le compteur a depasse
 
     //pour la simulation
     bool isSimulation;
     UInt32 indexOverrunSimulation; // index qu'il faut pour simuler un depassement de consommation
+
     //pour savoir si le travail est termine
     bool isWorkFinished;
     } gComputeMailBox;
@@ -56,6 +58,7 @@ private:
 
     void computeSMS();
 
+    void computeConsumption();
 
     void computeIsFinished();
 
@@ -74,8 +77,6 @@ public:
     void setup();
 
     void execute();
-
-    void computeConsumption();
 
     ~gCompute();
 
