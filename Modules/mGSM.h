@@ -17,6 +17,7 @@
 #include "../Tools/tCommandesAT.h"
 #include "../Tools/tDate.h"
 #include "mDelay.h"
+#include "tSIMCard.h"
 
 #define kNbFiguresPhone 12
 #define kNbFiguresPin 4
@@ -86,14 +87,14 @@ private:
 
 public:
 
-    UInt8 phoneNumber[kNbFiguresPhone + 1]; //numero de telephone de la carte SIM. Format : "+417********"
-    UInt8 codePIN[kNbFiguresPin + 1];
+    UInt8* phoneNumber; //numero de telephone de la carte SIM. Format : "+417********"
+    UInt8* codePIN;
     mGSMStateEnum state; // etat du module
 
     //----------------------------------------------------------------
     //constructeur
     //--------------------------------------------------------------
-    mGSM();
+    mGSM(tSIMCard* aSimCard);
 
     //----------------------------------------------------------------
     //destructeur

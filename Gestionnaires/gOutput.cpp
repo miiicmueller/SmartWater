@@ -37,17 +37,16 @@ void gOutput::execute()
 	{
 	if (!this->theGSM->sendSMS(
 		(UInt8*) (this->theGCompute->theComputeMailBox.aReplySMS),
-		(UInt8*) (this->theTools->theAlarmNumber[*(this->theGCompute->theComputeMailBox.aUserNb)
-			- 1]->aTelNumber)))
+		(UInt8*) (this->theGCompute->theComputeMailBox.aReplyNb)))
 	    {
 	    // TODO : en cas d'erreur d'envoi de SMS
 	    }
 	}
 
-    //reponse SMS
+    //alarme SMS
     for (int i = 0; i <= 1; i++)
 	{
-	if (this->theGCompute->theComputeMailBox.overrunConsumption[i])
+	if (this->theGCompute->theComputeMailBox.hasOverrun[i])
 	    {
 	    char aAlarm[80];
 
@@ -56,6 +55,8 @@ void gOutput::execute()
 		    this->theTools->theUnitName->aName,
 		    this->theGCompute->theComputeMailBox.overrunLimit,
 		    this->theGCompute->theComputeMailBox.overrunConsumption);
+
+	    this->theGCompute->theComputeMailBox.hasOverrun[i] = false;
 
 	    if (!this->theGSM->sendSMS(
 		    (UInt8*) (this->theGCompute->theComputeMailBox.aReplySMS),

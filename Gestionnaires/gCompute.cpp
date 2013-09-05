@@ -18,10 +18,15 @@ gCompute::gCompute(gInput* theGInput, gTerminal* theGTerminal,
 
     //assignation du contenu de la mailbox
     this->theComputeMailBox.aUserNb = this->theGInput->theInputMailBox.aUserNb;
+    this->theComputeMailBox.aReplyNb =
+	    this->theGInput->theInputMailBox.aReplyNb;
     }
 
 void gCompute::setup()
     {
+    this->theComputeMailBox.hasOverrun[1] = false;
+    this->theComputeMailBox.hasOverrun[2] = false;
+    this->theComputeMailBox.isSimulation = false;
     }
 
 void gCompute::execute()

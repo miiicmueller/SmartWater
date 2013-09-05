@@ -27,11 +27,14 @@ mDelay mGSM::timeOut;
 //----------------------------------------------------------------
 //constructeur
 //----------------------------------------------------------------
-mGSM::mGSM()
+mGSM::mGSM(tSIMCard* aSimCard)
     {
     //Initialisation des attributs
     this->indexSMS = 1;
     this->state = kDisconnected; // etat initial
+
+    this->codePIN = (UInt8*) (aSimCard->thePINCode);
+    this->phoneNumber = (UInt8*) (aSimCard->theOwnNumber);
     }
 
 //----------------------------------------------------------------

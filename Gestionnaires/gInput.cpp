@@ -44,9 +44,11 @@ void gInput::execute()
 
 	theSMS[0] = '\0';
 
-	if (!this->theGSM->getSMS(theSMS, &hasSMS))
+	if (!this->theGSM->getSMS(theSMS, &hasSMS,
+		this->theInputMailBox.aReplyNb))
 	    {
 	    // TODO : en cas d'erreur de lecture du SMS
+	    theSMS[0] = '\0';
 	    }
 
 	this->theAnalyzer.tCommandsAnalysis(theSMS, this->theTools);

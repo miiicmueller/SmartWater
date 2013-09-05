@@ -82,11 +82,6 @@ void main(void)
     mDelay::mSetup();
     mDelay::mOpen();
 
-    mGSM theGSM;
-    theGSM.mSetup();
-    //TODO : a remettre
-    //theGSM.mOpen();
-
     iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
     UInt16 eePromAddress = 0x50;
     mEEPROM aEEPROM(eePromAddress, &i2cBus);
@@ -100,6 +95,11 @@ void main(void)
 //    theTools.reset();
 //    theTools.saveAll();
     theTools.loadAll();
+
+    mGSM theGSM(theTools.theSIMCard);
+    theGSM.mSetup();
+    //TODO : a remettre
+    theGSM.mOpen();
 
     mTempSensor theTempSensor(0x48, &i2cBus);
     theTempSensor.mSetup();

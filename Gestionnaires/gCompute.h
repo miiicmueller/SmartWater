@@ -17,6 +17,7 @@ typedef struct
     {
     //pour les reponses SMS
     char aReplySMS[150];
+    char* aReplyNb;
     tCommandsUserNbEnum* aUserNb;
 
     //pour la reponse USB
@@ -36,6 +37,7 @@ typedef struct
     //pour la simulation
     bool isSimulation;
     UInt32 indexOverrunSimulation; // index qu'il faut pour simuler un depassement de consommation
+
     //pour savoir si le travail est termine
     bool isWorkFinished;
     } gComputeMailBox;
