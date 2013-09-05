@@ -174,13 +174,16 @@ void mGSM::mClose()
 //
 //aSMS : pointe la variable dans laquelle on veut recuperer le SMS
 //aHasSms : pointeur pour savoir si aSMS contient un SMS, false si tous les SMS ont ete lus
+//aHasSms : pointeur pour donner le numero de telephone de celui qui a envoye le SMS
 //retour : true s'il n'y a pas eu d'erreur durant la methode
 //----------------------------------------------------------------
-bool mGSM::getSMS(char* aSMS, bool* aHasSms)
+bool mGSM::getSMS(char* aSMS, bool* aHasSms, char* aNumPhone)
     {
     char aDataReceived[kSciRecBufReceptionSize ] = ""; // data recues du buffer
     bool aIsOk = false; //variable de retour
     bool aIsError = false; //variable de retour
+    UInt8 i = 0;
+    UInt8 j = 0;
 
     this->state = kErrorGeneral;
 
@@ -237,25 +240,45 @@ bool mGSM::getSMS(char* aSMS, bool* aHasSms)
 		    && 'M' == aDataReceived[2] && ':' == aDataReceived[5]) //controle le debut de l'entete
 		{
 		*aHasSms = true;
-		mGSM::timeOut.startDelayMS(kTimeOutResponse);
-		while ((false == mGSM::uart.readFrameToCRLF(aDataReceived))
-			&& (false == mGSM::timeOut.isDone()))
-		    ; //lit le message
 
-		if (mGSM::timeOut.isDone())
+		//prend le numero de telephone
+		i = 0;
+		while (!(aDataReceived[i] == '+' && aDataReceived[i - 1] == '\"')
+			&& i < kSciRecBufSize ) // recherche la position du numero de telephone
 		    {
-		    this->state = kErrorReadSms;
-		    aIsError = true;
+		    i++;
+		    }
+
+		if (kSciRecBufSize != i) //position retrouvee
+		    {
+		    for (j = 0; j < kNbFiguresPhone; i++, j++)
+			{
+			aNumPhone[j] = aDataReceived[i]; // copie le numero
+			}
+
+		    mGSM::timeOut.startDelayMS(kTimeOutResponse);
+		    while ((false == mGSM::uart.readFrameToCRLF(aDataReceived))
+			    && (false == mGSM::timeOut.isDone()))
+			; //lit le message
+
+		    if (mGSM::timeOut.isDone())
+			{
+			this->state = kErrorReadSms;
+			aIsError = true;
+			}
+		    else
+			{
+			strcpy((char *) aSMS, (const char *) aDataReceived); // copie du SMS (il ne peut y avoir qu'une seule ligne)
+			this->indexSMS++;
+			this->state = kOk;
+			aIsOk = true;
+			}
 		    }
 		else
 		    {
-		    strcpy((char *) aSMS, (const char *) aDataReceived); // copie du SMS (il ne peut y avoir qu'une seule ligne)
-		    this->indexSMS++;
-		    this->state = kOk;
-		    aIsOk = true;
+		    aIsError = true; // erreur de lecture du numero de telephone
 		    }
 		}
-
 	    }
 	}
 

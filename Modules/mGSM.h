@@ -120,9 +120,10 @@ public:
     //
     //aSMS : pointe la variable dans laquelle on veut recuperer le SMS
     //aHasSms : pointeur pour savoir si aSMS contient un SMS, false si tous les SMS ont ete lus
+    //aHasSms : pointeur pour donner le numero de telephone de celui qui a envoye le SMS
     //retour : true s'il n'y a pas eu d'erreur durant la methode
     //----------------------------------------------------------------
-    bool getSMS(char* aSMS, bool* aHasSms);
+    bool getSMS(char* aSMS, bool* aHasSms, char* aNumPhone);
 
     //----------------------------------------------------------------
     //envoi un SMS

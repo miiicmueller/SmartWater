@@ -93,7 +93,7 @@ void mCompteur::mClose()
 //exemple de format de trame : "/GWF Wasser      V4.1\r\n7.0(02514*m3)\r\n0.09(03-11-04)\r\n0.00(0434448)\r\n0.01(DN20)\r\n!\r\n"
 //avec 02514 comme indice
 //----------------------------------------------------------------
-UInt32 mCompteur::mRead()
+bool mCompteur::mRead(UInt32* aIndex)
     {
     UInt8 aFabFlVers[22] =
 	{
@@ -121,9 +121,8 @@ UInt32 mCompteur::mRead()
 	0
 	};
 
-    UInt32 aRet = 0;
     int i = 0, j = 0;
-    bool aIsOk;
+    bool aIsOk = false;
     UInt8 aNumb1; //variables bidons recuperant des valeurs non-importantes de la trame
     UInt8 aNumb2;
     mDelay aDelayTimeout;
@@ -208,18 +207,15 @@ UInt32 mCompteur::mRead()
 	    this->compteurParam->aNominalSize[strlen(
 		    (char*) this->compteurParam->aNominalSize) - 1] = 0x00;
 
-	    //Recuperation de l'indice
-	    aIsOk = sscanf((char*) aDebitMesure, "%d.%d(%d*m3)", &aNumb1,
-		    &aNumb2, &aRet);
-
 	    //retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
-	    if (aIsOk)
+	    if (sscanf((char*) aDebitMesure, "%d.%d(%d*m3)", &aNumb1, &aNumb2,
+		    aIndex) == 3)
 		{
-		return aRet;
+		aIsOk = true;
 		}
 	    }
 	}
-    return 0;
+    return aIsOk;
     }
 
 //----------------------------------------------------------------
