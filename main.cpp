@@ -84,6 +84,7 @@ void main(void)
 
     mGSM theGSM;
     theGSM.mSetup();
+    //TODO : a remettre
     //theGSM.mOpen();
 
     iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
@@ -91,6 +92,7 @@ void main(void)
     mEEPROM aEEPROM(eePromAddress, &i2cBus);
     aEEPROM.mOpen();
 
+    //TODO : a enlever
     // aEEPROM.initIdTable();
 
     tToolsCluster theTools(&aEEPROM);

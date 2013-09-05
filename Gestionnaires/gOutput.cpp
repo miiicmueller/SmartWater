@@ -2,6 +2,7 @@
 #include <assert.h>
 
 #include "gOutput.h"
+#include "stdio.h"
 
 //----------------------------------------------------------------
 //constructeur
@@ -40,6 +41,28 @@ void gOutput::execute()
 			- 1]->aTelNumber)))
 	    {
 	    // TODO : en cas d'erreur d'envoi de SMS
+	    }
+	}
+
+    //reponse SMS
+    for (int i = 0; i <= 1; i++)
+	{
+	if (this->theGCompute->theComputeMailBox.overrunConsumption[i])
+	    {
+	    char aAlarm[80];
+
+	    sprintf(aAlarm,
+		    "consumption alarm on : %s\r\nlimit : %d\r\nconsumption : %d",
+		    this->theTools->theUnitName->aName,
+		    this->theGCompute->theComputeMailBox.overrunLimit,
+		    this->theGCompute->theComputeMailBox.overrunConsumption);
+
+	    if (!this->theGSM->sendSMS(
+		    (UInt8*) (this->theGCompute->theComputeMailBox.aReplySMS),
+		    (UInt8*) (this->theTools->theAlarmNumber[i]->aTelNumber)))
+		{
+		// TODO : en cas d'erreur d'envoi de SMS
+		}
 	    }
 	}
 

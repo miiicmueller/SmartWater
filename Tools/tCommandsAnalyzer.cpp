@@ -253,6 +253,10 @@ void tCommandsAnalyzer::tCommandAnalyzer()
 	    {
 	    this->aCommandResult.aCommandEnum = kCommandDailyconsumption;
 	    }
+	else if (strcmp(this->aCommandBrut.theCommand, "simulate") == 0)
+	    {
+	    this->aCommandResult.aCommandEnum = kCommandSimulate;
+	    }
 	else
 	    {
 	    this->aCommandResult.aCommandEnum = kCommandError;
@@ -280,10 +284,6 @@ void tCommandsAnalyzer::tCommandAnalyzer()
 	else if (strcmp(this->aCommandBrut.theCommand, "passa") == 0)
 	    {
 	    this->aCommandResult.aCommandEnum = kCommandPassa;
-	    }
-	else if (strcmp(this->aCommandBrut.theCommand, "simulate") == 0)
-	    {
-	    this->aCommandResult.aCommandEnum = kCommandSimulate;
 	    }
 	else if (strcmp(this->aCommandBrut.theCommand, "reset") == 0)
 	    {
