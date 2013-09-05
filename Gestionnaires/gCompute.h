@@ -25,12 +25,16 @@ typedef struct
     //pour la mise a l'heure automatique
     bool mahAuto;
 
+    //pour la selection du compteur
+    tCommandsUserNbEnum aUserSelect;
+
+    //pour la surveillance de consommation
+    bool overrunConsumption[2];
+
     //pour la simulation
     bool isSimulation;
-    tCommandsUserNbEnum aUserSelect;
     UInt32 indexOverrunSimulation; // index qu'il faut pour simuler un depassement de consommation
-    
-//pour savoir si le travail est termine
+    //pour savoir si le travail est termine
     bool isWorkFinished;
     } gComputeMailBox;
 
@@ -50,7 +54,7 @@ private:
 
     void computeSMS();
 
-    bool computeConsumption(iMeterChannel aChannel);
+    void computeConsumption();
 
     void computeIsFinished();
 
@@ -61,7 +65,7 @@ public:
     //----------------------------------------------------------------
     //constructeur
     //
-    //gInput : le gestionnaire qui contient les entr�es
+    //gInput : le gestionnaire qui contient les entrées
     //----------------------------------------------------------------
     gCompute(gInput* theGInput, gTerminal* theGTerminal,
 	    tToolsCluster* theTools, mRTC* theRTC);
