@@ -23,7 +23,8 @@ iDIO mCompteur::cptSim((char*) kPort_6, BIT3);
 //
 //aChannel : choix du compteur d'eau
 //----------------------------------------------------------------
-mCompteur::mCompteur(iMeterChannel aChannel, mEEPROM *mEeprom)
+mCompteur::mCompteur(iMeterChannel aChannel, mEEPROM *mEeprom,
+	tCompteur *aTCompteur)
     {
     //selection du compteur d'eau desire
 
@@ -38,7 +39,7 @@ mCompteur::mCompteur(iMeterChannel aChannel, mEEPROM *mEeprom)
     else
 	{
 	// A verifier
-	this->compteurParam = new tCompteur(mEeprom, aChannel);
+	this->compteurParam = aTCompteur;
 
 	//Initialisation du parametre tCompteur
 	strcpy((char*) this->compteurParam->aManufacturer, "NA");
@@ -71,7 +72,7 @@ void mCompteur::mOpen()
 //activation des entrees
     this->uart.enable();
     this->channelMultiplexer.write(channelCodeMultiplexer);
-    this->enable.write(kHigh);
+    //this->enable.write(kHigh);
     }
 
 //----------------------------------------------------------------
@@ -132,6 +133,10 @@ bool mCompteur::mRead(UInt32* aIndex)
 
     //re-active le compteur, pour qu'il r-envoie la trame
     this->enable.write(kDisableMeter);
+    aDelayTimeout.startDelayMS(100);
+    //On attend
+    while (!aDelayTimeout.isDone())
+	;
     this->enable.write(kEnableMeter);
 
     //Attente d'un certains temps pour recevoir les caractere
@@ -207,6 +212,7 @@ bool mCompteur::mRead(UInt32* aIndex)
 	    this->compteurParam->aNominalSize[strlen(
 		    (char*) this->compteurParam->aNominalSize) - 1] = 0x00;
 
+	    *aIndex = 0;
 	    //retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
 	    if (sscanf((char*) aDebitMesure, "%d.%d(%d*m3)", &aNumb1, &aNumb2,
 		    aIndex) == 3)

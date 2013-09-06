@@ -15,14 +15,7 @@
 #include "tCommandsAnalyzer.h"
 #include "mUSB.h"
 #include "def.h"
-
-//Structure de valeur des compteurs
-typedef struct
-    {
-    UInt32 value;
-    tDate date;
-    bool isConnected;
-    } gInputMeterValueStruct;
+#include "tCompteur.h"
 
 typedef struct
     {
@@ -33,11 +26,15 @@ typedef struct
     tCommandsUserNbEnum* aUserNb;
     char aReplyNb[15];
 
-    //compteurs
-    gInputMeterValueStruct valueMeters[2];
+    //la date d'execution
+    tDate* date;
 
     //capteurs de temperature
     UInt16 temperature;
+
+    //pour la simulation
+    bool isSimulation;
+    UInt32 indexOverrunSimulation; // index qu'il faut pour simuler un depassement de consommation
     } gInputMailBox;
 
 class gInput: public Gestionnaire
@@ -45,7 +42,7 @@ class gInput: public Gestionnaire
 private:
     mTempSensor* theTempSensor;
 
-    mCompteur* theCompteurs[2];
+    mCompteur* theCompteurs[3];
 
     mRTC* theRTC;
 
@@ -63,7 +60,7 @@ public:
     //----------------------------------------------------------------
     //constructeur
     //----------------------------------------------------------------
-    gInput(mGSM* theGSM, mCompteur* theCompteurs[2], mRTC* theRTC,
+    gInput(mGSM* theGSM, mCompteur* theCompteurs[3], mRTC* theRTC,
 	    mTempSensor* theTempSensor, tToolsCluster* theTools, mUSB* theUSB);
 
     ~gInput();

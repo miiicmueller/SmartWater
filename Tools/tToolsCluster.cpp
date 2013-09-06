@@ -28,6 +28,9 @@ tToolsCluster::tToolsCluster(mEEPROM* aEEPROM)
 	this->theCompteur[i] = new tCompteur(aEEPROM, i);
 	}
 
+    //le compteur de simulation
+    this->theCompteur[2] = new tCompteur(aEEPROM, 2);
+
     //parametres administrateur
     this->theAvailability = new tAvailability(aEEPROM, 1);
 
@@ -72,7 +75,19 @@ void tToolsCluster::reset()
 	this->theCompteur[i]->aNominalSize[0] = '\0';
 	this->theCompteur[i]->aSerialNum[0] = '\0';
 	this->theCompteur[i]->aVersNum[0] = '\0';
+	this->theCompteur[i]->aIndex = 0;
+	this->theCompteur[i]->isConnected = false;
 	}
+
+    //le compteur de simulation
+    this->theCompteur[2]->aFabDate[0] = '\0';
+    this->theCompteur[2]->aFluide[0] = '\0';
+    this->theCompteur[2]->aManufacturer[0] = '\0';
+    this->theCompteur[2]->aNominalSize[0] = '\0';
+    this->theCompteur[2]->aSerialNum[0] = '\0';
+    this->theCompteur[2]->aVersNum[0] = '\0';
+    this->theCompteur[2]->aIndex = 0;
+    this->theCompteur[2]->isConnected = false;
 
     //parametres administrateur
     this->theAvailability->aIntervalMn = 60;
@@ -106,6 +121,9 @@ void tToolsCluster::saveAll()
 	this->theCompteur[i]->save();
 	}
 
+    //le compteur de simulation
+    this->theCompteur[2]->save();
+
     //parametres administrateur
     this->theAvailability->save();
 
@@ -135,6 +153,9 @@ void tToolsCluster::loadAll()
 
 	this->theCompteur[i]->load();
 	}
+
+    //le compteur de simulation
+    this->theCompteur[2]->load();
 
     //parametres administrateur
     this->theAvailability->load();

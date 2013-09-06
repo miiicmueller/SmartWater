@@ -537,11 +537,11 @@ bool mEEPROM::load(UInt16 aId, UInt8 aDataTab[])
 	{
 	for (i = 0; i < aLastSize; i++)
 	    {
-//	    //On attend que l'EEPROM soit prete
-//	    if (!this->ackPolling())
-//		{
-//		return false;
-//		}
+	    //On attend que l'EEPROM soit prete
+	    if (!this->ackPolling())
+		{
+		return false;
+		}
 	    aDataTab[i] = this->read(aLastAdr + i, &aReadRes);
 	    }
 	return true;
@@ -624,10 +624,10 @@ bool mEEPROM::store(UInt16 aId, UInt8 aDataTab[])
 	for (i = 0; i < aLastSize; i++)
 	    {
 	    //On attend que l'EEPROM soit prete
-//	    if (!this->ackPolling())
-//		{
-//		return false;
-//		}
+	    if (!this->ackPolling())
+		{
+		return false;
+		}
 	    this->write(aLastAdr + i, aDataTab[i]);
 	    }
 	return true;

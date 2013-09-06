@@ -53,13 +53,12 @@ void gOutput::execute()
 	    sprintf(aAlarm,
 		    "consumption alarm on : %s\r\nlimit : %d\r\nconsumption : %d",
 		    this->theTools->theUnitName->aName,
-		    this->theGCompute->theComputeMailBox.overrunLimit,
-		    this->theGCompute->theComputeMailBox.overrunConsumption);
+		    this->theGCompute->theComputeMailBox.overrunLimit[i],
+		    this->theGCompute->theComputeMailBox.overrunConsumption[i]);
 
 	    this->theGCompute->theComputeMailBox.hasOverrun[i] = false;
 
-	    if (!this->theGSM->sendSMS(
-		    (UInt8*) (this->theGCompute->theComputeMailBox.aReplySMS),
+	    if (!this->theGSM->sendSMS((UInt8*) aAlarm,
 		    (UInt8*) (this->theTools->theAlarmNumber[i]->aTelNumber)))
 		{
 		// TODO : en cas d'erreur d'envoi de SMS

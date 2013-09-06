@@ -34,10 +34,6 @@ typedef struct
     UInt16 overrunLimit[2]; // limite de a ne pas depasser
     bool hasOverrun[2]; // le compteur a depasse
 
-    //pour la simulation
-    bool isSimulation;
-    UInt32 indexOverrunSimulation; // index qu'il faut pour simuler un depassement de consommation
-
     //pour savoir si le travail est termine
     bool isWorkFinished;
     } gComputeMailBox;

@@ -8,6 +8,9 @@ tCompteur::tCompteur(mEEPROM *mEeprom, UInt16 aModeNum)
     {
     this->mPeriphSauv = mEeprom;
 
+    this->isConnected = false;
+    this->aIndex = 0;
+
     //Configuration de la sauvegarde
     this->aId = kCOMPTEUR_BASE_ID + aModeNum; //Id unique
     this->aNbBytes = kSizeSerializerCompteur;
@@ -48,6 +51,14 @@ void tCompteur::save()
 	{
 	aDataTab[i] = (UInt8) this->aNominalSize[j];
 	}
+    for (j = 0; j < kSizeIndex; i++, j++)
+	{
+	aDataTab[i] = (UInt8) (this->aIndex) >> (j * 8);
+	}
+    for (j = 0; j < kSizeIsSimulation; i++, j++)
+	{
+	aDataTab[i] = (UInt8) this->isConnected;
+	}
 
     //Enregistrement dans l'EEPROM
     this->mPeriphSauv->store(this->aId, aDataTab);
@@ -86,6 +97,14 @@ void tCompteur::load()
     for (j = 0; j < kSizeNominalSize; i++, j++)
 	{
 	this->aNominalSize[j] = (char) aDataTab[i];
+	}
+    for (j = 0; j < kSizeIndex; i++, j++)
+	{
+	this->aIndex |= (UInt32) aDataTab[i] << (j * 8);
+	}
+    for (j = 0; j < kSizeIsSimulation; i++, j++)
+	{
+	this->isConnected = (bool) aDataTab[i];
 	}
     }
 
