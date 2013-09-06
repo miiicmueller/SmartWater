@@ -8,7 +8,7 @@ gComputeMailBox gCompute::theComputeMailBox;
 //----------------------------------------------------------------
 //constructeur
 //
-//gInput : le gestionnaire qui contient les entrées
+//gInput : le gestionnaire qui contient les entrï¿½es
 //----------------------------------------------------------------
 gCompute::gCompute(gInput* theGInput, gTerminal* theGTerminal,
 	tToolsCluster* theTools, mRTC* theRTC)
@@ -518,7 +518,7 @@ void gCompute::computeSMS()
 //			{
 //			//calcul de la limite du jour
 //			if (4 == aMonth || 6 == aMonth || 9 == aMonth
-//				|| 11 == aMonth) //mois à 30 jours
+//				|| 11 == aMonth) //mois ï¿½ 30 jours
 //			    {
 //			    aLimitDay =
 //				    (UInt16) (((float) (theTools->theMonthsLimits[j]->limits[aMonth
@@ -526,7 +526,7 @@ void gCompute::computeSMS()
 //					    - (aValue - aValueBeginMonth[j]))
 //					    / (float) (31 - aDay)) + 0.5);
 //			    }
-//			else if (2 == aMonth && 29 == aDay) //mois à 29 jours
+//			else if (2 == aMonth && 29 == aDay) //mois ï¿½ 29 jours
 //			    {
 //			    aLimitDay =
 //				    (UInt16) ((float) (theTools->theMonthsLimits[j]->limits[aMonth
@@ -534,7 +534,7 @@ void gCompute::computeSMS()
 //					    - (aValue - aValueBeginMonth[j]))
 //					    + 0.5);
 //			    }
-//			else if (2 == aMonth) //mois à 28 jours
+//			else if (2 == aMonth) //mois ï¿½ 28 jours
 //			    {
 //			    aLimitDay =
 //				    (UInt16) (((float) (theTools->theMonthsLimits[j]->limits[aMonth
@@ -542,7 +542,7 @@ void gCompute::computeSMS()
 //					    - (aValue - aValueBeginMonth[j]))
 //					    / (float) (29 - aDay)) + 0.5);
 //			    }
-//			else //mois à 31 jours
+//			else //mois ï¿½ 31 jours
 //			    {
 //			    aLimitDay =
 //				    (UInt16) (((float) (theTools->theMonthsLimits[j]->limits[aMonth
@@ -614,9 +614,9 @@ void gCompute::computeIsFinished()
     {
     if ((!this->theComputeMailBox.mahAuto)
 	    && (!this->theGInput->theInputMailBox.isSimulation)
-	    && (!this->theGInput->theInputMailBox.aAction == kCommandNoCommand)
+	    && (*(this->theGInput->theInputMailBox.aAction) == kCommandNoCommand)
 	    && (*(this->theGTerminal->theTerminalMailBox.aTerminalState)
-		    != kTerminalDisconnected))
+		    == kTerminalDisconnected))
 	{
 	this->theComputeMailBox.isWorkFinished = true;
 	}

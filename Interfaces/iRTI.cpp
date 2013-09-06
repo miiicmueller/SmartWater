@@ -1,13 +1,13 @@
 //*****************************************************************************
 //Nom du fichier : iRTI.cpp
 //Auteurs et Date : SAVY Cyrille 29.04.2013
-//But : mettre en place un mécanisme de delay
+//But : mettre en place un mï¿½canisme de delay
 //*****************************************************************************
 
 #include "iRTI.h"
 
-#define kNbOfDelays	5
-#define kTA0_Period	400 // clk à 4 000 000 Hz, divisé par 400, cela fait 10 000Hz, soit 100us
+#define kNbOfDelays	10
+#define kTA0_Period	400 // clk ï¿½ 4 000 000 Hz, divisï¿½ par 400, cela fait 10 000Hz, soit 100us
 //initialisation des attributs statiques
 int iRTI::freeDelays = kNbOfDelays;
 tDelay iRTI::delaysTab[kNbOfDelays];
@@ -41,7 +41,7 @@ iRTI::~iRTI()
     this->freeDelays++;
     }
 
-//méthodes publiques
+//mï¿½thodes publiques
 void iRTI::startDelay100US(UInt32 aTime100Us)
     {
     this->delaysTab[this->delayNumber].counter = aTime100Us;
@@ -53,11 +53,11 @@ bool iRTI::isDone()
     return this->delaysTab[this->delayNumber].isDone;
     }
 
-//méthodes statiques, qui agissent sur toutes les instances de la classe
+//mï¿½thodes statiques, qui agissent sur toutes les instances de la classe
 void iRTI::config()
     {
-    TA0CTL |= (TASSEL__SMCLK); //sélection de la source d'horloge du compteur (divisé par 1 par défaut)
-    TA0CCR0 = kTA0_Period; //nombre de pas à compter pour avoir une période de 1us
+    TA0CTL |= (TASSEL__SMCLK); //sï¿½lection de la source d'horloge du compteur (divisï¿½ par 1 par dï¿½faut)
+    TA0CCR0 = kTA0_Period; //nombre de pas ï¿½ compter pour avoir une pï¿½riode de 1us
     }
 
 void iRTI::enable()
