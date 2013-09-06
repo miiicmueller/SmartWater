@@ -1,7 +1,7 @@
 /*
  * tToolsCluster.cpp
  *
- *  Created on: 30 août 2013
+ *  Created on: 30 aoï¿½t 2013
  *      Author: cyrille.savy
  */
 
@@ -405,11 +405,60 @@ void tToolsCluster::getDailyConsumption(char* aMessage, UInt8 aUserNb)
 
 void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb)
     {
-    char aTemp[8];
-    unsigned int aLimit;
+    char aTemp[20];
 
-    sprintf(aMessage, this->theUnitName->aName);
-    //TODO : la suite du message
+    //TODO : le vrai message
+    sprintf(aMessage, "Unite :");
+    strcat(aMessage, this->theUnitName->aName);
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Date et heure ");
+    strcat(aMessage, "18/09/12/16:53:00");
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Disponibilite ");
+    sprintf(aTemp, "%d/%d", this->theAvailability->aIntervalMn,
+	    this->theAvailability->aTimeMn);
+    strcat(aMessage, aTemp);
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Mode ");
+    aTemp[0] = this->theMode->mode;
+    aTemp[1] = 0;
+    strcat(aMessage, aTemp);
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Index ");
+    strcat(aMessage, "2514");
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Debit jour ");
+    strcat(aMessage, "10,7");
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Debit mens");
+    strcat(aMessage, "10,7");
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Limite jour ");
+    strcat(aMessage, "25,0");
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Temp ");
+    strcat(aMessage, "25,0");
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Off Temp ");
+    strcat(aMessage, "0,2");
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Credit ");
+    strcat(aMessage, "10,0");
+    strcat(aMessage, "\r\n");
+
+    strcat(aMessage, "Alarme ");
+    strcat(aMessage, this->theAlarmNumber[aUserNb]->aTelNumber);
+    strcat(aMessage, "\r\n");
     }
 
 // destructeur
