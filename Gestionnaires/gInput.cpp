@@ -108,9 +108,10 @@ void gInput::execute()
 	this->theCompteurs[0]->mClose();
 
 	//pour la temperature
-	this->theInputMailBox.temperature.aFloatVal =
-		(this->theTempSensor->readTemp()) / 16.0;
-
+	UInt16 temp = this->theTempSensor->readTemp();
+	this->theInputMailBox.temperature.aFakeFloat.integer = temp >> 4;
+	this->theInputMailBox.temperature.aFakeFloat.decimal = ((temp % 16)
+		* 100) >> 4;
 	}
     }
 

@@ -31,7 +31,11 @@ typedef unsigned long UInt32;
 typedef union
     {
     unsigned char aCharArray[sizeof(float)];
-    float aFloatVal;
+    struct
+	{
+	UInt16 integer;
+	UInt16 decimal;
+	} aFakeFloat;
     } Float32;
 
 #endif

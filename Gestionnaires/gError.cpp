@@ -9,12 +9,23 @@
 
 gError::gError()
     {
-    // TODO Auto-generated constructor stub
+
+    }
+
+void gError::setup()
+    {
+    for (int i = 0; i < kGErrorNbErrors; i++)
+	{
+	this->gErrorList[i] = true;
+	}
+    }
+
+void gError::execute()
+    {
 
     }
 
 gError::~gError()
     {
-    // TODO Auto-generated destructor stub
     }
 

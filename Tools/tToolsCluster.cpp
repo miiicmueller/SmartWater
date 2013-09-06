@@ -97,7 +97,8 @@ void tToolsCluster::reset()
 
     this->theMode->mode = 'S';
 
-    this->theTemperatureOffset->aOffset.aFloatVal = 0;
+    this->theTemperatureOffset->aOffset.aFakeFloat.integer = 0;
+    this->theTemperatureOffset->aOffset.aFakeFloat.decimal = 0;
 
     sprintf(this->theUnitName->aName, "Unit1");
 
@@ -223,15 +224,13 @@ bool tToolsCluster::setMode(char* aMode)
 
 bool tToolsCluster::setTemperatureOffset(char* aTemperatureOffset)
     {
-    UInt8 aOffsetUnit;
-    UInt8 aOffsetDecimal;
     bool isSuccessful = false;
 
-    if (sscanf(aTemperatureOffset, "%d.%d", &aOffsetUnit, &aOffsetDecimal) == 2)
+    if (sscanf(aTemperatureOffset, "%d.%d",
+	    &this->theTemperatureOffset->aOffset.aFakeFloat.integer,
+	    &this->theTemperatureOffset->aOffset.aFakeFloat.decimal) == 2)
 	{
 	isSuccessful = true;
-	this->theTemperatureOffset->aOffset.aFloatVal = aOffsetUnit
-		+ (0.1 * aOffsetDecimal);
 	this->theTemperatureOffset->save();
 	}
     return isSuccessful;
@@ -408,8 +407,6 @@ void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb, tDate* theDate,
     {
     char aTemp[20];
 
-    UInt16 i;
-
     aMessage[0] = '\0';
     strcat(aMessage, this->theUnitName->aName);
     strcat(aMessage, "\r\n");
@@ -444,7 +441,7 @@ void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb, tDate* theDate,
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
-    strcat(aMessage, "Debit mens");
+    strcat(aMessage, "Debit mens ");
     sprintf(aTemp, "%d",
 	    this->theMeasuresStatement[aUserNb - 1]->MonthlyConsumption[theDate->month]);
     strcat(aMessage, aTemp);
@@ -457,17 +454,20 @@ void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb, tDate* theDate,
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Temp ");
-    sprintf(aTemp, "%f", theTemp);
+    sprintf(aTemp, "%d.%d", theTemp.aFakeFloat.integer,
+	    theTemp.aFakeFloat.decimal / 10);
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Off Temp ");
-    sprintf(aTemp, "%f", this->theTemperatureOffset->aOffset.aFloatVal);
+    sprintf(aTemp, "%d.%d",
+	    this->theTemperatureOffset->aOffset.aFakeFloat.integer,
+	    this->theTemperatureOffset->aOffset.aFakeFloat.decimal / 10);
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Credit ");
-    sprintf(aTemp, "%fcts", theCredit);
+    sprintf(aTemp, "%dcts", theCredit);
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
