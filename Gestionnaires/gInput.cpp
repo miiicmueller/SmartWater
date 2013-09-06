@@ -39,6 +39,8 @@ void gInput::setup()
     this->theInputMailBox.date->hour = 0;
     this->theInputMailBox.date->minute = 0;
     this->theInputMailBox.date->second = 0;
+
+    this->theInputMailBox.theCredit = 0;
     }
 
 void gInput::execute()
