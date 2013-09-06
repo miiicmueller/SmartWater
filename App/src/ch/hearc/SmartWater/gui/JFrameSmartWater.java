@@ -2,6 +2,8 @@ package ch.hearc.SmartWater.gui;
 
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Graphics;
+import java.awt.Image;
 import java.awt.Menu;
 import java.awt.MenuBar;
 import java.awt.MenuItem;
@@ -9,10 +11,14 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.awt.image.ImageObserver;
+import java.awt.image.ImageProducer;
 import java.io.IOException;
 import java.util.Locale;
 import java.util.Map;
 import java.util.TreeMap;
+
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 import javax.swing.UIManager.LookAndFeelInfo;
 
@@ -24,6 +30,7 @@ import ch.hearc.SmartWater.commUsb.dialogSel.JFramePortSel;
 import ch.hearc.SmartWater.dataManager.DataManager;
 import ch.hearc.SmartWater.gui.login.JFrameLogin;
 import ch.hearc.SmartWater.gui.login.Session;
+import ch.hearc.SmartWater.gui.tools.ImageShop;
 import ch.hearc.SmartWater.lang.JLanguages;
 
 public class JFrameSmartWater extends JFrame {
@@ -353,10 +360,8 @@ public class JFrameSmartWater extends JFrame {
 				if (reponse == jOptionpane.YES_OPTION) {
 					JFrameSmartWater.this.exitSoftware();
 					JFrameSmartWater.this.dispose();
-				}
-				else
-				{
-					
+				} else {
+
 				}
 			}
 		});
@@ -439,7 +444,7 @@ public class JFrameSmartWater extends JFrame {
 		setResizable(true);
 		this.setBackground(Color.GRAY);
 
-		// Display the window.
+		this.setIconImage(ImageShop.IMAGE_LOGO_ICON.getImage());
 		this.setVisible(true);
 	}
 
@@ -504,5 +509,7 @@ public class JFrameSmartWater extends JFrame {
 	private DataManager dataManager;
 
 	Map<String, String> parametres;
+	
+
 
 }
