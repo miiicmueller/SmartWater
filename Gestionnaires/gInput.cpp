@@ -3,7 +3,7 @@
 
 #include "gInput.h"
 
-gInput::gInput(mGSM* theGSM, mCompteur* theCompteurs[2], mRTC* theRTC,
+gInput::gInput(mGSM* theGSM, mCompteur* theCompteurs[3], mRTC* theRTC,
 	mTempSensor* theTempSensor, tToolsCluster* theTools, mUSB* theUSB)
     {
     this->theGSM = theGSM;
@@ -11,8 +11,11 @@ gInput::gInput(mGSM* theGSM, mCompteur* theCompteurs[2], mRTC* theRTC,
     this->theTempSensor = theTempSensor;
     this->theCompteurs[0] = theCompteurs[0];
     this->theCompteurs[1] = theCompteurs[1];
+    this->theCompteurs[2] = theCompteurs[2];
     this->theTools = theTools;
     this->theUSB = theUSB;
+
+    this->theInputMailBox.date = new tDate();
 
     //assignation du contenu de la mailbox
     this->theInputMailBox.aUserNb = &(this->theAnalyzer.aCommandResult.aUserNb);
@@ -53,28 +56,46 @@ void gInput::execute()
 
 	this->theAnalyzer.tCommandsAnalysis(theSMS, this->theTools);
 
+	//lecture de l'heure
+	this->theRTC->readTime((char*) &(this->theInputMailBox.date->hour),
+		(char*) &(this->theInputMailBox.date->minute),
+		(char*) &(this->theInputMailBox.date->second));
+	this->theRTC->readDate((int*) &(this->theInputMailBox.date->year),
+		(char*) &(this->theInputMailBox.date->month),
+		(char*) &(this->theInputMailBox.date->day),
+		(char*) &(this->theInputMailBox.date->dayOfWeek));
+
 	//pour les compteurs
 	for (int i = 0; i <= 1; i++)
 	    {
 	    this->theCompteurs[i]->mOpen();
 
 	    if (this->theCompteurs[i]->mRead(
-		    &(this->theInputMailBox.valueMeters[i].value)))
+		    &(this->theTools->theCompteur[i]->aIndex)))
 		{
-		this->theRTC->readTime(
-			(char*) &(this->theInputMailBox.valueMeters[i].date.hour),
-			(char*) &(this->theInputMailBox.valueMeters[i].date.minute),
-			(char*) &(this->theInputMailBox.valueMeters[i].date.second));
-		this->theRTC->readDate(
-			(int*) &(this->theInputMailBox.valueMeters[i].date.year),
-			(char*) &(this->theInputMailBox.valueMeters[i].date.month),
-			(char*) &(this->theInputMailBox.valueMeters[i].date.day),
-			(char*) &(this->theInputMailBox.valueMeters[i].date.dayOfWeek));
-		this->theInputMailBox.valueMeters[i].isConnected = true;
+		this->theTools->theCompteur[i]->isConnected = true;
 		}
 	    else
 		{
-		this->theInputMailBox.valueMeters[i].isConnected = false;
+		this->theTools->theCompteur[i]->isConnected = false;
+		}
+	    }
+
+	if (this->theInputMailBox.isSimulation)
+	    {
+	    this->theCompteurs[2]->mOpen();
+
+	    this->theCompteurs[2]->simulationCpt(
+		    this->theInputMailBox.indexOverrunSimulation);
+
+	    if (this->theCompteurs[2]->mRead(
+		    &(this->theTools->theCompteur[2]->aIndex)))
+		{
+		this->theTools->theCompteur[2]->isConnected = true;
+		}
+	    else
+		{
+		this->theTools->theCompteur[2]->isConnected = false;
 		}
 	    }
 

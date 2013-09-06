@@ -52,8 +52,6 @@ volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received
  */
 void main(void)
     {
-    int i;
-
     // Important pour la basse consommation
     iDIO::InitAllPort();
 
@@ -85,8 +83,8 @@ void main(void)
     iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
     UInt16 eePromAddress = 0x50;
     mEEPROM aEEPROM(eePromAddress, &i2cBus);
+//    aEEPROM.initIdTable();
     aEEPROM.mOpen();
-    // aEEPROM.initIdTable();
 
     tToolsCluster theTools(&aEEPROM);
     // TODO : reset a enlever
@@ -108,10 +106,13 @@ void main(void)
     mRTC theRTC;
     theRTC.mOpen();
 
-    mCompteur* theCountersTab[2];
-    theCountersTab[0] = new mCompteur(kMeter1, &aEEPROM);
-    theCountersTab[1] = new mCompteur(kMeter2, &aEEPROM);
-    // mCompteur aCompteur(kMeterSimulation, &aEEPROM);
+    mCompteur* theCountersTab[3];
+    theCountersTab[0] = new mCompteur(kMeter1, &aEEPROM,
+	    theTools.theCompteur[0]);
+    theCountersTab[1] = new mCompteur(kMeter2, &aEEPROM,
+	    theTools.theCompteur[1]);
+    theCountersTab[2] = new mCompteur(kMeterSimulation, &aEEPROM,
+	    theTools.theCompteur[2]);
 
     gInput theGInput(&theGSM, theCountersTab, &theRTC, &theTempSensor,
 	    &theTools, &theUSB);
@@ -138,7 +139,7 @@ void main(void)
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
 	    theGOutput.execute();
-	    theGSleep.execute();
+	    //theGSleep.execute();
 	    }
 	if (aDelayInput.isDone())
 	    {
@@ -146,5 +147,45 @@ void main(void)
 	    theGInput.execute();
 	    }
 	}
+
+//    //test de compute consumption
+//    theGInput.theInputMailBox.valueMeters[0].date.day=10;
+//    theGInput.theInputMailBox.valueMeters[0].date.month=9;
+//    theGInput.theInputMailBox.valueMeters[0].isConnected=true;
+//    theGInput.theInputMailBox.valueMeters[0].value=10000;
+//    for(int k=0; k<12; k++)
+//	{
+//	theTools.theMonthsLimits[0]->limits[k]=970;
+//	}
+//
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=11; //rien
+//    theGInput.theInputMailBox.valueMeters[0].value=10030;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=11; //rien
+//    theGInput.theInputMailBox.valueMeters[0].value=10031;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=12; //rien
+//    theGInput.theInputMailBox.valueMeters[0].value=10060;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=13; //rien
+//    theGInput.theInputMailBox.valueMeters[0].value=10090;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=14; //avertissmeent le lendemain
+//    theGInput.theInputMailBox.valueMeters[0].value=10190;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=15; //alerte le lendemain
+//    theGInput.theInputMailBox.valueMeters[0].value=10290;
+//    theGCompute.computeConsumption();
+//
+//    theGInput.theInputMailBox.valueMeters[0].date.day=15; //alerte ici
+//    theGInput.theInputMailBox.valueMeters[0].value=10320;
+//    theGCompute.computeConsumption();
 
     }

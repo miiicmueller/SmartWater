@@ -45,9 +45,9 @@ void tAvailability::load()
 
     //Deserialisation
     this->aIntervalMn = (UInt8) aDataTab[0];
-    this->aIntervalMn |= (UInt8) aDataTab[1];
+    this->aIntervalMn |= (UInt16) (aDataTab[1] << 8);
     this->aTimeMn = (UInt8) aDataTab[2];
-    this->aTimeMn |= (UInt8) aDataTab[3];
+    this->aTimeMn |= (UInt16) (aDataTab[3] << 8);
 
     }
 

@@ -47,7 +47,7 @@ void tMonthsLimits::load()
     for (i = 0, j = 0; i < 12; i++, j += 2)
 	{
 	this->limits[i] = (UInt16) (aDataTab[j]);
-	this->limits[i] |= (UInt16) (aDataTab[j + 1]);
+	this->limits[i] |= (UInt16) (aDataTab[j + 1] << 8);
 	}
     }
 

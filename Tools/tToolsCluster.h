@@ -33,7 +33,7 @@ public:
     tMdPUser* theMdPUser[2];
     tMeasuresStatement* theMeasuresStatement[2];
     tMonthsLimits* theMonthsLimits[2];
-    tCompteur* theCompteur[2];
+    tCompteur* theCompteur[3];
 
     //parametres administrateur
     tAvailability* theAvailability;

@@ -258,6 +258,7 @@ bool mGSM::getSMS(char* aSMS, bool* aHasSms, char* aNumPhone)
 			{
 			aNumPhone[j] = aDataReceived[i]; // copie le numero
 			}
+		    aNumPhone[j] = '\0';
 
 		    mGSM::timeOut.startDelayMS(kTimeOutResponse);
 		    while ((false == mGSM::uart.readFrameToCRLF(aDataReceived))

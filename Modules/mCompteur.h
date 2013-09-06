@@ -46,7 +46,7 @@ public:
     //
     //aChannel : choix du compteur d'eau
     //----------------------------------------------------------------
-    mCompteur(iMeterChannel aChannel, mEEPROM *mEeprom);
+    mCompteur(iMeterChannel aChannel, mEEPROM *mEeprom, tCompteur *aTCompteur);
 
     //----------------------------------------------------------------
     //destructeur

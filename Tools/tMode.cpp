@@ -7,7 +7,6 @@
 tMode::tMode(mEEPROM *mEeprom, UInt16 aModeNum)
     {
     this->mPeriphSauv = mEeprom;
-    this->mode = 0;
 
     //Configuration de la sauvegarde
     this->aId = kMODE_BASE_ID + aModeNum; //Id unique
