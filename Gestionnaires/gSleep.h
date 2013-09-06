@@ -19,7 +19,7 @@ class gSleep: public Gestionnaire
 public:
     gSleep(tToolsCluster* aToolCluster, mRTC* amRTC, mGSM* aGsm,
 	    mCompteur* aCompteur, mTempSensor* amTempSensor,
-	    gCompute* aGCompute,mWDT* aWatchDog);
+	    gCompute* aGCompute, mWDT* aWatchDog);
     void setup();
     void execute();
 
@@ -33,10 +33,18 @@ private:
     mCompteur* aCompteur;
     mTempSensor* amTempSensor;
     gCompute* aGCompute;
+    static iDIO wakeUp;
+    static iDIO ledWakeUp;
+
+
+    //Interruptions handlers
+    friend void WakeUpBtn(void);
 
     char aHourOld;
     char aMinOld;
     char aSecOld;
+    static bool aCanSleep ;
+    static mDelay aCanSleepDelay ;
 
     };
 #endif

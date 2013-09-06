@@ -1,3 +1,5 @@
+//#define FIRST_INIT
+
 #include <msp430.h>
 
 #include "Interfaces/iDIO.h"
@@ -61,7 +63,7 @@ void main(void)
 
     mWDT theWatchDog;
     //Demmarage du watchdog
-    theWatchDog.startWatchDog();
+    //   theWatchDog.startWatchDog();
 
     //attente que l'alim soit stabilisee
     iDIO pGood((char*) kPort_6, BIT4);
@@ -80,10 +82,24 @@ void main(void)
     iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
     UInt16 eePromAddress = 0x50;
     mEEPROM aEEPROM(eePromAddress, &i2cBus);
-    aEEPROM.mOpen();
 
+#ifdef FIRST_INIT
+
+    theWatchDog.stopWatchDog();
+
+    aEEPROM.initIdTable();
+    aEEPROM.mOpen();
+    tToolsCluster theTools(&aEEPROM);
+    theTools.reset();
+    theTools.saveAll();
+
+    //On attend pour rien faire d'autre
+    while(1);
+#else
+    aEEPROM.mOpen();
     tToolsCluster theTools(&aEEPROM);
     theTools.loadAll();
+#endif
 
     mGSM theGSM(theTools.theSIMCard);
     theGSM.mSetup();
@@ -120,12 +136,15 @@ void main(void)
     theGOutput.setup();
     theGSleep.setup();
 
+    //On endort le processeur
+    mCpu::setPowerMode(kLPM3);
+
     mDelay aDelayCompute;
     mDelay aDelayInput;
 
     while (1)
 	{
-	theWatchDog.resetWatchDog();
+	//theWatchDog.resetWatchDog();
 	if (aDelayCompute.isDone())
 	    {
 	    aDelayCompute.startDelayMS(1);

@@ -7,8 +7,14 @@
 #include "Modules/mGSM.h"
 #include "Modules/mCompteur.h"
 #include "Modules/mTempSensor.h"
+#include "Interfaces/iDIO.h"
 #include "gCompute.h"
 #include "Modules/mWDT.h"
+
+iDIO gSleep::wakeUp((char*) kPort_2, BIT1);
+iDIO gSleep::ledWakeUp((char*) kPort_2, BIT0);
+bool gSleep::aCanSleep = true;
+mDelay gSleep::aCanSleepDelay;
 
 gSleep::gSleep(tToolsCluster* aToolCluster, mRTC* amRTC, mGSM* aGsm,
 	mCompteur* aCompteur, mTempSensor* amTempSensor, gCompute* aGCompute,
@@ -40,6 +46,20 @@ gSleep::gSleep(tToolsCluster* aToolCluster, mRTC* amRTC, mGSM* aGsm,
 
 void gSleep::setup()
     {
+    //Configuration du bouton de réveil
+    gSleep::wakeUp.SetPortDirection(kInput);
+    gSleep::wakeUp.write(~BIT1);
+    gSleep::wakeUp.SetPortResistorEnable(kResistorEnable);
+
+    //Configuration de la led de sortie
+    gSleep::ledWakeUp.SetPortDirection(kOutput);
+    gSleep::ledWakeUp.SetPortDriveStrength(kFullStrength);
+    gSleep::ledWakeUp.write(~BIT0);
+
+    //Config de l'interruption
+    P2IES &= ~BIT1;
+    P2IE |= BIT1;
+
     }
 
 void gSleep::execute()
@@ -55,10 +75,18 @@ void gSleep::execute()
     aRes = aMinutesCalc / this->atAvailability->aIntervalMn; // si on desire toute les 10 min, et que aMinutes = 15 => aRes = 1 . On est dans la deuxieme tranche, la premiere etant 0
     this->aMinOld = aRes * this->atAvailability->aIntervalMn;
 
+    if (gSleep::aCanSleepDelay.isDone() && !gSleep::aCanSleep)
+	{
+	gSleep::aCanSleep = true;
+	//On éteint la led
+	gSleep::ledWakeUp.write(~BIT0);
+	}
+
     //Comparaison avec les ancienne valeurs
     //Ici on dort
     if ((aMinutesCalc >= (this->aMinOld + this->atAvailability->aTimeMn))
-	    && (this->aGCompute->theComputeMailBox.isWorkFinished)) // Suivant l'exemple si aMinutes = 15 et aMinold = 10 et aTime = 5 , on passe
+	    && (this->aGCompute->theComputeMailBox.isWorkFinished)
+	    && gSleep::aCanSleep) // Suivant l'exemple si aMinutes = 15 et aMinold = 10 et aTime = 5 , on passe
 	{
 	//Setter l'alarme
 	this->amRTC->setAlarm(
@@ -96,3 +124,27 @@ void gSleep::execute()
 gSleep::~gSleep()
     {
     }
+
+// USCIA1 Interrupt handler
+#pragma vector=PORT2_VECTOR
+__interrupt void WakeUpBtn(void)
+    {
+//Verifiation que c'est bien un interruption en reception
+    if ((P2IFG & BIT1)== BIT1)
+	{
+	mDelay aDelay;
+
+	//On réveil le processeur
+	mCpu::setPowerMode(kActiveMode);
+
+	gSleep::aCanSleep = false;
+	//On ne permet pas de dormir pour 5 minutes
+	gSleep::aCanSleepDelay.startDelayMS(120000);
+
+	//On allume la led 1 seconde
+	gSleep::ledWakeUp.write(BIT0);
+
+	P2IFG &= ~BIT1;
+	}
+    }
+
