@@ -12,19 +12,21 @@
 #include "Modules/mTempSensor.h"
 #include "Tools/tAvailability.h"
 #include "gCompute.h"
+#include "Modules/mWDT.h"
 
 class gSleep: public Gestionnaire
     {
 public:
     gSleep(tToolsCluster* aToolCluster, mRTC* amRTC, mGSM* aGsm,
 	    mCompteur* aCompteur, mTempSensor* amTempSensor,
-	    gCompute* aGCompute);
+	    gCompute* aGCompute,mWDT* aWatchDog);
     void setup();
     void execute();
 
     ~gSleep();
 
 private:
+    mWDT* aWatchDog;
     tAvailability* atAvailability;
     mRTC* amRTC;
     mGSM* aGsm;
