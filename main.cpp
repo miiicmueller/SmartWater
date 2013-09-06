@@ -130,6 +130,8 @@ void main(void)
 
     mDelay aDelayCompute;
     mDelay aDelayInput;
+    aDelayCompute.startDelayMS(2);
+    aDelayInput.startDelayMS(1);
 
     while (1)
 	{

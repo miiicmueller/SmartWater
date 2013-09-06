@@ -33,6 +33,12 @@ gInput::gInput(mGSM* theGSM, mCompteur* theCompteurs[3], mRTC* theRTC,
 
 void gInput::setup()
     {
+    this->theInputMailBox.date->year = 1;
+    this->theInputMailBox.date->month = 1;
+    this->theInputMailBox.date->day = 1;
+    this->theInputMailBox.date->hour = 0;
+    this->theInputMailBox.date->minute = 0;
+    this->theInputMailBox.date->second = 0;
     }
 
 void gInput::execute()
@@ -102,7 +108,8 @@ void gInput::execute()
 	this->theCompteurs[0]->mClose();
 
 	//pour la temperature
-	this->theInputMailBox.temperature = this->theTempSensor->readTemp();
+	this->theInputMailBox.temperature.aFloatVal =
+		(this->theTempSensor->readTemp()) / 16.0;
 
 	}
     }

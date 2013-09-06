@@ -403,22 +403,27 @@ void tToolsCluster::getDailyConsumption(char* aMessage, UInt8 aUserNb)
 	}
     }
 
-void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb)
+void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb, tDate* theDate,
+	UInt16 theCredit, Float32 theTemp)
     {
     char aTemp[20];
 
-    //TODO : le vrai message
-    sprintf(aMessage, "Unite :");
+    UInt16 i;
+
+    aMessage[0] = '\0';
     strcat(aMessage, this->theUnitName->aName);
     strcat(aMessage, "\r\n");
 
-    strcat(aMessage, "Date et heure ");
-    strcat(aMessage, "18/09/12/16:53:00");
+    sprintf(aTemp, "%d/%d/%d %d:%d:%d", theDate->day, theDate->month,
+	    theDate->year, theDate->hour, theDate->minute, theDate->second);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Disponibilite ");
-    sprintf(aTemp, "%d/%d", this->theAvailability->aIntervalMn,
-	    this->theAvailability->aTimeMn);
+    sprintf(aTemp, "%d:%d/%d:%d", (this->theAvailability->aIntervalMn) / 60,
+	    (this->theAvailability->aIntervalMn) % 60,
+	    (this->theAvailability->aTimeMn) / 60,
+	    (this->theAvailability->aTimeMn) % 60);
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
@@ -429,31 +434,41 @@ void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb)
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Index ");
-    strcat(aMessage, "2514");
+    sprintf(aTemp, "%d", this->theCompteur[aUserNb - 1]->aIndex);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Debit jour ");
-    strcat(aMessage, "10,7");
+    sprintf(aTemp, "%d",
+	    this->theMeasuresStatement[aUserNb - 1]->CurrentMonthConsumption[theDate->day]);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Debit mens");
-    strcat(aMessage, "10,7");
+    sprintf(aTemp, "%d",
+	    this->theMeasuresStatement[aUserNb - 1]->MonthlyConsumption[theDate->month]);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Limite jour ");
-    strcat(aMessage, "25,0");
+    sprintf(aTemp, "%d",
+	    this->theMonthsLimits[aUserNb - 1]->limits[theDate->month]);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Temp ");
-    strcat(aMessage, "25,0");
+    sprintf(aTemp, "%f", theTemp);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Off Temp ");
-    strcat(aMessage, "0,2");
+    sprintf(aTemp, "%f", this->theTemperatureOffset->aOffset.aFloatVal);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Credit ");
-    strcat(aMessage, "10,0");
+    sprintf(aTemp, "%fcts", theCredit);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Alarme ");
