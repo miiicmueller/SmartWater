@@ -15,6 +15,13 @@ typedef enum
     kTempHigh = 0x03
     } mTempSensorRegEnum;
 
+typedef enum
+    {
+    kTempSensorOK = 0x00,
+    kTempSensorCommError = 0x01,
+    kTempSensorMissing = 0x02
+    } mTempSensorStatusEnum;
+
 class mTempSensor: public Module
     {
 private:

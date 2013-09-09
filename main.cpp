@@ -29,6 +29,7 @@
 #include "Gestionnaires/gOutput.h"
 #include "Gestionnaires/gSleep.h"
 #include "Gestionnaires/gTerminal.h"
+#include "Gestionnaires/gError.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -108,7 +109,6 @@ void main(void)
     aEEPROM.mOpen();
     tToolsCluster theTools(&aEEPROM);
     theTools.loadAll();
-#endif
 
     mGSM theGSM(theTools.theSIMCard);
     theGSM.mSetup();
@@ -131,11 +131,13 @@ void main(void)
     theCountersTab[2] = new mCompteur(kMeterSimulation, &aEEPROM,
 	    theTools.theCompteur[2]);
 
+    gError theGError(&theGSM, &theTempSensor, &aEEPROM);
     gInput theGInput(&theGSM, theCountersTab, &theRTC, &theTempSensor,
-	    &theTools, &theUSB);
+	    &theTools, &theUSB, &theGError);
     gTerminal theTerminalUSB(&theTools, &theUSB);
     gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools, &theRTC);
-    gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB, &theTools);
+    gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB, &theTools,
+	    &theGError);
     gSleep theGSleep(&theTools, &theRTC, &theGSM, theCountersTab[0],
 	    &theTempSensor, &theGCompute, &theWatchDog);
 
@@ -155,14 +157,15 @@ void main(void)
 
     while (1)
 	{
-	//theWatchDog.resetWatchDog();
+	theWatchDog.resetWatchDog();
 	if (aDelayCompute.isDone())
 	    {
 	    aDelayCompute.startDelayMS(1);
+	    theGError.execute();
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
 	    theGOutput.execute();
-	    //theGSleep.execute();
+	    theGSleep.execute();
 	    }
 	if (aDelayInput.isDone())
 	    {
@@ -170,5 +173,6 @@ void main(void)
 	    theGInput.execute();
 	    }
 	}
-
+#endif
     }
+

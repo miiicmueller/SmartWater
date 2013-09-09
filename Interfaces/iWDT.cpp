@@ -16,7 +16,7 @@ iWDT::~iWDT()
 void iWDT::startWatchDog()
     {
     // Watchdog mode -> reset after expired time; WDT is clocked by ACLK
-    WDTCTL = WDT_ARST_4M_16S;
+    // WDTCTL = WDT_ARST_4M_16S;
     }
 
 void iWDT::stopWatchDog()

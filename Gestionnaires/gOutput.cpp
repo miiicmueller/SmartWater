@@ -10,13 +10,14 @@
 //gCompute : le gestionnaire qui contient les donnees qui devront etre sorties
 //----------------------------------------------------------------
 gOutput::gOutput(gCompute* theGCompute, mGSM* theGSM, mRTC* theRTC,
-	mUSB* theUSB, tToolsCluster* theTools)
+	mUSB* theUSB, tToolsCluster* theTools, gError* theGError)
     {
     this->theGCompute = theGCompute;
     this->theGSM = theGSM;
     this->theRTC = theRTC;
     this->theUSB = theUSB;
     this->theTools = theTools;
+    this->theGError = theGError;
     }
 
 void gOutput::setup()
@@ -33,52 +34,61 @@ void gOutput::execute()
 	}
 
     //reponse SMS
-    if (this->theGCompute->theComputeMailBox.aReplySMS[0] != '\0')
+    if (this->theGError->gErrorList[kGErrorGSM] == false)
 	{
-	if (!this->theGSM->sendSMS(
-		(UInt8*) (this->theGCompute->theComputeMailBox.aReplySMS),
-		(UInt8*) (this->theGCompute->theComputeMailBox.aReplyNb)))
+	if (this->theGCompute->theComputeMailBox.aReplySMS[0] != '\0')
 	    {
-	    // TODO : en cas d'erreur d'envoi de SMS
+	    if (!this->theGSM->sendSMS(
+		    (UInt8*) (this->theGCompute->theComputeMailBox.aReplySMS),
+		    (UInt8*) (this->theGCompute->theComputeMailBox.aReplyNb)))
+		{
+		this->theGError->gErrorList[kGErrorGSM] = true;
+		}
 	    }
 	}
 
     //alarme SMS
-    for (int i = 0; i <= 1; i++)
+    if (this->theGError->gErrorList[kGErrorGSM] == false)
 	{
-	if (this->theGCompute->theComputeMailBox.hasOverrun[i])
+	for (int i = 0; i <= 1; i++)
 	    {
-	    char aAlarm[80];
-
-	    sprintf(aAlarm,
-		    "consumption alarm on : %s\r\nlimit : %d\r\nconsumption : %d",
-		    this->theTools->theUnitName->aName,
-		    this->theGCompute->theComputeMailBox.overrunLimit[i],
-		    this->theGCompute->theComputeMailBox.overrunConsumption[i]);
-
-	    this->theGCompute->theComputeMailBox.hasOverrun[i] = false;
-
-	    if (!this->theGSM->sendSMS((UInt8*) aAlarm,
-		    (UInt8*) (this->theTools->theAlarmNumber[i]->aTelNumber)))
+	    if (this->theGCompute->theComputeMailBox.hasOverrun[i])
 		{
-		// TODO : en cas d'erreur d'envoi de SMS
+		char aAlarm[80];
+
+		sprintf(aAlarm,
+			"consumption alarm on : %s\r\nlimit : %d\r\nconsumption : %d",
+			this->theTools->theUnitName->aName,
+			this->theGCompute->theComputeMailBox.overrunLimit[i],
+			this->theGCompute->theComputeMailBox.overrunConsumption[i]);
+
+		this->theGCompute->theComputeMailBox.hasOverrun[i] = false;
+
+		if (!this->theGSM->sendSMS((UInt8*) aAlarm,
+			(UInt8*) (this->theTools->theAlarmNumber[i]->aTelNumber)))
+		    {
+		    this->theGError->gErrorList[kGErrorGSM] = true;
+		    }
 		}
 	    }
 	}
 
     //mise a l'heure automatique
-    if (this->theGCompute->theComputeMailBox.mahAuto)
+    if (this->theGError->gErrorList[kGErrorGSM] == false)
 	{
-	this->theGCompute->theComputeMailBox.mahAuto = false;
-
-	tDate theDate;
-
-	if (theGSM->getDate(&theDate))
+	if (this->theGCompute->theComputeMailBox.mahAuto)
 	    {
-	    theRTC->setDate((int) theDate.year, (char) theDate.month,
-		    (char) theDate.day, (char) theDate.dayOfWeek);
-	    theRTC->setHour((char) theDate.hour, (char) theDate.minute,
-		    (char) theDate.second);
+	    this->theGCompute->theComputeMailBox.mahAuto = false;
+
+	    tDate theDate;
+
+	    if (theGSM->getDate(&theDate))
+		{
+		theRTC->setDate((int) theDate.year, (char) theDate.month,
+			(char) theDate.day, (char) theDate.dayOfWeek);
+		theRTC->setHour((char) theDate.hour, (char) theDate.minute,
+			(char) theDate.second);
+		}
 	    }
 	}
     }

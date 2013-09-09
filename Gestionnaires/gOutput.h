@@ -21,7 +21,7 @@ public:
     //gCompute : le gestionnaire qui contient les donnees qui devront etre sorties
     //----------------------------------------------------------------
     gOutput(gCompute* theGCompute, mGSM* theGSM, mRTC* theRTC, mUSB* theUSB,
-	    tToolsCluster* theTools);
+	    tToolsCluster* theTools, gError* theGError);
 
     void setup();
 
@@ -34,6 +34,7 @@ private:
     mGSM* theGSM;
     mRTC* theRTC;
     mUSB* theUSB;
+    gError* theGError;
     tToolsCluster* theTools;
     };
 #endif

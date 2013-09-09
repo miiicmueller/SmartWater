@@ -16,6 +16,7 @@
 #include "mUSB.h"
 #include "def.h"
 #include "tCompteur.h"
+#include "gError.h"
 
 typedef struct
     {
@@ -53,6 +54,8 @@ private:
 
     mUSB* theUSB;
 
+    gError* theGError;
+
     tToolsCluster* theTools;
 
     tCommandsAnalyzer theAnalyzer;
@@ -64,7 +67,8 @@ public:
     //constructeur
     //----------------------------------------------------------------
     gInput(mGSM* theGSM, mCompteur* theCompteurs[3], mRTC* theRTC,
-	    mTempSensor* theTempSensor, tToolsCluster* theTools, mUSB* theUSB);
+	    mTempSensor* theTempSensor, tToolsCluster* theTools, mUSB* theUSB,
+	    gError* theGError);
 
     ~gInput();
 

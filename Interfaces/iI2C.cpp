@@ -228,9 +228,8 @@ UInt8 iI2C::read()
     {
     return UCB1RXBUF;
     }
-
 /**
- * Configuration de l'adresse de l'esclave en cours de communcation
+ * Configuration de l'adresse de l'esclave en cours de communication
  * aSlaveAddr : Adresse de l'esclave
  */
 void iI2C::setSlaveAddr(char aSlaveAddr)

@@ -11,7 +11,7 @@
 mTempSensor::mTempSensor(char sensorAddress, iI2C *i2cBus)
     {
     this->sensorAddress = sensorAddress;
-    this->aStatus = 0;
+    this->aStatus = kTempSensorMissing;
     this->i2c_1 = i2cBus;
     }
 
@@ -31,7 +31,7 @@ void mTempSensor::mOpen()
 
 /**
  * Surtout pas de bus i2c->disable !!
- * Plusieurs autres composant peuvent être sur le bus !
+ * Plusieurs autres composant peuvent etre sur le bus !
  */
 void mTempSensor::mClose()
     {
@@ -39,7 +39,7 @@ void mTempSensor::mClose()
     }
 
 /**
- * Inutilisée
+ * Inutilisee
  */
 void mTempSensor::mSetup()
     {
@@ -82,7 +82,7 @@ UInt16 mTempSensor::readTemp()
     while (this->i2c_1->getStatusFlag(kTXIFG) == false)
 	;
 
-//écriture du permier byte à transmettre "Pointer Register"
+//ecriture du permier byte a� transmettre "Pointer Register"
     this->i2c_1->write(kTemperature);
 
 //Attente de l'ack de l'adresse slave
@@ -123,7 +123,7 @@ UInt16 mTempSensor::readTemp()
 	while (this->i2c_1->getStatusFlag(kSTP) == true)
 	    ;
 	// Comm error
-	this->aStatus = 0;
+	this->aStatus = kTempSensorOK;
 	return (int) tempLSB + ((int) tempMSB << 8);
 
 	}
@@ -132,17 +132,17 @@ UInt16 mTempSensor::readTemp()
 	this->i2c_1->stop();
 	while (this->i2c_1->getStatusFlag(kSTP) == true)
 	    ;
-	// Le capteur ne répond pas
-	this->aStatus = 1;
+	// Le capteur ne repond pas
+	this->aStatus = kTempSensorMissing;
 	return 0;
 	}
 
     }
 
 /**
- * Permet d'acceder à un registre du capteur pour sa configuration
- * aRegister : Registre à configurer
- * aValue : Valeur à écrire dans le registre
+ * Permet d'acceder a� un registre du capteur pour sa configuration
+ * aRegister : Registre a configurer
+ * aValue : Valeur a ecrire dans le registre
  */
 bool mTempSensor::configSensor(mTempSensorRegEnum aRegister, char aValue)
     {
@@ -163,7 +163,7 @@ bool mTempSensor::configSensor(mTempSensorRegEnum aRegister, char aValue)
     while (this->i2c_1->getStatusFlag(kTXIFG) == false)
 	;
 
-//écriture du permier byte à transmettre "Pointer Register"
+//ecriture du permier byte a� transmettre "Pointer Register"
     this->i2c_1->write(aRegister);
 
 //Attente de l'ack de l'adresse slave
@@ -198,7 +198,7 @@ bool mTempSensor::configSensor(mTempSensorRegEnum aRegister, char aValue)
 		while (this->i2c_1->getStatusFlag(kSTP) == true)
 		    ;
 		// Comm error
-		this->aStatus = 0;
+		this->aStatus = kTempSensorOK;
 		return true;
 		}
 	    else
@@ -207,7 +207,7 @@ bool mTempSensor::configSensor(mTempSensorRegEnum aRegister, char aValue)
 		while (this->i2c_1->getStatusFlag(kSTP) == true)
 		    ;
 		// Comm error
-		this->aStatus = 2;
+		this->aStatus = kTempSensorCommError;
 		return false;
 		}
 	    }
@@ -217,14 +217,14 @@ bool mTempSensor::configSensor(mTempSensorRegEnum aRegister, char aValue)
 	    while (this->i2c_1->getStatusFlag(kSTP) == true)
 		;
 	    // Comm error
-	    this->aStatus = 2;
+	    this->aStatus = kTempSensorCommError;
 	    return false;
 	    }
 	}
     else
 	{
-	// Le capteur ne répond pas
-	this->aStatus = 1;
+	// Le capteur ne repond pas
+	this->aStatus = kTempSensorMissing;
 	return false;
 	}
     }

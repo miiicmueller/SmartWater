@@ -4,7 +4,8 @@
 #include "gInput.h"
 
 gInput::gInput(mGSM* theGSM, mCompteur* theCompteurs[3], mRTC* theRTC,
-	mTempSensor* theTempSensor, tToolsCluster* theTools, mUSB* theUSB)
+	mTempSensor* theTempSensor, tToolsCluster* theTools, mUSB* theUSB,
+	gError* theGError)
     {
     this->theGSM = theGSM;
     this->theRTC = theRTC;
@@ -14,6 +15,7 @@ gInput::gInput(mGSM* theGSM, mCompteur* theCompteurs[3], mRTC* theRTC,
     this->theCompteurs[2] = theCompteurs[2];
     this->theTools = theTools;
     this->theUSB = theUSB;
+    this->theGError = theGError;
 
     this->theInputMailBox.date = new tDate();
 
@@ -49,17 +51,15 @@ void gInput::execute()
     if (!this->theUSB->isConnected())
 	{
 	//pour les SMS
-	// TODO : a verifier -> getSMS a peut-etre change de syntaxe
 	char theSMS[200];
 	bool hasSMS;
 
 	theSMS[0] = '\0';
 
-	if (!this->theGSM->getSMS(theSMS, &hasSMS,
-		this->theInputMailBox.aReplyNb))
+	if (this->theGError->gErrorList[kGErrorGSM] == false)
 	    {
-	    // TODO : en cas d'erreur de lecture du SMS
-	    theSMS[0] = '\0';
+	    this->theGSM->getSMS(theSMS, &hasSMS,
+		    this->theInputMailBox.aReplyNb);
 	    }
 
 	this->theAnalyzer.tCommandsAnalysis(theSMS, this->theTools);

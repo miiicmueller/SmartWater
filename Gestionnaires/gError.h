@@ -9,6 +9,10 @@
 #define GERROR_H_
 
 #include "Gestionnaire.h"
+#include "mGSM.h"
+#include "mTempSensor.h"
+#include "mEEPROM.h"
+#include "mDelay.h"
 
 #define kGErrorNbErrors	5
 
@@ -25,18 +29,27 @@ class gError: public Gestionnaire
     {
 public:
     bool gErrorList[kGErrorNbErrors];
-    //----------------------------------------------------------------
-    //constructeur
-    //
-    //gInput : le gestionnaire qui contient les entrees
-    //----------------------------------------------------------------
-    gError();
+//----------------------------------------------------------------
+//constructeur
+//
+//gInput : le gestionnaire qui contient les entrees
+//----------------------------------------------------------------
+    gError(mGSM* theGSM, mTempSensor* theTempSensor, mEEPROM* theEEPROM);
 
     void setup();
 
     void execute();
 
     ~gError();
+
+private:
+    mGSM* theGSM;
+
+    mTempSensor* theTempSensor;
+
+    mEEPROM* theEEPROM;
+
+    mDelay aDelay;
     };
 
 #endif /* GERROR_H_ */

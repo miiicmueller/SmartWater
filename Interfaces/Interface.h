@@ -23,17 +23,17 @@ class Interface
     {
 public:
     //tools
-    kStatusEnum status;	//�tat dans lequel se trouve l'interface
+    kStatusEnum status;	//etat dans lequel se trouve l'interface
 
 public:
     //constructeur
     Interface();
 
-    //m�thodes virtuelles pures que les classes filles devront impl�menter
+    //methodes virtuelles pures que les classes filles devront implementer
     virtual bool write(UInt8 aData) = 0;
     virtual UInt8 read() = 0;
 
-    //permet de conna�tre l'�tat de l'interface
+    //permet de connaetre l'etat de l'interface
     kStatusEnum getStatus();
 
     //destructeur
