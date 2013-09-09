@@ -1,3 +1,5 @@
+//#define FIRST_INIT
+
 #include <msp430.h>
 
 #include "Interfaces/iDIO.h"
@@ -11,6 +13,7 @@
 #include "Modules/mUSB.h"
 #include "Modules/mRTC.h"
 #include "Modules/mDelay.h"
+#include "Modules/mWDT.h"
 #include "Def/def.h"
 #include <string.h>
 
@@ -52,10 +55,15 @@ volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received
  */
 void main(void)
     {
+    //Configuration de la fréquence
+    mCpu::configFrequency();
+
     // Important pour la basse consommation
     iDIO::InitAllPort();
 
-    mCpu::configFrequency();
+    mWDT theWatchDog;
+    //Demmarage du watchdog
+    //   theWatchDog.startWatchDog();
 
     //attente que l'alim soit stabilisee
     iDIO pGood((char*) kPort_6, BIT4);
@@ -83,18 +91,27 @@ void main(void)
     iI2C i2cBus(k100kHz, kUSCI_B1, kMaster, 0xA5);
     UInt16 eePromAddress = 0x50;
     mEEPROM aEEPROM(eePromAddress, &i2cBus);
-//    aEEPROM.initIdTable();
-    aEEPROM.mOpen();
 
+#ifdef FIRST_INIT
+
+    theWatchDog.stopWatchDog();
+
+    aEEPROM.initIdTable();
+    aEEPROM.mOpen();
     tToolsCluster theTools(&aEEPROM);
-    // TODO : reset a enlever
-//    theTools.reset();
-//    theTools.saveAll();
+    theTools.reset();
+    theTools.saveAll();
+
+    //On attend pour rien faire d'autre
+    while(1);
+#else
+    aEEPROM.mOpen();
+    tToolsCluster theTools(&aEEPROM);
     theTools.loadAll();
+#endif
 
     mGSM theGSM(theTools.theSIMCard);
     theGSM.mSetup();
-    //TODO : a remettre
     theGSM.mOpen();
 
     mTempSensor theTempSensor(0x48, &i2cBus);
@@ -120,7 +137,7 @@ void main(void)
     gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools, &theRTC);
     gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB, &theTools);
     gSleep theGSleep(&theTools, &theRTC, &theGSM, theCountersTab[0],
-	    &theTempSensor, &theGCompute);
+	    &theTempSensor, &theGCompute, &theWatchDog);
 
     theGInput.setup();
     theTerminalUSB.setup();
@@ -130,16 +147,19 @@ void main(void)
 
     mDelay aDelayCompute;
     mDelay aDelayInput;
+    aDelayCompute.startDelayMS(2);
+    aDelayInput.startDelayMS(1);
 
     while (1)
 	{
+	theWatchDog.resetWatchDog();
 	if (aDelayCompute.isDone())
 	    {
 	    aDelayCompute.startDelayMS(1);
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
 	    theGOutput.execute();
-	    //theGSleep.execute();
+	    theGSleep.execute();
 	    }
 	if (aDelayInput.isDone())
 	    {
@@ -147,45 +167,5 @@ void main(void)
 	    theGInput.execute();
 	    }
 	}
-
-//    //test de compute consumption
-//    theGInput.theInputMailBox.valueMeters[0].date.day=10;
-//    theGInput.theInputMailBox.valueMeters[0].date.month=9;
-//    theGInput.theInputMailBox.valueMeters[0].isConnected=true;
-//    theGInput.theInputMailBox.valueMeters[0].value=10000;
-//    for(int k=0; k<12; k++)
-//	{
-//	theTools.theMonthsLimits[0]->limits[k]=970;
-//	}
-//
-//    theGCompute.computeConsumption();
-//
-//    theGInput.theInputMailBox.valueMeters[0].date.day=11; //rien
-//    theGInput.theInputMailBox.valueMeters[0].value=10030;
-//    theGCompute.computeConsumption();
-//
-//    theGInput.theInputMailBox.valueMeters[0].date.day=11; //rien
-//    theGInput.theInputMailBox.valueMeters[0].value=10031;
-//    theGCompute.computeConsumption();
-//
-//    theGInput.theInputMailBox.valueMeters[0].date.day=12; //rien
-//    theGInput.theInputMailBox.valueMeters[0].value=10060;
-//    theGCompute.computeConsumption();
-//
-//    theGInput.theInputMailBox.valueMeters[0].date.day=13; //rien
-//    theGInput.theInputMailBox.valueMeters[0].value=10090;
-//    theGCompute.computeConsumption();
-//
-//    theGInput.theInputMailBox.valueMeters[0].date.day=14; //avertissmeent le lendemain
-//    theGInput.theInputMailBox.valueMeters[0].value=10190;
-//    theGCompute.computeConsumption();
-//
-//    theGInput.theInputMailBox.valueMeters[0].date.day=15; //alerte le lendemain
-//    theGInput.theInputMailBox.valueMeters[0].value=10290;
-//    theGCompute.computeConsumption();
-//
-//    theGInput.theInputMailBox.valueMeters[0].date.day=15; //alerte ici
-//    theGInput.theInputMailBox.valueMeters[0].value=10320;
-//    theGCompute.computeConsumption();
 
     }
