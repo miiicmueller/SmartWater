@@ -57,7 +57,7 @@ UInt8 mTempSensor::getStatus()
 /**
  * Aquisition de la température
  * Donne un entier sur 16 bits (12bits)
- * POur avoir la température en degrée : Temp = (retour >> 4 )*0.0625
+ * POur avoir la temperature en degree : Temp = (retour >> 4 )*0.0625
  */
 UInt16 mTempSensor::readTemp()
     {
@@ -124,7 +124,7 @@ UInt16 mTempSensor::readTemp()
 	    ;
 	// Comm error
 	this->aStatus = kTempSensorOK;
-	return (int) tempLSB + ((int) tempMSB << 8);
+	return (int) (tempLSB >> 4) + ((int) tempMSB << 4);
 
 	}
     else

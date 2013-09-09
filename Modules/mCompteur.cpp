@@ -42,12 +42,12 @@ mCompteur::mCompteur(iMeterChannel aChannel, mEEPROM *mEeprom,
 	this->compteurParam = aTCompteur;
 
 	//Initialisation du parametre tCompteur
-	strcpy((char*) this->compteurParam->aManufacturer, "NA");
-	strcpy((char*) this->compteurParam->aFluide, "NA");
-	strcpy((char*) this->compteurParam->aVersNum, "NA");
-	strcpy((char*) this->compteurParam->aFabDate, "NA");
-	strcpy((char*) this->compteurParam->aSerialNum, "NA");
-	strcpy((char*) this->compteurParam->aNominalSize, "NA");
+	strcpy((char*) this->compteurParam->aData.aDataStruct.aManufacturer, "NA");
+	strcpy((char*) this->compteurParam->aData.aDataStruct.aFluide, "NA");
+	strcpy((char*) this->compteurParam->aData.aDataStruct.aVersNum, "NA");
+	strcpy((char*) this->compteurParam->aData.aDataStruct.aFabDate, "NA");
+	strcpy((char*) this->compteurParam->aData.aDataStruct.aSerialNum, "NA");
+	strcpy((char*) this->compteurParam->aData.aDataStruct.aNominalSize, "NA");
 
 	this->aStatus = 0;
 	}
@@ -187,30 +187,30 @@ bool mCompteur::mRead(UInt32* aIndex)
 	    {
 	    //Recuperation du fabricant, fluide, version
 	    sscanf((char*) aFabFlVers, "/%s %s      %s",
-		    &(this->compteurParam->aManufacturer),
-		    &(this->compteurParam->aFluide),
-		    &(this->compteurParam->aVersNum));
+		    &(this->compteurParam->aData.aDataStruct.aManufacturer),
+		    &(this->compteurParam->aData.aDataStruct.aFluide),
+		    &(this->compteurParam->aData.aDataStruct.aVersNum));
 
 	    //Recuperation de la date de fabrication
 	    sscanf((char*) aDateFabr, "%d.%d(%s)", &aNumb1, &aNumb2,
-		    &(this->compteurParam->aFabDate));
+		    &(this->compteurParam->aData.aDataStruct.aFabDate));
 
-	    this->compteurParam->aFabDate[strlen(
-		    (char*) this->compteurParam->aFabDate) - 1] = 0x00;
+	    this->compteurParam->aData.aDataStruct.aFabDate[strlen(
+		    (char*) this->compteurParam->aData.aDataStruct.aFabDate) - 1] = 0x00;
 
 	    //Recuperation du numero de serie
 	    sscanf((char*) aSerialNum, "%d.%d(%s)", &aNumb1, &aNumb2,
-		    &(this->compteurParam->aSerialNum));
+		    &(this->compteurParam->aData.aDataStruct.aSerialNum));
 
-	    this->compteurParam->aSerialNum[strlen(
-		    (char*) this->compteurParam->aSerialNum) - 1] = 0x00;
+	    this->compteurParam->aData.aDataStruct.aSerialNum[strlen(
+		    (char*) this->compteurParam->aData.aDataStruct.aSerialNum) - 1] = 0x00;
 
 	    //Recuperation de la taille nominale
 	    sscanf((char*) aTailleNom, "%d.%d(%s)", &aNumb1, &aNumb2,
-		    &(this->compteurParam->aNominalSize));
+		    &(this->compteurParam->aData.aDataStruct.aNominalSize));
 
-	    this->compteurParam->aNominalSize[strlen(
-		    (char*) this->compteurParam->aNominalSize) - 1] = 0x00;
+	    this->compteurParam->aData.aDataStruct.aNominalSize[strlen(
+		    (char*) this->compteurParam->aData.aDataStruct.aNominalSize) - 1] = 0x00;
 
 	    *aIndex = 0;
 	    //retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue

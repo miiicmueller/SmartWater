@@ -1,6 +1,10 @@
 #ifndef __DEF__
 #define __DEF__
 
+//Watchdog timer
+#define WDT_ARST_4M_16S     (WDTPW+WDTCNTCL+WDTSSEL0+WDTIS_2)
+
+
 #define kFreq_MCLK	25000000UL
 #define kFreq_SMCLK	 4000000UL
 #define kFreq_ACLK	   32768UL

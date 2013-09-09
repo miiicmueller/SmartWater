@@ -79,7 +79,7 @@ void gInput::execute()
 	    this->theCompteurs[i]->mOpen();
 
 	    if (this->theCompteurs[i]->mRead(
-		    &(this->theTools->theCompteur[i]->aIndex)))
+		    &(this->theTools->theCompteur[i]->aData.aDataStruct.aIndex)))
 		{
 		this->theTools->theCompteur[i]->isConnected = true;
 		}
@@ -97,7 +97,7 @@ void gInput::execute()
 		    this->theInputMailBox.indexOverrunSimulation);
 
 	    if (this->theCompteurs[2]->mRead(
-		    &(this->theTools->theCompteur[2]->aIndex)))
+		    &(this->theTools->theCompteur[2]->aData.aDataStruct.aIndex)))
 		{
 		this->theTools->theCompteur[2]->isConnected = true;
 		}

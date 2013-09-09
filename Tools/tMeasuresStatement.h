@@ -11,8 +11,15 @@ class tMeasuresStatement: public tParameters
     {
 
 public:
-    UInt16 MonthlyConsumption[12];
-    UInt16 CurrentMonthConsumption[31];
+    union
+	{
+	UInt8 aDataTab[86];
+	struct
+	    {
+	    UInt16 MonthlyConsumption[12];
+	    UInt16 CurrentMonthConsumption[31];
+	    } aDataStruct;
+	} aData;
 
     tMeasuresStatement(mEEPROM *mEeprom, UInt16 aModeNum);
     void save();

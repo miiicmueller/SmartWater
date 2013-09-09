@@ -1,7 +1,7 @@
 /*
  * tSIMCard.h
  *
- *  Created on: 30 août 2013
+ *  Created on: 30 aoï¿½t 2013
  *      Author: cyrille.savy
  */
 
@@ -17,8 +17,15 @@
 class tSIMCard: public tParameters
     {
 public:
-    char thePINCode[5];
-    char theOwnNumber[15];
+    union
+	{
+	UInt8 aDataTab[20];
+	struct
+	    {
+	    char theOwnNumber[15];
+	    char thePINCode[5];
+	    } aDataStruct;
+	} aData;
 
     tSIMCard(mEEPROM *mEeprom, UInt16 aModeNum);
 

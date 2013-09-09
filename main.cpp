@@ -56,7 +56,7 @@ volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received
  */
 void main(void)
     {
-    //Configuration de la frÃ©quence
+    //Configuration de la fréquence
     mCpu::configFrequency();
 
     // Important pour la basse consommation
@@ -146,9 +146,6 @@ void main(void)
     theGCompute.setup();
     theGOutput.setup();
     theGSleep.setup();
-
-    //On endort le processeur
-    mCpu::setPowerMode(kLPM3);
 
     mDelay aDelayCompute;
     mDelay aDelayInput;

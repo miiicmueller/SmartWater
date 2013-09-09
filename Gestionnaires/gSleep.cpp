@@ -40,8 +40,8 @@ gSleep::gSleep(tToolsCluster* aToolCluster, mRTC* amRTC, mGSM* aGsm,
     amRTC->readTime(&aHour, &aMinutes, &aSec);
 
     //On calcul on on se retrouve dans les portions horaire
-    aRes = (aMinutes + aHour * 60) / this->atAvailability->aIntervalMn; // si on desire toute les 10 min, et que aMinutes = 15 => aRes = 1 . On est dans la deuxieme tranche, la premiere etant 0
-    this->aMinOld = aRes * this->atAvailability->aIntervalMn;
+    aRes = (aMinutes + aHour * 60) / this->atAvailability->aData.aDataStruct.aIntervalMn; // si on desire toute les 10 min, et que aMinutes = 15 => aRes = 1 . On est dans la deuxieme tranche, la premiere etant 0
+    this->aMinOld = aRes * this->atAvailability->aData.aDataStruct.aIntervalMn;
     }
 
 void gSleep::setup()
@@ -72,8 +72,8 @@ void gSleep::execute()
     aMinutesCalc = (aHour * 60) + aMinutes;
 
     // Recalcul si la valeur aurait changée
-    aRes = aMinutesCalc / this->atAvailability->aIntervalMn; // si on desire toute les 10 min, et que aMinutes = 15 => aRes = 1 . On est dans la deuxieme tranche, la premiere etant 0
-    this->aMinOld = aRes * this->atAvailability->aIntervalMn;
+    aRes = aMinutesCalc / this->atAvailability->aData.aDataStruct.aIntervalMn; // si on desire toute les 10 min, et que aMinutes = 15 => aRes = 1 . On est dans la deuxieme tranche, la premiere etant 0
+    this->aMinOld = aRes * this->atAvailability->aData.aDataStruct.aIntervalMn;
 
     if (gSleep::aCanSleepDelay.isDone() && !gSleep::aCanSleep)
 	{
@@ -84,15 +84,15 @@ void gSleep::execute()
 
     //Comparaison avec les ancienne valeurs
     //Ici on dort
-    if ((aMinutesCalc >= (this->aMinOld + this->atAvailability->aTimeMn))
+    if ((aMinutesCalc >= (this->aMinOld + this->atAvailability->aData.aDataStruct.aTimeMn))
 	    && (this->aGCompute->theComputeMailBox.isWorkFinished)
 	    && gSleep::aCanSleep) // Suivant l'exemple si aMinutes = 15 et aMinold = 10 et aTime = 5 , on passe
 	{
 	//Setter l'alarme
 	this->amRTC->setAlarm(
-		((this->aMinOld + this->atAvailability->aIntervalMn) / 60),
-		(this->aMinOld + this->atAvailability->aIntervalMn % 60));
-	this->aMinOld += this->atAvailability->aIntervalMn;
+		((this->aMinOld + this->atAvailability->aData.aDataStruct.aIntervalMn) / 60),
+		(this->aMinOld + this->atAvailability->aData.aDataStruct.aIntervalMn % 60));
+	this->aMinOld += this->atAvailability->aData.aDataStruct.aIntervalMn;
 
 	//Arret de tout les autres composants
 	this->aGsm->mClose();
@@ -138,7 +138,7 @@ __interrupt void WakeUpBtn(void)
 	mCpu::setPowerMode(kActiveMode);
 
 	gSleep::aCanSleep = false;
-	//On ne permet pas de dormir pour 5 minutes
+	//On ne permet pas de dormir pour 2 minutes
 	gSleep::aCanSleepDelay.startDelayMS(120000);
 
 	//On allume la led 1 seconde

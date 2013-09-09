@@ -10,7 +10,14 @@
 class tMonthsLimits: public tParameters
     {
 public:
-    UInt16 limits[12];
+    union
+	{
+	UInt8 aDataTab[24];
+	struct
+	    {
+	    UInt16 limits[12];
+	    } aDataStruct;
+	} aData;
     tMonthsLimits(mEEPROM *mEeprom, UInt16 aModeNum);
     void save();
     void load();
