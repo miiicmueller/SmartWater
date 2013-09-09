@@ -17,7 +17,7 @@
     <cp>D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*</cp>
   </classPath>
   <jre>
-    <path>D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre</path>
+    <path>.\jre\</path>
     <bundledJre64Bit>true</bundledJre64Bit>
     <minVersion></minVersion>
     <maxVersion></maxVersion>
