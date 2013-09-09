@@ -1,6 +1,7 @@
 #include <string>
 #include <assert.h>
 #include <msp430f5519.h>
+#include "Def/def.h"
 #include "iWDT.h"
 
 iWDT::iWDT()
@@ -27,7 +28,7 @@ void iWDT::stopWatchDog()
 
 void iWDT::resetWatchDog()
     {
-   this->startWatchDog();
+    this->startWatchDog();
     }
 
 UInt8 iWDT::read()
