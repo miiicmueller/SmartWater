@@ -55,7 +55,7 @@ volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received
  */
 void main(void)
     {
-    //Configuration de la frÃ©quence
+    //Configuration de la fréquence
     mCpu::configFrequency();
 
     // Important pour la basse consommation
