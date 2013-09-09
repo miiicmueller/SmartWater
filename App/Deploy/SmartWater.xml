@@ -18,7 +18,7 @@
   </classPath>
   <jre>
     <path>D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre</path>
-    <bundledJre64Bit>false</bundledJre64Bit>
+    <bundledJre64Bit>true</bundledJre64Bit>
     <minVersion></minVersion>
     <maxVersion></maxVersion>
     <jdkPreference>jreOnly</jdkPreference>
@@ -26,8 +26,8 @@
   <splash>
     <file>D:\Module_ProjetP2\Software\SmartWater\App\ressource\smartwater4.bmp</file>
     <waitForWindow>true</waitForWindow>
-    <timeout>3</timeout>
-    <timeoutErr>true</timeoutErr>
+    <timeout>5</timeout>
+    <timeoutErr>false</timeoutErr>
   </splash>
   <versionInfo>
     <fileVersion>1.0.0.0</fileVersion>
