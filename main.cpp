@@ -145,9 +145,6 @@ void main(void)
     theGOutput.setup();
     theGSleep.setup();
 
-    //On endort le processeur
-    mCpu::setPowerMode(kLPM3);
-
     mDelay aDelayCompute;
     mDelay aDelayInput;
     aDelayCompute.startDelayMS(2);
@@ -155,14 +152,14 @@ void main(void)
 
     while (1)
 	{
-	//theWatchDog.resetWatchDog();
+	theWatchDog.resetWatchDog();
 	if (aDelayCompute.isDone())
 	    {
 	    aDelayCompute.startDelayMS(1);
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
 	    theGOutput.execute();
-	    //theGSleep.execute();
+	    theGSleep.execute();
 	    }
 	if (aDelayInput.isDone())
 	    {

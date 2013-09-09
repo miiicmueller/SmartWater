@@ -124,7 +124,7 @@ UInt16 mTempSensor::readTemp()
 	    ;
 	// Comm error
 	this->aStatus = 0;
-	return (int) tempLSB + ((int) tempMSB << 8);
+	return (int) (tempLSB >> 4) + ((int) tempMSB << 4);
 
 	}
     else

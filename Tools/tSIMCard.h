@@ -22,8 +22,8 @@ public:
 	UInt8 aDataTab[20];
 	struct
 	    {
-	    char thePINCode[5];
 	    char theOwnNumber[15];
+	    char thePINCode[5];
 	    } aDataStruct;
 	} aData;
 

@@ -1,6 +1,6 @@
 #include <string>
 #include <assert.h>
-
+#include <msp430f5519.h>
 #include "iWDT.h"
 
 iWDT::iWDT()
@@ -23,12 +23,11 @@ void iWDT::stopWatchDog()
     {
     // turn watchdog off
     WDTCTL = WDTPW | WDTHOLD; // Stop watchdog timer
-    _DINT();
     }
 
 void iWDT::resetWatchDog()
     {
-    WDTCTL |= WDTCNTCL;
+   this->startWatchDog();
     }
 
 UInt8 iWDT::read()
