@@ -57,52 +57,53 @@ void tToolsCluster::reset()
 
 	for (int j = 0; j < 12; j++)
 	    {
-	    this->theMeasuresStatement[i]->MonthlyConsumption[j] = 0;
+	    this->theMeasuresStatement[i]->aData.aDataStruct.MonthlyConsumption[j] = 0;
 	    }
 	for (int j = 0; j < 31; j++)
 	    {
-	    this->theMeasuresStatement[i]->CurrentMonthConsumption[j] = 0;
+	    this->theMeasuresStatement[i]->aData.aDataStruct.CurrentMonthConsumption[j] = 0;
 	    }
 
 	for (int j = 0; j < 12; j++)
 	    {
-	    this->theMonthsLimits[i]->limits[j] = 999;
+	    this->theMonthsLimits[i]->aData.aDataStruct.limits[j] = 999;
 	    }
 
-	this->theCompteur[i]->aFabDate[0] = '\0';
-	this->theCompteur[i]->aFluide[0] = '\0';
-	this->theCompteur[i]->aManufacturer[0] = '\0';
-	this->theCompteur[i]->aNominalSize[0] = '\0';
-	this->theCompteur[i]->aSerialNum[0] = '\0';
-	this->theCompteur[i]->aVersNum[0] = '\0';
-	this->theCompteur[i]->aIndex = 0;
+	this->theCompteur[i]->aData.aDataStruct.aFabDate[0] = '\0';
+	this->theCompteur[i]->aData.aDataStruct.aFluide[0] = '\0';
+	this->theCompteur[i]->aData.aDataStruct.aManufacturer[0] = '\0';
+	this->theCompteur[i]->aData.aDataStruct.aNominalSize[0] = '\0';
+	this->theCompteur[i]->aData.aDataStruct.aSerialNum[0] = '\0';
+	this->theCompteur[i]->aData.aDataStruct.aVersNum[0] = '\0';
+	this->theCompteur[i]->aData.aDataStruct.aIndex = 0;
 	this->theCompteur[i]->isConnected = false;
 	}
 
     //le compteur de simulation
-    this->theCompteur[2]->aFabDate[0] = '\0';
-    this->theCompteur[2]->aFluide[0] = '\0';
-    this->theCompteur[2]->aManufacturer[0] = '\0';
-    this->theCompteur[2]->aNominalSize[0] = '\0';
-    this->theCompteur[2]->aSerialNum[0] = '\0';
-    this->theCompteur[2]->aVersNum[0] = '\0';
-    this->theCompteur[2]->aIndex = 0;
+    this->theCompteur[2]->aData.aDataStruct.aFabDate[0] = '\0';
+    this->theCompteur[2]->aData.aDataStruct.aFluide[0] = '\0';
+    this->theCompteur[2]->aData.aDataStruct.aManufacturer[0] = '\0';
+    this->theCompteur[2]->aData.aDataStruct.aNominalSize[0] = '\0';
+    this->theCompteur[2]->aData.aDataStruct.aSerialNum[0] = '\0';
+    this->theCompteur[2]->aData.aDataStruct.aVersNum[0] = '\0';
+    this->theCompteur[2]->aData.aDataStruct.aIndex = 0;
     this->theCompteur[2]->isConnected = false;
 
     //parametres administrateur
-    this->theAvailability->aIntervalMn = 60;
-    this->theAvailability->aTimeMn = 15;
+    this->theAvailability->aData.aDataStruct.aIntervalMn = 60;
+    this->theAvailability->aData.aDataStruct.aTimeMn = 15;
 
     sprintf(this->theMdPAdmin->mdPAdmin, "PassAdmin");
 
     this->theMode->mode = 'S';
 
-    this->theTemperatureOffset->aOffset.aFloatVal = 0;
+    this->theTemperatureOffset->aOffset.aFakeFloat.integer = 0;
+    this->theTemperatureOffset->aOffset.aFakeFloat.decimal = 0;
 
     sprintf(this->theUnitName->aName, "Unit1");
 
-    sprintf(this->theSIMCard->theOwnNumber, "+41000000000");
-    sprintf(this->theSIMCard->thePINCode, "0000");
+    sprintf(this->theSIMCard->aData.aDataStruct.theOwnNumber, "+41000000000");
+    sprintf(this->theSIMCard->aData.aDataStruct.thePINCode, "0000");
     }
 
 void tToolsCluster::saveAll()
@@ -187,8 +188,8 @@ bool tToolsCluster::setAvailability(char* aPeriode, char* aDuree)
 		&& (aMinDuty >= MinDuree) && (aMinDuty <= MaxDuree))
 	    {
 	    isSuccessful = true;
-	    this->theAvailability->aIntervalMn = aMinPeriod;
-	    this->theAvailability->aTimeMn = aMinDuty;
+	    this->theAvailability->aData.aDataStruct.aIntervalMn = aMinPeriod;
+	    this->theAvailability->aData.aDataStruct.aTimeMn = aMinDuty;
 	    this->theAvailability->save();
 	    }
 	}
@@ -223,15 +224,13 @@ bool tToolsCluster::setMode(char* aMode)
 
 bool tToolsCluster::setTemperatureOffset(char* aTemperatureOffset)
     {
-    UInt8 aOffsetUnit;
-    UInt8 aOffsetDecimal;
     bool isSuccessful = false;
 
-    if (sscanf(aTemperatureOffset, "%d.%d", &aOffsetUnit, &aOffsetDecimal) == 2)
+    if (sscanf(aTemperatureOffset, "%d.%d",
+	    &this->theTemperatureOffset->aOffset.aFakeFloat.integer,
+	    &this->theTemperatureOffset->aOffset.aFakeFloat.decimal) == 2)
 	{
 	isSuccessful = true;
-	this->theTemperatureOffset->aOffset.aFloatVal = aOffsetUnit
-		+ (0.1 * aOffsetDecimal);
 	this->theTemperatureOffset->save();
 	}
     return isSuccessful;
@@ -252,7 +251,7 @@ bool tToolsCluster::setPINCode(char* aPINCode)
     if (strlen(aPINCode) == 4)
 	{
 	isSuccessful = true;
-	strcpy(this->theSIMCard->thePINCode, aPINCode);
+	strcpy(this->theSIMCard->aData.aDataStruct.thePINCode, aPINCode);
 	this->theSIMCard->save();
 	}
     return isSuccessful;
@@ -275,7 +274,7 @@ bool tToolsCluster::setOwnNumber(char* aOwnNumber)
 
 	if (isSuccessful == true)
 	    {
-	    strcpy(this->theSIMCard->theOwnNumber, aOwnNumber);
+	    strcpy(this->theSIMCard->aData.aDataStruct.theOwnNumber, aOwnNumber);
 	    this->theSIMCard->save();
 	    }
 	}
@@ -342,7 +341,7 @@ bool tToolsCluster::setMonthsLimits(char** aMonthLimits, UInt8 aNbOfLimits,
 	{
 	for (int i = 0; i < aNbOfLimits; i++)
 	    {
-	    this->theMonthsLimits[aUserNb - 1]->limits[theMonths[i] - 1] =
+	    this->theMonthsLimits[aUserNb - 1]->aData.aDataStruct.limits[theMonths[i] - 1] =
 		    theLimits[i];
 	    }
 
@@ -363,7 +362,7 @@ void tToolsCluster::getMonthsLimits(char* aMessage, UInt8 aUserNb)
     for (int i = 1; i <= 12; i++)
 	{
 	aLimit =
-		(unsigned int) this->theMonthsLimits[aUserNb - 1]->limits[i - 1];
+		(unsigned int) this->theMonthsLimits[aUserNb - 1]->aData.aDataStruct.limits[i - 1];
 	sprintf(aTemp, "%d:%d_", i, aLimit);
 	strcat(aMessage, aTemp);
 	}
@@ -379,7 +378,7 @@ void tToolsCluster::getMonthlyConsumption(char* aMessage, UInt8 aUserNb)
     for (int i = 1; i <= 12; i++)
 	{
 	aLimit =
-		(unsigned int) this->theMeasuresStatement[aUserNb - 1]->MonthlyConsumption[i
+		(unsigned int) this->theMeasuresStatement[aUserNb - 1]->aData.aDataStruct.MonthlyConsumption[i
 			- 1];
 	sprintf(aTemp, "%d:%d_", i, aLimit);
 	strcat(aMessage, aTemp);
@@ -396,29 +395,32 @@ void tToolsCluster::getDailyConsumption(char* aMessage, UInt8 aUserNb)
     for (int i = 1; i <= 31; i++)
 	{
 	aLimit =
-		(unsigned int) this->theMeasuresStatement[aUserNb - 1]->CurrentMonthConsumption[i
+		(unsigned int) this->theMeasuresStatement[aUserNb - 1]->aData.aDataStruct.CurrentMonthConsumption[i
 			- 1];
 	sprintf(aTemp, "%d:%d_", i, aLimit);
 	strcat(aMessage, aTemp);
 	}
     }
 
-void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb)
+void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb, tDate* theDate,
+	UInt16 theCredit, Float32 theTemp)
     {
     char aTemp[20];
 
-    //TODO : le vrai message
-    sprintf(aMessage, "Unite :");
+    aMessage[0] = '\0';
     strcat(aMessage, this->theUnitName->aName);
     strcat(aMessage, "\r\n");
 
-    strcat(aMessage, "Date et heure ");
-    strcat(aMessage, "18/09/12/16:53:00");
+    sprintf(aTemp, "%d/%d/%d %d:%d:%d", theDate->day, theDate->month,
+	    theDate->year, theDate->hour, theDate->minute, theDate->second);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Disponibilite ");
-    sprintf(aTemp, "%d/%d", this->theAvailability->aIntervalMn,
-	    this->theAvailability->aTimeMn);
+    sprintf(aTemp, "%d:%d/%d:%d", (this->theAvailability->aData.aDataStruct.aIntervalMn) / 60,
+	    (this->theAvailability->aData.aDataStruct.aIntervalMn) % 60,
+	    (this->theAvailability->aData.aDataStruct.aTimeMn) / 60,
+	    (this->theAvailability->aData.aDataStruct.aTimeMn) % 60);
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
@@ -429,31 +431,44 @@ void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb)
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Index ");
-    strcat(aMessage, "2514");
+    sprintf(aTemp, "%d", this->theCompteur[aUserNb - 1]->aData.aDataStruct.aIndex);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Debit jour ");
-    strcat(aMessage, "10,7");
+    sprintf(aTemp, "%d",
+	    this->theMeasuresStatement[aUserNb - 1]->aData.aDataStruct.CurrentMonthConsumption[theDate->day]);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
-    strcat(aMessage, "Debit mens");
-    strcat(aMessage, "10,7");
+    strcat(aMessage, "Debit mens ");
+    sprintf(aTemp, "%d",
+	    this->theMeasuresStatement[aUserNb - 1]->aData.aDataStruct.MonthlyConsumption[theDate->month]);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Limite jour ");
-    strcat(aMessage, "25,0");
+    sprintf(aTemp, "%d",
+	    this->theMonthsLimits[aUserNb - 1]->aData.aDataStruct.limits[theDate->month]);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Temp ");
-    strcat(aMessage, "25,0");
+    sprintf(aTemp, "%d.%d", theTemp.aFakeFloat.integer,
+	    theTemp.aFakeFloat.decimal / 10);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Off Temp ");
-    strcat(aMessage, "0,2");
+    sprintf(aTemp, "%d.%d",
+	    this->theTemperatureOffset->aOffset.aFakeFloat.integer,
+	    this->theTemperatureOffset->aOffset.aFakeFloat.decimal / 10);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Credit ");
-    strcat(aMessage, "10,0");
+    sprintf(aTemp, "%dcts", theCredit);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Alarme ");

@@ -33,8 +33,8 @@ mGSM::mGSM(tSIMCard* aSimCard)
     this->indexSMS = 1;
     this->state = kDisconnected; // etat initial
 
-    this->codePIN = (UInt8*) (aSimCard->thePINCode);
-    this->phoneNumber = (UInt8*) (aSimCard->theOwnNumber);
+    this->codePIN = (UInt8*) (aSimCard->aData.aDataStruct.thePINCode);
+    this->phoneNumber = (UInt8*) (aSimCard->aData.aDataStruct.theOwnNumber);
     }
 
 //----------------------------------------------------------------

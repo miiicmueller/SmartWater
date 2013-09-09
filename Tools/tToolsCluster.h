@@ -19,6 +19,8 @@
 #include "tUnitName.h"
 #include "tSIMCard.h"
 #include "tCompteur.h"
+#include "def.h"
+#include "tDate.h"
 
 #define MaxPeriode 1440
 #define MinPeriode 30
@@ -78,7 +80,8 @@ public:
 
     void getDailyConsumption(char* aMessage, UInt8 aUserNb);
 
-    void getEtat(char* aMessage, UInt8 aUserNb);
+    void getEtat(char* aMessage, UInt8 aUserNb, tDate* theDate,
+	    UInt16 theCredit, Float32 theTemp);
 
     tToolsCluster(mEEPROM* aEEPROM);
     virtual ~tToolsCluster();

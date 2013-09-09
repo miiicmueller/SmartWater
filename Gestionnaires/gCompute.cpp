@@ -3,6 +3,8 @@
 
 #include "gCompute.h"
 
+gComputeMailBox gCompute::theComputeMailBox;
+
 //----------------------------------------------------------------
 //constructeur
 //
@@ -87,7 +89,7 @@ void gCompute::computeTerminal()
 		else
 		    {
 		    *(this->theGTerminal->theTerminalMailBox.aAction) =
-			    kCommandError;
+			    kCommandError2;
 		    }
 		}
 	    break;
@@ -97,7 +99,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[1]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandMode:
@@ -105,7 +107,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[0]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandOffset:
@@ -113,7 +115,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[0]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandAlarm:
@@ -122,7 +124,7 @@ void gCompute::computeTerminal()
 		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb))))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandLimits:
@@ -136,7 +138,7 @@ void gCompute::computeTerminal()
 				*(this->theGTerminal->theTerminalMailBox.aUserNb))))
 		    {
 		    *(this->theGTerminal->theTerminalMailBox.aAction) =
-			    kCommandError;
+			    kCommandError2;
 		    }
 		}
 	    this->theTools->getMonthsLimits(this->theComputeMailBox.aReplyUSB,
@@ -144,7 +146,10 @@ void gCompute::computeTerminal()
 	    break;
 	case kCommandEtat:
 	    this->theTools->getEtat(this->theComputeMailBox.aReplyUSB,
-		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb)));
+		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb)),
+		    this->theGInput->theInputMailBox.date,
+		    this->theGInput->theInputMailBox.theCredit,
+		    this->theGInput->theInputMailBox.temperature);
 	    break;
 	case kCommandPassu:
 	    if (!this->theTools->setMdPUser(
@@ -153,7 +158,7 @@ void gCompute::computeTerminal()
 		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb))))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandPassa:
@@ -162,7 +167,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[1]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandSimulate:
@@ -197,7 +202,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[0]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandOwn:
@@ -205,7 +210,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[0]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	default:
@@ -234,7 +239,8 @@ void gCompute::computeTerminal()
 	sprintf(this->theComputeMailBox.aReplyUSB, "_OK_");
 	break;
 	// reponse error
-    case kCommandError:
+    case kCommandError1:
+    case kCommandError2:
 	sprintf(this->theComputeMailBox.aReplyUSB, "_ERROR_");
 	break;
 	// reponse speciale deja ecrite dans le switch precedent
@@ -275,25 +281,41 @@ void gCompute::computeSMS()
 		this->theRTC->setDate(aYear, aMonth, aDate, NULL);
 		this->theRTC->setHour(aHour, aMinute, 0);
 		}
+	    else
+		{
+		*(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+		}
 	    }
 	break;
     case kCommandDispo:
-	this->theTools->setAvailability(
+	if (!this->theTools->setAvailability(
 		this->theGInput->theInputMailBox.theParameters[0],
-		this->theGInput->theInputMailBox.theParameters[1]);
+		this->theGInput->theInputMailBox.theParameters[1]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandMode:
-	this->theTools->setMode(
-		this->theGInput->theInputMailBox.theParameters[0]);
+	if (!this->theTools->setMode(
+		this->theGInput->theInputMailBox.theParameters[0]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandOffset:
-	this->theTools->setTemperatureOffset(
-		this->theGInput->theInputMailBox.theParameters[0]);
+	if (!this->theTools->setTemperatureOffset(
+		this->theGInput->theInputMailBox.theParameters[0]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandAlarm:
-	this->theTools->setAlarmNumber(
+	if (!this->theTools->setAlarmNumber(
 		this->theGInput->theInputMailBox.theParameters[0],
-		UInt8(*(this->theGInput->theInputMailBox.aUserNb)));
+		UInt8(*(this->theGInput->theInputMailBox.aUserNb))))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandLimits:
 	if (*(this->theGInput->theInputMailBox.theParametersNumber) > 0)
@@ -303,7 +325,7 @@ void gCompute::computeSMS()
 		    *(this->theGInput->theInputMailBox.theParametersNumber),
 		    UInt8(*(this->theGInput->theInputMailBox.aUserNb))))
 		{
-		*(this->theGInput->theInputMailBox.aAction) = kCommandError;
+		*(this->theGInput->theInputMailBox.aAction) = kCommandError2;
 		}
 	    }
 	this->theTools->getMonthsLimits(this->theComputeMailBox.aReplySMS,
@@ -311,18 +333,27 @@ void gCompute::computeSMS()
 	break;
     case kCommandEtat:
 	this->theTools->getEtat(this->theComputeMailBox.aReplySMS,
-		UInt8(*(this->theGInput->theInputMailBox.aUserNb)));
+		UInt8(*(this->theGInput->theInputMailBox.aUserNb)),
+		this->theGInput->theInputMailBox.date,
+		this->theGInput->theInputMailBox.theCredit,
+		this->theGInput->theInputMailBox.temperature);
 	break;
     case kCommandPassu:
-	this->theTools->setMdPUser(
+	if (!this->theTools->setMdPUser(
 		this->theGInput->theInputMailBox.theParameters[0],
 		this->theGInput->theInputMailBox.theParameters[1],
-		UInt8(*(this->theGInput->theInputMailBox.aUserNb)));
+		UInt8(*(this->theGInput->theInputMailBox.aUserNb))))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandPassa:
-	this->theTools->setMdPAdmin(
+	if (!this->theTools->setMdPAdmin(
 		this->theGInput->theInputMailBox.theParameters[0],
-		this->theGInput->theInputMailBox.theParameters[1]);
+		this->theGInput->theInputMailBox.theParameters[1]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandSimulate:
 	this->theGInput->theInputMailBox.isSimulation = true;
@@ -346,16 +377,25 @@ void gCompute::computeSMS()
 	sprintf(this->theComputeMailBox.aReplySMS, "_OK_");
 	break;
     case kCommandUnitName:
-	this->theTools->setUnitName(
-		this->theGInput->theInputMailBox.theParameters[0]);
+	if (!this->theTools->setUnitName(
+		this->theGInput->theInputMailBox.theParameters[0]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandPin:
-	this->theTools->setPINCode(
-		this->theGInput->theInputMailBox.theParameters[0]);
+	if (!this->theTools->setPINCode(
+		this->theGInput->theInputMailBox.theParameters[0]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandOwn:
-	this->theTools->setOwnNumber(
-		this->theGInput->theInputMailBox.theParameters[0]);
+	if (!this->theTools->setOwnNumber(
+		this->theGInput->theInputMailBox.theParameters[0]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     default:
 	break;
@@ -365,8 +405,7 @@ void gCompute::computeSMS()
     switch (*(this->theGInput->theInputMailBox.aAction))
 	{
     // reponse error
-    case kCommandError:
-	//TODO : reponse _ERROR_ par SMS a enlever
+    case kCommandError2:
 	sprintf(this->theComputeMailBox.aReplySMS, "_ERROR_");
 	break;
 	// reponse speciale deja ecrite dans le switch precedent
@@ -377,6 +416,7 @@ void gCompute::computeSMS()
     case kCommandDysfunction:
 	break;
 	// pas de reponse
+    case kCommandError1:
     case kCommandDisconnect:
     case kCommandConnect:
     case kCommandUnitName:
@@ -419,14 +459,14 @@ void gCompute::computeConsumption()
 	    if (0 == aPreviousDay) // la premiere fois
 		{
 		aPreviousDay = theGInput->theInputMailBox.date->day;
-		aPreviousValue[j] = theTools->theCompteur[j]->aIndex;
+		aPreviousValue[j] = theTools->theCompteur[j]->aData.aDataStruct.aIndex;
 		aValueBeginMonth[j] = aPreviousValue[j];
 		}
 	    else
 		{
 		aDay = theGInput->theInputMailBox.date->day; // prend la date
 		aMonth = theGInput->theInputMailBox.date->month;
-		aValue = theTools->theCompteur[j]->aIndex;
+		aValue = theTools->theCompteur[j]->aData.aDataStruct.aIndex;
 
 		saveMeasurements();
 
@@ -471,7 +511,7 @@ void gCompute::computeConsumption()
 
 	j = 2;
 	aChoiceMeterSimulation = theComputeMailBox.aUserSelect - 1;
-	aValue = theTools->theCompteur[2]->aIndex;
+	aValue = theTools->theCompteur[2]->aData.aDataStruct.aIndex;
 	aMonth = theGInput->theInputMailBox.date->month;
 
 	if(0==aValueBeginMonth[2])
@@ -517,9 +557,9 @@ void gCompute::computeIsFinished()
     {
     if ((!this->theComputeMailBox.mahAuto)
 	    && (!this->theGInput->theInputMailBox.isSimulation)
-	    && (!this->theGInput->theInputMailBox.aAction == kCommandNoCommand)
+	    && (*(this->theGInput->theInputMailBox.aAction) == kCommandNoCommand)
 	    && (*(this->theGTerminal->theTerminalMailBox.aTerminalState)
-		    != kTerminalDisconnected))
+		    == kTerminalDisconnected))
 	{
 	this->theComputeMailBox.isWorkFinished = true;
 	}
@@ -548,18 +588,18 @@ void gCompute::saveMeasurements()
 	//efface du tableau, les jours du mois n'existant pas (p. ex. le 30 fevrier)
 	for (i = aPreviousDay; i < 31; i++)
 	    {
-	    theTools->theMeasuresStatement[j]->CurrentMonthConsumption[i] = 0;
+	    theTools->theMeasuresStatement[j]->aData.aDataStruct.CurrentMonthConsumption[i] = 0;
 	    }
 
 	//enregistre la consommation du mois passe
 	if (1 == aMonth) // pour le mois de decembre
 	    {
-	    theTools->theMeasuresStatement[j]->MonthlyConsumption[11] = (aValue
+	    theTools->theMeasuresStatement[j]->aData.aDataStruct.MonthlyConsumption[11] = (aValue
 		    - aValueBeginMonth[j]);
 	    }
 	else // pour les autres mois
 	    {
-	    theTools->theMeasuresStatement[j]->MonthlyConsumption[aMonth - 2] =
+	    theTools->theMeasuresStatement[j]->aData.aDataStruct.MonthlyConsumption[aMonth - 2] =
 		    aValue - aValueBeginMonth[j];
 	    }
 
@@ -568,7 +608,7 @@ void gCompute::saveMeasurements()
     else
 	{
 	//enregistre la consommation du mois courant
-	theTools->theMeasuresStatement[j]->MonthlyConsumption[aMonth - 1] =
+	theTools->theMeasuresStatement[j]->aData.aDataStruct.MonthlyConsumption[aMonth - 1] =
 		aValue - aValueBeginMonth[j];
 	}
 
@@ -576,13 +616,13 @@ void gCompute::saveMeasurements()
     if (aDay != aPreviousDay)
 	{
 	//enregistre la consommation du jour passe
-	theTools->theMeasuresStatement[j]->CurrentMonthConsumption[aPreviousDay
+	theTools->theMeasuresStatement[j]->aData.aDataStruct.CurrentMonthConsumption[aPreviousDay
 		- 1] = aValue - aPreviousValue[j];
 	}
     else
 	{
 	//enregistre la consommation du jour courant
-	theTools->theMeasuresStatement[j]->CurrentMonthConsumption[aDay - 1] =
+	theTools->theMeasuresStatement[j]->aData.aDataStruct.CurrentMonthConsumption[aDay - 1] =
 		aValue - aPreviousValue[j];
 	}
     }
@@ -607,27 +647,27 @@ void gCompute::computeLimitDay()
 	if (4 == aMonth || 6 == aMonth || 9 == aMonth || 11 == aMonth) //mois à 30 jours
 	    {
 	    aLimitDay =
-		    (UInt16) (((float) (theTools->theMonthsLimits[k]->limits[aMonth
+		    (UInt16) (((float) (theTools->theMonthsLimits[k]->aData.aDataStruct.limits[aMonth
 			    - 1] - (aValue - aValueBeginMonth[j]))
 			    / (float) (31 - aDay)) + 0.5);
 	    }
 	else if (2 == aMonth && 29 == aDay) //mois à 29 jours
 	    {
 	    aLimitDay =
-		    (UInt16) ((float) (theTools->theMonthsLimits[k]->limits[aMonth
+		    (UInt16) ((float) (theTools->theMonthsLimits[k]->aData.aDataStruct.limits[aMonth
 			    - 1] - (aValue - aValueBeginMonth[j])) + 0.5);
 	    }
 	else if (2 == aMonth) //mois à 28 jours
 	    {
 	    aLimitDay =
-		    (UInt16) (((float) (theTools->theMonthsLimits[k]->limits[aMonth
+		    (UInt16) (((float) (theTools->theMonthsLimits[k]->aData.aDataStruct.limits[aMonth
 			    - 1] - (aValue - aValueBeginMonth[j]))
 			    / (float) (29 - aDay)) + 0.5);
 	    }
 	else //mois à 31 jours
 	    {
 	    aLimitDay =
-		    (UInt16) (((float) (theTools->theMonthsLimits[k]->limits[aMonth
+		    (UInt16) (((float) (theTools->theMonthsLimits[k]->aData.aDataStruct.limits[aMonth
 			    - 1] - (aValue - aValueBeginMonth[j]))
 			    / (float) (32 - aDay)) + 0.5);
 	    }
@@ -635,7 +675,7 @@ void gCompute::computeLimitDay()
     else // cas ou le programme a commence au milieu d'un mois
 	{
 	aLimitDay =
-		(UInt16) ((float) theTools->theMonthsLimits[k]->limits[aMonth
+		(UInt16) ((float) theTools->theMonthsLimits[k]->aData.aDataStruct.limits[aMonth
 			- 1] / (float) 30);
 	}
     }
@@ -665,7 +705,7 @@ void gCompute::computeLimitNextDay()
 			    + (UInt32) ((float) (30
 				    * (aValue - aValueBeginMonth[j])
 				    - aDay * (aValue - aValueBeginMonth[j])
-				    + theTools->theMonthsLimits[k]->limits[aMonth
+				    + theTools->theMonthsLimits[k]->aData.aDataStruct.limits[aMonth
 					    - 1]) / (float) (31 - aDay));
 	    }
 	else if (2 == aMonth && 29 == aDay) //mois à 29 jours
@@ -675,7 +715,7 @@ void gCompute::computeLimitNextDay()
 			    + (UInt32) ((float) (29
 				    * (aValue - aValueBeginMonth[j])
 				    - aDay * (aValue - aValueBeginMonth[j])
-				    + theTools->theMonthsLimits[k]->limits[aMonth
+				    + theTools->theMonthsLimits[k]->aData.aDataStruct.limits[aMonth
 					    - 1]) / (float) (30 - aDay));
 	    }
 	else if (2 == aMonth) //mois à 28 jours
@@ -685,7 +725,7 @@ void gCompute::computeLimitNextDay()
 			    + (UInt32) ((float) (28
 				    * (aValue - aValueBeginMonth[j])
 				    - aDay * (aValue - aValueBeginMonth[j])
-				    + theTools->theMonthsLimits[k]->limits[aMonth
+				    + theTools->theMonthsLimits[k]->aData.aDataStruct.limits[aMonth
 					    - 1]) / (float) (29 - aDay));
 	    }
 	else //mois à 31 jours
@@ -695,7 +735,7 @@ void gCompute::computeLimitNextDay()
 			    + (UInt32) ((float) (31
 				    * (aValue - aValueBeginMonth[j])
 				    - aDay * (aValue - aValueBeginMonth[j])
-				    + theTools->theMonthsLimits[k]->limits[aMonth
+				    + theTools->theMonthsLimits[k]->aData.aDataStruct.limits[aMonth
 					    - 1]) / (float) (32 - aDay));
 	    }
 	}

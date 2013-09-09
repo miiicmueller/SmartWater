@@ -10,8 +10,16 @@
 class tAvailability: public tParameters
     {
 public:
-    UInt16 aIntervalMn;
-    UInt16 aTimeMn;
+
+    union
+	{
+	UInt8 aDataTab[4];
+	struct
+	    {
+	    UInt16 aIntervalMn;
+	    UInt16 aTimeMn;
+	    } aDataStruct;
+	} aData;
 
     tAvailability(mEEPROM *mEeprom, UInt16 aModeNum);
     void save();

@@ -1,7 +1,7 @@
 /*
  * tSIMCard.cpp
  *
- *  Created on: 30 août 2013
+ *  Created on: 30 aoï¿½t 2013
  *      Author: cyrille.savy
  */
 
@@ -21,38 +21,15 @@ tSIMCard::tSIMCard(mEEPROM *mEeprom, UInt16 aModeNum)
 
 void tSIMCard::save()
     {
-    UInt8 aDataTab[20];
-
-    // Serialisation des donnees
-    for (int i = 0; i < 15; i++)
-	{
-	aDataTab[i] = (UInt8) (this->theOwnNumber[i]);
-	}
-    for (int i = 0; i < 5; i++)
-	{
-	aDataTab[i + 15] = (UInt8) (this->thePINCode[i]);
-	}
-
     //Enregistrement dans l'EEPROM
-    this->mPeriphSauv->store(this->aId, aDataTab);
+    this->mPeriphSauv->store(this->aId, this->aData.aDataTab);
     }
 
 void tSIMCard::load()
     {
-    UInt8 aDataTab[20];
-
     //Recuperation des donnees
-    this->mPeriphSauv->load(this->aId, aDataTab);
+    this->mPeriphSauv->load(this->aId, this->aData.aDataTab);
 
-    // Deserialisation des donnees
-    for (int i = 0; i < 15; i++)
-	{
-	this->theOwnNumber[i] = (char) aDataTab[i];
-	}
-    for (int i = 0; i < 5; i++)
-	{
-	this->thePINCode[i] = (char) aDataTab[i + 15];
-	}
     }
 
 tSIMCard::~tSIMCard()

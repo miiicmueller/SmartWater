@@ -117,12 +117,12 @@ void tCommandsAnalyzer::tCommandsParser(char* aMessage)
 		}
 	    else
 		{
-		this->aCommandResult.aCommandEnum = kCommandError;
+		this->aCommandResult.aCommandEnum = kCommandError1;
 		}
 	    }
 	else
 	    {
-	    this->aCommandResult.aCommandEnum = kCommandError;
+	    this->aCommandResult.aCommandEnum = kCommandError1;
 	    }
 	}
     }
@@ -153,11 +153,11 @@ void tCommandsAnalyzer::tModeAnalyzer()
 	}
     else
 	{
-	this->aCommandResult.aCommandEnum = kCommandError;
+	this->aCommandResult.aCommandEnum = kCommandError1;
 	}
 
     //reussite du mode
-    if (this->aCommandResult.aCommandEnum != kCommandError)
+    if (this->aCommandResult.aCommandEnum != kCommandError1)
 	{
 	this->aStateEnum = kModeOk;
 	}
@@ -189,7 +189,7 @@ void tCommandsAnalyzer::tPasswordAnalyzer(tToolsCluster* theTools)
 	if (strcmp(this->aCommandBrut.theMdp, theTools->theMdPAdmin->mdPAdmin)
 		!= 0)
 	    {
-	    this->aCommandResult.aCommandEnum = kCommandError;
+	    this->aCommandResult.aCommandEnum = kCommandError1;
 	    }
 	break;
     case kUser1:
@@ -198,7 +198,7 @@ void tCommandsAnalyzer::tPasswordAnalyzer(tToolsCluster* theTools)
 		theTools->theMdPUser[this->aCommandResult.aUserNb - 1]->mdPUser)
 		!= 0)
 	    {
-	    this->aCommandResult.aCommandEnum = kCommandError;
+	    this->aCommandResult.aCommandEnum = kCommandError1;
 	    }
 	break;
     default:
@@ -206,7 +206,7 @@ void tCommandsAnalyzer::tPasswordAnalyzer(tToolsCluster* theTools)
 	}
 
     //reussite du mot de passe
-    if (this->aCommandResult.aCommandEnum != kCommandError)
+    if (this->aCommandResult.aCommandEnum != kCommandError1)
 	{
 	this->aStateEnum = kPassWordOk;
 	}
@@ -259,7 +259,7 @@ void tCommandsAnalyzer::tCommandAnalyzer()
 	    }
 	else
 	    {
-	    this->aCommandResult.aCommandEnum = kCommandError;
+	    this->aCommandResult.aCommandEnum = kCommandError2;
 	    }
 	}
     //commandes administrateur
@@ -307,12 +307,12 @@ void tCommandsAnalyzer::tCommandAnalyzer()
 	    }
 	else
 	    {
-	    this->aCommandResult.aCommandEnum = kCommandError;
+	    this->aCommandResult.aCommandEnum = kCommandError2;
 	    }
 	}
 
     //reussite de la commande
-    if (this->aCommandResult.aCommandEnum != kCommandError)
+    if (this->aCommandResult.aCommandEnum != kCommandError2)
 	{
 	this->aStateEnum = kCommandOk;
 	}
@@ -334,7 +334,7 @@ void tCommandsAnalyzer::tParametersAnalyzer()
     case kCommandDysfunction:
 	if (this->aCommandResult.parametersNumber != 0)
 	    {
-	    this->aCommandResult.aCommandEnum = kCommandError;
+	    this->aCommandResult.aCommandEnum = kCommandError2;
 	    }
 	break;
 	//commandes avec 1 parametre
@@ -346,7 +346,7 @@ void tCommandsAnalyzer::tParametersAnalyzer()
     case kCommandAlarm:
 	if (this->aCommandResult.parametersNumber != 1)
 	    {
-	    this->aCommandResult.aCommandEnum = kCommandError;
+	    this->aCommandResult.aCommandEnum = kCommandError2;
 	    }
 	break;
 	//commandes avec 2 parametres
@@ -355,7 +355,7 @@ void tCommandsAnalyzer::tParametersAnalyzer()
     case kCommandPassa:
 	if (this->aCommandResult.parametersNumber != 2)
 	    {
-	    this->aCommandResult.aCommandEnum = kCommandError;
+	    this->aCommandResult.aCommandEnum = kCommandError2;
 	    }
 	break;
 	//commandes avec un nombre de parametres variable
@@ -363,13 +363,13 @@ void tCommandsAnalyzer::tParametersAnalyzer()
 	if ((this->aCommandResult.parametersNumber != 2)
 		&& (this->aCommandResult.parametersNumber != 0))
 	    {
-	    this->aCommandResult.aCommandEnum = kCommandError;
+	    this->aCommandResult.aCommandEnum = kCommandError2;
 	    }
 	break;
     case kCommandLimits:
 	if (this->aCommandResult.parametersNumber > 12)
 	    {
-	    this->aCommandResult.aCommandEnum = kCommandError;
+	    this->aCommandResult.aCommandEnum = kCommandError2;
 	    }
 	break;
     default:
@@ -377,7 +377,7 @@ void tCommandsAnalyzer::tParametersAnalyzer()
 	}
 
     //reussite des parametres
-    if (this->aCommandResult.aCommandEnum != kCommandError)
+    if (this->aCommandResult.aCommandEnum != kCommandError2)
 	{
 	this->aStateEnum = kParametersOk;
 	}

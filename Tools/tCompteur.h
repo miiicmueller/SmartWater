@@ -19,13 +19,21 @@
 class tCompteur: public tParameters
     {
 public:
-    char aManufacturer[kSizeManufacturer]; // Fabriquant : GWF
-    char aFluide[kSizeFluide]; //Fluide contenu : Wasser ou Gas
-    char aVersNum[kSizeVersNum]; //Version de compteur : VX.X
-    char aSerialNum[kSizeSerialNum]; //Numero de serie : xxxxxxx
-    char aFabDate[kSizeFabDate]; //Date de fabrication ou calibration : xx-xx-xx
-    char aNominalSize[kSizeNominalSize]; // Taille nominal : (xxxx)
-    UInt32 aIndex;
+    union
+	{
+	UInt8 aDataTab[kSizeSerializerCompteur];
+	struct
+	    {
+	    char aManufacturer[kSizeManufacturer]; // Fabriquant : GWF
+	    char aFluide[kSizeFluide]; //Fluide contenu : Wasser ou Gas
+	    char aVersNum[kSizeVersNum]; //Version de compteur : VX.X
+	    char aSerialNum[kSizeSerialNum]; //Numero de serie : xxxxxxx
+	    char aFabDate[kSizeFabDate]; //Date de fabrication ou calibration : xx-xx-xx
+	    char aNominalSize[kSizeNominalSize]; // Taille nominal : (xxxx)
+	    UInt32 aIndex;
+	    } aDataStruct;
+	} aData;
+
     bool isConnected;
 
     tCompteur(mEEPROM *mEeprom, UInt16 aModeNum);

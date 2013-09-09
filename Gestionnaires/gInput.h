@@ -30,7 +30,10 @@ typedef struct
     tDate* date;
 
     //capteurs de temperature
-    UInt16 temperature;
+    Float32 temperature;
+
+    //credit
+    UInt16 theCredit;
 
     //pour la simulation
     bool isSimulation;

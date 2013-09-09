@@ -79,7 +79,7 @@ private:
 public:
 
     //mis a disposition des autres gestionnaires
-    gComputeMailBox theComputeMailBox;
+    static gComputeMailBox theComputeMailBox;
 
     //----------------------------------------------------------------
     //constructeur
