@@ -97,7 +97,8 @@ void tToolsCluster::reset()
 
     this->theMode->mode = 'S';
 
-    this->theTemperatureOffset->aOffset.aFloatVal = 0;
+    this->theTemperatureOffset->aOffset.aFakeFloat.integer = 0;
+    this->theTemperatureOffset->aOffset.aFakeFloat.decimal = 0;
 
     sprintf(this->theUnitName->aName, "Unit1");
 
@@ -223,15 +224,13 @@ bool tToolsCluster::setMode(char* aMode)
 
 bool tToolsCluster::setTemperatureOffset(char* aTemperatureOffset)
     {
-    UInt8 aOffsetUnit;
-    UInt8 aOffsetDecimal;
     bool isSuccessful = false;
 
-    if (sscanf(aTemperatureOffset, "%d.%d", &aOffsetUnit, &aOffsetDecimal) == 2)
+    if (sscanf(aTemperatureOffset, "%d.%d",
+	    &this->theTemperatureOffset->aOffset.aFakeFloat.integer,
+	    &this->theTemperatureOffset->aOffset.aFakeFloat.decimal) == 2)
 	{
 	isSuccessful = true;
-	this->theTemperatureOffset->aOffset.aFloatVal = aOffsetUnit
-		+ (0.1 * aOffsetDecimal);
 	this->theTemperatureOffset->save();
 	}
     return isSuccessful;
@@ -403,22 +402,25 @@ void tToolsCluster::getDailyConsumption(char* aMessage, UInt8 aUserNb)
 	}
     }
 
-void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb)
+void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb, tDate* theDate,
+	UInt16 theCredit, Float32 theTemp)
     {
     char aTemp[20];
 
-    //TODO : le vrai message
-    sprintf(aMessage, "Unite :");
+    aMessage[0] = '\0';
     strcat(aMessage, this->theUnitName->aName);
     strcat(aMessage, "\r\n");
 
-    strcat(aMessage, "Date et heure ");
-    strcat(aMessage, "18/09/12/16:53:00");
+    sprintf(aTemp, "%d/%d/%d %d:%d:%d", theDate->day, theDate->month,
+	    theDate->year, theDate->hour, theDate->minute, theDate->second);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Disponibilite ");
-    sprintf(aTemp, "%d/%d", this->theAvailability->aData.aDataStruct.aIntervalMn,
-	    this->theAvailability->aData.aDataStruct.aTimeMn);
+    sprintf(aTemp, "%d:%d/%d:%d", (this->theAvailability->aData.aDataStruct.aIntervalMn) / 60,
+	    (this->theAvailability->aData.aDataStruct.aIntervalMn) % 60,
+	    (this->theAvailability->aData.aDataStruct.aTimeMn) / 60,
+	    (this->theAvailability->aData.aDataStruct.aTimeMn) % 60);
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
@@ -429,31 +431,44 @@ void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb)
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Index ");
-    strcat(aMessage, "2514");
+    sprintf(aTemp, "%d", this->theCompteur[aUserNb - 1]->aData.aDataStruct.aIndex);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Debit jour ");
-    strcat(aMessage, "10,7");
+    sprintf(aTemp, "%d",
+	    this->theMeasuresStatement[aUserNb - 1]->aData.aDataStruct.CurrentMonthConsumption[theDate->day]);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
-    strcat(aMessage, "Debit mens");
-    strcat(aMessage, "10,7");
+    strcat(aMessage, "Debit mens ");
+    sprintf(aTemp, "%d",
+	    this->theMeasuresStatement[aUserNb - 1]->aData.aDataStruct.MonthlyConsumption[theDate->month]);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Limite jour ");
-    strcat(aMessage, "25,0");
+    sprintf(aTemp, "%d",
+	    this->theMonthsLimits[aUserNb - 1]->aData.aDataStruct.limits[theDate->month]);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Temp ");
-    strcat(aMessage, "25,0");
+    sprintf(aTemp, "%d.%d", theTemp.aFakeFloat.integer,
+	    theTemp.aFakeFloat.decimal / 10);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Off Temp ");
-    strcat(aMessage, "0,2");
+    sprintf(aTemp, "%d.%d",
+	    this->theTemperatureOffset->aOffset.aFakeFloat.integer,
+	    this->theTemperatureOffset->aOffset.aFakeFloat.decimal / 10);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Credit ");
-    strcat(aMessage, "10,0");
+    sprintf(aTemp, "%dcts", theCredit);
+    strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Alarme ");

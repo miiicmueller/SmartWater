@@ -3,6 +3,8 @@
 
 #include "gCompute.h"
 
+gComputeMailBox gCompute::theComputeMailBox;
+
 //----------------------------------------------------------------
 //constructeur
 //
@@ -72,7 +74,7 @@ void gCompute::computeTerminal()
 		else
 		    {
 		    *(this->theGTerminal->theTerminalMailBox.aAction) =
-			    kCommandError;
+			    kCommandError2;
 		    }
 		}
 	    break;
@@ -82,7 +84,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[1]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandMode:
@@ -90,7 +92,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[0]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandOffset:
@@ -98,7 +100,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[0]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandAlarm:
@@ -107,7 +109,7 @@ void gCompute::computeTerminal()
 		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb))))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandLimits:
@@ -121,7 +123,7 @@ void gCompute::computeTerminal()
 				*(this->theGTerminal->theTerminalMailBox.aUserNb))))
 		    {
 		    *(this->theGTerminal->theTerminalMailBox.aAction) =
-			    kCommandError;
+			    kCommandError2;
 		    }
 		}
 	    this->theTools->getMonthsLimits(this->theComputeMailBox.aReplyUSB,
@@ -129,7 +131,10 @@ void gCompute::computeTerminal()
 	    break;
 	case kCommandEtat:
 	    this->theTools->getEtat(this->theComputeMailBox.aReplyUSB,
-		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb)));
+		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb)),
+		    this->theGInput->theInputMailBox.date,
+		    this->theGInput->theInputMailBox.theCredit,
+		    this->theGInput->theInputMailBox.temperature);
 	    break;
 	case kCommandPassu:
 	    if (!this->theTools->setMdPUser(
@@ -138,7 +143,7 @@ void gCompute::computeTerminal()
 		    UInt8(*(this->theGTerminal->theTerminalMailBox.aUserNb))))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandPassa:
@@ -147,7 +152,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[1]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandSimulate:
@@ -182,7 +187,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[0]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	case kCommandOwn:
@@ -190,7 +195,7 @@ void gCompute::computeTerminal()
 		    this->theGTerminal->theTerminalMailBox.theParameters[0]))
 		{
 		*(this->theGTerminal->theTerminalMailBox.aAction) =
-			kCommandError;
+			kCommandError2;
 		}
 	    break;
 	default:
@@ -219,7 +224,8 @@ void gCompute::computeTerminal()
 	sprintf(this->theComputeMailBox.aReplyUSB, "_OK_");
 	break;
 	// reponse error
-    case kCommandError:
+    case kCommandError1:
+    case kCommandError2:
 	sprintf(this->theComputeMailBox.aReplyUSB, "_ERROR_");
 	break;
 	// reponse speciale deja ecrite dans le switch precedent
@@ -260,25 +266,41 @@ void gCompute::computeSMS()
 		this->theRTC->setDate(aYear, aMonth, aDate, NULL);
 		this->theRTC->setHour(aHour, aMinute, 0);
 		}
+	    else
+		{
+		*(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+		}
 	    }
 	break;
     case kCommandDispo:
-	this->theTools->setAvailability(
+	if (!this->theTools->setAvailability(
 		this->theGInput->theInputMailBox.theParameters[0],
-		this->theGInput->theInputMailBox.theParameters[1]);
+		this->theGInput->theInputMailBox.theParameters[1]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandMode:
-	this->theTools->setMode(
-		this->theGInput->theInputMailBox.theParameters[0]);
+	if (!this->theTools->setMode(
+		this->theGInput->theInputMailBox.theParameters[0]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandOffset:
-	this->theTools->setTemperatureOffset(
-		this->theGInput->theInputMailBox.theParameters[0]);
+	if (!this->theTools->setTemperatureOffset(
+		this->theGInput->theInputMailBox.theParameters[0]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandAlarm:
-	this->theTools->setAlarmNumber(
+	if (!this->theTools->setAlarmNumber(
 		this->theGInput->theInputMailBox.theParameters[0],
-		UInt8(*(this->theGInput->theInputMailBox.aUserNb)));
+		UInt8(*(this->theGInput->theInputMailBox.aUserNb))))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandLimits:
 	if (*(this->theGInput->theInputMailBox.theParametersNumber) > 0)
@@ -288,7 +310,7 @@ void gCompute::computeSMS()
 		    *(this->theGInput->theInputMailBox.theParametersNumber),
 		    UInt8(*(this->theGInput->theInputMailBox.aUserNb))))
 		{
-		*(this->theGInput->theInputMailBox.aAction) = kCommandError;
+		*(this->theGInput->theInputMailBox.aAction) = kCommandError2;
 		}
 	    }
 	this->theTools->getMonthsLimits(this->theComputeMailBox.aReplySMS,
@@ -296,18 +318,27 @@ void gCompute::computeSMS()
 	break;
     case kCommandEtat:
 	this->theTools->getEtat(this->theComputeMailBox.aReplySMS,
-		UInt8(*(this->theGInput->theInputMailBox.aUserNb)));
+		UInt8(*(this->theGInput->theInputMailBox.aUserNb)),
+		this->theGInput->theInputMailBox.date,
+		this->theGInput->theInputMailBox.theCredit,
+		this->theGInput->theInputMailBox.temperature);
 	break;
     case kCommandPassu:
-	this->theTools->setMdPUser(
+	if (!this->theTools->setMdPUser(
 		this->theGInput->theInputMailBox.theParameters[0],
 		this->theGInput->theInputMailBox.theParameters[1],
-		UInt8(*(this->theGInput->theInputMailBox.aUserNb)));
+		UInt8(*(this->theGInput->theInputMailBox.aUserNb))))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandPassa:
-	this->theTools->setMdPAdmin(
+	if (!this->theTools->setMdPAdmin(
 		this->theGInput->theInputMailBox.theParameters[0],
-		this->theGInput->theInputMailBox.theParameters[1]);
+		this->theGInput->theInputMailBox.theParameters[1]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandSimulate:
 	this->theGInput->theInputMailBox.isSimulation = true;
@@ -331,16 +362,25 @@ void gCompute::computeSMS()
 	sprintf(this->theComputeMailBox.aReplySMS, "_OK_");
 	break;
     case kCommandUnitName:
-	this->theTools->setUnitName(
-		this->theGInput->theInputMailBox.theParameters[0]);
+	if (!this->theTools->setUnitName(
+		this->theGInput->theInputMailBox.theParameters[0]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandPin:
-	this->theTools->setPINCode(
-		this->theGInput->theInputMailBox.theParameters[0]);
+	if (!this->theTools->setPINCode(
+		this->theGInput->theInputMailBox.theParameters[0]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     case kCommandOwn:
-	this->theTools->setOwnNumber(
-		this->theGInput->theInputMailBox.theParameters[0]);
+	if (!this->theTools->setOwnNumber(
+		this->theGInput->theInputMailBox.theParameters[0]))
+	    {
+	    *(this->theGInput->theInputMailBox.aAction) = kCommandError2;
+	    }
 	break;
     default:
 	break;
@@ -350,8 +390,7 @@ void gCompute::computeSMS()
     switch (*(this->theGInput->theInputMailBox.aAction))
 	{
     // reponse error
-    case kCommandError:
-	//TODO : reponse _ERROR_ par SMS a enlever
+    case kCommandError2:
 	sprintf(this->theComputeMailBox.aReplySMS, "_ERROR_");
 	break;
 	// reponse speciale deja ecrite dans le switch precedent
@@ -362,6 +401,7 @@ void gCompute::computeSMS()
     case kCommandDysfunction:
 	break;
 	// pas de reponse
+    case kCommandError1:
     case kCommandDisconnect:
     case kCommandConnect:
     case kCommandUnitName:

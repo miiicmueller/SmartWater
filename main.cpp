@@ -76,6 +76,15 @@ void main(void)
     //activation des interruptions
     __bis_SR_register(GIE);
 
+    //instanciation des interfaces
+    //parametrage des interfaces
+    //instanciation des modules
+    //parametrage des modules
+    //instanciation des utilitaires
+    //parametrage des utilitaires
+    //instanciation des gestionnaires
+    //parametrage des gestionnaires
+
     mDelay::mSetup();
     mDelay::mOpen();
 
@@ -141,6 +150,8 @@ void main(void)
 
     mDelay aDelayCompute;
     mDelay aDelayInput;
+    aDelayCompute.startDelayMS(2);
+    aDelayInput.startDelayMS(1);
 
     while (1)
 	{
@@ -151,7 +162,7 @@ void main(void)
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
 	    theGOutput.execute();
-	    theGSleep.execute();
+	    //theGSleep.execute();
 	    }
 	if (aDelayInput.isDone())
 	    {
