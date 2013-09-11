@@ -22,6 +22,7 @@ gCompute::gCompute(gInput* theGInput, gTerminal* theGTerminal,
     this->theComputeMailBox.aUserNb = this->theGInput->theInputMailBox.aUserNb;
     this->theComputeMailBox.aReplyNb =
 	    this->theGInput->theInputMailBox.aReplyNb;
+    this->theComputeMailBox.theDate = this->theGInput->theInputMailBox.date;
 
     //initilisation des attributs de computeConsumption
     aMonth = 0;
@@ -52,9 +53,11 @@ void gCompute::execute()
 
     this->computeSMS();
 
-    //this->computeConsumption(); //TODO adapter
+    this->computeConsumption();
 
     this->computeIsFinished();
+
+    this->computeCredit();
     }
 
 void gCompute::computeTerminal()
@@ -436,6 +439,8 @@ void gCompute::computeSMS()
 	this->theComputeMailBox.aReplySMS[0] = '\0';
 	break;
 	}
+
+    *(this->theGInput->theInputMailBox.aAction) = kCommandNoCommand;
     }
 
 //----------------------------------------------------------------
@@ -459,7 +464,8 @@ void gCompute::computeConsumption()
 	    if (0 == aPreviousDay) // la premiere fois
 		{
 		aPreviousDay = theGInput->theInputMailBox.date->day;
-		aPreviousValue[j] = theTools->theCompteur[j]->aData.aDataStruct.aIndex;
+		aPreviousValue[j] =
+			theTools->theCompteur[j]->aData.aDataStruct.aIndex;
 		aValueBeginMonth[j] = aPreviousValue[j];
 		}
 	    else
@@ -504,52 +510,67 @@ void gCompute::computeConsumption()
     //controle la consommation du compteur de simulation
     if (theGInput->theInputMailBox.isSimulation)
 	{
-	if (1 == aDay) //met a jour lorsqu'on est un nouveau mois
+	static bool aFirstRun = true;
+
+	if (this->theGInput->theInputMailBox.simulateCompteur == false)
 	    {
-	    aFullMonth = true;
-	    }
+	    this->theGInput->theInputMailBox.simulateCompteur = true;
 
-	j = 2;
-	aChoiceMeterSimulation = theComputeMailBox.aUserSelect - 1;
-	aValue = theTools->theCompteur[2]->aData.aDataStruct.aIndex;
-	aMonth = theGInput->theInputMailBox.date->month;
-
-	if(0==aValueBeginMonth[2])
-	    {
-	    aValueBeginMonth[2]=aValue;
-	    }
-
-	aDay++;
-	aPreviousDay = aDay - 1;
-
-	computeLimitDay();
-	computeLimitNextDay();
-
-	//calcul si depasse la limite quotidienne
-	if (aLimitDay < (aValue - aPreviousValue[j]) && aPreviousValue[j])
-	    {
-	    if (aWarningConsumption[j]) // valeur depassee
+	    if (aFirstRun)
 		{
-		this->theComputeMailBox.hasOverrun[aChoiceMeterSimulation] =
-			true;
-		this->theComputeMailBox.overrunLimit[aChoiceMeterSimulation] =
-			aLimitDay;
-		this->theComputeMailBox.overrunConsumption[aChoiceMeterSimulation] =
-			aValue - aPreviousValue[j];
-		aPreviousDay = 0;
-		aValueBeginMonth[2] = 0;
-		this->theGInput->theInputMailBox.isSimulation = false;
+		aFirstRun = false;
+		aDay = theGInput->theInputMailBox.date->day; // prend la date
 		}
-	    else // premier jour de depassement de la limite
+
+	    if (1 == aDay) //met a jour lorsqu'on est un nouveau mois
 		{
-		aWarningConsumption[j] = true;
+		aFullMonth = true;
 		}
+
+	    j = 2;
+	    aChoiceMeterSimulation = theComputeMailBox.aUserSelect - 1;
+	    aValue = theTools->theCompteur[2]->aData.aDataStruct.aIndex;
+	    aMonth = theGInput->theInputMailBox.date->month;
+
+	    if (0 == aValueBeginMonth[2])
+		{
+		aValueBeginMonth[2] = aValue;
+		}
+
+	    aDay++;
+	    aPreviousDay = aDay - 1;
+
+	    computeLimitDay();
+	    computeLimitNextDay();
+
+	    //calcul si depasse la limite quotidienne
+	    if ((aLimitDay < (aValue - aPreviousValue[j]))
+		    && (0 != aPreviousValue[j]))
+		{
+		if (aWarningConsumption[j]) // valeur depassee
+		    {
+		    this->theComputeMailBox.hasOverrun[aChoiceMeterSimulation] =
+			    true;
+		    this->theComputeMailBox.overrunLimit[aChoiceMeterSimulation] =
+			    aLimitDay;
+		    this->theComputeMailBox.overrunConsumption[aChoiceMeterSimulation] =
+			    aValue - aPreviousValue[j];
+		    aPreviousDay = 0;
+		    aValueBeginMonth[2] = 0;
+		    this->theGInput->theInputMailBox.isSimulation = false;
+		    aFirstRun = true;
+		    }
+		else // premier jour de depassement de la limite
+		    {
+		    aWarningConsumption[j] = true;
+		    }
+		}
+	    else // pas de depassement
+		{
+		aWarningConsumption[j] = false;
+		}
+	    aPreviousValue[j] = aValue;
 	    }
-	else // pas de depassement
-	    {
-	    aWarningConsumption[j] = false;
-	    }
-	aPreviousValue[j] = aValue;
 	}
     }
 
@@ -588,19 +609,20 @@ void gCompute::saveMeasurements()
 	//efface du tableau, les jours du mois n'existant pas (p. ex. le 30 fevrier)
 	for (i = aPreviousDay; i < 31; i++)
 	    {
-	    theTools->theMeasuresStatement[j]->aData.aDataStruct.CurrentMonthConsumption[i] = 0;
+	    theTools->theMeasuresStatement[j]->aData.aDataStruct.CurrentMonthConsumption[i] =
+		    0;
 	    }
 
 	//enregistre la consommation du mois passe
 	if (1 == aMonth) // pour le mois de decembre
 	    {
-	    theTools->theMeasuresStatement[j]->aData.aDataStruct.MonthlyConsumption[11] = (aValue
-		    - aValueBeginMonth[j]);
+	    theTools->theMeasuresStatement[j]->aData.aDataStruct.MonthlyConsumption[11] =
+		    (aValue - aValueBeginMonth[j]);
 	    }
 	else // pour les autres mois
 	    {
-	    theTools->theMeasuresStatement[j]->aData.aDataStruct.MonthlyConsumption[aMonth - 2] =
-		    aValue - aValueBeginMonth[j];
+	    theTools->theMeasuresStatement[j]->aData.aDataStruct.MonthlyConsumption[aMonth
+		    - 2] = aValue - aValueBeginMonth[j];
 	    }
 
 	aValueBeginMonth[j] = aValue;
@@ -608,8 +630,8 @@ void gCompute::saveMeasurements()
     else
 	{
 	//enregistre la consommation du mois courant
-	theTools->theMeasuresStatement[j]->aData.aDataStruct.MonthlyConsumption[aMonth - 1] =
-		aValue - aValueBeginMonth[j];
+	theTools->theMeasuresStatement[j]->aData.aDataStruct.MonthlyConsumption[aMonth
+		- 1] = aValue - aValueBeginMonth[j];
 	}
 
 // enregistre le jour
@@ -622,8 +644,8 @@ void gCompute::saveMeasurements()
     else
 	{
 	//enregistre la consommation du jour courant
-	theTools->theMeasuresStatement[j]->aData.aDataStruct.CurrentMonthConsumption[aDay - 1] =
-		aValue - aPreviousValue[j];
+	theTools->theMeasuresStatement[j]->aData.aDataStruct.CurrentMonthConsumption[aDay
+		- 1] = aValue - aPreviousValue[j];
 	}
     }
 
@@ -632,14 +654,14 @@ void gCompute::saveMeasurements()
 //----------------------------------------------------------------
 void gCompute::computeLimitDay()
     {
-    UInt8 k=0;
-    if(theGInput->theInputMailBox.isSimulation)
+    UInt8 k = 0;
+    if (theGInput->theInputMailBox.isSimulation)
 	{
-	k=j+theComputeMailBox.aUserSelect-3; //place l'index sur le compteur selectionne en simulation
+	k = j + theComputeMailBox.aUserSelect - 3; //place l'index sur le compteur selectionne en simulation
 	}
     else
 	{
-	k=j;
+	k = j;
 	}
     if (aFullMonth) // cas ou les mesures sont faites des le premier jour du mois
 	{
@@ -687,14 +709,14 @@ void gCompute::computeLimitDay()
 //----------------------------------------------------------------
 void gCompute::computeLimitNextDay()
     {
-    UInt8 k=0;
-    if(theGInput->theInputMailBox.isSimulation)
+    UInt8 k = 0;
+    if (theGInput->theInputMailBox.isSimulation)
 	{
-	k=j+theComputeMailBox.aUserSelect-3; //place l'index sur le compteur selectionne en simulation
+	k = j + theComputeMailBox.aUserSelect - 3; //place l'index sur le compteur selectionne en simulation
 	}
     else
 	{
-	k=j;
+	k = j;
 	}
     if (aFullMonth) // cas ou les mesures sont faites des le premier jour du mois
 	{
@@ -744,6 +766,31 @@ void gCompute::computeLimitNextDay()
 	theGInput->theInputMailBox.indexOverrunSimulation = aLimitDay
 		+ aValueBeginMonth[j];
 	}
-
     theGInput->theInputMailBox.indexOverrunSimulation += 10; //ajoute 10 pour avoir un depassement
     }
+
+//pour verifier le credit restant
+void gCompute::computeCredit()
+    {
+    static UInt16 thePreviousCredit = 10000;
+
+    if (this->theComputeMailBox.aReplySMS[0] == '\0')
+	{
+	if ((this->theGInput->theInputMailBox.theCredit < 500)
+		&& (thePreviousCredit >= 500))
+	    {
+	    if (this->theTools->theAlarmNumber[0]->aTelNumber[0] == '+')
+		{
+		sprintf(this->theComputeMailBox.aReplySMS,
+			"Remaining credit is low (%d.%d)",
+			(this->theGInput->theInputMailBox.theCredit / 100),
+			(this->theGInput->theInputMailBox.theCredit % 100));
+
+		strcpy(this->theComputeMailBox.aReplyNb,
+			this->theTools->theAlarmNumber[0]->aTelNumber);
+		}
+	    }
+	thePreviousCredit = this->theGInput->theInputMailBox.theCredit;
+	}
+    }
+

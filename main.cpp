@@ -56,7 +56,7 @@ volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received
  */
 void main(void)
     {
-    //Configuration de la fréquence
+    //Configuration de la frequence
     mCpu::configFrequency();
 
     // Important pour la basse consommation
@@ -76,15 +76,6 @@ void main(void)
 
     //activation des interruptions
     __bis_SR_register(GIE);
-
-    //instanciation des interfaces
-    //parametrage des interfaces
-    //instanciation des modules
-    //parametrage des modules
-    //instanciation des utilitaires
-    //parametrage des utilitaires
-    //instanciation des gestionnaires
-    //parametrage des gestionnaires
 
     mDelay::mSetup();
     mDelay::mOpen();
@@ -131,6 +122,7 @@ void main(void)
     theCountersTab[2] = new mCompteur(kMeterSimulation, &aEEPROM,
 	    theTools.theCompteur[2]);
 
+    //instanciation des gestionnaires
     gError theGError(&theGSM, &theTempSensor, &aEEPROM);
     gInput theGInput(&theGSM, theCountersTab, &theRTC, &theTempSensor,
 	    &theTools, &theUSB, &theGError);
@@ -141,15 +133,17 @@ void main(void)
     gSleep theGSleep(&theTools, &theRTC, &theGSM, theCountersTab[0],
 	    &theTempSensor, &theGCompute, &theWatchDog);
 
+    //parametrage des gestionnaires
     theGInput.setup();
     theTerminalUSB.setup();
     theGCompute.setup();
     theGOutput.setup();
     theGSleep.setup();
+    theGError.setup();
 
     mDelay aDelayCompute;
     mDelay aDelayInput;
-    aDelayCompute.startDelayMS(2);
+    aDelayCompute.startDelayMS(5);
     aDelayInput.startDelayMS(1);
 
     while (1)
@@ -157,7 +151,7 @@ void main(void)
 	theWatchDog.resetWatchDog();
 	if (aDelayCompute.isDone())
 	    {
-	    aDelayCompute.startDelayMS(1);
+	    aDelayCompute.startDelayMS(5);
 	    theGError.execute();
 	    theTerminalUSB.execute();
 	    theGCompute.execute();

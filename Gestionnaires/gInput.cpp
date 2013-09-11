@@ -42,7 +42,9 @@ void gInput::setup()
     this->theInputMailBox.date->minute = 0;
     this->theInputMailBox.date->second = 0;
 
-    this->theInputMailBox.theCredit = 0;
+    this->theInputMailBox.theCredit = 0xFFFF;
+
+    this->theInputMailBox.simulateCompteur = false;
     }
 
 void gInput::execute()
@@ -89,7 +91,8 @@ void gInput::execute()
 		}
 	    }
 
-	if (this->theInputMailBox.isSimulation)
+	if (this->theInputMailBox.isSimulation
+		&& this->theInputMailBox.simulateCompteur)
 	    {
 	    this->theCompteurs[2]->mOpen();
 
@@ -105,6 +108,7 @@ void gInput::execute()
 		{
 		this->theTools->theCompteur[2]->isConnected = false;
 		}
+	    this->theInputMailBox.simulateCompteur = false;
 	    }
 
 	this->theCompteurs[0]->mClose();
@@ -114,6 +118,15 @@ void gInput::execute()
 	this->theInputMailBox.temperature.aFakeFloat.integer = temp >> 4;
 	this->theInputMailBox.temperature.aFakeFloat.decimal = ((temp % 16)
 		* 100) >> 4;
+
+	//pour le credit
+	static UInt8 thePreviousDay = 0;
+	if ((this->theInputMailBox.date->day != thePreviousDay)
+		&& (this->theInputMailBox.date->hour > 8))
+	    {
+	    thePreviousDay = this->theInputMailBox.date->day;
+	    this->theGSM->getCredit(&(this->theInputMailBox.theCredit));
+	    }
 	}
     }
 

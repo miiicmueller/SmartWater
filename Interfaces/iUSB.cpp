@@ -13,8 +13,6 @@
 
 #include "iUSB.h"
 
-//TODO : Rechercher une solution pour reveiller le micro par l'USB
-
 char iUSB::usbBuffer[MAX_BUFFERSIZE] = "";
 
 /**
@@ -35,7 +33,6 @@ iUSB::iUSB(volatile BYTE *bCDCDataReceived_event)
 
 iUSB::~iUSB()
     {
-
     }
 
 /**
@@ -43,7 +40,6 @@ iUSB::~iUSB()
  */
 void iUSB::config()
     {
-
     //Ne pas oublier d'avoir setVcore(3) avant
     //initialisation de l'USB
     this->initUSB();
@@ -63,7 +59,6 @@ void iUSB::config()
 
     //desactiver LDO
     USBPWRCTL &= ~(SLDOEN);      // Disable the VUSB LDO and the SLDO
-
     }
 
 /**
@@ -111,7 +106,6 @@ int iUSB::getBufferSize()
  */
 bool iUSB::getFullFrame(char* FrameBuffer)
     {
-
     //Tester si l'on a recu qqch
     if (*this->dataReceived)
 	{

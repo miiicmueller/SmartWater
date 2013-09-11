@@ -57,11 +57,13 @@ void tToolsCluster::reset()
 
 	for (int j = 0; j < 12; j++)
 	    {
-	    this->theMeasuresStatement[i]->aData.aDataStruct.MonthlyConsumption[j] = 0;
+	    this->theMeasuresStatement[i]->aData.aDataStruct.MonthlyConsumption[j] =
+		    0;
 	    }
 	for (int j = 0; j < 31; j++)
 	    {
-	    this->theMeasuresStatement[i]->aData.aDataStruct.CurrentMonthConsumption[j] = 0;
+	    this->theMeasuresStatement[i]->aData.aDataStruct.CurrentMonthConsumption[j] =
+		    0;
 	    }
 
 	for (int j = 0; j < 12; j++)
@@ -274,7 +276,8 @@ bool tToolsCluster::setOwnNumber(char* aOwnNumber)
 
 	if (isSuccessful == true)
 	    {
-	    strcpy(this->theSIMCard->aData.aDataStruct.theOwnNumber, aOwnNumber);
+	    strcpy(this->theSIMCard->aData.aDataStruct.theOwnNumber,
+		    aOwnNumber);
 	    this->theSIMCard->save();
 	    }
 	}
@@ -341,8 +344,8 @@ bool tToolsCluster::setMonthsLimits(char** aMonthLimits, UInt8 aNbOfLimits,
 	{
 	for (int i = 0; i < aNbOfLimits; i++)
 	    {
-	    this->theMonthsLimits[aUserNb - 1]->aData.aDataStruct.limits[theMonths[i] - 1] =
-		    theLimits[i];
+	    this->theMonthsLimits[aUserNb - 1]->aData.aDataStruct.limits[theMonths[i]
+		    - 1] = theLimits[i];
 	    }
 
 	this->theMonthsLimits[aUserNb - 1]->save();
@@ -362,7 +365,8 @@ void tToolsCluster::getMonthsLimits(char* aMessage, UInt8 aUserNb)
     for (int i = 1; i <= 12; i++)
 	{
 	aLimit =
-		(unsigned int) this->theMonthsLimits[aUserNb - 1]->aData.aDataStruct.limits[i - 1];
+		(unsigned int) this->theMonthsLimits[aUserNb - 1]->aData.aDataStruct.limits[i
+			- 1];
 	sprintf(aTemp, "%d:%d_", i, aLimit);
 	strcat(aMessage, aTemp);
 	}
@@ -417,7 +421,8 @@ void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb, tDate* theDate,
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Disponibilite ");
-    sprintf(aTemp, "%d:%d/%d:%d", (this->theAvailability->aData.aDataStruct.aIntervalMn) / 60,
+    sprintf(aTemp, "%d:%d/%d:%d",
+	    (this->theAvailability->aData.aDataStruct.aIntervalMn) / 60,
 	    (this->theAvailability->aData.aDataStruct.aIntervalMn) % 60,
 	    (this->theAvailability->aData.aDataStruct.aTimeMn) / 60,
 	    (this->theAvailability->aData.aDataStruct.aTimeMn) % 60);
@@ -431,25 +436,29 @@ void tToolsCluster::getEtat(char* aMessage, UInt8 aUserNb, tDate* theDate,
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Index ");
-    sprintf(aTemp, "%d", this->theCompteur[aUserNb - 1]->aData.aDataStruct.aIndex);
+    sprintf(aTemp, "%d",
+	    this->theCompteur[aUserNb - 1]->aData.aDataStruct.aIndex);
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Debit jour ");
     sprintf(aTemp, "%d",
-	    this->theMeasuresStatement[aUserNb - 1]->aData.aDataStruct.CurrentMonthConsumption[theDate->day]);
+	    this->theMeasuresStatement[aUserNb - 1]->aData.aDataStruct.CurrentMonthConsumption[theDate->day
+		    - 1]);
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Debit mens ");
     sprintf(aTemp, "%d",
-	    this->theMeasuresStatement[aUserNb - 1]->aData.aDataStruct.MonthlyConsumption[theDate->month]);
+	    this->theMeasuresStatement[aUserNb - 1]->aData.aDataStruct.MonthlyConsumption[theDate->month
+		    - 1]);
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 
     strcat(aMessage, "Limite jour ");
     sprintf(aTemp, "%d",
-	    this->theMonthsLimits[aUserNb - 1]->aData.aDataStruct.limits[theDate->month]);
+	    this->theMonthsLimits[aUserNb - 1]->aData.aDataStruct.limits[theDate->month
+		    - 1]);
     strcat(aMessage, aTemp);
     strcat(aMessage, "\r\n");
 

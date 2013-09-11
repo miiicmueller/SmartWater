@@ -48,26 +48,33 @@ void gOutput::execute()
 	}
 
     //alarme SMS
-    if (this->theGError->gErrorList[kGErrorGSM] == false)
+    if ((this->theGCompute->theComputeMailBox.theDate->hour > 8)
+	    && (this->theGCompute->theComputeMailBox.theDate->hour < 21))
 	{
-	for (int i = 0; i <= 1; i++)
+	if (this->theGError->gErrorList[kGErrorGSM] == false)
 	    {
-	    if (this->theGCompute->theComputeMailBox.hasOverrun[i])
+	    for (int i = 0; i <= 1; i++)
 		{
-		char aAlarm[80];
-
-		sprintf(aAlarm,
-			"consumption alarm on : %s\r\nlimit : %d\r\nconsumption : %d",
-			this->theTools->theUnitName->aName,
-			this->theGCompute->theComputeMailBox.overrunLimit[i],
-			this->theGCompute->theComputeMailBox.overrunConsumption[i]);
-
-		this->theGCompute->theComputeMailBox.hasOverrun[i] = false;
-
-		if (!this->theGSM->sendSMS((UInt8*) aAlarm,
-			(UInt8*) (this->theTools->theAlarmNumber[i]->aTelNumber)))
+		if (this->theGCompute->theComputeMailBox.hasOverrun[i])
 		    {
-		    this->theGError->gErrorList[kGErrorGSM] = true;
+		    char aAlarm[80];
+
+		    sprintf(aAlarm,
+			    "consumption alarm on : %s\r\nlimit : %d\r\nconsumption : %d",
+			    this->theTools->theUnitName->aName,
+			    this->theGCompute->theComputeMailBox.overrunLimit[i],
+			    this->theGCompute->theComputeMailBox.overrunConsumption[i]);
+
+		    this->theGCompute->theComputeMailBox.hasOverrun[i] = false;
+
+		    if (this->theTools->theAlarmNumber[i]->aTelNumber[0] == '+')
+			{
+			if (!this->theGSM->sendSMS((UInt8*) aAlarm,
+				(UInt8*) (this->theTools->theAlarmNumber[i]->aTelNumber)))
+			    {
+			    this->theGError->gErrorList[kGErrorGSM] = true;
+			    }
+			}
 		    }
 		}
 	    }

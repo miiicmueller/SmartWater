@@ -188,7 +188,7 @@ bool mGSM::getSMS(char* aSMS, bool* aHasSms, char* aNumPhone)
     UInt8 i = 0;
     UInt8 j = 0;
 
-    this->state = kErrorGeneral;
+    this->state = kErrorReadSms;
 
     // demande le prochain SMS
     mGSM::uart.clearInternalSerialBuffer(); //efface buffer
@@ -281,6 +281,7 @@ bool mGSM::getSMS(char* aSMS, bool* aHasSms, char* aNumPhone)
 		else
 		    {
 		    aIsError = true; // erreur de lecture du numero de telephone
+		    this->indexSMS++;
 		    }
 		}
 	    }
@@ -420,7 +421,7 @@ bool mGSM::getDate(tDate* aDate)
     bool aIsOk = false;
     bool aIsError = false;
     bool aAllRead = false;
-    UInt8 aIndex = this->indexSMS; // index de lecture des sms recus dans la carte sim
+    UInt8 aIndex; // index de lecture des sms recus dans la carte sim
     UInt8 aNbSms = 0;
     UInt16 i = 0;
     UInt8 j = 0;
@@ -441,7 +442,7 @@ bool mGSM::getDate(tDate* aDate)
 		getNbSms(&aNbSms);
 		}
 
-	    if (!mGSM::timeOut.isDone())
+	    if (!aDelayGetNewSms.isDone())
 		{
 		while (!aAllRead && !aIsError)
 		    {
@@ -456,14 +457,14 @@ bool mGSM::getDate(tDate* aDate)
 
 		    // demande de lire le prochain SMS
 		    mGSM::uart.sendString(mGSM::commandesAtGsm.getSMS);
-		    if (aIndex < 10) //ecrit l'index du sms a lire
+		    if (aNbSms < 10) //ecrit l'index du sms a lire
 			{
-			mGSM::uart.write((char) (aIndex + 48));
+			mGSM::uart.write((char) (aNbSms + 48));
 			}
 		    else
 			{
-			mGSM::uart.write((char) ((aIndex / 10) + 48));
-			mGSM::uart.write((char) ((aIndex % 10) + 48));
+			mGSM::uart.write((char) ((aNbSms / 10) + 48));
+			mGSM::uart.write((char) ((aNbSms % 10) + 48));
 			}
 		    mGSM::uart.sendString(mGSM::commandesAtGsm.endAT);
 
@@ -557,7 +558,7 @@ bool mGSM::getDate(tDate* aDate)
 			this->state = kErrorReadSms;
 			}
 
-		    aIndex++; // passe au SMS suivant
+		    aNbSms++; // passe au SMS suivant
 		    }
 		}
 	    }

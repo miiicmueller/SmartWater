@@ -3,7 +3,7 @@
 
 #include "iI2C.h"
 
-//FIXME Le code marche bien pour USCI_B1 mais a plein de lacune pour le B0.
+//TODO : Le code marche bien pour USCI_B1 mais a plein de lacune pour le B0.
 //Donc a ajouter pour la prochaine utilisation
 
 //Initalisation des attributs UART_x statiques

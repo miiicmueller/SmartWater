@@ -39,6 +39,7 @@ typedef struct
     //pour la simulation
     bool isSimulation;
     UInt32 indexOverrunSimulation; // index qu'il faut pour simuler un depassement de consommation
+    bool simulateCompteur;
     } gInputMailBox;
 
 class gInput: public Gestionnaire

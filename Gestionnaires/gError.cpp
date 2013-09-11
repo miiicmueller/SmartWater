@@ -36,32 +36,32 @@ void gError::execute()
 	    this->theGSM->mOpen();
 	    break;
 	case kErrorGeneral:
-	case kErrorEnterPin:
 	case kErrorSetModeSms:
 	case kErrorSetModeText:
 	case kErrorEnableServiceData:
 	case kErrorDeleteAllSms:
 	case kErrorGetCredit:
-	case kErrorReadSms:
 	case kErrorModePDU:
 	case kErrorModeText:
-	case kErrorSimNotInserted:
 	case kErrorSimRequired:
 	case kErrorSimFailure:
 	case kErrorAntenna:
 	case kErrorDecodeDate:
 	case kErrorSimBusy:
-	case kErrorSimWrong:
 	case kErrorSimPukRequired:
 	case kErrorGetStateMemory:
-	case kErrorSimPin2Required:
-	case kErrorSimPuk2Required:
 	case kErrorMemoryFailure:
-	case kErrorMemoryFull:
 	case kErrorSendSmsTimeOut:
 	    this->theGSM->mClose();
 	    this->gErrorList[kGErrorGSM] = true;
 	    break;
+	case kErrorMemoryFull:
+	case kErrorSimPin2Required:
+	case kErrorSimPuk2Required:
+	case kErrorEnterPin:
+	case kErrorSimNotInserted:
+	case kErrorSimWrong:
+	case kErrorReadSms:
 	default:
 	    break;
 	    }
