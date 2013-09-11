@@ -77,3 +77,560 @@ Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre\bin\javaw.exe
 Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar" ch.hearc.SmartWater.app.UseFrameSmartWater
 Args length:	931/32768 chars
 Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	931/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre\
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	931/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre\*
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\*\bin\javaw.exe (n/a)
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre\bin;.\jre\lib
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin;.\jre\lib\bin\javaw.exe (n/a)
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	1576/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Instance already exists.
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Instance already exists.
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	1576/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	1999/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	2003/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	2003/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	2003/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Set var:	java.library.path = ./library
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	2003/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-Djava.library.path=./library -classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	2033/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-Djava.library.path=./library -classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	2033/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-Djava.library.path=./library -classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	2033/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	2003/32768 chars
+Exit code:	259
+
+
+CmdLine:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe --l4j-debug
+WOW64:		yes
+Bundled JRE:	.\jre
+Check launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe (OK)
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml
+Add classpath:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar
+      "      :	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll
+Launcher:	D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.\jre\bin\javaw.exe
+Launcher args:	-classpath "D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\BilatRmiTools.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\clavier.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\HmTimes.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jcommon-1.0.17.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jfreechart-1.0.14.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\junit-4.10.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\jxl.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\SteelSeries-3.9.24.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext\trident-6.3.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ext;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\jre;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\launch4j.log;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\ressource;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\setup;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.exe;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\SmartWater.xml;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\.;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\..;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxParallel.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\librxtxSerial64.so;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\RXTXcomm.jar;D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\rxtxSerial.dll" ch.hearc.SmartWater.app.UseFrameSmartWater
+Args length:	2003/32768 chars
+Exit code:	259
