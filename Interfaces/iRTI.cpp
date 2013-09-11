@@ -27,6 +27,7 @@ iRTI::iRTI()
 	this->delayNumber = i;
 	this->freeDelays--;
 	this->delaysTab[i].isFree = false;
+	this->delaysTab[i].isDone = true;
 	}
     else
 	{
@@ -41,7 +42,7 @@ iRTI::~iRTI()
     this->freeDelays++;
     }
 
-//m�thodes publiques
+//methodes publiques
 void iRTI::startDelay100US(UInt32 aTime100Us)
     {
     this->delaysTab[this->delayNumber].counter = aTime100Us;

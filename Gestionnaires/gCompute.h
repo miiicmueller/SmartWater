@@ -26,6 +26,9 @@ typedef struct
     //pour la mise a l'heure automatique
     bool mahAuto;
 
+    //pour la date
+    tDate* theDate;
+
     //pour la selection du compteur
     tCommandsUserNbEnum aUserSelect;
 
@@ -51,26 +54,27 @@ private:
     gTerminal* theGTerminal;
 
     //attributs tools pour le computeConsumption et ses sous-fonctions
-    UInt8 aMonth ;
-    UInt8 aDay ;
+    UInt8 aMonth;
+    UInt8 aDay;
     UInt32 aValue;
     UInt16 aLimitDay; // limite journaliere a ne pas depasser
     UInt8 j;
     bool aFullMonth; // le programme n'a pas commence au milieu de ce mois
-    UInt32 aPreviousValue[3] ;
-    UInt32 aValueBeginMonth[3] ;
+    UInt32 aPreviousValue[3];
+    UInt32 aValueBeginMonth[3];
     UInt8 aPreviousDay;
 
     void computeTerminal();
 
     void computeSMS();
 
+    void computeConsumption();
 
     void computeIsFinished();
 
-    void saveMeasurements();
+    void computeCredit();
 
-    void computeConsumption();
+    void saveMeasurements();
 
     void computeLimitDay();
 

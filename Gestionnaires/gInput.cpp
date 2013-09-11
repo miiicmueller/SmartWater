@@ -4,7 +4,8 @@
 #include "gInput.h"
 
 gInput::gInput(mGSM* theGSM, mCompteur* theCompteurs[3], mRTC* theRTC,
-	mTempSensor* theTempSensor, tToolsCluster* theTools, mUSB* theUSB)
+	mTempSensor* theTempSensor, tToolsCluster* theTools, mUSB* theUSB,
+	gError* theGError)
     {
     this->theGSM = theGSM;
     this->theRTC = theRTC;
@@ -14,6 +15,7 @@ gInput::gInput(mGSM* theGSM, mCompteur* theCompteurs[3], mRTC* theRTC,
     this->theCompteurs[2] = theCompteurs[2];
     this->theTools = theTools;
     this->theUSB = theUSB;
+    this->theGError = theGError;
 
     this->theInputMailBox.date = new tDate();
 
@@ -40,7 +42,9 @@ void gInput::setup()
     this->theInputMailBox.date->minute = 0;
     this->theInputMailBox.date->second = 0;
 
-    this->theInputMailBox.theCredit = 0;
+    this->theInputMailBox.theCredit = 0xFFFF;
+
+    this->theInputMailBox.simulateCompteur = false;
     }
 
 void gInput::execute()
@@ -49,17 +53,15 @@ void gInput::execute()
     if (!this->theUSB->isConnected())
 	{
 	//pour les SMS
-	// TODO : a verifier -> getSMS a peut-etre change de syntaxe
 	char theSMS[200];
 	bool hasSMS;
 
 	theSMS[0] = '\0';
 
-	if (!this->theGSM->getSMS(theSMS, &hasSMS,
-		this->theInputMailBox.aReplyNb))
+	if (this->theGError->gErrorList[kGErrorGSM] == false)
 	    {
-	    // TODO : en cas d'erreur de lecture du SMS
-	    theSMS[0] = '\0';
+	    this->theGSM->getSMS(theSMS, &hasSMS,
+		    this->theInputMailBox.aReplyNb);
 	    }
 
 	this->theAnalyzer.tCommandsAnalysis(theSMS, this->theTools);
@@ -89,7 +91,8 @@ void gInput::execute()
 		}
 	    }
 
-	if (this->theInputMailBox.isSimulation)
+	if (this->theInputMailBox.isSimulation
+		&& this->theInputMailBox.simulateCompteur)
 	    {
 	    this->theCompteurs[2]->mOpen();
 
@@ -105,6 +108,7 @@ void gInput::execute()
 		{
 		this->theTools->theCompteur[2]->isConnected = false;
 		}
+	    this->theInputMailBox.simulateCompteur = false;
 	    }
 
 	this->theCompteurs[0]->mClose();
@@ -114,6 +118,15 @@ void gInput::execute()
 	this->theInputMailBox.temperature.aFakeFloat.integer = temp >> 4;
 	this->theInputMailBox.temperature.aFakeFloat.decimal = ((temp % 16)
 		* 100) >> 4;
+
+	//pour le credit
+	static UInt8 thePreviousDay = 0;
+	if ((this->theInputMailBox.date->day != thePreviousDay)
+		&& (this->theInputMailBox.date->hour > 8))
+	    {
+	    thePreviousDay = this->theInputMailBox.date->day;
+	    this->theGSM->getCredit(&(this->theInputMailBox.theCredit));
+	    }
 	}
     }
 

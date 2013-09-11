@@ -28,6 +28,7 @@ public:
 private:
     mWDT* aWatchDog;
     tAvailability* atAvailability;
+    tMode* atMode;
     mRTC* amRTC;
     mGSM* aGsm;
     mCompteur* aCompteur;
@@ -36,15 +37,14 @@ private:
     static iDIO wakeUp;
     static iDIO ledWakeUp;
 
-
     //Interruptions handlers
     friend void WakeUpBtn(void);
 
     char aHourOld;
     char aMinOld;
     char aSecOld;
-    static bool aCanSleep ;
-    static mDelay aCanSleepDelay ;
+    static volatile bool aCanSleep;
+    static mDelay *aCanSleepDelay;
 
     };
 #endif

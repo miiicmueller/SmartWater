@@ -18,10 +18,13 @@ iRTC::iRTC()
     this->aDeltaMinuteAlarme = 0;
     this->aMinuteAlarme = 0;
 
-    RTCAHOUR = 0x00;
     RTCAMIN = 0x00;
+    RTCAHOUR = 0x00;
+
     RTCADOW = 0x00;
-    RTCADAY = 0x00;
+    RTCADAY = 0x01;
+    RTCMON = 0x01;
+    RTCYEAR = 0x01;
 
     iRTC::RTC_A = this;
 
@@ -142,7 +145,7 @@ void iRTC::setHour(char aHour, char aMinute, char aSecond)
  */
 void iRTC::calibration(int aTemperature)
     {
-//TODO
+    //TODO : possibilite d'implementation
     }
 
 /**

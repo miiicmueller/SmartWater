@@ -746,8 +746,6 @@ bool iUART::readFullFrame(UInt8* stringReceived)
     return true;
     }
 
-// TODO - Tester les performances des fonctions send string
-
 /**
  * Fonction qui permet d'obtenir le nombre de caractere contenu
  * dans le buffer
@@ -900,10 +898,10 @@ bool iUART::retInString(UInt8* string)
 #pragma vector=USCI_A0_VECTOR
 __interrupt void USCI_A0(void)
     {
-//Vï¿½rifiation que c'est bien un interruption en reception
+//Verifiation que c'est bien un interruption en reception
     if ((UCA0IFG & UCRXIFG)== UCRXIFG)
 	{
-	// On teste si le pointeur iUART_0 a ï¿½tï¿½  affectï¿½
+	// On teste si le pointeur iUART_0 a ete  affecte
 	if (iUART::USCI_0 != NULL)
 	    {
 	    iUART::USCI_0->interruptHandler();

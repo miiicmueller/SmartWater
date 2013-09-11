@@ -15,6 +15,8 @@ tAlarmNumber::tAlarmNumber(mEEPROM *mEeprom, UInt16 aModeNum)
     //Allocation de la memoire
     this->mPeriphSauv->malloc(this->aId, this->aNbBytes);
 
+    //mise a 0 de la valeur de la chaine
+    this->aTelNumber[0] = '\0';
     }
 
 void tAlarmNumber::save()

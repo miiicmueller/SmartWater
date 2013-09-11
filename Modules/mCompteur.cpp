@@ -42,12 +42,14 @@ mCompteur::mCompteur(iMeterChannel aChannel, mEEPROM *mEeprom,
 	this->compteurParam = aTCompteur;
 
 	//Initialisation du parametre tCompteur
-	strcpy((char*) this->compteurParam->aData.aDataStruct.aManufacturer, "NA");
+	strcpy((char*) this->compteurParam->aData.aDataStruct.aManufacturer,
+		"NA");
 	strcpy((char*) this->compteurParam->aData.aDataStruct.aFluide, "NA");
 	strcpy((char*) this->compteurParam->aData.aDataStruct.aVersNum, "NA");
 	strcpy((char*) this->compteurParam->aData.aDataStruct.aFabDate, "NA");
 	strcpy((char*) this->compteurParam->aData.aDataStruct.aSerialNum, "NA");
-	strcpy((char*) this->compteurParam->aData.aDataStruct.aNominalSize, "NA");
+	strcpy((char*) this->compteurParam->aData.aDataStruct.aNominalSize,
+		"NA");
 
 	this->aStatus = 0;
 	}
@@ -140,7 +142,7 @@ bool mCompteur::mRead(UInt32* aIndex)
     this->enable.write(kEnableMeter);
 
     //Attente d'un certains temps pour recevoir les caractere
-    aDelayTimeout.startDelayMS(5000); //Timeout ce 3s
+    aDelayTimeout.startDelayMS(5000); //Timeout ce 5s
     //On attend
     while ((mCompteur::uart.availableCharToRead() < 85)
 	    && !aDelayTimeout.isDone())
@@ -196,21 +198,24 @@ bool mCompteur::mRead(UInt32* aIndex)
 		    &(this->compteurParam->aData.aDataStruct.aFabDate));
 
 	    this->compteurParam->aData.aDataStruct.aFabDate[strlen(
-		    (char*) this->compteurParam->aData.aDataStruct.aFabDate) - 1] = 0x00;
+		    (char*) this->compteurParam->aData.aDataStruct.aFabDate) - 1] =
+		    0x00;
 
 	    //Recuperation du numero de serie
 	    sscanf((char*) aSerialNum, "%d.%d(%s)", &aNumb1, &aNumb2,
 		    &(this->compteurParam->aData.aDataStruct.aSerialNum));
 
 	    this->compteurParam->aData.aDataStruct.aSerialNum[strlen(
-		    (char*) this->compteurParam->aData.aDataStruct.aSerialNum) - 1] = 0x00;
+		    (char*) this->compteurParam->aData.aDataStruct.aSerialNum)
+		    - 1] = 0x00;
 
 	    //Recuperation de la taille nominale
 	    sscanf((char*) aTailleNom, "%d.%d(%s)", &aNumb1, &aNumb2,
 		    &(this->compteurParam->aData.aDataStruct.aNominalSize));
 
 	    this->compteurParam->aData.aDataStruct.aNominalSize[strlen(
-		    (char*) this->compteurParam->aData.aDataStruct.aNominalSize) - 1] = 0x00;
+		    (char*) this->compteurParam->aData.aDataStruct.aNominalSize)
+		    - 1] = 0x00;
 
 	    *aIndex = 0;
 	    //retour : la valeur de l'indice du compteur, 0 si la valeur n'a pas pu etre lue
@@ -235,10 +240,20 @@ bool mCompteur::mRead(UInt32* aIndex)
 void mCompteur::simulationCpt(int aIndex)
     {
     char aFrame[90];
+    char significantZero[6];
+
+    significantZero[0] = '\0';
+    for (int i = 1, j = 10; i <= 4; i++, j *= 10)
+	{
+	if (aIndex < (j - 1))
+	    {
+	    strcat(significantZero, "0");
+	    }
+	}
 
     sprintf(aFrame,
-	    "/SIM Wasser      V1.0\r\n7.0(%5d*m3)\r\n0.09(22-08-13)\r\n0.00(0000000)\r\n0.01(DN20)\r\n!\r\n",
-	    aIndex);
+	    "/SIM Wasser      V1.0\r\n7.0(%s%d*m3)\r\n0.09(22-08-13)\r\n0.00(00000000)\r\n0.01(DN20)\r\n!\r\n",
+	    significantZero, aIndex);
 
     this->channelMultiplexer.write(channelCodeMultiplexer);
     this->enable.write(kEnableMeter);
@@ -276,20 +291,23 @@ void mCompteur::sendChar(char aChar)
     int i;
 
     mDelay aDelay;
+    UInt8 aParity;
 
-    this->cptSim.write(kHigh);	//bit de start
+    //bit de start
+    this->cptSim.write(kHigh);
 
     aDelay.startDelay100US(kBitTimeUs);
     while (!aDelay.isDone())
 	{
 	}
-    //Delay10TCYx (NMEA_TimeBit); //attendre 1 bit
 
-    for (i = 7; i >= 0; i--)
+    // 7 data bits
+    for (i = 6, aParity = 0; i >= 0; i--)
 	{
 	if ((aChar & 0x01) == 1)
 	    {
 	    this->cptSim.write(kLow);
+	    aParity++;
 	    }
 	else
 	    {
@@ -302,16 +320,29 @@ void mCompteur::sendChar(char aChar)
 	while (!aDelay.isDone())
 	    {
 	    }
-	//Delay10TCYx(NMEA_TimeBit); //attendre 1 bit
 	}
 
-    this->cptSim.write(kLow); //stop bit
+    //parity bit
+    if ((aParity % 2) != 0)
+	{
+	this->cptSim.write(kLow);
+	}
+    else
+	{
+	this->cptSim.write(kHigh);
+	}
+    aDelay.startDelay100US(kBitTimeUs);
+    while (!aDelay.isDone())
+	{
+	}
+
+    //stop bit
+    this->cptSim.write(kLow);
 
     aDelay.startDelay100US(kBitTimeUs);
     while (!aDelay.isDone())
 	{
 	}
-    //Delay10TCYx(NMEA_TimeBit); //attendre 1 bit
 
     return;
     }

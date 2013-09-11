@@ -17,6 +17,7 @@ tCommandsAnalyzer::tCommandsAnalyzer()
     this->maxSizesCommands[1] = sizeMaxMdp;
     this->maxSizesCommands[2] = sizeMaxCommand;
     this->maxSizesCommands[3] = sizeMaxParameter;
+    this->aCommandResult.aCommandEnum = kCommandNoCommand;
     }
 
 void tCommandsAnalyzer::tCommandsAnalysis(char* aMessage,

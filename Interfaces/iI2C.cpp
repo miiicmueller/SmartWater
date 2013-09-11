@@ -3,7 +3,7 @@
 
 #include "iI2C.h"
 
-//FIXME Le code marche bien pour USCI_B1 mais a plein de lacune pour le B0.
+//TODO : Le code marche bien pour USCI_B1 mais a plein de lacune pour le B0.
 //Donc a ajouter pour la prochaine utilisation
 
 //Initalisation des attributs UART_x statiques
@@ -228,9 +228,8 @@ UInt8 iI2C::read()
     {
     return UCB1RXBUF;
     }
-
 /**
- * Configuration de l'adresse de l'esclave en cours de communcation
+ * Configuration de l'adresse de l'esclave en cours de communication
  * aSlaveAddr : Adresse de l'esclave
  */
 void iI2C::setSlaveAddr(char aSlaveAddr)

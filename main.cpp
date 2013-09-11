@@ -29,6 +29,7 @@
 #include "Gestionnaires/gOutput.h"
 #include "Gestionnaires/gSleep.h"
 #include "Gestionnaires/gTerminal.h"
+#include "Gestionnaires/gError.h"
 
 #ifdef __cplusplus
 extern "C"
@@ -55,7 +56,7 @@ volatile BYTE bCDCDataReceived_event = FALSE; //Indicates data has been received
  */
 void main(void)
     {
-    //Configuration de la fr�quence
+    //Configuration de la frequence
     mCpu::configFrequency();
 
     // Important pour la basse consommation
@@ -75,15 +76,6 @@ void main(void)
 
     //activation des interruptions
     __bis_SR_register(GIE);
-
-    //instanciation des interfaces
-    //parametrage des interfaces
-    //instanciation des modules
-    //parametrage des modules
-    //instanciation des utilitaires
-    //parametrage des utilitaires
-    //instanciation des gestionnaires
-    //parametrage des gestionnaires
 
     mDelay::mSetup();
     mDelay::mOpen();
@@ -108,7 +100,6 @@ void main(void)
     aEEPROM.mOpen();
     tToolsCluster theTools(&aEEPROM);
     theTools.loadAll();
-#endif
 
     mGSM theGSM(theTools.theSIMCard);
     theGSM.mSetup();
@@ -131,23 +122,28 @@ void main(void)
     theCountersTab[2] = new mCompteur(kMeterSimulation, &aEEPROM,
 	    theTools.theCompteur[2]);
 
+    //instanciation des gestionnaires
+    gError theGError(&theGSM, &theTempSensor, &aEEPROM);
     gInput theGInput(&theGSM, theCountersTab, &theRTC, &theTempSensor,
-	    &theTools, &theUSB);
+	    &theTools, &theUSB, &theGError);
     gTerminal theTerminalUSB(&theTools, &theUSB);
     gCompute theGCompute(&theGInput, &theTerminalUSB, &theTools, &theRTC);
-    gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB, &theTools);
+    gOutput theGOutput(&theGCompute, &theGSM, &theRTC, &theUSB, &theTools,
+	    &theGError);
     gSleep theGSleep(&theTools, &theRTC, &theGSM, theCountersTab[0],
 	    &theTempSensor, &theGCompute, &theWatchDog);
 
+    //parametrage des gestionnaires
     theGInput.setup();
     theTerminalUSB.setup();
     theGCompute.setup();
     theGOutput.setup();
     theGSleep.setup();
+    theGError.setup();
 
     mDelay aDelayCompute;
     mDelay aDelayInput;
-    aDelayCompute.startDelayMS(2);
+    aDelayCompute.startDelayMS(5);
     aDelayInput.startDelayMS(1);
 
     while (1)
@@ -155,7 +151,8 @@ void main(void)
 	theWatchDog.resetWatchDog();
 	if (aDelayCompute.isDone())
 	    {
-	    aDelayCompute.startDelayMS(1);
+	    aDelayCompute.startDelayMS(5);
+	    theGError.execute();
 	    theTerminalUSB.execute();
 	    theGCompute.execute();
 	    theGOutput.execute();
@@ -167,5 +164,6 @@ void main(void)
 	    theGInput.execute();
 	    }
 	}
-
+#endif
     }
+
