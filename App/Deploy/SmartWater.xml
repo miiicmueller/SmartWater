@@ -19,9 +19,9 @@
     <cp>D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*</cp>
   </classPath>
   <jre>
-    <path>.\jre\</path>
-    <bundledJre64Bit>true</bundledJre64Bit>
-    <minVersion></minVersion>
+    <path></path>
+    <bundledJre64Bit>false</bundledJre64Bit>
+    <minVersion>1.6.0</minVersion>
     <maxVersion></maxVersion>
     <jdkPreference>jreOnly</jdkPreference>
   </jre>
