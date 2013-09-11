@@ -19,7 +19,7 @@
     <cp>D:\Module_ProjetP2\Software\SmartWater\App\Deploy\library\*</cp>
   </classPath>
   <jre>
-    <path>./jre/</path>
+    <path>.\jre\</path>
     <bundledJre64Bit>true</bundledJre64Bit>
     <minVersion></minVersion>
     <maxVersion></maxVersion>
